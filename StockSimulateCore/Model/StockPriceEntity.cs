@@ -12,6 +12,9 @@ namespace StockSimulateCore.Model
         [Description("股票代码")]
         public string StockCode { get; set; }
 
+        [Description("结算日")]
+        public string DealDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
 
@@ -33,14 +36,12 @@ namespace StockSimulateCore.Model
         [Description("昨日收盘价(元)")]
         public decimal YesterdayEndPrice { get; set; }
 
-        [Description("成交量")]
+        [Description("成交量(万手)")]
         public decimal DealQty { get; set; }
 
         [Description("成交额(亿元)")]
         public decimal DealAmount { get; set; }
 
-        [Description("结算日")]
-        public string DealDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
 
         [Description("总股本(万股)")]
         public decimal Capital { get; set; }

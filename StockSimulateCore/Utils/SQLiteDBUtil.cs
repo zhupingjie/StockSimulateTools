@@ -155,14 +155,15 @@ namespace StockSimulateCore.Utils
 
         #region CRUD
 
-        public TEntity[] QueryAll<TEntity>(string where = "") where TEntity : BaseEntity, new()
+        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "", int takeSize = 0) where TEntity : BaseEntity, new()
         {
             var tableName = GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where);
+            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize);
         }
 
-        public TEntity QueryFirst<TEntity>(string where) where TEntity : BaseEntity, new()
+
+        public TEntity QueryFirst<TEntity>(string where = "") where TEntity : BaseEntity, new()
         {
             var tableName = GetEntityTypeName<TEntity>();
 
@@ -287,13 +288,16 @@ namespace StockSimulateCore.Utils
         }
 
 
-        TEntity[] GetEntitys<TEntity>(string table, string where) where TEntity : BaseEntity, new()
+        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0) where TEntity : BaseEntity, new()
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
                 var lst = new List<TEntity>();
                 var sql = $"select * from {table}";
                 if (!string.IsNullOrWhiteSpace(where)) sql = $"{sql} where {where}";
+                if (!string.IsNullOrEmpty(orderBy)) sql = $"{sql} order by {orderBy}";
+                if(takeSize > 0) sql = $"{sql} limit {takeSize}";
+
                 try
                 {
                     con.Open();
@@ -442,46 +446,6 @@ namespace StockSimulateCore.Utils
                     LogUtil.Logger.Error(ex);
                     //log4net.LogManager.GetLogger("logAppender").Error(ex);
                     return false;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            }
-        }
-
-        public TEntity GetEntity<TEntity>(string table, string where) where TEntity : BaseEntity, new ()
-        {
-            return GetEntitys<TEntity>(table, where).FirstOrDefault();
-        }
-
-
-        public List<string> GetGroupStrings(string table, string groupColumn, string where)
-        {
-            using (SQLiteConnection con = new SQLiteConnection(strConn))
-            {
-                try
-                {
-                    con.Open();
-                    var cmd = con.CreateCommand();
-                    cmd.CommandText = $"select {groupColumn} from {table} where {where} group by {groupColumn}";
-                    var ada = new SQLiteDataAdapter(cmd);
-                    var dt = new DataTable(table);
-                    ada.Fill(dt);
-
-                    var lst = new List<string>();
-                    for (var i = 0; i < dt.Rows.Count; i++)
-                    {
-                        DataRow dr = dt.Rows[i];
-                        lst.Add(dr[0].ToString());
-                    }
-                    return lst;
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Logger.Error(ex);
-                    //log4net.LogManager.GetLogger("logAppender").Error(ex);
-                    return null;
                 }
                 finally
                 {

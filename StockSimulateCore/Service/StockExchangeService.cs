@@ -9,7 +9,7 @@ namespace StockSimulateCore.Service
 {
     public class StockExchangeService : IStockExchangeService
     {
-        public StockExchangeService(double amount)
+        public StockExchangeService(decimal amount)
         {
             StockAccount = new AccountEntity()
             {

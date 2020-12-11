@@ -72,40 +72,141 @@ namespace StockPriceTools
             }
             var stocks = Repository.QueryAll<StockEntity>(where);
             var dt = ObjectUtil.ConvertTable(stocks);
-            this.dataGridView1.DataSource = dt.DefaultView;
-            for(var i=0; i<this.dataGridView1.ColumnCount; i++)
+            this.gridStockList.DataSource = dt.DefaultView;
+            for(var i=0; i<this.gridStockList.ColumnCount; i++)
             {
-                var length = this.dataGridView1.Columns[i].Name.Length;
-                this.dataGridView1.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                var length = this.gridStockList.Columns[i].Name.Length;
+                this.gridStockList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
             }
-            for(var i=0; i<this.dataGridView1.Rows.Count; i++)
+            for(var i=0; i<this.gridStockList.Rows.Count; i++)
             {
-                var row = this.dataGridView1.Rows[i];
+                var row = this.gridStockList.Rows[i];
                 var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
                 if(value > 0)
                 {
-                    this.dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                    this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
                 }
                 else
                 {
-                    this.dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                    this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
+            }
+        }
+
+        void LoadPriceList(string stockCode)
+        {
+            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate desc",  60);
+            var dt = ObjectUtil.ConvertTable(stockPrices);
+            this.gridPriceList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridPriceList.ColumnCount; i++)
+            {
+                var columnName = this.gridPriceList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridPriceList.Columns[i].Visible = false;
+                else
+                {
+                    var length = columnName.Length;
+                    this.gridPriceList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+            for (var i = 0; i < this.gridPriceList.Rows.Count; i++)
+            {
+                var row = this.gridPriceList.Rows[i];
+                var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
+                if (value > 0)
+                {
+                    this.gridPriceList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    this.gridPriceList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+            }
+        }
+
+        void LoadExchangeList(string stockCode)
+        {
+            var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ExchangeTime desc", 60);
+            var dt = ObjectUtil.ConvertTable(exchangeOrders);
+            this.gridExchangeList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridExchangeList.ColumnCount; i++)
+            {
+                var columnName = this.gridExchangeList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridExchangeList.Columns[i].Visible = false;
+                else
+                {
+                    var length = columnName.Length;
+                    this.gridExchangeList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+        }
+
+        void LoadStockBaseInfo(string stockCode)
+        {
+            this.lstBaseInfo.Items.Clear();
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            var preps = typeof(StockEntity).GetProperties();
+            foreach(var prep in preps)
+            {
+                if (prep.Name == "ID") continue;
+
+                var desc = prep.Name;
+                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+                if (attr != null) desc = attr.Description;
+
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{desc}";
+                listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(stock, prep.Name)}");
+                this.lstBaseInfo.Items.Add(listViewItem);
+            }
+            //foreach (DataGridViewCell cell in selectRow.Cells)
+            //{
+            //    var listViewItem = new ListViewItem();
+            //    listViewItem.Text = $"{this.gridStockList.Columns[cell.ColumnIndex].Name}";
+            //    listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
+            //    this.lstBaseInfo.Items.Add(listViewItem);
+            //}
+        }
+
+        void LoadStockStrategyInfo(string stockCode)
+        {
+            this.lstStrategyInfo.Items.Clear();
+
+            var accountStock = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
+            if (accountStock == null) return;
+
+            var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{accountStock.StrategyName}'");
+            if (strategy == null) return;
+
+            var preps = typeof(StrategyEntity).GetProperties();
+            foreach (var prep in preps)
+            {
+                if (prep.Name == "ID") continue;
+
+                var desc = prep.Name;
+                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+                if (attr != null) desc = attr.Description;
+
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{desc}";
+                listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(strategy, prep.Name)}");
+                this.lstStrategyInfo.Items.Add(listViewItem);
             }
         }
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (this.dataGridView1.SelectedRows.Count == 0) return;
-            this.listView1.Items.Clear();
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            this.lstBaseInfo.Items.Clear();
 
-            var selectRow = this.dataGridView1.SelectedRows[0];
-            foreach (DataGridViewCell cell in selectRow.Cells)
-            {
-                var listViewItem = new ListViewItem();
-                listViewItem.Text = $"{this.dataGridView1.Columns[cell.ColumnIndex].Name}";
-                listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
-                this.listView1.Items.Add(listViewItem);
-            }
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            this.LoadStockBaseInfo(stockCode);
+            this.LoadStockStrategyInfo(stockCode);
+            this.LoadPriceList(stockCode);
+            this.LoadExchangeList(stockCode);
         }
 
         private void btnGather_Click(object sender, EventArgs e)
@@ -152,6 +253,44 @@ namespace StockPriceTools
 
         private void txtStockCode_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnAccountInfo_Click(object sender, EventArgs e)
+        {
+            var frm = new AccountForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+        }
+
+        private void gridPriceList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (this.gridPriceList.SelectedRows.Count == 0) return;
+            this.lstPriceInfo.Items.Clear();
+
+            var selectRow = this.gridPriceList.SelectedRows[0];
+            foreach (DataGridViewCell cell in selectRow.Cells)
+            {
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{this.gridPriceList.Columns[cell.ColumnIndex].Name}";
+                listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
+                this.lstPriceInfo.Items.Add(listViewItem);
+            }
+        }
+
+        private void gridExchangeList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (this.gridExchangeList.SelectedRows.Count == 0) return;
+            this.lstExchangeInfo.Items.Clear();
+
+            var selectRow = this.gridExchangeList.SelectedRows[0];
+            foreach (DataGridViewCell cell in selectRow.Cells)
+            {
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{this.gridExchangeList.Columns[cell.ColumnIndex].Name}";
+                listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
+                this.lstExchangeInfo.Items.Add(listViewItem);
+            }
 
         }
     }

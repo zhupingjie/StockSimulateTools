@@ -37,21 +37,9 @@ namespace StockSimulateCore.Model
         public decimal TotalBuyAmount { get; set; }
 
         [Description("成本(元)")]
-        public decimal Cost
-        {
-            get
-            {
-                return Math.Round(TotalBuyAmount / HoldQty, 3);
-            }
-        }
+        public decimal Cost { get; set; }
 
         [Description("盈亏(元)")]
-        public decimal Profit
-        {
-            get
-            {
-                return HoldAmount - TotalBuyAmount;
-            }
-        }
+        public decimal Profit { get; set; }
     }
 }
