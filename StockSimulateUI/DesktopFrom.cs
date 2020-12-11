@@ -1,6 +1,7 @@
 ﻿using StockPriceTools.UI;
 using StockSimulateCore.Model;
 using StockSimulateCore.Utils;
+using StockSimulateUI.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace StockPriceTools
 
         private void btnCalcuate_Click(object sender, EventArgs e)
         {
-            var frm = new CalcuateForm();
+            var frm = new StrategyForm();
             frm.Show();
         }
 
@@ -140,6 +141,18 @@ namespace StockPriceTools
         private void DesktopFrom_Load(object sender, EventArgs e)
         {
             LoadStockList();
+        }
+
+        private void btnAddStrategy_Click(object sender, EventArgs e)
+        {
+            var frm = new StrategyListForm();
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.Show();
+        }
+
+        private void txtStockCode_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

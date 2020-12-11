@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StockPriceTools;
+using StockSimulateCore.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,16 +10,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace StockPriceTools
+namespace StockSimulateUI.UI
 {
-    public partial class CalcuateForm : Form
+    public partial class StrategyForm : Form
     {
-        public CalcuateForm()
+        public StrategyForm()
         {
             InitializeComponent();
         }
 
         private DataTable DataSource = null;
+        public StrategyEntity Strategy { get; set; }
 
         private void btnCalcuate_Click(object sender, EventArgs e)
         {
@@ -51,29 +54,29 @@ namespace StockPriceTools
             this.DataSource.Rows.Clear();
 
             
-            double baseBuyAmount = GetTextValue(this.txtBaseBuyAmount);
-            double lastBuyPrice = GetTextValue(this.txtBaseBuyPrice);
-            double buyRate = GetTextValue(this.txtBuyRate);
-            double buyAmount = GetTextValue(this.txtBuyAmount);
-            double buyCount = GetExchangeCount(Math.Floor(baseBuyAmount / lastBuyPrice));
-            double totalBuyAmount = Math.Round(buyCount * lastBuyPrice, 3);
-            double hasCount = buyCount;
-            double totalDownPercent = 0;
-            double extraBuyPercent1 = GetTextValue(this.txtExtraBuyPercent1);
-            double extraBuyPercent2 = GetTextValue(this.txtExtraBuyPercent2);
-            double downPercent1 = GetTextValue(this.txtDownPercent1);
-            double downPercent2 = GetTextValue(this.txtDownPercent2);
-            double maxBuyPrice = GetTextValue(this.txtMaxBuyPrice);
-            double maxPer = GetTextValue(this.txtSingleBuyPercent);
-            double saleRate = GetTextValue(this.txtSaleRate);
-            double saleHoldPer = GetTextValue(this.txtSaleHoldPer);
-            double maxDownPer = GetTextValue(this.txtMaxDownPer);
+            decimal baseBuyAmount = GetTextValue(this.txtBaseBuyAmount);
+            decimal lastBuyPrice = GetTextValue(this.txtBaseBuyPrice);
+            decimal buyRate = GetTextValue(this.txtBuyRate);
+            decimal buyAmount = GetTextValue(this.txtBuyAmount);
+            decimal buyCount = GetExchangeCount(Math.Floor(baseBuyAmount / lastBuyPrice));
+            decimal totalBuyAmount = Math.Round(buyCount * lastBuyPrice, 3);
+            decimal hasCount = buyCount;
+            decimal totalDownPercent = 0;
+            decimal extraBuyPercent1 = GetTextValue(this.txtExtraBuyPercent1);
+            decimal extraBuyPercent2 = GetTextValue(this.txtExtraBuyPercent2);
+            decimal downPercent1 = GetTextValue(this.txtDownPercent1);
+            decimal downPercent2 = GetTextValue(this.txtDownPercent2);
+            decimal maxBuyPrice = GetTextValue(this.txtMaxBuyPrice);
+            decimal maxPer = GetTextValue(this.txtSingleBuyPercent);
+            decimal saleRate = GetTextValue(this.txtSaleRate);
+            decimal saleHoldPer = GetTextValue(this.txtSaleHoldPer);
+            decimal maxDownPer = GetTextValue(this.txtMaxDownPer);
 
-            double downPer = 0;
-            double cost = lastBuyPrice;
-            double saleCount = 0;
-            double saleAmount = 0;
-            double profit = 0;
+            decimal downPer = 0;
+            decimal cost = lastBuyPrice;
+            decimal saleCount = 0;
+            decimal saleAmount = 0;
+            decimal profit = 0;
 
             var dr = this.DataSource.NewRow();
             dr["操作"] = $"建仓";
@@ -99,7 +102,7 @@ namespace StockPriceTools
                 //跌幅操作最大值
                 if (downPer <= maxDownPer) break;
 
-                double thsBuyAmount = buyAmount;
+                decimal thsBuyAmount = buyAmount;
                 downPer += buyRate;
 
                 totalDownPercent += Math.Abs(buyRate);
@@ -135,8 +138,8 @@ namespace StockPriceTools
                 this.DataSource.Rows.Add(dr);
             }
 
-            double lastPer = downPer;
-            double upPer = 0;
+            decimal lastPer = downPer;
+            decimal upPer = 0;
             while (true)
             {
                 if (lastPer >= Math.Abs(downPer)) break;
@@ -171,14 +174,14 @@ namespace StockPriceTools
             }
         }
 
-        double GetTextValue(TextBox textBox)
+        decimal GetTextValue(TextBox textBox)
         {
-            double d = 0;
-            double.TryParse(textBox.Text, out d);
+            decimal d = 0;
+            decimal.TryParse(textBox.Text, out d);
             return Math.Round(d, 3);
         }
 
-        double GetExchangeCount(double amount)
+        decimal GetExchangeCount(decimal amount)
         {
             var yu = amount % 100;
             if(yu > 50)
@@ -196,15 +199,39 @@ namespace StockPriceTools
             var frm = new VoluatieForm();
             frm.ShowDialog();
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            this.Strategy = new StrategyEntity()
+            {
+                Name = this.txtName.Text,
+                IncreasePricePer = GetTextValue(this.txtBuyRate),
+                IncreaseAmount = GetTextValue(this.txtBuyAmount),
+                MaxPositionPer = GetTextValue(this.txtSingleBuyPercent),
+                IncreaseMaxSlidePer = GetTextValue(this.txtMaxDownPer),
+                IncreaseMorePer = GetTextValue(this.txtDownPercent1),
+                IncreaseMoreAmountPer = GetTextValue(this.txtExtraBuyPercent1),
+                IncreaseMaxPer = GetTextValue(this.txtDownPercent2),
+                IncreaseMaxAmountPer = GetTextValue(this.txtExtraBuyPercent2),
+                ReducePricePer = GetTextValue(this.txtSaleRate),
+                ReducePositionPer = GetTextValue(this.txtSaleHoldPer),
+                RemindQQ = this.txtRemindQQ.Text,
+                RemindEmail = this.txtRemindEmail.Text,
+                RemindCount = (int)GetTextValue(this.txtRemindCount),
+                RemindPer = GetTextValue(this.txtRemindPer)
+            };
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
     }
 
     public class StockPriceInfo
     {
-        public double CurrentPrice { get; set; }
+        public decimal CurrentPrice { get; set; }
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
-        public double Count
+        public decimal Count
         {
             get
             {

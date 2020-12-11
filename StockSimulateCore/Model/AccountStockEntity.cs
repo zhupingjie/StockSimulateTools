@@ -21,6 +21,9 @@ namespace StockSimulateCore.Model
         [Description("建仓起始价格")]
         public decimal BuyPrice { get; set; }
 
+        [Description("建仓市值")]
+        public decimal BuyAmount { get; set; }
+
         [Description("减仓起始价格")]
         public decimal SalePrice { get; set; }
 

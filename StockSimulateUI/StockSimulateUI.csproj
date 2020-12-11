@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A3D60B81-5AD9-42CF-8A53-92A5377817B8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>StockPriceTools</RootNamespace>
-    <AssemblyName>StockPriceTools</AssemblyName>
+    <RootNamespace>StockSimulateUI</RootNamespace>
+    <AssemblyName>StockSimulateUI</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -90,11 +90,11 @@
     <Compile Include="DesktopFrom.Designer.cs">
       <DependentUpon>DesktopFrom.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\CalcuateForm.cs">
+    <Compile Include="UI\StrategyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\CalcuateForm.Designer.cs">
-      <DependentUpon>CalcuateForm.cs</DependentUpon>
+    <Compile Include="UI\StrategyForm.Designer.cs">
+      <DependentUpon>StrategyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,6 +103,12 @@
     </Compile>
     <Compile Include="UI\NewStockForm.Designer.cs">
       <DependentUpon>NewStockForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\StrategyListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\StrategyListForm.Designer.cs">
+      <DependentUpon>StrategyListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\VoluatieForm.cs">
       <SubType>Form</SubType>
@@ -113,14 +119,17 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\CalcuateForm.resx">
-      <DependentUpon>CalcuateForm.cs</DependentUpon>
+    <EmbeddedResource Include="UI\StrategyForm.resx">
+      <DependentUpon>StrategyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DesktopFrom.resx">
       <DependentUpon>DesktopFrom.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\NewStockForm.resx">
       <DependentUpon>NewStockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\StrategyListForm.resx">
+      <DependentUpon>StrategyListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\VoluatieForm.resx">
       <DependentUpon>VoluatieForm.cs</DependentUpon>

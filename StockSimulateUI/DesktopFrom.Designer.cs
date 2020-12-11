@@ -160,6 +160,7 @@
             this.txtStockCode.Size = new System.Drawing.Size(91, 21);
             this.txtStockCode.TabIndex = 0;
             this.txtStockCode.Text = "股票代码";
+            this.txtStockCode.TextChanged += new System.EventHandler(this.txtStockCode_TextChanged);
             // 
             // toolStripSeparator1
             // 
@@ -174,6 +175,7 @@
             this.btnAddStrategy.Name = "btnAddStrategy";
             this.btnAddStrategy.Size = new System.Drawing.Size(60, 22);
             this.btnAddStrategy.Text = "买卖策略";
+            this.btnAddStrategy.Click += new System.EventHandler(this.btnAddStrategy_Click);
             // 
             // btnSetStrategy
             // 
