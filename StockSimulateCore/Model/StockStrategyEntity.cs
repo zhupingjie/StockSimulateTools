@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace StockSimulateCore.Model
 {
-    public class AccountStockEntity :BaseEntity
+    public class StockStrategyEntity :BaseEntity
     {
-        [Description("交易者")]
-        public string AccountName { get; set; }
-
         [Description("股票代码")]
         public string StockCode { get; set; }
 

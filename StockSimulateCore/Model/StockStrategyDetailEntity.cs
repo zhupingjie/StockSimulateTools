@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StockSimulateCore.Model
 {
-    public class ExchangeStrategyEntity : BaseEntity
+    public class StockStrategyDetailEntity : BaseEntity
     {
         [Description("股票代码")]
         public string StockCode { get; set; }

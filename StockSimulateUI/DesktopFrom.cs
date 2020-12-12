@@ -28,12 +28,6 @@ namespace StockPriceTools
             frm.Show();
         }
 
-        private void btnValuatie_Click(object sender, EventArgs e)
-        {
-            var frm = new VoluatieForm();
-            frm.Show();
-        }
-
         private void btnInit_Click(object sender, EventArgs e)
         {
             SQLiteDBUtil.Instance.InitSQLiteDB();
@@ -93,6 +87,18 @@ namespace StockPriceTools
             }
         }
 
+        void LoadStockStrategyList()
+        {
+            var accountStocks = Repository.QueryAll<StockStrategyEntity>();
+            var dt = ObjectUtil.ConvertTable(accountStocks);
+            this.gridStockStrategyList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
+            {
+                var length = this.gridStockStrategyList.Columns[i].Name.Length;
+                this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+            }
+        }
+
         void LoadPriceList(string stockCode)
         {
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate desc",  60);
@@ -140,6 +146,22 @@ namespace StockPriceTools
             }
         }
 
+        void LoadMainTargetInfo(string stockCode)
+        {
+            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype=0", "", 60);
+            //var dt = ObjectUtil.ConvertTable(mainTargets);
+            var dt = EastMoneyUtil.ConvertMainTargetData(mainTargets);
+            this.gridMaintargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridMaintargetList.ColumnCount; i++)
+            {
+                if (i == 0) this.gridMaintargetList.Columns[i].Width = 160;
+                else
+                {
+                    this.gridMaintargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
         void LoadStockBaseInfo(string stockCode)
         {
             this.lstBaseInfo.Items.Clear();
@@ -174,7 +196,7 @@ namespace StockPriceTools
         {
             this.lstStrategyInfo.Items.Clear();
 
-            var accountStock = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
+            var accountStock = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
             if (accountStock == null) return;
 
             var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{accountStock.StrategyName}'");
@@ -206,7 +228,8 @@ namespace StockPriceTools
             this.LoadStockBaseInfo(stockCode);
             this.LoadStockStrategyInfo(stockCode);
             this.LoadPriceList(stockCode);
-            this.LoadExchangeList(stockCode);
+            //this.LoadExchangeList(stockCode);
+            //this.LoadMainTargetInfo(stockCode);
         }
 
         private void btnGather_Click(object sender, EventArgs e)
@@ -216,6 +239,7 @@ namespace StockPriceTools
             {
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
                 if (stockInfo == null) return;
+                //if (stockInfo.Price.LastDate.DayOfWeek == DayOfWeek.Saturday || stockInfo.Price.LastDate.DayOfWeek == DayOfWeek.Sunday) continue;
 
                 stockInfo.Stock.ID = stock.ID;
                 Repository.Update<StockEntity>(stockInfo.Stock);
@@ -230,6 +254,43 @@ namespace StockPriceTools
                     stockInfo.Price.ID = price.ID;
                     Repository.Update<StockPriceEntity>(stockInfo.Price);
                 }
+
+                var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
+                if (mainTargetInfos.Length > 0)
+                {
+                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=0 and Date in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        Repository.Insert<MainTargetEntity>(newMts);
+                    }
+                }
+                mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 1);
+                if (mainTargetInfos.Length > 0)
+                {
+                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=1 and Date in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        Repository.Insert<MainTargetEntity>(newMts);
+                    }
+                }
+                mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 2);
+                if (mainTargetInfos.Length > 0)
+                {
+                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=2 and Date in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        Repository.Insert<MainTargetEntity>(newMts);
+                    }
+                }
             }
             this.LoadStockList();
         }
@@ -242,6 +303,7 @@ namespace StockPriceTools
         private void DesktopFrom_Load(object sender, EventArgs e)
         {
             LoadStockList();
+            LoadStockStrategyList();
         }
 
         private void btnAddStrategy_Click(object sender, EventArgs e)
@@ -292,6 +354,62 @@ namespace StockPriceTools
                 this.lstExchangeInfo.Items.Add(listViewItem);
             }
 
+        }
+
+        private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            switch(this.tabControlBottom.SelectedIndex)
+            {
+                case 0:
+                    this.LoadPriceList(stockCode);
+                    break;
+                case 1:
+                    this.LoadExchangeList(stockCode);
+                    break;
+                case 2:
+                    this.LoadMainTargetInfo(stockCode);
+                    break;
+            }
+        }
+
+        private void btnSetStrategy_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            var frm = new SetStrategyForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+                var stockStrategy = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
+                if(stockStrategy == null)
+                {
+                    stockStrategy = new StockStrategyEntity()
+                    {
+                        StockCode = stockCode,
+                        StrategyName = frm.StrategyName,
+                        BuyPrice = frm.BuyPrice,
+                        BuyAmount = frm.BuyAmount,
+                        SalePrice = frm.SalePrice,
+                    };
+                    Repository.Insert<StockStrategyEntity>(stockStrategy);
+
+
+                }
+                else
+                {
+                    stockStrategy.StrategyName = frm.StrategyName;
+                    stockStrategy.BuyPrice = frm.BuyPrice;
+                    stockStrategy.BuyAmount = frm.BuyAmount;
+                    stockStrategy.SalePrice = frm.SalePrice;
+                    Repository.Update<StockStrategyEntity>(stockStrategy);
+                }
+            }
         }
     }
 }

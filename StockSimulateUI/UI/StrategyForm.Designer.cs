@@ -29,6 +29,16 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtRemindPer = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txtRemindCount = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.txtRemindEmail = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtRemindQQ = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.txtMaxDownPer = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -60,16 +70,6 @@
             this.txtBuyRate = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.txtRemindQQ = new System.Windows.Forms.TextBox();
-            this.txtRemindEmail = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.txtRemindCount = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.txtRemindPer = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -122,8 +122,94 @@
             this.panel1.Size = new System.Drawing.Size(1005, 170);
             this.panel1.TabIndex = 2;
             // 
+            // txtRemindPer
+            // 
+            this.txtRemindPer.Location = new System.Drawing.Point(95, 129);
+            this.txtRemindPer.Name = "txtRemindPer";
+            this.txtRemindPer.Size = new System.Drawing.Size(82, 21);
+            this.txtRemindPer.TabIndex = 42;
+            this.txtRemindPer.Text = "47426568";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(12, 132);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(95, 12);
+            this.label18.TabIndex = 43;
+            this.label18.Text = "股价浮动比例(%)";
+            // 
+            // txtRemindCount
+            // 
+            this.txtRemindCount.Location = new System.Drawing.Point(299, 130);
+            this.txtRemindCount.Name = "txtRemindCount";
+            this.txtRemindCount.Size = new System.Drawing.Size(82, 21);
+            this.txtRemindCount.TabIndex = 40;
+            this.txtRemindCount.Text = "3";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(198, 132);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(53, 12);
+            this.label17.TabIndex = 41;
+            this.label17.Text = "提醒次数";
+            // 
+            // txtRemindEmail
+            // 
+            this.txtRemindEmail.Location = new System.Drawing.Point(696, 129);
+            this.txtRemindEmail.Name = "txtRemindEmail";
+            this.txtRemindEmail.Size = new System.Drawing.Size(82, 21);
+            this.txtRemindEmail.TabIndex = 38;
+            this.txtRemindEmail.Text = "zhupj@foxmail.com";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(595, 136);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(59, 12);
+            this.label16.TabIndex = 39;
+            this.label16.Text = "提醒Email";
+            // 
+            // txtRemindQQ
+            // 
+            this.txtRemindQQ.Location = new System.Drawing.Point(493, 130);
+            this.txtRemindQQ.Name = "txtRemindQQ";
+            this.txtRemindQQ.Size = new System.Drawing.Size(82, 21);
+            this.txtRemindQQ.TabIndex = 36;
+            this.txtRemindQQ.Text = "47426568";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(402, 133);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(41, 12);
+            this.label15.TabIndex = 37;
+            this.label15.Text = "提醒QQ";
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(492, 102);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(82, 21);
+            this.txtName.TabIndex = 34;
+            this.txtName.Text = "默认策略";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(409, 105);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(53, 12);
+            this.label14.TabIndex = 35;
+            this.label14.Text = "策略名称";
+            // 
             // btnSave
             // 
+            this.btnSave.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSave.Location = new System.Drawing.Point(906, 18);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(87, 78);
@@ -219,6 +305,7 @@
             // 
             // btnCalcuate
             // 
+            this.btnCalcuate.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnCalcuate.Location = new System.Drawing.Point(802, 18);
             this.btnCalcuate.Name = "btnCalcuate";
             this.btnCalcuate.Size = new System.Drawing.Size(87, 78);
@@ -389,91 +476,6 @@
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(1005, 478);
             this.dataGridView1.TabIndex = 3;
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(492, 102);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(82, 21);
-            this.txtName.TabIndex = 34;
-            this.txtName.Text = "默认策略";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(409, 105);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(53, 12);
-            this.label14.TabIndex = 35;
-            this.label14.Text = "策略名称";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(402, 133);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(41, 12);
-            this.label15.TabIndex = 37;
-            this.label15.Text = "提醒QQ";
-            // 
-            // txtRemindQQ
-            // 
-            this.txtRemindQQ.Location = new System.Drawing.Point(493, 130);
-            this.txtRemindQQ.Name = "txtRemindQQ";
-            this.txtRemindQQ.Size = new System.Drawing.Size(82, 21);
-            this.txtRemindQQ.TabIndex = 36;
-            this.txtRemindQQ.Text = "47426568";
-            // 
-            // txtRemindEmail
-            // 
-            this.txtRemindEmail.Location = new System.Drawing.Point(696, 129);
-            this.txtRemindEmail.Name = "txtRemindEmail";
-            this.txtRemindEmail.Size = new System.Drawing.Size(82, 21);
-            this.txtRemindEmail.TabIndex = 38;
-            this.txtRemindEmail.Text = "zhupj@foxmail.com";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(595, 136);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(59, 12);
-            this.label16.TabIndex = 39;
-            this.label16.Text = "提醒Email";
-            // 
-            // txtRemindCount
-            // 
-            this.txtRemindCount.Location = new System.Drawing.Point(299, 130);
-            this.txtRemindCount.Name = "txtRemindCount";
-            this.txtRemindCount.Size = new System.Drawing.Size(82, 21);
-            this.txtRemindCount.TabIndex = 40;
-            this.txtRemindCount.Text = "3";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(198, 132);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(53, 12);
-            this.label17.TabIndex = 41;
-            this.label17.Text = "提醒次数";
-            // 
-            // txtRemindPer
-            // 
-            this.txtRemindPer.Location = new System.Drawing.Point(95, 129);
-            this.txtRemindPer.Name = "txtRemindPer";
-            this.txtRemindPer.Size = new System.Drawing.Size(82, 21);
-            this.txtRemindPer.TabIndex = 42;
-            this.txtRemindPer.Text = "47426568";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(12, 132);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(95, 12);
-            this.label18.TabIndex = 43;
-            this.label18.Text = "股价浮动比例(%)";
             // 
             // StrategyForm
             // 

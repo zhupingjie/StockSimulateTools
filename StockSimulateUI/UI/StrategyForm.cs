@@ -194,12 +194,6 @@ namespace StockSimulateUI.UI
             }
         }
 
-        private void btnValuatie_Click(object sender, EventArgs e)
-        {
-            var frm = new VoluatieForm();
-            frm.ShowDialog();
-        }
-
         private void btnSave_Click(object sender, EventArgs e)
         {
             this.Strategy = new StrategyEntity()

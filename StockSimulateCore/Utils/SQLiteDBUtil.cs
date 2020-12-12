@@ -8,6 +8,7 @@ using System.Data;
 using System.Reflection;
 using StockSimulateCore.Model;
 using ServiceStack;
+using System.IO;
 
 namespace StockSimulateCore.Utils
 {
@@ -45,7 +46,10 @@ namespace StockSimulateCore.Utils
         {
             try
             {
-                SQLiteConnection.CreateFile($"{dbName}");
+                if (!File.Exists(dbName))
+                {
+                    SQLiteConnection.CreateFile($"{dbName}");
+                }
             }
             catch (Exception ex)
             {
@@ -175,7 +179,15 @@ namespace StockSimulateCore.Utils
             var tableName = GetEntityTypeName<TEntity>();
             return CreateEntity(entity, tableName);
         }
-
+        public bool Insert<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
+        {
+            var tableName = GetEntityTypeName<TEntity>();
+            foreach (var entity in entitys)
+            {
+                CreateEntity(entity, tableName);
+            }
+            return true;
+        }
         public bool Update<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();

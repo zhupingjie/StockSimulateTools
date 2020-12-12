@@ -140,6 +140,12 @@
     <Compile Include="UI\AccountForm.Designer.cs">
       <DependentUpon>AccountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SetStrategyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SetStrategyForm.Designer.cs">
+      <DependentUpon>SetStrategyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\StrategyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,17 +166,14 @@
     <Compile Include="UI\StrategyListForm.Designer.cs">
       <DependentUpon>StrategyListForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\VoluatieForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\VoluatieForm.Designer.cs">
-      <DependentUpon>VoluatieForm.cs</DependentUpon>
-    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\AccountForm.resx">
       <DependentUpon>AccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SetStrategyForm.resx">
+      <DependentUpon>SetStrategyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\StrategyForm.resx">
       <DependentUpon>StrategyForm.cs</DependentUpon>
@@ -183,9 +186,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\StrategyListForm.resx">
       <DependentUpon>StrategyListForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\VoluatieForm.resx">
-      <DependentUpon>VoluatieForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

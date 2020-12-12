@@ -77,6 +77,7 @@
             this.Name = "NewStockForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "添加股票代码";
+            this.Load += new System.EventHandler(this.NewStockForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NewStockForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();

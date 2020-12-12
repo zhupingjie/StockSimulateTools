@@ -1,7 +1,10 @@
 ﻿using ServiceStack;
+using ServiceStack.Text;
 using StockSimulateCore.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +13,7 @@ namespace StockSimulateCore.Utils
 {
     public class EastMoneyUtil
     {
+        #region 股价及基本信息
         public static StockInfo GetStockPrice(string code)
         {
             var secid = GetStockSecid(code);
@@ -68,6 +72,114 @@ namespace StockSimulateCore.Utils
             };
         }
 
+        #endregion
+
+        #region 财务主要指标
+
+        public static MainTargetEntity[] GetMainTargets(string stockCode, int type)
+        {
+            var josnParam = ServiceStack.Text.JsonSerializer.SerializeToString(new
+            {
+                type = type,
+                code = stockCode
+            });
+            var retStr = "http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax".PostJsonToUrl(josnParam, requestFilter => {
+                requestFilter.Timeout = 5 * 60 * 1000;
+            });
+            retStr = retStr.Replace("亿", "");
+            var result = ServiceStack.Text.JsonSerializer.DeserializeFromString<MainTargetEntity[]>(retStr);
+            if(result != null)
+            {
+                result.ToList().ForEach(x =>
+                {
+                    x.StockCode = stockCode;
+                    x.Rtype = type;
+                });
+            }
+            return result;
+        }
+
+        public static DataTable ConvertMainTargetData(MainTargetEntity[] data)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("指标");
+            var dates = data.GroupBy(c => c.Date).Select(c => c.Key).OrderByDescending(c => c).ToArray();
+            foreach (var date in dates)
+            {
+                dt.Columns.Add(date);
+            }
+            dt.Columns.Add("平均增长");
+            dt.Columns.Add("近期增长");
+
+            //基本每股收益
+            BuildTargetRow(dt, "Jbmgsy", dates, data);
+            //每股净资产(元)
+            BuildTargetRow(dt, "Mgjzc", dates, data);
+            //每股公积金(元)
+            BuildTargetRow(dt, "Mggjj", dates, data);
+            //每股未分配利润(元)
+            BuildTargetRow(dt, "Mgwfply", dates, data);
+            //每股经营现金流(元)
+            BuildTargetRow(dt, "Mgjyxjl", dates, data);
+            //营业总收入(元)
+            BuildTargetRow(dt, "Yyzsr", dates, data);
+            //归属净利润(元)
+            BuildTargetRow(dt, "Gsjlr", dates, data);
+            //扣非净利润(元)
+            BuildTargetRow(dt, "Kfjlr", dates, data);
+            //营业总收入同比增长(%)
+            BuildTargetRow(dt, "Yyzsrtbzz", dates, data);
+            //归属净利润同比增长(%)
+            BuildTargetRow(dt, "Gsjlrtbzz", dates, data);
+            //毛利率(%)
+            BuildTargetRow(dt, "Mll", dates, data);
+            //资产负债率(%)
+            BuildTargetRow(dt, "Zcfzl", dates, data);
+
+            return dt;
+        }
+
+        static void BuildTargetRow(DataTable dt, string field, string[] dates, MainTargetEntity[] data)
+        {
+            //基本每股收益
+            var dr = dt.NewRow();
+            dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(MainTargetEntity), field);//"基本每股收益(元)";
+
+            var vals = new List<decimal>();
+            var percent = new List<decimal>();
+            foreach (var date in dates)
+            {
+                var item = data.FirstOrDefault(c => c.Date == date);
+
+                var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
+                dr[date] = value;
+                if (vals.Count == 0)
+                {
+                    vals.Add(value);
+                }
+                else if (vals.Count == 1)
+                {
+                    if (value != 0)
+                    {
+                        var p = Math.Round((vals.FirstOrDefault() - value) / value, 2) * 100;
+                        percent.Add(p);
+                    }
+                    else
+                    {
+                        percent.Add(0);
+                    }
+                    vals.Clear();
+                }
+            }
+            dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
+            dr["近期增长"] = $"{percent.FirstOrDefault()}%";
+            dt.Rows.Add(dr);
+        }
+
+        #endregion
+
+        #region 辅助方法
+
         static string GetStockSecid(string code)
         {
             var secid = code.Substring(0, 2) == "SZ" ? "0" : "1";
@@ -97,6 +209,8 @@ namespace StockSimulateCore.Utils
             var val = ObjectUtil.ToValue<decimal>(model[field], 0);
             return Math.Round(val / 100000000, 3);
         }
+
+        #endregion
     }
 
     public class EastMoneyAPIModel

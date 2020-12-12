@@ -25,10 +25,6 @@ namespace StockSimulateCore.Utils
                 {
                     dt.Columns.Add(attr.Description);
                 }
-                //else
-                //{
-                //    dt.Columns.Add(prep.Name);
-                //}
             }
             foreach(var entity in entitys)
             {
@@ -62,6 +58,33 @@ namespace StockSimulateCore.Utils
             return null;
         }
 
+        public static T GetPropertyValue<T>(object obj, string field)
+        {
+            if (obj == null) return default(T);
+            var propertyInfos = obj.GetType().GetProperties();
+            foreach (var propertyInfo in propertyInfos)
+            {
+                if (propertyInfo.Name.ToLower() == field.ToLower())
+                {
+                    var val = propertyInfo.GetValue(obj);
+                    if (val == null) return default(T);
+                    return TypeSerializer.DeserializeFromString<T>($"{val}");
+                }
+            }
+            return default(T);
+        }
+
+        public static string GetPropertyDesc(Type type, string field)
+        {
+            var prep = type.GetProperties().FirstOrDefault(c => c.Name == field);
+            if (prep == null) return field;
+
+            var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
+            if (attr == null) return field;
+
+            return (attr as DescriptionAttribute).Description;
+        }
+
         public static T ToValue<T>(object value, T defaultValue)
         {
             try
@@ -77,5 +100,6 @@ namespace StockSimulateCore.Utils
                 throw new Exception($"数据[{value}]转换为类型[{typeof(T).Name}]错误:{ex.Message}");
             }
         }
+
     }
 }

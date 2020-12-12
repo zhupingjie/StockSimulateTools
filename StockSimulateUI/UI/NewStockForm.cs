@@ -30,6 +30,8 @@ namespace StockPriceTools.UI
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.textBox1.Text.Length > 6) this.textBox1.Text = this.textBox1.Text.Substring(0, 6);
+            if (this.textBox1.Text.StartsWith("6")) this.comboBox1.Text = "SH";
+            if (this.textBox1.Text.StartsWith("0")) this.comboBox1.Text = "SZ";
         }
 
         private void NewStockForm_KeyDown(object sender, KeyEventArgs e)
@@ -38,6 +40,11 @@ namespace StockPriceTools.UI
             {
                 btnOK_Click(sender, e);
             }
+        }
+
+        private void NewStockForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
