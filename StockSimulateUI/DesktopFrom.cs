@@ -87,6 +87,36 @@ namespace StockPriceTools
             }
         }
 
+        void LoadStockStrategyDetailList(string stockCode)
+        {
+            var strategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            var dt = ObjectUtil.ConvertTable(strategyDetails);
+            this.gridStockStrategyDetailList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridStockStrategyDetailList.ColumnCount; i++)
+            {
+                var columnName = this.gridStockStrategyDetailList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridStockStrategyDetailList.Columns[i].Visible = false;
+                else
+                {
+                    var length = columnName.Length;
+                    this.gridStockStrategyDetailList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+            for (var i = 0; i < this.gridStockStrategyDetailList.Rows.Count; i++)
+            {
+                var row = this.gridStockStrategyDetailList.Rows[i];
+                var value = ObjectUtil.ToValue<bool>(row.Cells["执行策略"].Value, false);
+                if (value)
+                {
+                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                else
+                {
+                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
+                }
+            }
+        }
+
         void LoadStockStrategyList()
         {
             var accountStocks = Repository.QueryAll<StockStrategyEntity>();
@@ -368,9 +398,12 @@ namespace StockPriceTools
                     this.LoadPriceList(stockCode);
                     break;
                 case 1:
-                    this.LoadExchangeList(stockCode);
+                    this.LoadStockStrategyDetailList(stockCode);
                     break;
                 case 2:
+                    this.LoadExchangeList(stockCode);
+                    break;
+                case 3:
                     this.LoadMainTargetInfo(stockCode);
                     break;
             }
@@ -381,6 +414,7 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
             var frm = new SetStrategyForm();
             frm.StartPosition = FormStartPosition.CenterParent;
@@ -392,23 +426,26 @@ namespace StockPriceTools
                     stockStrategy = new StockStrategyEntity()
                     {
                         StockCode = stockCode,
+                        StockName = stockName,
                         StrategyName = frm.StrategyName,
                         BuyPrice = frm.BuyPrice,
                         BuyAmount = frm.BuyAmount,
                         SalePrice = frm.SalePrice,
                     };
                     Repository.Insert<StockStrategyEntity>(stockStrategy);
-
-
                 }
                 else
                 {
+                    stockStrategy.StockCode = stockCode;
+                    stockStrategy.StockName = stockName;
                     stockStrategy.StrategyName = frm.StrategyName;
                     stockStrategy.BuyPrice = frm.BuyPrice;
                     stockStrategy.BuyAmount = frm.BuyAmount;
                     stockStrategy.SalePrice = frm.SalePrice;
                     Repository.Update<StockStrategyEntity>(stockStrategy);
                 }
+
+                this.LoadStockStrategyList();
             }
         }
     }

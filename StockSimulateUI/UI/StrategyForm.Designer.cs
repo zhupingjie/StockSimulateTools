@@ -119,12 +119,12 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1005, 170);
+            this.panel1.Size = new System.Drawing.Size(1005, 194);
             this.panel1.TabIndex = 2;
             // 
             // txtRemindPer
             // 
-            this.txtRemindPer.Location = new System.Drawing.Point(95, 129);
+            this.txtRemindPer.Location = new System.Drawing.Point(95, 160);
             this.txtRemindPer.Name = "txtRemindPer";
             this.txtRemindPer.Size = new System.Drawing.Size(82, 21);
             this.txtRemindPer.TabIndex = 42;
@@ -133,7 +133,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(12, 132);
+            this.label18.Location = new System.Drawing.Point(-2, 163);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(95, 12);
             this.label18.TabIndex = 43;
@@ -158,7 +158,7 @@
             // 
             // txtRemindEmail
             // 
-            this.txtRemindEmail.Location = new System.Drawing.Point(696, 129);
+            this.txtRemindEmail.Location = new System.Drawing.Point(696, 133);
             this.txtRemindEmail.Name = "txtRemindEmail";
             this.txtRemindEmail.Size = new System.Drawing.Size(82, 21);
             this.txtRemindEmail.TabIndex = 38;
@@ -167,7 +167,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(595, 136);
+            this.label16.Location = new System.Drawing.Point(595, 140);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(59, 12);
             this.label16.TabIndex = 39;
@@ -192,7 +192,7 @@
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(492, 102);
+            this.txtName.Location = new System.Drawing.Point(95, 130);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(82, 21);
             this.txtName.TabIndex = 34;
@@ -201,7 +201,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(409, 105);
+            this.label14.Location = new System.Drawing.Point(12, 133);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 12);
             this.label14.TabIndex = 35;
@@ -471,10 +471,10 @@
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 170);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 194);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(1005, 478);
+            this.dataGridView1.Size = new System.Drawing.Size(1005, 454);
             this.dataGridView1.TabIndex = 3;
             // 
             // StrategyForm

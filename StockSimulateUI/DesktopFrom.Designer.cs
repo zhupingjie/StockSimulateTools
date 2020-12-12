@@ -82,6 +82,10 @@
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.tabFocusList = new System.Windows.Forms.TabPage();
             this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
+            this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
+            this.btnShowBase = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridStockStrategyDetailList = new System.Windows.Forms.DataGridView();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -116,6 +120,8 @@
             this.tabStockList.SuspendLayout();
             this.tabFocusList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
+            this.tabStockStrategyDetail.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -137,6 +143,8 @@
             this.btnAddStrategy,
             this.btnSetStrategy,
             this.toolStripSplitButton1,
+            this.btnShowBase,
+            this.toolStripSeparator3,
             this.btnInitialize});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -312,6 +320,7 @@
             // tabControlBottom
             // 
             this.tabControlBottom.Controls.Add(this.tabPriceList);
+            this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
             this.tabControlBottom.Controls.Add(this.tabExchangeList);
             this.tabControlBottom.Controls.Add(this.tabMaintarget);
             this.tabControlBottom.Controls.Add(this.tabZZFZB);
@@ -689,6 +698,44 @@
             this.gridStockStrategyList.Size = new System.Drawing.Size(836, 189);
             this.gridStockStrategyList.TabIndex = 42;
             // 
+            // tabStockStrategyDetail
+            // 
+            this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyDetailList);
+            this.tabStockStrategyDetail.Location = new System.Drawing.Point(4, 22);
+            this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
+            this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 306);
+            this.tabStockStrategyDetail.TabIndex = 6;
+            this.tabStockStrategyDetail.Text = "策略内容";
+            this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
+            // 
+            // btnShowBase
+            // 
+            this.btnShowBase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnShowBase.Image = ((System.Drawing.Image)(resources.GetObject("btnShowBase.Image")));
+            this.btnShowBase.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowBase.Name = "btnShowBase";
+            this.btnShowBase.Size = new System.Drawing.Size(60, 22);
+            this.btnShowBase.Text = "财务数据";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // gridStockStrategyDetailList
+            // 
+            this.gridStockStrategyDetailList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridStockStrategyDetailList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridStockStrategyDetailList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridStockStrategyDetailList.Location = new System.Drawing.Point(0, 0);
+            this.gridStockStrategyDetailList.MultiSelect = false;
+            this.gridStockStrategyDetailList.Name = "gridStockStrategyDetailList";
+            this.gridStockStrategyDetailList.ReadOnly = true;
+            this.gridStockStrategyDetailList.RowTemplate.Height = 23;
+            this.gridStockStrategyDetailList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridStockStrategyDetailList.Size = new System.Drawing.Size(842, 306);
+            this.gridStockStrategyDetailList.TabIndex = 45;
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -737,6 +784,8 @@
             this.tabStockList.ResumeLayout(false);
             this.tabFocusList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
+            this.tabStockStrategyDetail.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -796,5 +845,9 @@
         private System.Windows.Forms.TabPage tabStockList;
         private System.Windows.Forms.TabPage tabFocusList;
         private System.Windows.Forms.DataGridView gridStockStrategyList;
+        private System.Windows.Forms.ToolStripButton btnShowBase;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.TabPage tabStockStrategyDetail;
+        private System.Windows.Forms.DataGridView gridStockStrategyDetailList;
     }
 }
