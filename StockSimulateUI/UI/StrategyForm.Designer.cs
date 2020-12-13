@@ -70,12 +70,16 @@
             this.txtBuyRate = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.txtSalePrice = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtSalePrice);
+            this.panel1.Controls.Add(this.label19);
             this.panel1.Controls.Add(this.txtRemindPer);
             this.panel1.Controls.Add(this.label18);
             this.panel1.Controls.Add(this.txtRemindCount);
@@ -237,7 +241,7 @@
             // 
             // txtSaleHoldPer
             // 
-            this.txtSaleHoldPer.Location = new System.Drawing.Point(299, 99);
+            this.txtSaleHoldPer.Location = new System.Drawing.Point(503, 99);
             this.txtSaleHoldPer.Name = "txtSaleHoldPer";
             this.txtSaleHoldPer.Size = new System.Drawing.Size(82, 21);
             this.txtSaleHoldPer.TabIndex = 29;
@@ -246,7 +250,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(198, 102);
+            this.label13.Location = new System.Drawing.Point(402, 102);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(71, 12);
             this.label13.TabIndex = 30;
@@ -254,7 +258,7 @@
             // 
             // txtSaleRate
             // 
-            this.txtSaleRate.Location = new System.Drawing.Point(95, 99);
+            this.txtSaleRate.Location = new System.Drawing.Point(299, 99);
             this.txtSaleRate.Name = "txtSaleRate";
             this.txtSaleRate.Size = new System.Drawing.Size(82, 21);
             this.txtSaleRate.TabIndex = 27;
@@ -263,7 +267,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 102);
+            this.label12.Location = new System.Drawing.Point(216, 102);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(71, 12);
             this.label12.TabIndex = 28;
@@ -477,6 +481,23 @@
             this.dataGridView1.Size = new System.Drawing.Size(1005, 454);
             this.dataGridView1.TabIndex = 3;
             // 
+            // txtSalePrice
+            // 
+            this.txtSalePrice.Location = new System.Drawing.Point(95, 102);
+            this.txtSalePrice.Name = "txtSalePrice";
+            this.txtSalePrice.Size = new System.Drawing.Size(82, 21);
+            this.txtSalePrice.TabIndex = 44;
+            this.txtSalePrice.Text = "10";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(12, 105);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(41, 12);
+            this.label19.TabIndex = 45;
+            this.label19.Text = "卖出价";
+            // 
             // StrategyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -537,5 +558,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox txtRemindPer;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtSalePrice;
+        private System.Windows.Forms.Label label19;
     }
 }

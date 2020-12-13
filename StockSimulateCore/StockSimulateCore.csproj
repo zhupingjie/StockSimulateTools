@@ -118,7 +118,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Model\AccountEntity.cs" />
+    <Compile Include="Model\ActionLogEntity.cs" />
     <Compile Include="Model\StockStrategyEntity.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\ExchangeOrderEntity.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\IStockExchangeService.cs" />
     <Compile Include="Service\StockExchangeService.cs" />
+    <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Utils\AssemblyUtil.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />

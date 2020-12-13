@@ -1,5 +1,7 @@
 ﻿using StockPriceTools.UI;
+using StockSimulateCore.Config;
 using StockSimulateCore.Model;
+using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using StockSimulateUI.UI;
 using System;
@@ -9,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,54 +20,154 @@ namespace StockPriceTools
     public partial class DesktopFrom : Form
     {
         private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        private RunningConfig RC = RunningConfig.Instance;
         public DesktopFrom()
         {
             InitializeComponent();
         }
 
-        private void btnCalcuate_Click(object sender, EventArgs e)
+        #region 页面加载事件
+        private void DesktopFrom_Load(object sender, EventArgs e)
         {
-            var frm = new StrategyForm();
-            frm.Show();
+            this.LoadData();
+
+            this.GatherData();
+
+            this.RemindData();
         }
 
-        private void btnInit_Click(object sender, EventArgs e)
+        void LoadData()
         {
-            SQLiteDBUtil.Instance.InitSQLiteDB();
-        }
-
-        private void btnAddStock_Click(object sender, EventArgs e)
-        {
-            var stockCode = string.Empty;
-            var dlg = new NewStockForm();
-            if(dlg.ShowDialog() == DialogResult.OK) stockCode = dlg.StockCode;
-            if (string.IsNullOrEmpty(stockCode)) return;
-
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
-            if(stock == null)
+            Task.Factory.StartNew(() =>
             {
-                stock = new StockEntity()
+                while (true)
                 {
-                    Code = stockCode
-                };
-                Repository.Insert<StockEntity>(stock);
-            }
-            this.LoadStockList();
+                    Action act = delegate ()
+                    {
+                        this.LoadStockList();
+                        this.LoadStockStrategyList();
+                    };
+                    this.Invoke(act);
+                    this.ActionLog("已加载自选股及策略股数据...");
+                    Thread.Sleep(RC.LoadStockDataInterval * 1000);
+                }
+            });
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        void GatherData()
         {
-            this.LoadStockList();
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    var stocks = Repository.QueryAll<StockEntity>();
+                    foreach (var stock in stocks)
+                    {
+                        var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
+                        if (stockInfo == null) return;
+
+                        stockInfo.Stock.ID = stock.ID;
+                        Repository.Update<StockEntity>(stockInfo.Stock);
+
+                        var price = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{DateTime.Now.ToString("yyyy-MM-dd")}'");
+                        if (price == null)
+                        {
+                            Repository.Insert<StockPriceEntity>(stockInfo.Price);
+                        }
+                        else
+                        {
+                            stockInfo.Price.ID = price.ID;
+                            Repository.Update<StockPriceEntity>(stockInfo.Price);
+                        }
+                        this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.Price.Price}] [{stockInfo.Price.UDPer}%]");
+                    }
+                    Thread.Sleep(RC.GatherStockPriceInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    var stocks = Repository.QueryAll<StockEntity>();
+                    foreach (var stock in stocks)
+                    {
+                        var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
+                        if (mainTargetInfos.Length > 0)
+                        {
+                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=0 and Date in ('{string.Join("','", dates)}')");
+                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                            if (newMts.Length > 0)
+                            {
+                                Repository.Insert<MainTargetEntity>(newMts);
+                            }
+                        }
+                        mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 1);
+                        if (mainTargetInfos.Length > 0)
+                        {
+                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=1 and Date in ('{string.Join("','", dates)}')");
+                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                            if (newMts.Length > 0)
+                            {
+                                Repository.Insert<MainTargetEntity>(newMts);
+                            }
+                        }
+                        mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 2);
+                        if (mainTargetInfos.Length > 0)
+                        {
+                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
+                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=2 and Date in ('{string.Join("','", dates)}')");
+                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
+                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
+                            if (newMts.Length > 0)
+                            {
+                                Repository.Insert<MainTargetEntity>(newMts);
+                            }
+                        }
+                        this.ActionLog($"已采集[{stock.Name}]主要指标数据...");
+                    }
+                    Thread.Sleep(RC.GatherStockMainTargetInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
         }
+
+        void RemindData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    var stockStrategyDetails = Repository.QueryAll<StockStrategyDetailEntity>();
+                    var stockCodes = stockStrategyDetails.Select(c => c.StockCode).Distinct().ToArray();
+                    var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
+
+                    foreach (var stock in stocks)
+                    {
+                        var stockStrategyDetail = stockStrategyDetails.FirstOrDefault(c => c.StockCode == stock.Code && c.BuyQty > 0 && c.MaxPrice >= stock.Price && c.MinPrice <= stock.Price && !c.Execute);
+                        if (stockStrategyDetail == null) continue;
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{stockStrategyDetail.Target}({stockStrategyDetail.MinPrice}-{stockStrategyDetail.MaxPrice})],请注意!";
+                        this.ShowMessage(message);
+                        this.ActionLog(message);
+                    }
+                    Thread.Sleep(RC.RemindStockStrategyInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+        }
+   
+
+        #endregion
+
+        #region 加载GridList数据
 
         void LoadStockList()
         {
-            var where = string.Empty;
-            if(!string.IsNullOrEmpty(this.txtStockCode.Text) && this.txtStockCode.Text != "股票代码")
-            {
-                where = $"Code like '%{this.txtStockCode.Text}%'";
-            }
-            var stocks = Repository.QueryAll<StockEntity>(where);
+            var stocks = Repository.QueryAll<StockEntity>();
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = dt.DefaultView;
             for(var i=0; i<this.gridStockList.ColumnCount; i++)
@@ -87,36 +190,6 @@ namespace StockPriceTools
             }
         }
 
-        void LoadStockStrategyDetailList(string stockCode)
-        {
-            var strategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
-            var dt = ObjectUtil.ConvertTable(strategyDetails);
-            this.gridStockStrategyDetailList.DataSource = dt.DefaultView;
-            for (var i = 0; i < this.gridStockStrategyDetailList.ColumnCount; i++)
-            {
-                var columnName = this.gridStockStrategyDetailList.Columns[i].Name;
-                if (columnName == "股票代码") this.gridStockStrategyDetailList.Columns[i].Visible = false;
-                else
-                {
-                    var length = columnName.Length;
-                    this.gridStockStrategyDetailList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
-                }
-            }
-            for (var i = 0; i < this.gridStockStrategyDetailList.Rows.Count; i++)
-            {
-                var row = this.gridStockStrategyDetailList.Rows[i];
-                var value = ObjectUtil.ToValue<bool>(row.Cells["执行策略"].Value, false);
-                if (value)
-                {
-                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
-                }
-                else
-                {
-                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
-                }
-            }
-        }
-
         void LoadStockStrategyList()
         {
             var accountStocks = Repository.QueryAll<StockStrategyEntity>();
@@ -128,7 +201,7 @@ namespace StockPriceTools
                 this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
             }
         }
-
+        
         void LoadPriceList(string stockCode)
         {
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate desc",  60);
@@ -192,6 +265,39 @@ namespace StockPriceTools
             }
         }
 
+        void LoadStockStrategyDetailList(string stockCode)
+        {
+            var strategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            var dt = ObjectUtil.ConvertTable(strategyDetails);
+            this.gridStockStrategyDetailList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridStockStrategyDetailList.ColumnCount; i++)
+            {
+                var columnName = this.gridStockStrategyDetailList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridStockStrategyDetailList.Columns[i].Visible = false;
+                else
+                {
+                    var length = columnName.Length;
+                    this.gridStockStrategyDetailList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+            for (var i = 0; i < this.gridStockStrategyDetailList.Rows.Count; i++)
+            {
+                var row = this.gridStockStrategyDetailList.Rows[i];
+                var value = ObjectUtil.ToValue<bool>(row.Cells["执行策略"].Value, false);
+                if (value)
+                {
+                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                else
+                {
+                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
+                }
+            }
+        }
+
+        #endregion
+
+        #region 加载ListView数据
         void LoadStockBaseInfo(string stockCode)
         {
             this.lstBaseInfo.Items.Clear();
@@ -248,6 +354,14 @@ namespace StockPriceTools
             }
         }
 
+        #endregion
+
+        #region GridList事件
+        /// <summary>
+        /// 自选股列表点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
@@ -257,104 +371,16 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             this.LoadStockBaseInfo(stockCode);
             this.LoadStockStrategyInfo(stockCode);
-            this.LoadPriceList(stockCode);
+            //this.LoadPriceList(stockCode);
             //this.LoadExchangeList(stockCode);
             //this.LoadMainTargetInfo(stockCode);
         }
 
-        private void btnGather_Click(object sender, EventArgs e)
-        {
-            var stocks = Repository.QueryAll<StockEntity>();
-            foreach (var stock in stocks)
-            {
-                var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                if (stockInfo == null) return;
-                //if (stockInfo.Price.LastDate.DayOfWeek == DayOfWeek.Saturday || stockInfo.Price.LastDate.DayOfWeek == DayOfWeek.Sunday) continue;
-
-                stockInfo.Stock.ID = stock.ID;
-                Repository.Update<StockEntity>(stockInfo.Stock);
-
-                var price = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{DateTime.Now.ToString("yyyy-MM-dd")}'");
-                if (price == null)
-                {
-                    Repository.Insert<StockPriceEntity>(stockInfo.Price);
-                }
-                else
-                {
-                    stockInfo.Price.ID = price.ID;
-                    Repository.Update<StockPriceEntity>(stockInfo.Price);
-                }
-
-                var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
-                if (mainTargetInfos.Length > 0)
-                {
-                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=0 and Date in ('{string.Join("','", dates)}')");
-                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                    if (newMts.Length > 0)
-                    {
-                        Repository.Insert<MainTargetEntity>(newMts);
-                    }
-                }
-                mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 1);
-                if (mainTargetInfos.Length > 0)
-                {
-                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=1 and Date in ('{string.Join("','", dates)}')");
-                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                    if (newMts.Length > 0)
-                    {
-                        Repository.Insert<MainTargetEntity>(newMts);
-                    }
-                }
-                mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 2);
-                if (mainTargetInfos.Length > 0)
-                {
-                    var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                    var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=2 and Date in ('{string.Join("','", dates)}')");
-                    var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                    var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                    if (newMts.Length > 0)
-                    {
-                        Repository.Insert<MainTargetEntity>(newMts);
-                    }
-                }
-            }
-            this.LoadStockList();
-        }
-
-        private void btnInitialize_Click(object sender, EventArgs e)
-        {
-            Repository.InitSQLiteDB();
-        }
-
-        private void DesktopFrom_Load(object sender, EventArgs e)
-        {
-            LoadStockList();
-            LoadStockStrategyList();
-        }
-
-        private void btnAddStrategy_Click(object sender, EventArgs e)
-        {
-            var frm = new StrategyListForm();
-            frm.StartPosition = FormStartPosition.CenterScreen;
-            frm.Show();
-        }
-
-        private void txtStockCode_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnAccountInfo_Click(object sender, EventArgs e)
-        {
-            var frm = new AccountForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
-        }
-
+        /// <summary>
+        /// 历史股价列表点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridPriceList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridPriceList.SelectedRows.Count == 0) return;
@@ -369,6 +395,12 @@ namespace StockPriceTools
                 this.lstPriceInfo.Items.Add(listViewItem);
             }
         }
+
+        /// <summary>
+        /// 交易数据列表点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void gridExchangeList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -386,27 +418,44 @@ namespace StockPriceTools
 
         }
 
-        private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+        #endregion
 
-            switch(this.tabControlBottom.SelectedIndex)
+        #region 工具栏按钮事件
+        private void btnAddStock_Click(object sender, EventArgs e)
+        {
+            var stockCode = string.Empty;
+            var dlg = new NewStockForm();
+            if (dlg.ShowDialog() == DialogResult.OK) stockCode = dlg.StockCode;
+            if (string.IsNullOrEmpty(stockCode)) return;
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null)
             {
-                case 0:
-                    this.LoadPriceList(stockCode);
-                    break;
-                case 1:
-                    this.LoadStockStrategyDetailList(stockCode);
-                    break;
-                case 2:
-                    this.LoadExchangeList(stockCode);
-                    break;
-                case 3:
-                    this.LoadMainTargetInfo(stockCode);
-                    break;
+                stock = new StockEntity()
+                {
+                    Code = stockCode
+                };
+                Repository.Insert<StockEntity>(stock);
             }
+            this.LoadStockList();
+        }
+        private void btnInitialize_Click(object sender, EventArgs e)
+        {
+            Repository.InitSQLiteDB();
+        }
+
+        private void btnAddStrategy_Click(object sender, EventArgs e)
+        {
+            var frm = new StrategyListForm();
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.Show();
+        }
+
+        private void btnAccountInfo_Click(object sender, EventArgs e)
+        {
+            var frm = new AccountForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
         }
 
         private void btnSetStrategy_Click(object sender, EventArgs e)
@@ -418,10 +467,16 @@ namespace StockPriceTools
 
             var frm = new SetStrategyForm();
             frm.StartPosition = FormStartPosition.CenterParent;
-            if(frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
+                var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{frm.StrategyName}'");
+                if (strategy == null) return;
+
+                var account = Repository.QueryFirst<AccountEntity>();
+                if (account == null) return;
+
                 var stockStrategy = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
-                if(stockStrategy == null)
+                if (stockStrategy == null)
                 {
                     stockStrategy = new StockStrategyEntity()
                     {
@@ -444,9 +499,100 @@ namespace StockPriceTools
                     stockStrategy.SalePrice = frm.SalePrice;
                     Repository.Update<StockStrategyEntity>(stockStrategy);
                 }
+                Repository.Delete<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
 
+                var dt = StockStrategyService.MakeStrategyData(strategy, stockStrategy.BuyPrice, stockStrategy.BuyAmount, stockStrategy.SalePrice, account.Amount);
+                for (var i = 0; i < dt.Rows.Count; i++)
+                {
+                    var dr = dt.Rows[i];
+                    var detail = new StockStrategyDetailEntity()
+                    {
+                        StockCode = stockCode,
+                        StrategyName = strategy.Name,
+                        Target = dr["操作"].ToString(),
+                        Price = ObjectUtil.ToValue<decimal>(dr["收盘价"].ToString(), 0),
+                        BuyQty = ObjectUtil.ToValue<int>(dr["买入数"].ToString(), 0),
+                        BuyAmount = ObjectUtil.ToValue<decimal>(dr["买入市值"].ToString(), 0),
+                        SaleQty = ObjectUtil.ToValue<int>(dr["卖出数"].ToString(), 0),
+                        SaleAmount = ObjectUtil.ToValue<decimal>(dr["卖出市值"].ToString(), 0),
+                        HoldQty = ObjectUtil.ToValue<int>(dr["持有数"].ToString(), 0),
+                        HoldAmount = ObjectUtil.ToValue<decimal>(dr["持有市值"].ToString(), 0),
+                        TotalBuyAmount = ObjectUtil.ToValue<decimal>(dr["投入市值"].ToString(), 0),
+                        FloatAmount = ObjectUtil.ToValue<decimal>(dr["浮动市值"].ToString(), 0),
+                        Cost = ObjectUtil.ToValue<decimal>(dr["成本"].ToString(), 0),
+                        Profit = ObjectUtil.ToValue<decimal>(dr["盈亏"].ToString(), 0),
+                    };
+                    detail.MaxPrice = Math.Round(detail.Price * 1.02m, 2);
+                    detail.MinPrice = Math.Round(detail.Price * 0.98m, 2);
+                    Repository.Insert<StockStrategyDetailEntity>(detail);
+                }
                 this.LoadStockStrategyList();
             }
         }
+
+        private void btnInit_Click(object sender, EventArgs e)
+        {
+            SQLiteDBUtil.Instance.InitSQLiteDB();
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            var frm = new ConfigForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+        }
+
+
+        #endregion
+
+        #region TabControl事件
+
+        private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            switch (this.tabControlBottom.SelectedIndex)
+            {
+                case 1:
+                    this.LoadPriceList(stockCode);
+                    break;
+                case 2:
+                    this.LoadStockStrategyDetailList(stockCode);
+                    break;
+                case 3:
+                    this.LoadExchangeList(stockCode);
+                    break;
+                case 4:
+                    this.LoadMainTargetInfo(stockCode);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region 操作日志事件
+
+        public void ActionLog(string message)
+        {
+            Action act = delegate ()
+            {
+                this.txtActionLog.AppendText($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}\n");
+                this.txtActionLog.SelectionStart = this.txtActionLog.Text.Length;
+                this.txtActionLog.ScrollToCaret();
+            };
+            this.Invoke(act);
+        }
+
+        public void ShowMessage(string message)
+        {
+            Action act = delegate ()
+            {
+                this.lblMessage.Text = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}";
+            };
+            this.Invoke(act);
+        }
+        #endregion
     }
 }

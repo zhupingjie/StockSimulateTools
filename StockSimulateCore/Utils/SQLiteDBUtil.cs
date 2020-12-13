@@ -194,6 +194,18 @@ namespace StockSimulateCore.Utils
             return UpdateEntity(entity, tableName);
         }
 
+        public bool Delete<TEntity>(TEntity entity) where TEntity:BaseEntity
+        {
+            var tableName = GetEntityTypeName<TEntity>();
+            return DeleteEntity(entity, tableName);
+        }
+
+        public bool Delete<TEntity>(string where) where TEntity : BaseEntity
+        {
+            var tableName = GetEntityTypeName<TEntity>();
+            return DeleteEntity(tableName, where);
+        }
+
         string GetEntityTypeName<TEntity>() where TEntity:BaseEntity
         {
             return typeof(TEntity).Name.Replace("Entity", "");
@@ -373,9 +385,7 @@ namespace StockSimulateCore.Utils
 
         #endregion
 
-
-
-        public bool DeleteEntity(string table, string col, string val)
+        public bool DeleteEntity(BaseEntity entity, string table)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
@@ -383,7 +393,7 @@ namespace StockSimulateCore.Utils
                 var cmd = con.CreateCommand();
 
                 StringBuilder sb = new StringBuilder();
-                cmd.CommandText = $"delete from {table} where {col}='{val}'";
+                cmd.CommandText = $"delete from {table} where ID='{entity.ID}'";
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -392,7 +402,6 @@ namespace StockSimulateCore.Utils
                 catch (Exception ex)
                 {
                     LogUtil.Logger.Error(ex);
-                    //log4net.LogManager.GetLogger("logAppender").Error(ex);
                     return false;
                 }
                 finally
@@ -402,6 +411,32 @@ namespace StockSimulateCore.Utils
             }
         }
 
+
+        public bool DeleteEntity(string table, string where)
+        {
+            using (SQLiteConnection con = new SQLiteConnection(strConn))
+            {
+                con.Open();
+                var cmd = con.CreateCommand();
+
+                StringBuilder sb = new StringBuilder();
+                cmd.CommandText = $"delete from {table} where {where}";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Logger.Error(ex);
+                    return false;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
         public bool ExistsEntity(string table, string column, string value)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))

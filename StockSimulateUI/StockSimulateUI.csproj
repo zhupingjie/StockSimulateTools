@@ -140,6 +140,12 @@
     <Compile Include="UI\AccountForm.Designer.cs">
       <DependentUpon>AccountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\ConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ConfigForm.Designer.cs">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\SetStrategyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +177,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\AccountForm.resx">
       <DependentUpon>AccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ConfigForm.resx">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SetStrategyForm.resx">
       <DependentUpon>SetStrategyForm.cs</DependentUpon>
