@@ -145,13 +145,19 @@ namespace StockPriceTools
                     var stockStrategyDetails = Repository.QueryAll<StockStrategyDetailEntity>();
                     var stockCodes = stockStrategyDetails.Select(c => c.StockCode).Distinct().ToArray();
                     var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
+                    var strategys = Repository.QueryAll<StrategyEntity>();
 
                     foreach (var stock in stocks)
                     {
                         var stockStrategyDetail = stockStrategyDetails.FirstOrDefault(c => c.StockCode == stock.Code && (c.BuyQty > 0 || c.SaleQty > 0) && c.MaxPrice >= stock.Price && c.MinPrice <= stock.Price && !c.Execute);
                         if (stockStrategyDetail == null) continue;
 
+                        var strategy = strategys.FirstOrDefault(c => c.Name == stockStrategyDetail.StrategyName);
+                        if (strategy == null) continue;
+
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{stockStrategyDetail.Target}({stockStrategyDetail.MinPrice}-{stockStrategyDetail.MaxPrice})],请注意!";
+
+                        MailUtil.SendMailAsync(new SenderMailConfig(), message, message, strategy.RemindEmail);
                         this.ShowMessage(message);
                         this.ActionLog(message);
                     }

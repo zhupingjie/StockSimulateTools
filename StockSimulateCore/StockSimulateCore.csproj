@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\RunningConfig.cs" />
+    <Compile Include="Config\SenderMailConfig.cs" />
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\ActionLogEntity.cs" />
     <Compile Include="Model\StockStrategyEntity.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Utils\AssemblyUtil.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\MailUtil.cs" />
     <Compile Include="Utils\ObjectUtil.cs" />
     <Compile Include="Utils\SQLiteColumn.cs" />
     <Compile Include="Utils\SQLiteDBUtil.cs" />
