@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StrategyForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtSalePrice = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.txtRemindPer = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.txtRemindCount = new System.Windows.Forms.TextBox();
@@ -70,8 +73,6 @@
             this.txtBuyRate = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.txtSalePrice = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -125,6 +126,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1005, 194);
             this.panel1.TabIndex = 2;
+            // 
+            // txtSalePrice
+            // 
+            this.txtSalePrice.Location = new System.Drawing.Point(95, 102);
+            this.txtSalePrice.Name = "txtSalePrice";
+            this.txtSalePrice.Size = new System.Drawing.Size(82, 21);
+            this.txtSalePrice.TabIndex = 44;
+            this.txtSalePrice.Text = "10";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(12, 105);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(41, 12);
+            this.label19.TabIndex = 45;
+            this.label19.Text = "卖出价";
             // 
             // txtRemindPer
             // 
@@ -481,23 +499,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(1005, 454);
             this.dataGridView1.TabIndex = 3;
             // 
-            // txtSalePrice
-            // 
-            this.txtSalePrice.Location = new System.Drawing.Point(95, 102);
-            this.txtSalePrice.Name = "txtSalePrice";
-            this.txtSalePrice.Size = new System.Drawing.Size(82, 21);
-            this.txtSalePrice.TabIndex = 44;
-            this.txtSalePrice.Text = "10";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(12, 105);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 12);
-            this.label19.TabIndex = 45;
-            this.label19.Text = "卖出价";
-            // 
             // StrategyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -505,6 +506,7 @@
             this.ClientSize = new System.Drawing.Size(1005, 648);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "StrategyForm";
             this.Text = "买卖策略";
             this.Load += new System.EventHandler(this.MainForm_Load);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetStrategyForm));
             this.txtStrategy = new System.Windows.Forms.ComboBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.txtBuyPrice = new System.Windows.Forms.TextBox();
@@ -140,6 +141,7 @@
             this.Controls.Add(this.txtBuyPrice);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtStrategy);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SetStrategyForm";
             this.Text = "设置股票买卖策略";
             this.Load += new System.EventHandler(this.SetStrategyForm_Load);

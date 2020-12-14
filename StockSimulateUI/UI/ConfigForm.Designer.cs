@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtRemindStockPriceFloatPer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtRemindStockStrategyInterval = new System.Windows.Forms.TextBox();
@@ -40,8 +43,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtRemindStockPriceFloatPer = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -64,6 +65,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(794, 390);
             this.panel1.TabIndex = 4;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(12, 304);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(390, 46);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "买卖点价格浮动比例(%)";
+            // 
+            // txtRemindStockPriceFloatPer
+            // 
+            this.txtRemindStockPriceFloatPer.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtRemindStockPriceFloatPer.Location = new System.Drawing.Point(428, 304);
+            this.txtRemindStockPriceFloatPer.Name = "txtRemindStockPriceFloatPer";
+            this.txtRemindStockPriceFloatPer.Size = new System.Drawing.Size(331, 54);
+            this.txtRemindStockPriceFloatPer.TabIndex = 8;
             // 
             // label4
             // 
@@ -167,24 +186,6 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(12, 304);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(390, 46);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "买卖点价格浮动比例(%)";
-            // 
-            // txtRemindStockPriceFloatPer
-            // 
-            this.txtRemindStockPriceFloatPer.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtRemindStockPriceFloatPer.Location = new System.Drawing.Point(428, 304);
-            this.txtRemindStockPriceFloatPer.Name = "txtRemindStockPriceFloatPer";
-            this.txtRemindStockPriceFloatPer.Size = new System.Drawing.Size(331, 54);
-            this.txtRemindStockPriceFloatPer.TabIndex = 8;
-            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -192,6 +193,7 @@
             this.ClientSize = new System.Drawing.Size(794, 458);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ConfigForm";
             this.Text = "设置";
             this.Load += new System.EventHandler(this.ConfigForm_Load);

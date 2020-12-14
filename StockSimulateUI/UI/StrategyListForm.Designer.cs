@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StrategyListForm));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnNew = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtStrategyName = new System.Windows.Forms.TextBox();
-            this.btnNew = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -50,15 +51,25 @@
             this.panel1.Size = new System.Drawing.Size(800, 33);
             this.panel1.TabIndex = 5;
             // 
-            // dataGridView1
+            // btnDelete
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 33);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(800, 417);
-            this.dataGridView1.TabIndex = 6;
+            this.btnDelete.Location = new System.Drawing.Point(220, 5);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(54, 23);
+            this.btnDelete.TabIndex = 5;
+            this.btnDelete.Text = "删除";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnNew
+            // 
+            this.btnNew.Location = new System.Drawing.Point(160, 5);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(54, 23);
+            this.btnNew.TabIndex = 4;
+            this.btnNew.Text = "添加";
+            this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // btnSearch
             // 
@@ -78,25 +89,15 @@
             this.txtStrategyName.TabIndex = 2;
             this.txtStrategyName.Text = "名称";
             // 
-            // btnNew
+            // dataGridView1
             // 
-            this.btnNew.Location = new System.Drawing.Point(160, 5);
-            this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(54, 23);
-            this.btnNew.TabIndex = 4;
-            this.btnNew.Text = "添加";
-            this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Location = new System.Drawing.Point(220, 5);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(54, 23);
-            this.btnDelete.TabIndex = 5;
-            this.btnDelete.Text = "删除";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 33);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.Size = new System.Drawing.Size(800, 417);
+            this.dataGridView1.TabIndex = 6;
             // 
             // StrategyListForm
             // 
@@ -105,6 +106,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "StrategyListForm";
             this.Text = "所有买卖策略";
             this.Load += new System.EventHandler(this.StrategyListForm_Load);

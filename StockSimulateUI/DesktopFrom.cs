@@ -42,7 +42,10 @@ namespace StockPriceTools
         void LoadConfigData()
         {
             Task.Factory.StartNew(() =>
-            {
+            {   
+                //同步数据库
+                Repository.InitSQLiteDB();
+
                 var configs = Repository.QueryAll<GlobalConfigEntity>();
                 foreach(var config in configs)
                 {
@@ -196,6 +199,7 @@ namespace StockPriceTools
         {
             var stocks = Repository.QueryAll<StockEntity>();
             var dt = ObjectUtil.ConvertTable(stocks);
+            this.gridStockList.DataSource = null;
             this.gridStockList.DataSource = dt.DefaultView;
             for(var i=0; i<this.gridStockList.ColumnCount; i++)
             {
@@ -221,6 +225,7 @@ namespace StockPriceTools
         {
             var accountStocks = Repository.QueryAll<StockStrategyEntity>();
             var dt = ObjectUtil.ConvertTable(accountStocks);
+            this.gridStockStrategyList.DataSource = null;
             this.gridStockStrategyList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
             {
@@ -233,6 +238,7 @@ namespace StockPriceTools
         {
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate desc",  60);
             var dt = ObjectUtil.ConvertTable(stockPrices);
+            this.gridPriceList.DataSource = null;
             this.gridPriceList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridPriceList.ColumnCount; i++)
             {
@@ -263,6 +269,7 @@ namespace StockPriceTools
         {
             var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ExchangeTime desc", 60);
             var dt = ObjectUtil.ConvertTable(exchangeOrders);
+            this.gridExchangeList.DataSource = null;
             this.gridExchangeList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridExchangeList.ColumnCount; i++)
             {
@@ -276,11 +283,12 @@ namespace StockPriceTools
             }
         }
 
-        void LoadMainTargetInfo(string stockCode)
+        void LoadMainTargetInfo(string stockCode, int rtype = 0)
         {
-            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype=0", "", 60);
+            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
             //var dt = ObjectUtil.ConvertTable(mainTargets);
             var dt = EastMoneyUtil.ConvertMainTargetData(mainTargets);
+            this.gridMaintargetList.DataSource = null;
             this.gridMaintargetList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridMaintargetList.ColumnCount; i++)
             {
@@ -296,6 +304,7 @@ namespace StockPriceTools
         {
             var strategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
             var dt = ObjectUtil.ConvertTable(strategyDetails);
+            this.gridStockStrategyDetailList.DataSource = null;
             this.gridStockStrategyDetailList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridStockStrategyDetailList.ColumnCount; i++)
             {
@@ -398,6 +407,7 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             this.LoadStockBaseInfo(stockCode);
             this.LoadStockStrategyInfo(stockCode);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
             //this.LoadPriceList(stockCode);
             //this.LoadExchangeList(stockCode);
             //this.LoadMainTargetInfo(stockCode);
@@ -444,7 +454,21 @@ namespace StockPriceTools
             }
 
         }
+        private void gridStockStrategyDetailList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var row = this.gridStockStrategyDetailList.Rows[e.RowIndex];
+            if (row == null) return;
 
+            var stockCode = $"{row.Cells["股票代码"].Value}";
+            var strategyName = row.Cells["买卖策略"].Value;
+            var target = row.Cells["买卖点"].Value;
+
+            var stockStrategyDetail = Repository.QueryFirst<StockStrategyDetailEntity>($"StockCode='{stockCode}' and StrategyName='{strategyName}' and Target='{target}'");
+            if (stockStrategyDetail == null) return;
+
+            stockStrategyDetail.Execute = true;
+            Repository.Update<StockStrategyDetailEntity>(stockStrategyDetail);
+        }
         #endregion
 
         #region 工具栏按钮事件
@@ -466,9 +490,37 @@ namespace StockPriceTools
             }
             this.LoadStockList();
         }
+
+        private void btnDeleteStock_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
+
+            if (MessageBox.Show($"确认要删除自选股[{stockName}]?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if(stock != null)
+            {
+                Repository.Delete<StockEntity>(stock);
+            }
+            var stockStrategy = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
+            if(stockStrategy != null)
+            {
+                Repository.Delete<StockStrategyEntity>(stockStrategy);
+            }
+            var stockStrategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            if(stockStrategyDetails.Length > 0)
+            {
+                Repository.Delete<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            }
+            this.LoadStockList();
+        }
+
         private void btnInitialize_Click(object sender, EventArgs e)
         {
-            Repository.InitSQLiteDB();
+            
         }
 
         private void btnAddStrategy_Click(object sender, EventArgs e)
@@ -557,18 +609,12 @@ namespace StockPriceTools
             }
         }
 
-        private void btnInit_Click(object sender, EventArgs e)
-        {
-            SQLiteDBUtil.Instance.InitSQLiteDB();
-        }
-
         private void btnConfig_Click(object sender, EventArgs e)
         {
             var frm = new ConfigForm();
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog();
         }
-
 
         #endregion
 
@@ -580,7 +626,12 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
 
-            switch (this.tabControlBottom.SelectedIndex)
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
+        }
+
+        void LoadTabGridList(int tabIndex, string stockCode)
+        {
+            switch (tabIndex)
             {
                 case 1:
                     this.LoadPriceList(stockCode);
@@ -597,6 +648,41 @@ namespace StockPriceTools
             }
         }
 
+        private void txtByReport_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByReport.Checked)
+            {
+                this.LoadMainTargetInfo(stockCode, 0);
+            }
+        }
+
+        private void txtByYear_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByYear.Checked)
+            {
+                this.LoadMainTargetInfo(stockCode, 1);
+            }
+        }
+
+        private void txtByQuarter_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByQuarter.Checked)
+            {
+                this.LoadMainTargetInfo(stockCode, 2);
+            }
+        }
         #endregion
 
         #region 操作日志事件
@@ -621,21 +707,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
-        private void gridStockStrategyDetailList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var row = this.gridStockStrategyDetailList.Rows[e.RowIndex];
-            if (row == null) return;
-
-            var stockCode = row.Cells["股票代码"].Value;
-            var strategyName = row.Cells["买卖策略"].Value;
-            var target = row.Cells["买卖点"].Value;
-
-            var stockStrategyDetail = Repository.QueryFirst<StockStrategyDetailEntity>($"StockCode='{stockCode}' and StrategyName='{strategyName}' and Target='{target}'");
-            if (stockStrategyDetail == null) return;
-
-            stockStrategyDetail.Execute = true;
-            Repository.Update<StockStrategyDetailEntity>(stockStrategyDetail);
-        }
     }
 }

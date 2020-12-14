@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -38,8 +41,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -54,6 +55,26 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(800, 68);
             this.panel2.TabIndex = 1;
+            // 
+            // btnClose
+            // 
+            this.btnClose.Location = new System.Drawing.Point(603, 15);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(75, 41);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "关闭";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.Location = new System.Drawing.Point(684, 15);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 41);
+            this.btnOK.TabIndex = 0;
+            this.btnOK.Text = "保存";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // panel1
             // 
@@ -146,26 +167,6 @@
             this.txtName.Size = new System.Drawing.Size(426, 54);
             this.txtName.TabIndex = 0;
             // 
-            // btnOK
-            // 
-            this.btnOK.Location = new System.Drawing.Point(684, 15);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 41);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "保存";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Location = new System.Drawing.Point(603, 15);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 41);
-            this.btnClose.TabIndex = 1;
-            this.btnClose.Text = "关闭";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -173,6 +174,7 @@
             this.ClientSize = new System.Drawing.Size(800, 383);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AccountForm";
             this.Text = "我的账户信息";
             this.Load += new System.EventHandler(this.AccountForm_Load);
