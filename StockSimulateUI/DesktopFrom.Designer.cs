@@ -100,6 +100,7 @@
             this.gridXJLLBList = new System.Windows.Forms.DataGridView();
             this.gridLRBList = new System.Windows.Forms.DataGridView();
             this.gridZCFZBList = new System.Windows.Forms.DataGridView();
+            this.btnAddRmind = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -161,6 +162,7 @@
             this.toolStripSeparator1,
             this.btnAddStrategy,
             this.btnSetStrategy,
+            this.btnAddRmind,
             this.toolStripSplitButton1,
             this.btnConfig});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -216,7 +218,7 @@
             this.btnAddStrategy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddStrategy.Name = "btnAddStrategy";
             this.btnAddStrategy.Size = new System.Drawing.Size(60, 22);
-            this.btnAddStrategy.Text = "买卖策略";
+            this.btnAddStrategy.Text = "添加策略";
             this.btnAddStrategy.Click += new System.EventHandler(this.btnAddStrategy_Click);
             // 
             // btnSetStrategy
@@ -920,6 +922,16 @@
             this.gridZCFZBList.Size = new System.Drawing.Size(842, 277);
             this.gridZCFZBList.TabIndex = 48;
             // 
+            // btnAddRmind
+            // 
+            this.btnAddRmind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnAddRmind.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRmind.Image")));
+            this.btnAddRmind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddRmind.Name = "btnAddRmind";
+            this.btnAddRmind.Size = new System.Drawing.Size(60, 22);
+            this.btnAddRmind.Text = "设置提醒";
+            this.btnAddRmind.Click += new System.EventHandler(this.btnAddRmind_Click);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1057,5 +1069,6 @@
         private System.Windows.Forms.RadioButton txtByQuarterOfXJLLB;
         private System.Windows.Forms.RadioButton txtByYearOfXJLLB;
         private System.Windows.Forms.RadioButton txtByReportOfXJLLB;
+        private System.Windows.Forms.ToolStripButton btnAddRmind;
     }
 }

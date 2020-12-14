@@ -74,29 +74,5 @@ namespace StockSimulateCore.Model
         /// </summary>
         [Description("减仓持仓比例(%)")]
         public decimal ReducePositionPer { get; set; } = 10;
-
-        /// <summary>
-        /// 股价提醒浮动比例(%)
-        /// </summary>
-        [Description("股价提醒浮动比例(%)")]
-        public decimal RemindPer { get; set; } = 10;
-
-        /// <summary>
-        /// 提醒邮箱
-        /// </summary>
-        [Description("提醒邮箱")]
-        public string RemindEmail { get; set; } = "zhupj@foxmail.com";
-
-        /// <summary>
-        /// 提醒QQ
-        /// </summary>
-        [Description("提醒QQ")]
-        public string RemindQQ { get; set; } = "47426568";
-
-        /// <summary>
-        /// 提醒次数
-        /// </summary>
-        [Description("提醒次数")]
-        public int RemindCount { get; set; } = 3;
     }
 }

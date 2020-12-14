@@ -34,6 +34,8 @@ namespace StockSimulateUI.UI
             this.txtAmount.Text = $"{account.Amount}";
             this.txtHoldAmount.Text = $"{account.HoldAmount}";
             this.txtProfit.Text = $"{account.Profit}";
+            this.txtEmail.Text = account.Email;
+            this.txtQQ.Text = account.QQ;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -44,12 +46,16 @@ namespace StockSimulateUI.UI
                 account = new AccountEntity();
                 account.Name = this.txtName.Text;
                 account.Amount = ObjectUtil.ToValue<decimal>(this.txtAmount.Text, 0);
+                account.Email = this.txtEmail.Text;
+                account.QQ = this.txtQQ.Text;
                 Repository.Insert<AccountEntity>(account);
             }
             else
             {
                 account.Name = this.txtName.Text;
                 account.Amount = ObjectUtil.ToValue<decimal>(this.txtAmount.Text, 0);
+                account.Email = this.txtEmail.Text;
+                account.QQ = this.txtQQ.Text;
                 Repository.Update<AccountEntity>(account);
             }
         }

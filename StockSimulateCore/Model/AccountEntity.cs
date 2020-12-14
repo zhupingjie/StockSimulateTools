@@ -20,5 +20,11 @@ namespace StockSimulateCore.Model
 
         [Description("盈亏(元)")]
         public decimal Profit { get; set; }
+
+        [Description("邮箱")]
+        public string Email { get; set; } = "zhupj@foxmail.com";
+
+        [Description("QQ")]
+        public string QQ { get; set; } = "47426568";
     }
 }

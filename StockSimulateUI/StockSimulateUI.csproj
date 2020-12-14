@@ -146,6 +146,12 @@
     <Compile Include="UI\ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SetRemindForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SetRemindForm.Designer.cs">
+      <DependentUpon>SetRemindForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\SetStrategyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SetRemindForm.resx">
+      <DependentUpon>SetRemindForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SetStrategyForm.resx">
       <DependentUpon>SetStrategyForm.cs</DependentUpon>

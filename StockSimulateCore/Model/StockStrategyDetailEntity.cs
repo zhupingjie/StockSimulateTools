@@ -12,7 +12,7 @@ namespace StockSimulateCore.Model
         [Description("股票代码")]
         public string StockCode { get; set; }
 
-        [Description("买卖策略")]
+        [Description("策略名称")]
         public string StrategyName { get; set; }
 
         [Description("买卖点")]

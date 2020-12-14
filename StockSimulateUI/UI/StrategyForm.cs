@@ -91,10 +91,10 @@ namespace StockSimulateUI.UI
                 IncreaseMaxAmountPer = GetTextValue(this.txtExtraBuyPercent2),
                 ReducePricePer = GetTextValue(this.txtSaleRate),
                 ReducePositionPer = GetTextValue(this.txtSaleHoldPer),
-                RemindQQ = this.txtRemindQQ.Text,
-                RemindEmail = this.txtRemindEmail.Text,
-                RemindCount = (int)GetTextValue(this.txtRemindCount),
-                RemindPer = GetTextValue(this.txtRemindPer)
+                //RemindQQ = this.txtRemindQQ.Text,
+                //RemindEmail = this.txtRemindEmail.Text,
+                //RemindCount = (int)GetTextValue(this.txtRemindCount),
+                //RemindPer = GetTextValue(this.txtRemindPer)
             };
             this.DialogResult = DialogResult.OK;
             this.Close();
