@@ -166,26 +166,77 @@ namespace StockPriceTools
             {
                 while (true)
                 {
-                    var stockStrategyDetails = Repository.QueryAll<StockStrategyDetailEntity>();
-                    var stockCodes = stockStrategyDetails.Select(c => c.StockCode).Distinct().ToArray();
+                    var reminds = Repository.QueryAll<RemindEntity>();
+                    var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
                     var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
-                    var strategys = Repository.QueryAll<StrategyEntity>();
-                    var account = Repository.QueryFirst<AccountEntity>();
-                    if (account == null) return;
 
                     foreach (var stock in stocks)
                     {
-                        var stockStrategyDetail = stockStrategyDetails.FirstOrDefault(c => c.StockCode == stock.Code && (c.BuyQty > 0 || c.SaleQty > 0) && c.MaxPrice >= stock.Price && c.MinPrice <= stock.Price && !c.Execute);
-                        if (stockStrategyDetail == null) continue;
+                        var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice)/c.BasePrice) > c.Target && !c.Handled);
+                        if (remind != null)
+                        {
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.Price - remind.BasePrice > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
-                        var strategy = strategys.FirstOrDefault(c => c.Name == stockStrategyDetail.StrategyName);
-                        if (strategy == null) continue;
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            this.ShowMessage(message);
+                            this.ActionLog(message);
+                            
+                            //当前提醒设置为已处理
+                            remind.Handled = true;
+                            Repository.Update<RemindEntity>(remind);
 
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{stockStrategyDetail.Target}({stockStrategyDetail.MinPrice}-{stockStrategyDetail.MaxPrice})],请注意!";
+                            //创建一条以当前价格为基准的提醒
+                            remind = new RemindEntity()
+                            {
+                                StockCode = remind.StockCode,
+                                RType = 0,
+                                Target = remind.Target,
+                                BasePrice = stock.Price,
+                                Email = remind.Email,
+                                QQ = remind.QQ,
+                            };
+                            Repository.Insert<RemindEntity>(remind);
+                        }
 
-                        MailUtil.SendMailAsync(new SenderMailConfig(), message, message, account.Email);
-                        this.ShowMessage(message);
-                        this.ActionLog(message);
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
+                        if(remind != null)
+                        {
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已上涨高于股价[{remind.Target}],请注意!";
+
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            this.ShowMessage(message);
+                            this.ActionLog(message);
+                        }
+
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
+                        if (remind != null)
+                        {
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
+
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            this.ShowMessage(message);
+                            this.ActionLog(message);
+                        }
+
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled);
+                        if (remind != null)
+                        {
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            this.ShowMessage(message);
+                            this.ActionLog(message);
+                        }
+
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled);
+                        if (remind != null)
+                        {
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            this.ShowMessage(message);
+                            this.ActionLog(message);
+                        }
                     }
                     Thread.Sleep(RC.RemindStockStrategyInterval * 1000);
                 }
@@ -248,8 +299,8 @@ namespace StockPriceTools
                 if (columnName == "股票代码") this.gridPriceList.Columns[i].Visible = false;
                 else
                 {
-                    var length = columnName.Length;
-                    this.gridPriceList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                    var length = this.gridPriceList.Columns[i].Name.Length;
+                    this.gridPriceList.Columns[i].Width = length < 5 ? 80 : length < 6 ? 90 : length < 8 ? 120 : 140;
                 }
             }
             for (var i = 0; i < this.gridPriceList.Rows.Count; i++)
@@ -264,6 +315,39 @@ namespace StockPriceTools
                 {
                     this.gridPriceList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
+            }
+        }
+
+        void LoadRemindList(string stockCode)
+        {
+            var reminds = Repository.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "ID desc", 60);
+            var dt = ObjectUtil.ConvertTable(reminds);
+            this.gridRemindList.DataSource = null;
+            this.gridRemindList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridRemindList.ColumnCount; i++)
+            {
+                var columnName = this.gridRemindList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridRemindList.Columns[i].Visible = false;
+                else
+                {
+                    var length = this.gridRemindList.Columns[i].Name.Length;
+                    this.gridRemindList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+            for (var i = 0; i < this.gridRemindList.Rows.Count; i++)
+            {
+                var row = this.gridRemindList.Rows[i];
+                var value = ObjectUtil.ToValue<bool>(row.Cells["是否执行"].Value, false);
+                if (value)
+                {
+                    this.gridRemindList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                else
+                {
+                    this.gridRemindList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
+                }
+                var type = ObjectUtil.ToValue<int>(row.Cells["类型"].Value, -1);
+                row.Cells["类型"].Value = (type == 0 ? "涨跌幅" : type == 1 ? "上涨" : type == 2 ? "下跌" : type == 8 ? "买点" : type == 9 ? "买点" : "");
             }
         }
 
@@ -284,6 +368,7 @@ namespace StockPriceTools
                 }
             }
         }
+
 
         void LoadMainTargetInfo(string stockCode, int rtype = 0)
         {
@@ -316,19 +401,6 @@ namespace StockPriceTools
                 {
                     var length = columnName.Length;
                     this.gridStockStrategyDetailList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
-                }
-            }
-            for (var i = 0; i < this.gridStockStrategyDetailList.Rows.Count; i++)
-            {
-                var row = this.gridStockStrategyDetailList.Rows[i];
-                var value = ObjectUtil.ToValue<bool>(row.Cells["执行策略"].Value, false);
-                if (value)
-                {
-                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
-                }
-                else
-                {
-                    this.gridStockStrategyDetailList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
                 }
             }
         }
@@ -456,21 +528,7 @@ namespace StockPriceTools
             }
 
         }
-        private void gridStockStrategyDetailList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var row = this.gridStockStrategyDetailList.Rows[e.RowIndex];
-            if (row == null) return;
 
-            var stockCode = $"{row.Cells["股票代码"].Value}";
-            var strategyName = row.Cells["策略名称"].Value;
-            var target = row.Cells["买卖点"].Value;
-
-            var stockStrategyDetail = Repository.QueryFirst<StockStrategyDetailEntity>($"StockCode='{stockCode}' and StrategyName='{strategyName}' and Target='{target}'");
-            if (stockStrategyDetail == null) return;
-
-            stockStrategyDetail.Execute = true;
-            Repository.Update<StockStrategyDetailEntity>(stockStrategyDetail);
-        }
         #endregion
 
         #region 工具栏按钮事件
@@ -520,11 +578,6 @@ namespace StockPriceTools
             this.LoadStockList();
         }
 
-        private void btnInitialize_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void btnAddStrategy_Click(object sender, EventArgs e)
         {
             var frm = new StrategyListForm();
@@ -535,6 +588,12 @@ namespace StockPriceTools
         private void btnAccountInfo_Click(object sender, EventArgs e)
         {
             var frm = new AccountForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+        }
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            var frm = new ConfigForm();
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog();
         }
@@ -581,7 +640,7 @@ namespace StockPriceTools
                     Repository.Update<StockStrategyEntity>(stockStrategy);
                 }
                 Repository.Delete<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
-
+                Repository.Delete<RemindEntity>($"StockCode='{stockCode}' and (RType={8} or RType={9})");
                 var dt = StockStrategyService.MakeStrategyData(strategy, stockStrategy.BuyPrice, stockStrategy.BuyAmount, stockStrategy.SalePrice, account.Amount);
                 for (var i = 0; i < dt.Rows.Count; i++)
                 {
@@ -603,19 +662,27 @@ namespace StockPriceTools
                         Cost = ObjectUtil.ToValue<decimal>(dr["成本"].ToString(), 0),
                         Profit = ObjectUtil.ToValue<decimal>(dr["盈亏"].ToString(), 0),
                     };
-                    detail.MaxPrice = Math.Round(detail.Price * (1 + RC.RemindStockPriceFloatPer / 100), 2);
-                    detail.MinPrice = Math.Round(detail.Price * (1 - RC.RemindStockPriceFloatPer / 100), 2);
                     Repository.Insert<StockStrategyDetailEntity>(detail);
+
+                    if (detail.BuyQty > 0 || detail.SaleQty > 0)
+                    {
+                        var remind = new RemindEntity()
+                        {
+                            StockCode = stockCode,
+                            BasePrice = stockStrategy.BuyPrice,
+                            Target = detail.Price,
+                            RType = detail.BuyQty > 0 ? 8 : 9,
+                            Email = account.Email,
+                            QQ = account.QQ,
+                            Title = detail.Target
+                        };
+                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100), 2);
+                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100), 2);
+                        Repository.Insert<RemindEntity>(remind);
+                    }
                 }
                 this.LoadStockStrategyList();
             }
-        }
-
-        private void btnConfig_Click(object sender, EventArgs e)
-        {
-            var frm = new ConfigForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
         }
 
         private void btnAddRmind_Click(object sender, EventArgs e)
@@ -627,7 +694,7 @@ namespace StockPriceTools
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var price = ObjectUtil.ToValue<decimal>($"{selectRow.Cells["股价(元)"].Value}", 0);
+            var price = ObjectUtil.ToValue<decimal>($"{selectRow.Cells["股价"].Value}", 0);
             var frm = new SetRemindForm();
             frm.BasePrice = price;
             frm.StartPosition = FormStartPosition.CenterParent;
@@ -645,11 +712,8 @@ namespace StockPriceTools
                             Target = frm.UDPer,
                             Email = account.Email,
                             QQ = account.QQ,
-                            RType = 0,
-                            Title = "涨跌幅"
+                            RType = 0
                         };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100), 2);
                         Repository.Insert<RemindEntity>(remind);
                     }
                 }
@@ -665,11 +729,10 @@ namespace StockPriceTools
                             Target = frm.UpPrice,
                             Email = account.Email,
                             QQ = account.QQ,
-                            RType = 1,
-                            Title = "上涨点"
+                            RType = 1
                         };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100), 2); 
+                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
+                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2); 
                         Repository.Insert<RemindEntity>(remind);
                     }
                 }
@@ -685,11 +748,10 @@ namespace StockPriceTools
                             Target = frm.DownPrice,
                             Email = account.Email,
                             QQ = account.QQ,
-                            RType = 2,
-                            Title = "下跌点"
+                            RType = 2
                         };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100), 2);
+                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
+                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
                         Repository.Insert<RemindEntity>(remind);
                     }
                 }
@@ -698,7 +760,7 @@ namespace StockPriceTools
 
         #endregion
 
-        #region TabControl事件
+        #region 底部TabControl区域事件
 
         private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -720,9 +782,12 @@ namespace StockPriceTools
                     this.LoadStockStrategyDetailList(stockCode);
                     break;
                 case 3:
-                    this.LoadExchangeList(stockCode);
+                    this.LoadRemindList(stockCode);
                     break;
                 case 4:
+                    this.LoadExchangeList(stockCode);
+                    break;
+                case 5:
                     this.LoadMainTargetInfo(stockCode);
                     break;
             }
@@ -763,6 +828,36 @@ namespace StockPriceTools
                 this.LoadMainTargetInfo(stockCode, 2);
             }
         }
+        
+        private void btnHandleRemind_Click(object sender, EventArgs e)
+        {
+            if (this.gridRemindList.SelectedRows.Count == 0) return;
+            var row = this.gridRemindList.SelectedRows[0];
+            
+            if (MessageBox.Show($"确认要标记执行选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            var stockCode = $"{row.Cells["股票代码"].Value}";
+            var type = $"{row.Cells["类型"].Value}";
+            var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
+            var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
+
+            var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rtype} and Target={target} and Handled='False'");
+            if (remind != null)
+            {
+                remind.Handled = true;
+                Repository.Update<RemindEntity>(remind);
+            }
+        }
+
+        private void btnBuyExchange_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSaleExchange_Click(object sender, EventArgs e)
+        {
+
+        }
         #endregion
 
         #region 操作日志事件
@@ -787,5 +882,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }

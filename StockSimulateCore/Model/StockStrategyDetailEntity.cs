@@ -18,14 +18,8 @@ namespace StockSimulateCore.Model
         [Description("买卖点")]
         public string Target { get; set; }
 
-        [Description("股价(元)")]
+        [Description("股价")]
         public decimal Price { get; set; }
-
-        [Description("股价上限(元)")]
-        public decimal MaxPrice { get; set; }
-
-        [Description("股价下限(元)")]
-        public decimal MinPrice { get; set; }
 
         [Description("买入数")]
         public int BuyQty { get; set; }
@@ -56,8 +50,5 @@ namespace StockSimulateCore.Model
 
         [Description("盈亏(元)")]
         public decimal Profit { get; set; }
-
-        [Description("执行策略")]
-        public bool Execute { get; set; }
     }
 }

@@ -38,6 +38,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnAddStrategy = new System.Windows.Forms.ToolStripButton();
             this.btnSetStrategy = new System.Windows.Forms.ToolStripButton();
+            this.btnAddRmind = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -57,11 +58,30 @@
             this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
             this.gridStockStrategyDetailList = new System.Windows.Forms.DataGridView();
             this.tabExchangeList = new System.Windows.Forms.TabPage();
-            this.gridExchangeList = new System.Windows.Forms.DataGridView();
             this.tabMaintarget = new System.Windows.Forms.TabPage();
+            this.gridMaintargetList = new System.Windows.Forms.DataGridView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.txtByQuarter = new System.Windows.Forms.RadioButton();
+            this.txtByYear = new System.Windows.Forms.RadioButton();
+            this.txtByReport = new System.Windows.Forms.RadioButton();
             this.tabZZFZB = new System.Windows.Forms.TabPage();
+            this.gridZCFZBList = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.txtByQuarterOfZCFZB = new System.Windows.Forms.RadioButton();
+            this.txtByYearOfZCFZB = new System.Windows.Forms.RadioButton();
+            this.txtByReportOfZCFZB = new System.Windows.Forms.RadioButton();
             this.tabLRB = new System.Windows.Forms.TabPage();
+            this.gridLRBList = new System.Windows.Forms.DataGridView();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.txtByQuarterOfLRB = new System.Windows.Forms.RadioButton();
+            this.txtByYearOfLRB = new System.Windows.Forms.RadioButton();
+            this.txtByReportOfLRB = new System.Windows.Forms.RadioButton();
             this.tabXJLLB = new System.Windows.Forms.TabPage();
+            this.gridXJLLBList = new System.Windows.Forms.DataGridView();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.txtByQuarterOfXJLLB = new System.Windows.Forms.RadioButton();
+            this.txtByYearOfXJLLB = new System.Windows.Forms.RadioButton();
+            this.txtByReportOfXJLLB = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControlLeft = new System.Windows.Forms.TabControl();
             this.tabBaseData = new System.Windows.Forms.TabPage();
@@ -80,27 +100,14 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.gridMaintargetList = new System.Windows.Forms.DataGridView();
-            this.txtByReport = new System.Windows.Forms.RadioButton();
-            this.txtByYear = new System.Windows.Forms.RadioButton();
-            this.txtByQuarter = new System.Windows.Forms.RadioButton();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.txtByQuarterOfZCFZB = new System.Windows.Forms.RadioButton();
-            this.txtByYearOfZCFZB = new System.Windows.Forms.RadioButton();
-            this.txtByReportOfZCFZB = new System.Windows.Forms.RadioButton();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.txtByQuarterOfLRB = new System.Windows.Forms.RadioButton();
-            this.txtByYearOfLRB = new System.Windows.Forms.RadioButton();
-            this.txtByReportOfLRB = new System.Windows.Forms.RadioButton();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.txtByQuarterOfXJLLB = new System.Windows.Forms.RadioButton();
-            this.txtByYearOfXJLLB = new System.Windows.Forms.RadioButton();
-            this.txtByReportOfXJLLB = new System.Windows.Forms.RadioButton();
-            this.gridXJLLBList = new System.Windows.Forms.DataGridView();
-            this.gridLRBList = new System.Windows.Forms.DataGridView();
-            this.gridZCFZBList = new System.Windows.Forms.DataGridView();
-            this.btnAddRmind = new System.Windows.Forms.ToolStripButton();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.gridExchangeList = new System.Windows.Forms.DataGridView();
+            this.btnBuyExchange = new System.Windows.Forms.Button();
+            this.btnSaleExchange = new System.Windows.Forms.Button();
+            this.tabRemind = new System.Windows.Forms.TabPage();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.btnHandleRemind = new System.Windows.Forms.Button();
+            this.gridRemindList = new System.Windows.Forms.DataGridView();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -123,25 +130,29 @@
             this.tabStockStrategyDetail.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).BeginInit();
             this.tabExchangeList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).BeginInit();
             this.tabMaintarget.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).BeginInit();
+            this.panel3.SuspendLayout();
             this.tabZZFZB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridZCFZBList)).BeginInit();
+            this.panel4.SuspendLayout();
             this.tabLRB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridLRBList)).BeginInit();
+            this.panel5.SuspendLayout();
             this.tabXJLLB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridXJLLBList)).BeginInit();
+            this.panel6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControlLeft.SuspendLayout();
             this.tabBaseData.SuspendLayout();
             this.tabStrategyData.SuspendLayout();
             this.tabPriceData.SuspendLayout();
             this.tabExchange.SuspendLayout();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).BeginInit();
-            this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridXJLLBList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridLRBList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridZCFZBList)).BeginInit();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).BeginInit();
+            this.tabRemind.SuspendLayout();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -230,6 +241,16 @@
             this.btnSetStrategy.Size = new System.Drawing.Size(60, 22);
             this.btnSetStrategy.Text = "设置策略";
             this.btnSetStrategy.Click += new System.EventHandler(this.btnSetStrategy_Click);
+            // 
+            // btnAddRmind
+            // 
+            this.btnAddRmind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnAddRmind.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRmind.Image")));
+            this.btnAddRmind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddRmind.Name = "btnAddRmind";
+            this.btnAddRmind.Size = new System.Drawing.Size(60, 22);
+            this.btnAddRmind.Text = "设置提醒";
+            this.btnAddRmind.Click += new System.EventHandler(this.btnAddRmind_Click);
             // 
             // toolStripSplitButton1
             // 
@@ -333,6 +354,7 @@
             this.gridStockList.MultiSelect = false;
             this.gridStockList.Name = "gridStockList";
             this.gridStockList.ReadOnly = true;
+            this.gridStockList.RowHeadersWidth = 10;
             this.gridStockList.RowTemplate.Height = 23;
             this.gridStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridStockList.Size = new System.Drawing.Size(836, 189);
@@ -359,6 +381,7 @@
             this.gridStockStrategyList.MultiSelect = false;
             this.gridStockStrategyList.Name = "gridStockStrategyList";
             this.gridStockStrategyList.ReadOnly = true;
+            this.gridStockStrategyList.RowHeadersWidth = 10;
             this.gridStockStrategyList.RowTemplate.Height = 23;
             this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridStockStrategyList.Size = new System.Drawing.Size(836, 189);
@@ -369,6 +392,7 @@
             this.tabControlBottom.Controls.Add(this.tabActionLog);
             this.tabControlBottom.Controls.Add(this.tabPriceList);
             this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
+            this.tabControlBottom.Controls.Add(this.tabRemind);
             this.tabControlBottom.Controls.Add(this.tabExchangeList);
             this.tabControlBottom.Controls.Add(this.tabMaintarget);
             this.tabControlBottom.Controls.Add(this.tabZZFZB);
@@ -423,6 +447,7 @@
             this.gridPriceList.MultiSelect = false;
             this.gridPriceList.Name = "gridPriceList";
             this.gridPriceList.ReadOnly = true;
+            this.gridPriceList.RowHeadersWidth = 10;
             this.gridPriceList.RowTemplate.Height = 23;
             this.gridPriceList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridPriceList.Size = new System.Drawing.Size(836, 300);
@@ -435,7 +460,7 @@
             this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
             this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 306);
             this.tabStockStrategyDetail.TabIndex = 6;
-            this.tabStockStrategyDetail.Text = "策略内容";
+            this.tabStockStrategyDetail.Text = "买卖策略";
             this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
             // 
             // gridStockStrategyDetailList
@@ -447,15 +472,16 @@
             this.gridStockStrategyDetailList.MultiSelect = false;
             this.gridStockStrategyDetailList.Name = "gridStockStrategyDetailList";
             this.gridStockStrategyDetailList.ReadOnly = true;
+            this.gridStockStrategyDetailList.RowHeadersWidth = 10;
             this.gridStockStrategyDetailList.RowTemplate.Height = 23;
             this.gridStockStrategyDetailList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridStockStrategyDetailList.Size = new System.Drawing.Size(842, 306);
             this.gridStockStrategyDetailList.TabIndex = 45;
-            this.gridStockStrategyDetailList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockStrategyDetailList_CellDoubleClick);
             // 
             // tabExchangeList
             // 
             this.tabExchangeList.Controls.Add(this.gridExchangeList);
+            this.tabExchangeList.Controls.Add(this.panel7);
             this.tabExchangeList.Location = new System.Drawing.Point(4, 22);
             this.tabExchangeList.Name = "tabExchangeList";
             this.tabExchangeList.Padding = new System.Windows.Forms.Padding(3);
@@ -463,20 +489,6 @@
             this.tabExchangeList.TabIndex = 1;
             this.tabExchangeList.Text = "交易记录";
             this.tabExchangeList.UseVisualStyleBackColor = true;
-            // 
-            // gridExchangeList
-            // 
-            this.gridExchangeList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridExchangeList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridExchangeList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridExchangeList.Location = new System.Drawing.Point(3, 3);
-            this.gridExchangeList.MultiSelect = false;
-            this.gridExchangeList.Name = "gridExchangeList";
-            this.gridExchangeList.ReadOnly = true;
-            this.gridExchangeList.RowTemplate.Height = 23;
-            this.gridExchangeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridExchangeList.Size = new System.Drawing.Size(836, 300);
-            this.gridExchangeList.TabIndex = 45;
             // 
             // tabMaintarget
             // 
@@ -489,6 +501,67 @@
             this.tabMaintarget.Text = "主要指标";
             this.tabMaintarget.UseVisualStyleBackColor = true;
             // 
+            // gridMaintargetList
+            // 
+            this.gridMaintargetList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridMaintargetList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridMaintargetList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridMaintargetList.Location = new System.Drawing.Point(0, 29);
+            this.gridMaintargetList.MultiSelect = false;
+            this.gridMaintargetList.Name = "gridMaintargetList";
+            this.gridMaintargetList.ReadOnly = true;
+            this.gridMaintargetList.RowHeadersWidth = 10;
+            this.gridMaintargetList.RowTemplate.Height = 23;
+            this.gridMaintargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridMaintargetList.Size = new System.Drawing.Size(842, 277);
+            this.gridMaintargetList.TabIndex = 47;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.txtByQuarter);
+            this.panel3.Controls.Add(this.txtByYear);
+            this.panel3.Controls.Add(this.txtByReport);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(842, 29);
+            this.panel3.TabIndex = 46;
+            // 
+            // txtByQuarter
+            // 
+            this.txtByQuarter.AutoSize = true;
+            this.txtByQuarter.Location = new System.Drawing.Point(150, 7);
+            this.txtByQuarter.Name = "txtByQuarter";
+            this.txtByQuarter.Size = new System.Drawing.Size(59, 16);
+            this.txtByQuarter.TabIndex = 2;
+            this.txtByQuarter.Text = "按季度";
+            this.txtByQuarter.UseVisualStyleBackColor = true;
+            this.txtByQuarter.CheckedChanged += new System.EventHandler(this.txtByQuarter_CheckedChanged);
+            // 
+            // txtByYear
+            // 
+            this.txtByYear.AutoSize = true;
+            this.txtByYear.Location = new System.Drawing.Point(85, 7);
+            this.txtByYear.Name = "txtByYear";
+            this.txtByYear.Size = new System.Drawing.Size(59, 16);
+            this.txtByYear.TabIndex = 1;
+            this.txtByYear.Text = "按年度";
+            this.txtByYear.UseVisualStyleBackColor = true;
+            this.txtByYear.CheckedChanged += new System.EventHandler(this.txtByYear_CheckedChanged);
+            // 
+            // txtByReport
+            // 
+            this.txtByReport.AutoSize = true;
+            this.txtByReport.Checked = true;
+            this.txtByReport.Location = new System.Drawing.Point(8, 7);
+            this.txtByReport.Name = "txtByReport";
+            this.txtByReport.Size = new System.Drawing.Size(71, 16);
+            this.txtByReport.TabIndex = 0;
+            this.txtByReport.TabStop = true;
+            this.txtByReport.Text = "按报告期";
+            this.txtByReport.UseVisualStyleBackColor = true;
+            this.txtByReport.CheckedChanged += new System.EventHandler(this.txtByReport_CheckedChanged);
+            // 
             // tabZZFZB
             // 
             this.tabZZFZB.Controls.Add(this.gridZCFZBList);
@@ -499,6 +572,64 @@
             this.tabZZFZB.TabIndex = 3;
             this.tabZZFZB.Text = "资产负债表";
             this.tabZZFZB.UseVisualStyleBackColor = true;
+            // 
+            // gridZCFZBList
+            // 
+            this.gridZCFZBList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridZCFZBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridZCFZBList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridZCFZBList.Location = new System.Drawing.Point(0, 29);
+            this.gridZCFZBList.MultiSelect = false;
+            this.gridZCFZBList.Name = "gridZCFZBList";
+            this.gridZCFZBList.ReadOnly = true;
+            this.gridZCFZBList.RowHeadersWidth = 10;
+            this.gridZCFZBList.RowTemplate.Height = 23;
+            this.gridZCFZBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridZCFZBList.Size = new System.Drawing.Size(842, 277);
+            this.gridZCFZBList.TabIndex = 48;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.txtByQuarterOfZCFZB);
+            this.panel4.Controls.Add(this.txtByYearOfZCFZB);
+            this.panel4.Controls.Add(this.txtByReportOfZCFZB);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(842, 29);
+            this.panel4.TabIndex = 47;
+            // 
+            // txtByQuarterOfZCFZB
+            // 
+            this.txtByQuarterOfZCFZB.AutoSize = true;
+            this.txtByQuarterOfZCFZB.Location = new System.Drawing.Point(150, 7);
+            this.txtByQuarterOfZCFZB.Name = "txtByQuarterOfZCFZB";
+            this.txtByQuarterOfZCFZB.Size = new System.Drawing.Size(59, 16);
+            this.txtByQuarterOfZCFZB.TabIndex = 2;
+            this.txtByQuarterOfZCFZB.Text = "按季度";
+            this.txtByQuarterOfZCFZB.UseVisualStyleBackColor = true;
+            // 
+            // txtByYearOfZCFZB
+            // 
+            this.txtByYearOfZCFZB.AutoSize = true;
+            this.txtByYearOfZCFZB.Location = new System.Drawing.Point(85, 7);
+            this.txtByYearOfZCFZB.Name = "txtByYearOfZCFZB";
+            this.txtByYearOfZCFZB.Size = new System.Drawing.Size(59, 16);
+            this.txtByYearOfZCFZB.TabIndex = 1;
+            this.txtByYearOfZCFZB.Text = "按年度";
+            this.txtByYearOfZCFZB.UseVisualStyleBackColor = true;
+            // 
+            // txtByReportOfZCFZB
+            // 
+            this.txtByReportOfZCFZB.AutoSize = true;
+            this.txtByReportOfZCFZB.Checked = true;
+            this.txtByReportOfZCFZB.Location = new System.Drawing.Point(8, 7);
+            this.txtByReportOfZCFZB.Name = "txtByReportOfZCFZB";
+            this.txtByReportOfZCFZB.Size = new System.Drawing.Size(71, 16);
+            this.txtByReportOfZCFZB.TabIndex = 0;
+            this.txtByReportOfZCFZB.TabStop = true;
+            this.txtByReportOfZCFZB.Text = "按报告期";
+            this.txtByReportOfZCFZB.UseVisualStyleBackColor = true;
             // 
             // tabLRB
             // 
@@ -511,6 +642,64 @@
             this.tabLRB.Text = "利润表";
             this.tabLRB.UseVisualStyleBackColor = true;
             // 
+            // gridLRBList
+            // 
+            this.gridLRBList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridLRBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridLRBList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridLRBList.Location = new System.Drawing.Point(0, 29);
+            this.gridLRBList.MultiSelect = false;
+            this.gridLRBList.Name = "gridLRBList";
+            this.gridLRBList.ReadOnly = true;
+            this.gridLRBList.RowHeadersWidth = 10;
+            this.gridLRBList.RowTemplate.Height = 23;
+            this.gridLRBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridLRBList.Size = new System.Drawing.Size(842, 277);
+            this.gridLRBList.TabIndex = 48;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.txtByQuarterOfLRB);
+            this.panel5.Controls.Add(this.txtByYearOfLRB);
+            this.panel5.Controls.Add(this.txtByReportOfLRB);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(842, 29);
+            this.panel5.TabIndex = 47;
+            // 
+            // txtByQuarterOfLRB
+            // 
+            this.txtByQuarterOfLRB.AutoSize = true;
+            this.txtByQuarterOfLRB.Location = new System.Drawing.Point(150, 7);
+            this.txtByQuarterOfLRB.Name = "txtByQuarterOfLRB";
+            this.txtByQuarterOfLRB.Size = new System.Drawing.Size(59, 16);
+            this.txtByQuarterOfLRB.TabIndex = 2;
+            this.txtByQuarterOfLRB.Text = "按季度";
+            this.txtByQuarterOfLRB.UseVisualStyleBackColor = true;
+            // 
+            // txtByYearOfLRB
+            // 
+            this.txtByYearOfLRB.AutoSize = true;
+            this.txtByYearOfLRB.Location = new System.Drawing.Point(85, 7);
+            this.txtByYearOfLRB.Name = "txtByYearOfLRB";
+            this.txtByYearOfLRB.Size = new System.Drawing.Size(59, 16);
+            this.txtByYearOfLRB.TabIndex = 1;
+            this.txtByYearOfLRB.Text = "按年度";
+            this.txtByYearOfLRB.UseVisualStyleBackColor = true;
+            // 
+            // txtByReportOfLRB
+            // 
+            this.txtByReportOfLRB.AutoSize = true;
+            this.txtByReportOfLRB.Checked = true;
+            this.txtByReportOfLRB.Location = new System.Drawing.Point(8, 7);
+            this.txtByReportOfLRB.Name = "txtByReportOfLRB";
+            this.txtByReportOfLRB.Size = new System.Drawing.Size(71, 16);
+            this.txtByReportOfLRB.TabIndex = 0;
+            this.txtByReportOfLRB.TabStop = true;
+            this.txtByReportOfLRB.Text = "按报告期";
+            this.txtByReportOfLRB.UseVisualStyleBackColor = true;
+            // 
             // tabXJLLB
             // 
             this.tabXJLLB.Controls.Add(this.gridXJLLBList);
@@ -521,6 +710,64 @@
             this.tabXJLLB.TabIndex = 5;
             this.tabXJLLB.Text = "现金流量表";
             this.tabXJLLB.UseVisualStyleBackColor = true;
+            // 
+            // gridXJLLBList
+            // 
+            this.gridXJLLBList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridXJLLBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridXJLLBList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridXJLLBList.Location = new System.Drawing.Point(0, 29);
+            this.gridXJLLBList.MultiSelect = false;
+            this.gridXJLLBList.Name = "gridXJLLBList";
+            this.gridXJLLBList.ReadOnly = true;
+            this.gridXJLLBList.RowHeadersWidth = 10;
+            this.gridXJLLBList.RowTemplate.Height = 23;
+            this.gridXJLLBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridXJLLBList.Size = new System.Drawing.Size(842, 277);
+            this.gridXJLLBList.TabIndex = 48;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.txtByQuarterOfXJLLB);
+            this.panel6.Controls.Add(this.txtByYearOfXJLLB);
+            this.panel6.Controls.Add(this.txtByReportOfXJLLB);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(842, 29);
+            this.panel6.TabIndex = 47;
+            // 
+            // txtByQuarterOfXJLLB
+            // 
+            this.txtByQuarterOfXJLLB.AutoSize = true;
+            this.txtByQuarterOfXJLLB.Location = new System.Drawing.Point(150, 7);
+            this.txtByQuarterOfXJLLB.Name = "txtByQuarterOfXJLLB";
+            this.txtByQuarterOfXJLLB.Size = new System.Drawing.Size(59, 16);
+            this.txtByQuarterOfXJLLB.TabIndex = 2;
+            this.txtByQuarterOfXJLLB.Text = "按季度";
+            this.txtByQuarterOfXJLLB.UseVisualStyleBackColor = true;
+            // 
+            // txtByYearOfXJLLB
+            // 
+            this.txtByYearOfXJLLB.AutoSize = true;
+            this.txtByYearOfXJLLB.Location = new System.Drawing.Point(85, 7);
+            this.txtByYearOfXJLLB.Name = "txtByYearOfXJLLB";
+            this.txtByYearOfXJLLB.Size = new System.Drawing.Size(59, 16);
+            this.txtByYearOfXJLLB.TabIndex = 1;
+            this.txtByYearOfXJLLB.Text = "按年度";
+            this.txtByYearOfXJLLB.UseVisualStyleBackColor = true;
+            // 
+            // txtByReportOfXJLLB
+            // 
+            this.txtByReportOfXJLLB.AutoSize = true;
+            this.txtByReportOfXJLLB.Checked = true;
+            this.txtByReportOfXJLLB.Location = new System.Drawing.Point(8, 7);
+            this.txtByReportOfXJLLB.Name = "txtByReportOfXJLLB";
+            this.txtByReportOfXJLLB.Size = new System.Drawing.Size(71, 16);
+            this.txtByReportOfXJLLB.TabIndex = 0;
+            this.txtByReportOfXJLLB.TabStop = true;
+            this.txtByReportOfXJLLB.Text = "按报告期";
+            this.txtByReportOfXJLLB.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -695,242 +942,98 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
-            // panel3
+            // panel7
             // 
-            this.panel3.Controls.Add(this.txtByQuarter);
-            this.panel3.Controls.Add(this.txtByYear);
-            this.panel3.Controls.Add(this.txtByReport);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(842, 29);
-            this.panel3.TabIndex = 46;
+            this.panel7.Controls.Add(this.btnSaleExchange);
+            this.panel7.Controls.Add(this.btnBuyExchange);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 3);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(836, 29);
+            this.panel7.TabIndex = 47;
             // 
-            // gridMaintargetList
+            // gridExchangeList
             // 
-            this.gridMaintargetList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridMaintargetList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridMaintargetList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridMaintargetList.Location = new System.Drawing.Point(0, 29);
-            this.gridMaintargetList.MultiSelect = false;
-            this.gridMaintargetList.Name = "gridMaintargetList";
-            this.gridMaintargetList.ReadOnly = true;
-            this.gridMaintargetList.RowTemplate.Height = 23;
-            this.gridMaintargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridMaintargetList.Size = new System.Drawing.Size(842, 277);
-            this.gridMaintargetList.TabIndex = 47;
+            this.gridExchangeList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridExchangeList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridExchangeList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridExchangeList.Location = new System.Drawing.Point(3, 32);
+            this.gridExchangeList.MultiSelect = false;
+            this.gridExchangeList.Name = "gridExchangeList";
+            this.gridExchangeList.ReadOnly = true;
+            this.gridExchangeList.RowHeadersWidth = 10;
+            this.gridExchangeList.RowTemplate.Height = 23;
+            this.gridExchangeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridExchangeList.Size = new System.Drawing.Size(836, 271);
+            this.gridExchangeList.TabIndex = 48;
             // 
-            // txtByReport
+            // btnBuyExchange
             // 
-            this.txtByReport.AutoSize = true;
-            this.txtByReport.Checked = true;
-            this.txtByReport.Location = new System.Drawing.Point(8, 7);
-            this.txtByReport.Name = "txtByReport";
-            this.txtByReport.Size = new System.Drawing.Size(71, 16);
-            this.txtByReport.TabIndex = 0;
-            this.txtByReport.Text = "按报告期";
-            this.txtByReport.UseVisualStyleBackColor = true;
-            this.txtByReport.CheckedChanged += new System.EventHandler(this.txtByReport_CheckedChanged);
+            this.btnBuyExchange.BackColor = System.Drawing.Color.White;
+            this.btnBuyExchange.Location = new System.Drawing.Point(5, 3);
+            this.btnBuyExchange.Name = "btnBuyExchange";
+            this.btnBuyExchange.Size = new System.Drawing.Size(64, 23);
+            this.btnBuyExchange.TabIndex = 0;
+            this.btnBuyExchange.Text = "买入";
+            this.btnBuyExchange.UseVisualStyleBackColor = false;
+            this.btnBuyExchange.Click += new System.EventHandler(this.btnBuyExchange_Click);
             // 
-            // txtByYear
+            // btnSaleExchange
             // 
-            this.txtByYear.AutoSize = true;
-            this.txtByYear.Location = new System.Drawing.Point(85, 7);
-            this.txtByYear.Name = "txtByYear";
-            this.txtByYear.Size = new System.Drawing.Size(59, 16);
-            this.txtByYear.TabIndex = 1;
-            this.txtByYear.Text = "按年度";
-            this.txtByYear.UseVisualStyleBackColor = true;
-            this.txtByYear.CheckedChanged += new System.EventHandler(this.txtByYear_CheckedChanged);
+            this.btnSaleExchange.BackColor = System.Drawing.Color.White;
+            this.btnSaleExchange.Location = new System.Drawing.Point(75, 3);
+            this.btnSaleExchange.Name = "btnSaleExchange";
+            this.btnSaleExchange.Size = new System.Drawing.Size(64, 23);
+            this.btnSaleExchange.TabIndex = 1;
+            this.btnSaleExchange.Text = "卖出";
+            this.btnSaleExchange.UseVisualStyleBackColor = false;
+            this.btnSaleExchange.Click += new System.EventHandler(this.btnSaleExchange_Click);
             // 
-            // txtByQuarter
+            // tabRemind
             // 
-            this.txtByQuarter.AutoSize = true;
-            this.txtByQuarter.Location = new System.Drawing.Point(150, 7);
-            this.txtByQuarter.Name = "txtByQuarter";
-            this.txtByQuarter.Size = new System.Drawing.Size(59, 16);
-            this.txtByQuarter.TabIndex = 2;
-            this.txtByQuarter.Text = "按季度";
-            this.txtByQuarter.UseVisualStyleBackColor = true;
-            this.txtByQuarter.CheckedChanged += new System.EventHandler(this.txtByQuarter_CheckedChanged);
+            this.tabRemind.Controls.Add(this.gridRemindList);
+            this.tabRemind.Controls.Add(this.panel8);
+            this.tabRemind.Location = new System.Drawing.Point(4, 22);
+            this.tabRemind.Name = "tabRemind";
+            this.tabRemind.Size = new System.Drawing.Size(842, 306);
+            this.tabRemind.TabIndex = 8;
+            this.tabRemind.Text = "涨跌提醒";
+            this.tabRemind.UseVisualStyleBackColor = true;
             // 
-            // panel4
+            // panel8
             // 
-            this.panel4.Controls.Add(this.txtByQuarterOfZCFZB);
-            this.panel4.Controls.Add(this.txtByYearOfZCFZB);
-            this.panel4.Controls.Add(this.txtByReportOfZCFZB);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(842, 29);
-            this.panel4.TabIndex = 47;
+            this.panel8.Controls.Add(this.btnHandleRemind);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(842, 29);
+            this.panel8.TabIndex = 50;
             // 
-            // txtByQuarterOfZCFZB
+            // btnHandleRemind
             // 
-            this.txtByQuarterOfZCFZB.AutoSize = true;
-            this.txtByQuarterOfZCFZB.Location = new System.Drawing.Point(150, 7);
-            this.txtByQuarterOfZCFZB.Name = "txtByQuarterOfZCFZB";
-            this.txtByQuarterOfZCFZB.Size = new System.Drawing.Size(59, 16);
-            this.txtByQuarterOfZCFZB.TabIndex = 2;
-            this.txtByQuarterOfZCFZB.Text = "按季度";
-            this.txtByQuarterOfZCFZB.UseVisualStyleBackColor = true;
+            this.btnHandleRemind.BackColor = System.Drawing.Color.White;
+            this.btnHandleRemind.Location = new System.Drawing.Point(5, 3);
+            this.btnHandleRemind.Name = "btnHandleRemind";
+            this.btnHandleRemind.Size = new System.Drawing.Size(68, 23);
+            this.btnHandleRemind.TabIndex = 0;
+            this.btnHandleRemind.Text = "标记执行";
+            this.btnHandleRemind.UseVisualStyleBackColor = false;
+            this.btnHandleRemind.Click += new System.EventHandler(this.btnHandleRemind_Click);
             // 
-            // txtByYearOfZCFZB
+            // gridRemindList
             // 
-            this.txtByYearOfZCFZB.AutoSize = true;
-            this.txtByYearOfZCFZB.Location = new System.Drawing.Point(85, 7);
-            this.txtByYearOfZCFZB.Name = "txtByYearOfZCFZB";
-            this.txtByYearOfZCFZB.Size = new System.Drawing.Size(59, 16);
-            this.txtByYearOfZCFZB.TabIndex = 1;
-            this.txtByYearOfZCFZB.Text = "按年度";
-            this.txtByYearOfZCFZB.UseVisualStyleBackColor = true;
-            // 
-            // txtByReportOfZCFZB
-            // 
-            this.txtByReportOfZCFZB.AutoSize = true;
-            this.txtByReportOfZCFZB.Checked = true;
-            this.txtByReportOfZCFZB.Location = new System.Drawing.Point(8, 7);
-            this.txtByReportOfZCFZB.Name = "txtByReportOfZCFZB";
-            this.txtByReportOfZCFZB.Size = new System.Drawing.Size(71, 16);
-            this.txtByReportOfZCFZB.TabIndex = 0;
-            this.txtByReportOfZCFZB.Text = "按报告期";
-            this.txtByReportOfZCFZB.UseVisualStyleBackColor = true;
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.txtByQuarterOfLRB);
-            this.panel5.Controls.Add(this.txtByYearOfLRB);
-            this.panel5.Controls.Add(this.txtByReportOfLRB);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(842, 29);
-            this.panel5.TabIndex = 47;
-            // 
-            // txtByQuarterOfLRB
-            // 
-            this.txtByQuarterOfLRB.AutoSize = true;
-            this.txtByQuarterOfLRB.Location = new System.Drawing.Point(150, 7);
-            this.txtByQuarterOfLRB.Name = "txtByQuarterOfLRB";
-            this.txtByQuarterOfLRB.Size = new System.Drawing.Size(59, 16);
-            this.txtByQuarterOfLRB.TabIndex = 2;
-            this.txtByQuarterOfLRB.Text = "按季度";
-            this.txtByQuarterOfLRB.UseVisualStyleBackColor = true;
-            // 
-            // txtByYearOfLRB
-            // 
-            this.txtByYearOfLRB.AutoSize = true;
-            this.txtByYearOfLRB.Location = new System.Drawing.Point(85, 7);
-            this.txtByYearOfLRB.Name = "txtByYearOfLRB";
-            this.txtByYearOfLRB.Size = new System.Drawing.Size(59, 16);
-            this.txtByYearOfLRB.TabIndex = 1;
-            this.txtByYearOfLRB.Text = "按年度";
-            this.txtByYearOfLRB.UseVisualStyleBackColor = true;
-            // 
-            // txtByReportOfLRB
-            // 
-            this.txtByReportOfLRB.AutoSize = true;
-            this.txtByReportOfLRB.Checked = true;
-            this.txtByReportOfLRB.Location = new System.Drawing.Point(8, 7);
-            this.txtByReportOfLRB.Name = "txtByReportOfLRB";
-            this.txtByReportOfLRB.Size = new System.Drawing.Size(71, 16);
-            this.txtByReportOfLRB.TabIndex = 0;
-            this.txtByReportOfLRB.Text = "按报告期";
-            this.txtByReportOfLRB.UseVisualStyleBackColor = true;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.txtByQuarterOfXJLLB);
-            this.panel6.Controls.Add(this.txtByYearOfXJLLB);
-            this.panel6.Controls.Add(this.txtByReportOfXJLLB);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(842, 29);
-            this.panel6.TabIndex = 47;
-            // 
-            // txtByQuarterOfXJLLB
-            // 
-            this.txtByQuarterOfXJLLB.AutoSize = true;
-            this.txtByQuarterOfXJLLB.Location = new System.Drawing.Point(150, 7);
-            this.txtByQuarterOfXJLLB.Name = "txtByQuarterOfXJLLB";
-            this.txtByQuarterOfXJLLB.Size = new System.Drawing.Size(59, 16);
-            this.txtByQuarterOfXJLLB.TabIndex = 2;
-            this.txtByQuarterOfXJLLB.Text = "按季度";
-            this.txtByQuarterOfXJLLB.UseVisualStyleBackColor = true;
-            // 
-            // txtByYearOfXJLLB
-            // 
-            this.txtByYearOfXJLLB.AutoSize = true;
-            this.txtByYearOfXJLLB.Location = new System.Drawing.Point(85, 7);
-            this.txtByYearOfXJLLB.Name = "txtByYearOfXJLLB";
-            this.txtByYearOfXJLLB.Size = new System.Drawing.Size(59, 16);
-            this.txtByYearOfXJLLB.TabIndex = 1;
-            this.txtByYearOfXJLLB.Text = "按年度";
-            this.txtByYearOfXJLLB.UseVisualStyleBackColor = true;
-            // 
-            // txtByReportOfXJLLB
-            // 
-            this.txtByReportOfXJLLB.AutoSize = true;
-            this.txtByReportOfXJLLB.Checked = true;
-            this.txtByReportOfXJLLB.Location = new System.Drawing.Point(8, 7);
-            this.txtByReportOfXJLLB.Name = "txtByReportOfXJLLB";
-            this.txtByReportOfXJLLB.Size = new System.Drawing.Size(71, 16);
-            this.txtByReportOfXJLLB.TabIndex = 0;
-            this.txtByReportOfXJLLB.Text = "按报告期";
-            this.txtByReportOfXJLLB.UseVisualStyleBackColor = true;
-            // 
-            // gridXJLLBList
-            // 
-            this.gridXJLLBList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridXJLLBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridXJLLBList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridXJLLBList.Location = new System.Drawing.Point(0, 29);
-            this.gridXJLLBList.MultiSelect = false;
-            this.gridXJLLBList.Name = "gridXJLLBList";
-            this.gridXJLLBList.ReadOnly = true;
-            this.gridXJLLBList.RowTemplate.Height = 23;
-            this.gridXJLLBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridXJLLBList.Size = new System.Drawing.Size(842, 277);
-            this.gridXJLLBList.TabIndex = 48;
-            // 
-            // gridLRBList
-            // 
-            this.gridLRBList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridLRBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridLRBList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridLRBList.Location = new System.Drawing.Point(0, 29);
-            this.gridLRBList.MultiSelect = false;
-            this.gridLRBList.Name = "gridLRBList";
-            this.gridLRBList.ReadOnly = true;
-            this.gridLRBList.RowTemplate.Height = 23;
-            this.gridLRBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridLRBList.Size = new System.Drawing.Size(842, 277);
-            this.gridLRBList.TabIndex = 48;
-            // 
-            // gridZCFZBList
-            // 
-            this.gridZCFZBList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridZCFZBList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridZCFZBList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridZCFZBList.Location = new System.Drawing.Point(0, 29);
-            this.gridZCFZBList.MultiSelect = false;
-            this.gridZCFZBList.Name = "gridZCFZBList";
-            this.gridZCFZBList.ReadOnly = true;
-            this.gridZCFZBList.RowTemplate.Height = 23;
-            this.gridZCFZBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridZCFZBList.Size = new System.Drawing.Size(842, 277);
-            this.gridZCFZBList.TabIndex = 48;
-            // 
-            // btnAddRmind
-            // 
-            this.btnAddRmind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnAddRmind.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRmind.Image")));
-            this.btnAddRmind.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddRmind.Name = "btnAddRmind";
-            this.btnAddRmind.Size = new System.Drawing.Size(60, 22);
-            this.btnAddRmind.Text = "设置提醒";
-            this.btnAddRmind.Click += new System.EventHandler(this.btnAddRmind_Click);
+            this.gridRemindList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridRemindList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridRemindList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridRemindList.Location = new System.Drawing.Point(0, 29);
+            this.gridRemindList.MultiSelect = false;
+            this.gridRemindList.Name = "gridRemindList";
+            this.gridRemindList.ReadOnly = true;
+            this.gridRemindList.RowHeadersWidth = 10;
+            this.gridRemindList.RowTemplate.Height = 23;
+            this.gridRemindList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridRemindList.Size = new System.Drawing.Size(842, 277);
+            this.gridRemindList.TabIndex = 51;
             // 
             // DesktopFrom
             // 
@@ -969,29 +1072,33 @@
             this.tabStockStrategyDetail.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).EndInit();
             this.tabExchangeList.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).EndInit();
             this.tabMaintarget.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.tabZZFZB.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridZCFZBList)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.tabLRB.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridLRBList)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.tabXJLLB.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridXJLLBList)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
             this.tabStrategyData.ResumeLayout(false);
             this.tabPriceData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).EndInit();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridXJLLBList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridLRBList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridZCFZBList)).EndInit();
+            this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).EndInit();
+            this.tabRemind.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1041,7 +1148,6 @@
         private System.Windows.Forms.TabPage tabStockStrategyDetail;
         private System.Windows.Forms.DataGridView gridStockStrategyDetailList;
         private System.Windows.Forms.TabPage tabExchangeList;
-        private System.Windows.Forms.DataGridView gridExchangeList;
         private System.Windows.Forms.TabPage tabMaintarget;
         private System.Windows.Forms.TabPage tabZZFZB;
         private System.Windows.Forms.TabPage tabLRB;
@@ -1070,5 +1176,13 @@
         private System.Windows.Forms.RadioButton txtByYearOfXJLLB;
         private System.Windows.Forms.RadioButton txtByReportOfXJLLB;
         private System.Windows.Forms.ToolStripButton btnAddRmind;
+        private System.Windows.Forms.DataGridView gridExchangeList;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Button btnSaleExchange;
+        private System.Windows.Forms.Button btnBuyExchange;
+        private System.Windows.Forms.TabPage tabRemind;
+        private System.Windows.Forms.DataGridView gridRemindList;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Button btnHandleRemind;
     }
 }

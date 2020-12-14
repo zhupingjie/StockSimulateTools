@@ -18,22 +18,22 @@ namespace StockSimulateCore.Model
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
 
-        [Description("当前股价(元)")]
+        [Description("当前股价")]
         public decimal Price { get; set; }
 
-        [Description("今日开盘价(元)")]
+        [Description("今日开盘价")]
         public decimal TodayStartPrice { get; set; }
 
-        [Description("今日收盘价(元)")]
+        [Description("今日收盘价")]
         public decimal TodayEndPrice { get; set; }
 
-        [Description("今日最高价(元)")]
+        [Description("今日最高价")]
         public decimal TodayMaxPrice { get; set; }
 
-        [Description("今日最低价(元)")]
+        [Description("今日最低价")]
         public decimal TodayMinPrice { get; set; }
 
-        [Description("昨日收盘价(元)")]
+        [Description("昨日收盘价")]
         public decimal YesterdayEndPrice { get; set; }
 
         [Description("成交量(万手)")]

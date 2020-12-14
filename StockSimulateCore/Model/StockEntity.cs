@@ -15,7 +15,7 @@ namespace StockSimulateCore.Model
         [Description("股票名称")]
         public string Name { get; set; }
 
-        [Description("股价(元)")]
+        [Description("股价")]
         public decimal Price { get; set; }
 
         [Description("浮动(%)")]
