@@ -9,7 +9,6 @@ namespace StockSimulateCore.Config
     public class RunningConfig
     {
         private static readonly RunningConfig instance = new RunningConfig();
-
         public static RunningConfig Instance
         {
             get
@@ -25,5 +24,7 @@ namespace StockSimulateCore.Config
         public int GatherStockMainTargetInterval { get; set; } = 12 * 60 * 60;
 
         public int RemindStockStrategyInterval { get; set; } = 30;
+
+        public int RemindStockPriceFloatPer { get; set; } = 2;
     }
 }

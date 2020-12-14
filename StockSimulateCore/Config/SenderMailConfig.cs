@@ -17,11 +17,11 @@ namespace StockSimulateCore.Config
         {
         }
 
-        public string SendUserId { get; set; } = "47426568@qq.com";
-        public string SendPwd { get; set; } = "qqmm47426568";
+        public string SendUserId { get; set; } = "zhupj@foxmail.com";
+        public string SendPwd { get; set; } = "oznnqmdunobhbjai";
         public string DisplayName { get; set; } = "QQMail";
         public string Host { get; set; } = "smtp.qq.com";
-        public int Port { get; set; } = 465;
+        public int Port { get; set; } = 587;
 
         /// <summary>
         /// 启用SSL加密

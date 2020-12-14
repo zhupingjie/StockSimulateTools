@@ -40,6 +40,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtRemindStockPriceFloatPer = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -47,6 +49,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.txtRemindStockPriceFloatPer);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.txtRemindStockStrategyInterval);
@@ -58,7 +62,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(786, 311);
+            this.panel1.Size = new System.Drawing.Size(794, 390);
             this.panel1.TabIndex = 4;
             // 
             // label4
@@ -139,9 +143,9 @@
             this.panel2.Controls.Add(this.btnClose);
             this.panel2.Controls.Add(this.btnOK);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 311);
+            this.panel2.Location = new System.Drawing.Point(0, 390);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(786, 68);
+            this.panel2.Size = new System.Drawing.Size(794, 68);
             this.panel2.TabIndex = 3;
             // 
             // btnClose
@@ -163,11 +167,29 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(12, 304);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(390, 46);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "买卖点价格浮动比例(%)";
+            // 
+            // txtRemindStockPriceFloatPer
+            // 
+            this.txtRemindStockPriceFloatPer.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtRemindStockPriceFloatPer.Location = new System.Drawing.Point(428, 304);
+            this.txtRemindStockPriceFloatPer.Name = "txtRemindStockPriceFloatPer";
+            this.txtRemindStockPriceFloatPer.Size = new System.Drawing.Size(331, 54);
+            this.txtRemindStockPriceFloatPer.TabIndex = 8;
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(786, 379);
+            this.ClientSize = new System.Drawing.Size(794, 458);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Name = "ConfigForm";
@@ -194,5 +216,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtRemindStockPriceFloatPer;
     }
 }

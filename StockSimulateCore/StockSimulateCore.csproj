@@ -122,6 +122,7 @@
     <Compile Include="Config\SenderMailConfig.cs" />
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\ActionLogEntity.cs" />
+    <Compile Include="Model\GlobalConfigEntity.cs" />
     <Compile Include="Model\StockStrategyEntity.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\ExchangeOrderEntity.cs" />

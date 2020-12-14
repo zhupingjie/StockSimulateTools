@@ -30,14 +30,35 @@ namespace StockPriceTools
         #region 页面加载事件
         private void DesktopFrom_Load(object sender, EventArgs e)
         {
-            this.LoadData();
+            this.LoadConfigData();
+
+            this.LoadStockData();
 
             this.GatherData();
 
             this.RemindData();
         }
 
-        void LoadData()
+        void LoadConfigData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var configs = Repository.QueryAll<GlobalConfigEntity>();
+                foreach(var config in configs)
+                {
+                    var prepInfo = ObjectUtil.GetPropertyInfo(RC, config.Name);
+                    if (prepInfo == null) continue;
+
+                    var value = ObjectUtil.ToValue(config.Value, prepInfo.PropertyType);
+                    if (value != null)
+                    {
+                        ObjectUtil.SetPropertyValue(RC, config.Name, value);
+                    }
+                }
+            });
+        }
+
+        void LoadStockData()
         {
             Task.Factory.StartNew(() =>
             {
@@ -528,8 +549,8 @@ namespace StockPriceTools
                         Cost = ObjectUtil.ToValue<decimal>(dr["成本"].ToString(), 0),
                         Profit = ObjectUtil.ToValue<decimal>(dr["盈亏"].ToString(), 0),
                     };
-                    detail.MaxPrice = Math.Round(detail.Price * 1.02m, 2);
-                    detail.MinPrice = Math.Round(detail.Price * 0.98m, 2);
+                    detail.MaxPrice = Math.Round(detail.Price * (1 + RC.RemindStockPriceFloatPer / 100), 2);
+                    detail.MinPrice = Math.Round(detail.Price * (1 - RC.RemindStockPriceFloatPer / 100), 2);
                     Repository.Insert<StockStrategyDetailEntity>(detail);
                 }
                 this.LoadStockStrategyList();
@@ -600,5 +621,21 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
+        private void gridStockStrategyDetailList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var row = this.gridStockStrategyDetailList.Rows[e.RowIndex];
+            if (row == null) return;
+
+            var stockCode = row.Cells["股票代码"].Value;
+            var strategyName = row.Cells["买卖策略"].Value;
+            var target = row.Cells["买卖点"].Value;
+
+            var stockStrategyDetail = Repository.QueryFirst<StockStrategyDetailEntity>($"StockCode='{stockCode}' and StrategyName='{strategyName}' and Target='{target}'");
+            if (stockStrategyDetail == null) return;
+
+            stockStrategyDetail.Execute = true;
+            Repository.Update<StockStrategyDetailEntity>(stockStrategyDetail);
+        }
     }
 }
