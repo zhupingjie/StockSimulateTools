@@ -68,7 +68,7 @@ namespace StockSimulateCore.Utils
             return new StockInfo()
             {
                 Stock = stock,
-                Price = stockPrice
+                DayPrice = stockPrice
             };
         }
 
@@ -222,6 +222,6 @@ namespace StockSimulateCore.Utils
     {
         public StockEntity Stock { get; set; }
 
-        public StockPriceEntity Price { get; set; }
+        public StockPriceEntity DayPrice { get; set; }
     }
 }

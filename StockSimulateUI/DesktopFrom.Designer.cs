@@ -108,6 +108,7 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnCancelRemind = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -367,7 +368,7 @@
             this.tabFocusList.Location = new System.Drawing.Point(4, 22);
             this.tabFocusList.Name = "tabFocusList";
             this.tabFocusList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFocusList.Size = new System.Drawing.Size(842, 195);
+            this.tabFocusList.Size = new System.Drawing.Size(842, 280);
             this.tabFocusList.TabIndex = 1;
             this.tabFocusList.Text = "策略股";
             this.tabFocusList.UseVisualStyleBackColor = true;
@@ -384,7 +385,7 @@
             this.gridStockStrategyList.RowHeadersWidth = 10;
             this.gridStockStrategyList.RowTemplate.Height = 23;
             this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockStrategyList.Size = new System.Drawing.Size(836, 189);
+            this.gridStockStrategyList.Size = new System.Drawing.Size(836, 274);
             this.gridStockStrategyList.TabIndex = 42;
             // 
             // tabControlBottom
@@ -434,7 +435,7 @@
             this.tabPriceList.Location = new System.Drawing.Point(4, 22);
             this.tabPriceList.Name = "tabPriceList";
             this.tabPriceList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPriceList.Size = new System.Drawing.Size(842, 306);
+            this.tabPriceList.Size = new System.Drawing.Size(842, 221);
             this.tabPriceList.TabIndex = 0;
             this.tabPriceList.Text = "历史股价";
             // 
@@ -450,7 +451,7 @@
             this.gridPriceList.RowHeadersWidth = 10;
             this.gridPriceList.RowTemplate.Height = 23;
             this.gridPriceList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridPriceList.Size = new System.Drawing.Size(836, 300);
+            this.gridPriceList.Size = new System.Drawing.Size(836, 215);
             this.gridPriceList.TabIndex = 44;
             // 
             // tabStockStrategyDetail
@@ -458,7 +459,7 @@
             this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyDetailList);
             this.tabStockStrategyDetail.Location = new System.Drawing.Point(4, 22);
             this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
-            this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 306);
+            this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 221);
             this.tabStockStrategyDetail.TabIndex = 6;
             this.tabStockStrategyDetail.Text = "买卖策略";
             this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
@@ -475,7 +476,7 @@
             this.gridStockStrategyDetailList.RowHeadersWidth = 10;
             this.gridStockStrategyDetailList.RowTemplate.Height = 23;
             this.gridStockStrategyDetailList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockStrategyDetailList.Size = new System.Drawing.Size(842, 306);
+            this.gridStockStrategyDetailList.Size = new System.Drawing.Size(842, 221);
             this.gridStockStrategyDetailList.TabIndex = 45;
             // 
             // tabRemind
@@ -484,7 +485,7 @@
             this.tabRemind.Controls.Add(this.panel8);
             this.tabRemind.Location = new System.Drawing.Point(4, 22);
             this.tabRemind.Name = "tabRemind";
-            this.tabRemind.Size = new System.Drawing.Size(842, 306);
+            this.tabRemind.Size = new System.Drawing.Size(842, 221);
             this.tabRemind.TabIndex = 8;
             this.tabRemind.Text = "涨跌提醒";
             this.tabRemind.UseVisualStyleBackColor = true;
@@ -495,17 +496,17 @@
             this.gridRemindList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridRemindList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridRemindList.Location = new System.Drawing.Point(0, 29);
-            this.gridRemindList.MultiSelect = false;
             this.gridRemindList.Name = "gridRemindList";
             this.gridRemindList.ReadOnly = true;
             this.gridRemindList.RowHeadersWidth = 10;
             this.gridRemindList.RowTemplate.Height = 23;
             this.gridRemindList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridRemindList.Size = new System.Drawing.Size(842, 277);
+            this.gridRemindList.Size = new System.Drawing.Size(842, 192);
             this.gridRemindList.TabIndex = 51;
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.btnCancelRemind);
             this.panel8.Controls.Add(this.btnHandleRemind);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel8.Location = new System.Drawing.Point(0, 0);
@@ -531,7 +532,7 @@
             this.tabExchangeList.Location = new System.Drawing.Point(4, 22);
             this.tabExchangeList.Name = "tabExchangeList";
             this.tabExchangeList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExchangeList.Size = new System.Drawing.Size(842, 306);
+            this.tabExchangeList.Size = new System.Drawing.Size(842, 221);
             this.tabExchangeList.TabIndex = 1;
             this.tabExchangeList.Text = "交易记录";
             this.tabExchangeList.UseVisualStyleBackColor = true;
@@ -548,7 +549,7 @@
             this.gridExchangeList.RowHeadersWidth = 10;
             this.gridExchangeList.RowTemplate.Height = 23;
             this.gridExchangeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridExchangeList.Size = new System.Drawing.Size(836, 271);
+            this.gridExchangeList.Size = new System.Drawing.Size(836, 186);
             this.gridExchangeList.TabIndex = 48;
             // 
             // panel7
@@ -589,7 +590,7 @@
             this.tabMaintarget.Controls.Add(this.panel3);
             this.tabMaintarget.Location = new System.Drawing.Point(4, 22);
             this.tabMaintarget.Name = "tabMaintarget";
-            this.tabMaintarget.Size = new System.Drawing.Size(842, 306);
+            this.tabMaintarget.Size = new System.Drawing.Size(842, 221);
             this.tabMaintarget.TabIndex = 2;
             this.tabMaintarget.Text = "主要指标";
             this.tabMaintarget.UseVisualStyleBackColor = true;
@@ -606,7 +607,7 @@
             this.gridMaintargetList.RowHeadersWidth = 10;
             this.gridMaintargetList.RowTemplate.Height = 23;
             this.gridMaintargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridMaintargetList.Size = new System.Drawing.Size(842, 277);
+            this.gridMaintargetList.Size = new System.Drawing.Size(842, 192);
             this.gridMaintargetList.TabIndex = 47;
             // 
             // panel3
@@ -661,7 +662,7 @@
             this.tabZZFZB.Controls.Add(this.panel4);
             this.tabZZFZB.Location = new System.Drawing.Point(4, 22);
             this.tabZZFZB.Name = "tabZZFZB";
-            this.tabZZFZB.Size = new System.Drawing.Size(842, 306);
+            this.tabZZFZB.Size = new System.Drawing.Size(842, 221);
             this.tabZZFZB.TabIndex = 3;
             this.tabZZFZB.Text = "资产负债表";
             this.tabZZFZB.UseVisualStyleBackColor = true;
@@ -678,7 +679,7 @@
             this.gridZCFZBList.RowHeadersWidth = 10;
             this.gridZCFZBList.RowTemplate.Height = 23;
             this.gridZCFZBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridZCFZBList.Size = new System.Drawing.Size(842, 277);
+            this.gridZCFZBList.Size = new System.Drawing.Size(842, 192);
             this.gridZCFZBList.TabIndex = 48;
             // 
             // panel4
@@ -730,7 +731,7 @@
             this.tabLRB.Controls.Add(this.panel5);
             this.tabLRB.Location = new System.Drawing.Point(4, 22);
             this.tabLRB.Name = "tabLRB";
-            this.tabLRB.Size = new System.Drawing.Size(842, 306);
+            this.tabLRB.Size = new System.Drawing.Size(842, 221);
             this.tabLRB.TabIndex = 4;
             this.tabLRB.Text = "利润表";
             this.tabLRB.UseVisualStyleBackColor = true;
@@ -747,7 +748,7 @@
             this.gridLRBList.RowHeadersWidth = 10;
             this.gridLRBList.RowTemplate.Height = 23;
             this.gridLRBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridLRBList.Size = new System.Drawing.Size(842, 277);
+            this.gridLRBList.Size = new System.Drawing.Size(842, 192);
             this.gridLRBList.TabIndex = 48;
             // 
             // panel5
@@ -799,7 +800,7 @@
             this.tabXJLLB.Controls.Add(this.panel6);
             this.tabXJLLB.Location = new System.Drawing.Point(4, 22);
             this.tabXJLLB.Name = "tabXJLLB";
-            this.tabXJLLB.Size = new System.Drawing.Size(842, 306);
+            this.tabXJLLB.Size = new System.Drawing.Size(842, 221);
             this.tabXJLLB.TabIndex = 5;
             this.tabXJLLB.Text = "现金流量表";
             this.tabXJLLB.UseVisualStyleBackColor = true;
@@ -816,7 +817,7 @@
             this.gridXJLLBList.RowHeadersWidth = 10;
             this.gridXJLLBList.RowTemplate.Height = 23;
             this.gridXJLLBList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridXJLLBList.Size = new System.Drawing.Size(842, 277);
+            this.gridXJLLBList.Size = new System.Drawing.Size(842, 192);
             this.gridXJLLBList.TabIndex = 48;
             // 
             // panel6
@@ -1035,6 +1036,17 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
+            // btnCancelRemind
+            // 
+            this.btnCancelRemind.BackColor = System.Drawing.Color.White;
+            this.btnCancelRemind.Location = new System.Drawing.Point(79, 3);
+            this.btnCancelRemind.Name = "btnCancelRemind";
+            this.btnCancelRemind.Size = new System.Drawing.Size(68, 23);
+            this.btnCancelRemind.TabIndex = 1;
+            this.btnCancelRemind.Text = "取消提醒";
+            this.btnCancelRemind.UseVisualStyleBackColor = false;
+            this.btnCancelRemind.Click += new System.EventHandler(this.btnCancelRemind_Click);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1047,6 +1059,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DesktopFrom";
             this.Text = "Stock Simulate App";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.DesktopFrom_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -1184,5 +1197,6 @@
         private System.Windows.Forms.DataGridView gridRemindList;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Button btnHandleRemind;
+        private System.Windows.Forms.Button btnCancelRemind;
     }
 }

@@ -175,5 +175,12 @@ namespace StockSimulateCore.Utils
                 throw new Exception($"数据[{value}]转换为类型[{type.Name}]错误:{ex.Message}");
             }
         }
+
+        public static bool EffectStockDealTime()
+        {
+            if (DateTime.Now.Hour < 9 || DateTime.Now.Hour > 11 && DateTime.Now.Minute > 30) return false;
+            if (DateTime.Now.Hour < 13 || DateTime.Now.Hour > 15 && DateTime.Now.Minute > 30) return false;
+            return true;
+        }
     }
 }

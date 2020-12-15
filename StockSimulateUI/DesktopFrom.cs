@@ -66,7 +66,7 @@ namespace StockPriceTools
             //页面加载后加载一次数据，其余通过采集价格数据后刷新列表
             Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(5 * 1000);
+                Thread.Sleep(2 * 1000);
 
                 Action act = delegate ()
                 {
@@ -85,36 +85,38 @@ namespace StockPriceTools
 
                 while (true)
                 {
-                    var stocks = Repository.QueryAll<StockEntity>();
-                    foreach (var stock in stocks)
+                    if (ObjectUtil.EffectStockDealTime())
                     {
-                        var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                        if (stockInfo == null) return;
-                        if (stockInfo.Price.Price == 0) return;
-
-                        stockInfo.Stock.ID = stock.ID;
-                        Repository.Update<StockEntity>(stockInfo.Stock);
-
-                        var price = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{DateTime.Now.ToString("yyyy-MM-dd")}'");
-                        if (price == null)
+                        var stocks = Repository.QueryAll<StockEntity>();
+                        foreach (var stock in stocks)
                         {
-                            Repository.Insert<StockPriceEntity>(stockInfo.Price);
+                            var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
+                            if (stockInfo == null) return;
+                            if (stockInfo.DayPrice.Price == 0) return;
+
+                            stockInfo.Stock.ID = stock.ID;
+                            Repository.Update<StockEntity>(stockInfo.Stock);
+
+                            var price = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{DateTime.Now.ToString("yyyy-MM-dd")}'");
+                            if (price == null)
+                            {
+                                Repository.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                            }
+                            else
+                            {
+                                stockInfo.DayPrice.ID = price.ID;
+                                Repository.Update<StockPriceEntity>(stockInfo.DayPrice);
+                            }
+                            this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price.ToString("####.00").PadLeft(4, ' ')}] [{stockInfo.DayPrice.UDPer}%]");
                         }
-                        else
+                        this.ActionLog($">------------------------------------------------>");
+                        Action act = delegate ()
                         {
-                            stockInfo.Price.ID = price.ID;
-                            Repository.Update<StockPriceEntity>(stockInfo.Price);
-                        }
-                        this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.Price.Price}] [{stockInfo.Price.UDPer}%]");
+                            this.LoadStockList();
+                            this.LoadStockStrategyList();
+                        };
+                        this.Invoke(act);
                     }
-                    this.ActionLog($">------------------------------------------------>");
-                    Action act = delegate ()
-                    {
-                        this.LoadStockList();
-                        this.LoadStockStrategyList();
-                    };
-                    this.Invoke(act);
-
                     Thread.Sleep(RC.GatherStockPriceInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -179,82 +181,85 @@ namespace StockPriceTools
             {
                 while (true)
                 {
-                    var reminds = Repository.QueryAll<RemindEntity>();
-                    var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
-                    var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
-
-                    foreach (var stock in stocks)
+                    if (ObjectUtil.EffectStockDealTime())
                     {
-                        var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice)/c.BasePrice*100) > c.Target && !c.Handled);
-                        if (remind != null)
+                        var reminds = Repository.QueryAll<RemindEntity>();
+                        var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
+                        var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
+
+                        foreach (var stock in stocks)
                         {
-                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.Price - remind.BasePrice > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
-
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
-                            
-                            //当前提醒设置为已处理
-                            remind.Handled = true;
-                            Repository.Update<RemindEntity>(remind);
-
-                            //创建一条以当前价格为基准的提醒
-                            remind = new RemindEntity()
+                            var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice) / c.BasePrice * 100) > c.Target && !c.Handled);
+                            if (remind != null)
                             {
-                                StockCode = remind.StockCode,
-                                RType = 0,
-                                Target = remind.Target,
-                                BasePrice = stock.Price,
-                                Email = remind.Email,
-                                QQ = remind.QQ,
-                            };
-                            Repository.Insert<RemindEntity>(remind);
-                        }
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.Price - remind.BasePrice > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
-                        if(remind != null)
-                        {
-                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已上涨高于股价[{remind.Target}],请注意!";
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                                this.ShowMessage(message);
+                                this.ActionLog(message);
 
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
-                        }
+                                //当前提醒设置为已处理
+                                remind.Handled = true;
+                                Repository.Update<RemindEntity>(remind);
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
-                        if (remind != null)
-                        {
-                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
+                                //创建一条以当前价格为基准的提醒
+                                remind = new RemindEntity()
+                                {
+                                    StockCode = remind.StockCode,
+                                    RType = 0,
+                                    Target = remind.Target,
+                                    BasePrice = stock.Price,
+                                    Email = remind.Email,
+                                    QQ = remind.QQ,
+                                };
+                                Repository.Insert<RemindEntity>(remind);
+                            }
 
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
-                        }
+                            remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
+                            if (remind != null)
+                            {
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已上涨高于股价[{remind.Target}],请注意!";
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
-                        if (remind != null)
-                        {
-                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                                this.ShowMessage(message);
+                                this.ActionLog(message);
+                            }
 
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
+                            remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
+                            if (remind != null)
+                            {
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
 
-                            remind.LastRemind = DateTime.Now;
-                            Repository.Update<RemindEntity>(remind);
-                        }
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                                this.ShowMessage(message);
+                                this.ActionLog(message);
+                            }
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
-                        if (remind != null)
-                        {
-                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+                            remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                            if (remind != null)
+                            {
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
 
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                                this.ShowMessage(message);
+                                this.ActionLog(message);
 
-                            remind.LastRemind = DateTime.Now;
-                            Repository.Update<RemindEntity>(remind);
+                                remind.LastRemind = DateTime.Now;
+                                Repository.Update<RemindEntity>(remind);
+                            }
+
+                            remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                            if (remind != null)
+                            {
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                                this.ShowMessage(message);
+                                this.ActionLog(message);
+
+                                remind.LastRemind = DateTime.Now;
+                                Repository.Update<RemindEntity>(remind);
+                            }
                         }
                     }
                     Thread.Sleep(RC.RemindStockStrategyInterval * 1000);
@@ -774,6 +779,8 @@ namespace StockPriceTools
                         Repository.Insert<RemindEntity>(remind);
                     }
                 }
+
+                this.LoadRemindList(stockCode);
             }
         }
 
@@ -850,32 +857,90 @@ namespace StockPriceTools
         
         private void btnHandleRemind_Click(object sender, EventArgs e)
         {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
             if (this.gridRemindList.SelectedRows.Count == 0) return;
-            var row = this.gridRemindList.SelectedRows[0];
             
             if (MessageBox.Show($"确认要标记执行选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
-            var stockCode = $"{row.Cells["股票代码"].Value}";
-            var type = $"{row.Cells["类型"].Value}";
-            var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
-            var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
-
-            var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rtype} and Target={target} and Handled='False'");
-            if (remind != null)
+            for (var i = 0; i < this.gridRemindList.SelectedRows.Count; i++)
             {
-                remind.Handled = true;
-                Repository.Update<RemindEntity>(remind);
+                var row = this.gridRemindList.SelectedRows[i];
+
+                var type = $"{row.Cells["类型"].Value}";
+                var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
+                var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
+
+                var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rtype} and Target={target} and Handled='False'");
+                if (remind != null)
+                {
+                    remind.Handled = true;
+                    Repository.Update<RemindEntity>(remind);
+                }
             }
+            this.LoadRemindList(stockCode);
+        }
+
+
+        private void btnCancelRemind_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.gridRemindList.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show($"确认要取消选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            for (var i = 0; i < this.gridRemindList.SelectedRows.Count; i++)
+            {
+                var row = this.gridRemindList.SelectedRows[i];
+
+                var type = $"{row.Cells["类型"].Value}";
+                var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
+                var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
+
+                var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rtype} and Target={target}");
+                if (remind != null)
+                {
+                    Repository.Delete<RemindEntity>(remind);
+                }
+            }
+            this.LoadRemindList(stockCode);
         }
 
         private void btnBuyExchange_Click(object sender, EventArgs e)
         {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
 
+            var frm = new NewExchangeForm();
+            frm.DealType = 0;
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
 
         private void btnSaleExchange_Click(object sender, EventArgs e)
         {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockPrice = ObjectUtil.ToValue<decimal>($"{selectRow.Cells["股价"].Value}", 0);
 
+            var frm = new NewExchangeForm();
+            frm.DealType = 1;
+            frm.DealPrice = stockPrice;
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
         #endregion
 
@@ -901,5 +966,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }

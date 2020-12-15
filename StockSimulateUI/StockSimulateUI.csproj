@@ -151,6 +151,12 @@
     <Compile Include="UI\ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\NewExchangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\NewExchangeForm.Designer.cs">
+      <DependentUpon>NewExchangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\SetRemindForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\NewExchangeForm.resx">
+      <DependentUpon>NewExchangeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SetRemindForm.resx">
       <DependentUpon>SetRemindForm.cs</DependentUpon>
