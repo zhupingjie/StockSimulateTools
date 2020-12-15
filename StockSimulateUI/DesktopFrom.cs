@@ -32,7 +32,7 @@ namespace StockPriceTools
         {
             this.LoadConfigData();
 
-            this.LoadStockData();
+            //this.LoadStockData();
 
             this.GatherData();
 
@@ -61,24 +61,6 @@ namespace StockPriceTools
             });
         }
 
-        void LoadStockData()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Action act = delegate ()
-                    {
-                        this.LoadStockList();
-                        this.LoadStockStrategyList();
-                    };
-                    this.Invoke(act);
-                    this.ActionLog("已加载自选股及策略股数据...");
-                    Thread.Sleep(RC.LoadStockDataInterval * 1000);
-                }
-            });
-        }
-
         void GatherData()
         {
             Task.Factory.StartNew(() =>
@@ -90,6 +72,7 @@ namespace StockPriceTools
                     {
                         var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
                         if (stockInfo == null) return;
+                        if (stockInfo.Price.Price == 0) return;
 
                         stockInfo.Stock.ID = stock.ID;
                         Repository.Update<StockEntity>(stockInfo.Stock);
@@ -106,6 +89,14 @@ namespace StockPriceTools
                         }
                         this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.Price.Price}] [{stockInfo.Price.UDPer}%]");
                     }
+
+                    Action act = delegate ()
+                    {
+                        this.LoadStockList();
+                        this.LoadStockStrategyList();
+                    };
+                    this.Invoke(act);
+
                     Thread.Sleep(RC.GatherStockPriceInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -168,11 +159,11 @@ namespace StockPriceTools
                 {
                     var reminds = Repository.QueryAll<RemindEntity>();
                     var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
-                    var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
+                    var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
 
                     foreach (var stock in stocks)
                     {
-                        var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice)/c.BasePrice) > c.Target && !c.Handled);
+                        var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice)/c.BasePrice*100) > c.Target && !c.Handled);
                         if (remind != null)
                         {
                             var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.Price - remind.BasePrice > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";

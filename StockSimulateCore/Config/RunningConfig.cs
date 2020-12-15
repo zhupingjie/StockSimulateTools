@@ -17,9 +17,7 @@ namespace StockSimulateCore.Config
             }
         }
 
-        public int LoadStockDataInterval { get; set; } = 30;
-
-        public int GatherStockPriceInterval { get; set; } = 60;
+        public int GatherStockPriceInterval { get; set; } = 30;
 
         public int GatherStockMainTargetInterval { get; set; } = 12 * 60 * 60;
 
