@@ -178,9 +178,10 @@ namespace StockSimulateCore.Utils
 
         public static bool EffectStockDealTime()
         {
-            if (DateTime.Now.Hour < 9 || DateTime.Now.Hour > 11 && DateTime.Now.Minute > 30) return false;
-            if (DateTime.Now.Hour < 13 || DateTime.Now.Hour > 15 && DateTime.Now.Minute > 30) return false;
-            return true;
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return false;
+            if (DateTime.Now.Hour >= 9 && DateTime.Now.Hour < 12) return true;
+            if (DateTime.Now.Hour >= 13 && DateTime.Now.Hour < 16) return true;
+            return false;
         }
     }
 }

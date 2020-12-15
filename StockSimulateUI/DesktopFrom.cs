@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace StockPriceTools
 {
@@ -300,8 +301,8 @@ namespace StockPriceTools
 
         void LoadStockStrategyList()
         {
-            var accountStocks = Repository.QueryAll<StockStrategyEntity>();
-            var dt = ObjectUtil.ConvertTable(accountStocks);
+            var stockStrategys = Repository.QueryAll<StockStrategyEntity>();
+            var dt = ObjectUtil.ConvertTable(stockStrategys);
             this.gridStockStrategyList.DataSource = null;
             this.gridStockStrategyList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
@@ -311,6 +312,39 @@ namespace StockPriceTools
             }
         }
         
+        void LoadPriceChart(string stockCode)
+        {
+            var series = this.chartPrice.Series.FirstOrDefault();
+            if (series == null)
+            {
+                series = this.chartPrice.Series.Add("日线走势图");
+                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
+                series.BackSecondaryColor = Color.Green;
+                series.Color = Color.Red;
+                series.BorderWidth = 2;
+                series.IsVisibleInLegend = true;
+                series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+                series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
+                series.ShadowColor = Color.Gray;
+                series.ShadowOffset = 2;
+            }
+            series.Points.Clear();
+            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate asc", 30);
+            foreach(var item in stockPrices)
+            {
+                var xvalue = ObjectUtil.ToValue<DateTime>(item.DealDate, DateTime.Now).ToString("MM-dd");
+                series.Points.AddXY(xvalue, item.TodayMaxPrice, item.TodayMinPrice, item.TodayStartPrice, item.TodayEndPrice);
+            }
+
+            var chartArea = this.chartPrice.ChartAreas[0];
+            chartArea.AxisY.Maximum = Math.Round((double)stockPrices.Max(c => c.TodayMaxPrice) * 1.02d, 2);
+            chartArea.AxisY.Minimum = Math.Round((double)stockPrices.Min(c => c.TodayMinPrice) * 0.98d, 2);
+            chartArea.AxisY.IsStartedFromZero = false;
+            chartArea.AxisY.MajorGrid.Enabled = true;
+            chartArea.AxisY.MajorGrid.LineColor = Color.Gray;
+            chartArea.AxisX.MajorGrid.Enabled = false;
+        }
+
         void LoadPriceList(string stockCode)
         {
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate desc",  60);
@@ -802,18 +836,21 @@ namespace StockPriceTools
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceList(stockCode);
+                    this.LoadPriceChart(stockCode);
                     break;
                 case 2:
-                    this.LoadStockStrategyDetailList(stockCode);
+                    this.LoadPriceList(stockCode);
                     break;
                 case 3:
-                    this.LoadRemindList(stockCode);
+                    this.LoadStockStrategyDetailList(stockCode);
                     break;
                 case 4:
-                    this.LoadExchangeList(stockCode);
+                    this.LoadRemindList(stockCode);
                     break;
                 case 5:
+                    this.LoadExchangeList(stockCode);
+                    break;
+                case 6:
                     this.LoadMainTargetInfo(stockCode);
                     break;
             }
@@ -966,6 +1003,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }

@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -53,6 +55,8 @@
             this.tabControlBottom = new System.Windows.Forms.TabControl();
             this.tabActionLog = new System.Windows.Forms.TabPage();
             this.txtActionLog = new System.Windows.Forms.RichTextBox();
+            this.tabPriceChart = new System.Windows.Forms.TabPage();
+            this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPriceList = new System.Windows.Forms.TabPage();
             this.gridPriceList = new System.Windows.Forms.DataGridView();
             this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
@@ -60,6 +64,7 @@
             this.tabRemind = new System.Windows.Forms.TabPage();
             this.gridRemindList = new System.Windows.Forms.DataGridView();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.btnCancelRemind = new System.Windows.Forms.Button();
             this.btnHandleRemind = new System.Windows.Forms.Button();
             this.tabExchangeList = new System.Windows.Forms.TabPage();
             this.gridExchangeList = new System.Windows.Forms.DataGridView();
@@ -108,7 +113,6 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnCancelRemind = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,6 +130,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
             this.tabControlBottom.SuspendLayout();
             this.tabActionLog.SuspendLayout();
+            this.tabPriceChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).BeginInit();
             this.tabPriceList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).BeginInit();
             this.tabStockStrategyDetail.SuspendLayout();
@@ -391,6 +397,7 @@
             // tabControlBottom
             // 
             this.tabControlBottom.Controls.Add(this.tabActionLog);
+            this.tabControlBottom.Controls.Add(this.tabPriceChart);
             this.tabControlBottom.Controls.Add(this.tabPriceList);
             this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
             this.tabControlBottom.Controls.Add(this.tabRemind);
@@ -427,6 +434,30 @@
             this.txtActionLog.Size = new System.Drawing.Size(842, 221);
             this.txtActionLog.TabIndex = 1;
             this.txtActionLog.Text = "";
+            // 
+            // tabPriceChart
+            // 
+            this.tabPriceChart.Controls.Add(this.chartPrice);
+            this.tabPriceChart.Location = new System.Drawing.Point(4, 22);
+            this.tabPriceChart.Name = "tabPriceChart";
+            this.tabPriceChart.Size = new System.Drawing.Size(842, 221);
+            this.tabPriceChart.TabIndex = 9;
+            this.tabPriceChart.Text = "股价走势";
+            this.tabPriceChart.UseVisualStyleBackColor = true;
+            // 
+            // chartPrice
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea1);
+            this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend1);
+            this.chartPrice.Location = new System.Drawing.Point(0, 0);
+            this.chartPrice.Name = "chartPrice";
+            this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            this.chartPrice.Size = new System.Drawing.Size(842, 221);
+            this.chartPrice.TabIndex = 0;
+            this.chartPrice.Text = "股价日走势图";
             // 
             // tabPriceList
             // 
@@ -513,6 +544,17 @@
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(842, 29);
             this.panel8.TabIndex = 50;
+            // 
+            // btnCancelRemind
+            // 
+            this.btnCancelRemind.BackColor = System.Drawing.Color.White;
+            this.btnCancelRemind.Location = new System.Drawing.Point(79, 3);
+            this.btnCancelRemind.Name = "btnCancelRemind";
+            this.btnCancelRemind.Size = new System.Drawing.Size(68, 23);
+            this.btnCancelRemind.TabIndex = 1;
+            this.btnCancelRemind.Text = "取消提醒";
+            this.btnCancelRemind.UseVisualStyleBackColor = false;
+            this.btnCancelRemind.Click += new System.EventHandler(this.btnCancelRemind_Click);
             // 
             // btnHandleRemind
             // 
@@ -1036,17 +1078,6 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
-            // btnCancelRemind
-            // 
-            this.btnCancelRemind.BackColor = System.Drawing.Color.White;
-            this.btnCancelRemind.Location = new System.Drawing.Point(79, 3);
-            this.btnCancelRemind.Name = "btnCancelRemind";
-            this.btnCancelRemind.Size = new System.Drawing.Size(68, 23);
-            this.btnCancelRemind.TabIndex = 1;
-            this.btnCancelRemind.Text = "取消提醒";
-            this.btnCancelRemind.UseVisualStyleBackColor = false;
-            this.btnCancelRemind.Click += new System.EventHandler(this.btnCancelRemind_Click);
-            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1059,7 +1090,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DesktopFrom";
             this.Text = "Stock Simulate App";
-            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.DesktopFrom_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -1080,6 +1110,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
             this.tabControlBottom.ResumeLayout(false);
             this.tabActionLog.ResumeLayout(false);
+            this.tabPriceChart.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).EndInit();
             this.tabPriceList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
             this.tabStockStrategyDetail.ResumeLayout(false);
@@ -1198,5 +1230,7 @@
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Button btnHandleRemind;
         private System.Windows.Forms.Button btnCancelRemind;
+        private System.Windows.Forms.TabPage tabPriceChart;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartPrice;
     }
 }
