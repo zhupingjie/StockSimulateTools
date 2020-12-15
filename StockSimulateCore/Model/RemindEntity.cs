@@ -41,5 +41,8 @@ namespace StockSimulateCore.Model
 
         [Description("是否执行")]
         public bool Handled { get; set; }
+
+        [Description("最后提醒时间")]
+        public DateTime? LastRemind { get; set; }
     }
 }

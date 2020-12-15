@@ -355,6 +355,17 @@ namespace StockSimulateCore.Utils
                                 {
                                     obj = Boolean.Parse(dr[field.Name].ToString());
                                 }
+                                else if(ObjectUtil.IsNullableType (field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                                {
+                                    if (dr[field.Name] == DBNull.Value)
+                                    {
+                                        obj = null;
+                                    }
+                                    else
+                                    {
+                                        obj = DateTime.Parse(dr[field.Name].ToString());
+                                    }
+                                }
                                 else if (field.PropertyType == typeof(DateTime))
                                 {
                                     obj = DateTime.Parse(dr[field.Name].ToString());

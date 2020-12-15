@@ -32,7 +32,7 @@ namespace StockPriceTools
         {
             this.LoadConfigData();
 
-            //this.LoadStockData();
+            this.LoadStockData();
 
             this.GatherData();
 
@@ -61,10 +61,28 @@ namespace StockPriceTools
             });
         }
 
+        void LoadStockData()
+        {
+            //页面加载后加载一次数据，其余通过采集价格数据后刷新列表
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5 * 1000);
+
+                Action act = delegate ()
+                {
+                    this.LoadStockList();
+                    this.LoadStockStrategyList();
+                };
+                this.Invoke(act);
+            });
+        }
+
         void GatherData()
         {
             Task.Factory.StartNew(() =>
             {
+                Thread.Sleep(2000);
+
                 while (true)
                 {
                     var stocks = Repository.QueryAll<StockEntity>();
@@ -89,7 +107,7 @@ namespace StockPriceTools
                         }
                         this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.Price.Price}] [{stockInfo.Price.UDPer}%]");
                     }
-
+                    this.ActionLog($">------------------------------------------------>");
                     Action act = delegate ()
                     {
                         this.LoadStockList();
@@ -103,6 +121,7 @@ namespace StockPriceTools
 
             Task.Factory.StartNew(() =>
             {
+                Thread.Sleep(15 * 1000);
                 while (true)
                 {
                     var stocks = Repository.QueryAll<StockEntity>();
@@ -146,6 +165,9 @@ namespace StockPriceTools
                         }
                         this.ActionLog($"已采集[{stock.Name}]主要指标数据...");
                     }
+
+                    this.ActionLog($">------------------------------------------------>");
+
                     Thread.Sleep(RC.GatherStockMainTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -209,7 +231,7 @@ namespace StockPriceTools
                             this.ActionLog(message);
                         }
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled);
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
                         if (remind != null)
                         {
                             var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
@@ -217,9 +239,12 @@ namespace StockPriceTools
                             MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                             this.ShowMessage(message);
                             this.ActionLog(message);
+
+                            remind.LastRemind = DateTime.Now;
+                            Repository.Update<RemindEntity>(remind);
                         }
 
-                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled);
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
                         if (remind != null)
                         {
                             var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.Title} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
@@ -227,6 +252,9 @@ namespace StockPriceTools
                             MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                             this.ShowMessage(message);
                             this.ActionLog(message);
+
+                            remind.LastRemind = DateTime.Now;
+                            Repository.Update<RemindEntity>(remind);
                         }
                     }
                     Thread.Sleep(RC.RemindStockStrategyInterval * 1000);
@@ -873,6 +901,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }
