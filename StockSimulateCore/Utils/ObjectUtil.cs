@@ -183,5 +183,11 @@ namespace StockSimulateCore.Utils
             if (DateTime.Now.Hour >= 13 && DateTime.Now.Hour < 16) return true;
             return false;
         }
+
+        public static string[] GetSplitArray(object text, string split)
+        {
+            if (text == null) return new string[] { };
+            return $"{text}".Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

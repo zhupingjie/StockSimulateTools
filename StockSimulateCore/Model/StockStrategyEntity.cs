@@ -7,25 +7,31 @@ using System.Threading.Tasks;
 
 namespace StockSimulateCore.Model
 {
-    public class StockStrategyEntity :BaseEntity
+    public class StockStrategyEntity : BaseEntity
     {
         [Description("股票代码")]
         public string StockCode { get; set; }
 
-        [Description("股票名称")]
-        public string StockName { get; set; }
-
-        [Description("买卖策略")]
+        [Description("策略名称")]
         public string StrategyName { get; set; }
 
-        [Description("建仓起始价格")]
-        public decimal BuyPrice { get; set; }
+        [Description("买卖点")]
+        public string Target { get; set; }
 
-        [Description("建仓市值")]
+        [Description("股价")]
+        public decimal Price { get; set; }
+
+        [Description("买入数")]
+        public int BuyQty { get; set; }
+
+        [Description("买入市值(元)")]
         public decimal BuyAmount { get; set; }
 
-        [Description("减仓起始价格")]
-        public decimal SalePrice { get; set; }
+        [Description("卖出数")]
+        public int SaleQty { get; set; }
+
+        [Description("卖出市值(元)")]
+        public decimal SaleAmount { get; set; }
 
         [Description("持有数")]
         public int HoldQty { get; set; }
@@ -35,6 +41,9 @@ namespace StockSimulateCore.Model
 
         [Description("买入总市值(元)")]
         public decimal TotalBuyAmount { get; set; }
+
+        [Description("浮动市值(元)")]
+        public decimal FloatAmount { get; set; }
 
         [Description("成本(元)")]
         public decimal Cost { get; set; }

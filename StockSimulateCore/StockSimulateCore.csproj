@@ -120,15 +120,14 @@
   <ItemGroup>
     <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Config\SenderMailConfig.cs" />
-    <Compile Include="Model\AccountStockEntity.cs" />
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\ActionLogEntity.cs" />
     <Compile Include="Model\GlobalConfigEntity.cs" />
     <Compile Include="Model\RemindEntity.cs" />
-    <Compile Include="Model\StockStrategyEntity.cs" />
+    <Compile Include="Model\AccountStockEntity.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\ExchangeOrderEntity.cs" />
-    <Compile Include="Model\StockStrategyDetailEntity.cs" />
+    <Compile Include="Model\StockStrategyEntity.cs" />
     <Compile Include="Model\IBaseEntity.cs" />
     <Compile Include="Model\MainTargetEntity.cs" />
     <Compile Include="Model\StockEntity.cs" />

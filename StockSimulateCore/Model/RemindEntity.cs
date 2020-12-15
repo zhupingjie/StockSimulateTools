@@ -18,9 +18,6 @@ namespace StockSimulateCore.Model
         [Description("类型")]
         public int RType { get; set; }
 
-        [Description("基准价格")]
-        public decimal BasePrice { get; set; }
-
         [Description("目标")]
         public decimal Target { get; set; }
 
@@ -41,6 +38,9 @@ namespace StockSimulateCore.Model
 
         [Description("是否执行")]
         public bool Handled { get; set; }
+
+        [Description("计划提醒时间")]
+        public DateTime? PlanRemind { get; set; }
 
         [Description("最后提醒时间")]
         public DateTime? LastRemind { get; set; }

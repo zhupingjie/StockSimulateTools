@@ -50,8 +50,6 @@
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
-            this.tabFocusList = new System.Windows.Forms.TabPage();
-            this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
             this.tabControlBottom = new System.Windows.Forms.TabControl();
             this.tabActionLog = new System.Windows.Forms.TabPage();
             this.txtActionLog = new System.Windows.Forms.RichTextBox();
@@ -60,7 +58,7 @@
             this.tabPriceList = new System.Windows.Forms.TabPage();
             this.gridPriceList = new System.Windows.Forms.DataGridView();
             this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
-            this.gridStockStrategyDetailList = new System.Windows.Forms.DataGridView();
+            this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
             this.tabRemind = new System.Windows.Forms.TabPage();
             this.gridRemindList = new System.Windows.Forms.DataGridView();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -113,6 +111,8 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabHoldStockList = new System.Windows.Forms.TabPage();
+            this.gridAccountStockList = new System.Windows.Forms.DataGridView();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,8 +126,6 @@
             this.tabControlMain.SuspendLayout();
             this.tabStockList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridStockList)).BeginInit();
-            this.tabFocusList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
             this.tabControlBottom.SuspendLayout();
             this.tabActionLog.SuspendLayout();
             this.tabPriceChart.SuspendLayout();
@@ -135,7 +133,7 @@
             this.tabPriceList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).BeginInit();
             this.tabStockStrategyDetail.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
             this.tabRemind.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).BeginInit();
             this.panel8.SuspendLayout();
@@ -160,6 +158,8 @@
             this.tabStrategyData.SuspendLayout();
             this.tabPriceData.SuspendLayout();
             this.tabExchange.SuspendLayout();
+            this.tabHoldStockList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -333,7 +333,7 @@
             // tabControlMain
             // 
             this.tabControlMain.Controls.Add(this.tabStockList);
-            this.tabControlMain.Controls.Add(this.tabFocusList);
+            this.tabControlMain.Controls.Add(this.tabHoldStockList);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.Location = new System.Drawing.Point(0, 0);
             this.tabControlMain.Name = "tabControlMain";
@@ -367,32 +367,6 @@
             this.gridStockList.Size = new System.Drawing.Size(836, 274);
             this.gridStockList.TabIndex = 41;
             this.gridStockList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
-            // 
-            // tabFocusList
-            // 
-            this.tabFocusList.Controls.Add(this.gridStockStrategyList);
-            this.tabFocusList.Location = new System.Drawing.Point(4, 22);
-            this.tabFocusList.Name = "tabFocusList";
-            this.tabFocusList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFocusList.Size = new System.Drawing.Size(842, 280);
-            this.tabFocusList.TabIndex = 1;
-            this.tabFocusList.Text = "策略股";
-            this.tabFocusList.UseVisualStyleBackColor = true;
-            // 
-            // gridStockStrategyList
-            // 
-            this.gridStockStrategyList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridStockStrategyList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridStockStrategyList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridStockStrategyList.Location = new System.Drawing.Point(3, 3);
-            this.gridStockStrategyList.MultiSelect = false;
-            this.gridStockStrategyList.Name = "gridStockStrategyList";
-            this.gridStockStrategyList.ReadOnly = true;
-            this.gridStockStrategyList.RowHeadersWidth = 10;
-            this.gridStockStrategyList.RowTemplate.Height = 23;
-            this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockStrategyList.Size = new System.Drawing.Size(836, 274);
-            this.gridStockStrategyList.TabIndex = 42;
             // 
             // tabControlBottom
             // 
@@ -487,7 +461,7 @@
             // 
             // tabStockStrategyDetail
             // 
-            this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyDetailList);
+            this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyList);
             this.tabStockStrategyDetail.Location = new System.Drawing.Point(4, 22);
             this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
             this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 221);
@@ -495,20 +469,20 @@
             this.tabStockStrategyDetail.Text = "买卖策略";
             this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
             // 
-            // gridStockStrategyDetailList
+            // gridStockStrategyList
             // 
-            this.gridStockStrategyDetailList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridStockStrategyDetailList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridStockStrategyDetailList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridStockStrategyDetailList.Location = new System.Drawing.Point(0, 0);
-            this.gridStockStrategyDetailList.MultiSelect = false;
-            this.gridStockStrategyDetailList.Name = "gridStockStrategyDetailList";
-            this.gridStockStrategyDetailList.ReadOnly = true;
-            this.gridStockStrategyDetailList.RowHeadersWidth = 10;
-            this.gridStockStrategyDetailList.RowTemplate.Height = 23;
-            this.gridStockStrategyDetailList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockStrategyDetailList.Size = new System.Drawing.Size(842, 221);
-            this.gridStockStrategyDetailList.TabIndex = 45;
+            this.gridStockStrategyList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridStockStrategyList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridStockStrategyList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridStockStrategyList.Location = new System.Drawing.Point(0, 0);
+            this.gridStockStrategyList.MultiSelect = false;
+            this.gridStockStrategyList.Name = "gridStockStrategyList";
+            this.gridStockStrategyList.ReadOnly = true;
+            this.gridStockStrategyList.RowHeadersWidth = 10;
+            this.gridStockStrategyList.RowTemplate.Height = 23;
+            this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridStockStrategyList.Size = new System.Drawing.Size(842, 221);
+            this.gridStockStrategyList.TabIndex = 45;
             // 
             // tabRemind
             // 
@@ -1078,6 +1052,31 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
+            // tabHoldStockList
+            // 
+            this.tabHoldStockList.Controls.Add(this.gridAccountStockList);
+            this.tabHoldStockList.Location = new System.Drawing.Point(4, 22);
+            this.tabHoldStockList.Name = "tabHoldStockList";
+            this.tabHoldStockList.Size = new System.Drawing.Size(842, 280);
+            this.tabHoldStockList.TabIndex = 2;
+            this.tabHoldStockList.Text = "交易股";
+            this.tabHoldStockList.UseVisualStyleBackColor = true;
+            // 
+            // gridAccountStockList
+            // 
+            this.gridAccountStockList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridAccountStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridAccountStockList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridAccountStockList.Location = new System.Drawing.Point(0, 0);
+            this.gridAccountStockList.MultiSelect = false;
+            this.gridAccountStockList.Name = "gridAccountStockList";
+            this.gridAccountStockList.ReadOnly = true;
+            this.gridAccountStockList.RowHeadersWidth = 10;
+            this.gridAccountStockList.RowTemplate.Height = 23;
+            this.gridAccountStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridAccountStockList.Size = new System.Drawing.Size(842, 280);
+            this.gridAccountStockList.TabIndex = 43;
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1106,8 +1105,6 @@
             this.tabControlMain.ResumeLayout(false);
             this.tabStockList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridStockList)).EndInit();
-            this.tabFocusList.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
             this.tabControlBottom.ResumeLayout(false);
             this.tabActionLog.ResumeLayout(false);
             this.tabPriceChart.ResumeLayout(false);
@@ -1115,7 +1112,7 @@
             this.tabPriceList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
             this.tabStockStrategyDetail.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyDetailList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
             this.tabRemind.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).EndInit();
             this.panel8.ResumeLayout(false);
@@ -1144,6 +1141,8 @@
             this.tabStrategyData.ResumeLayout(false);
             this.tabPriceData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
+            this.tabHoldStockList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1184,14 +1183,12 @@
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabStockList;
-        private System.Windows.Forms.TabPage tabFocusList;
-        private System.Windows.Forms.DataGridView gridStockStrategyList;
         private System.Windows.Forms.Label lblMessage;
         private System.Windows.Forms.TabControl tabControlBottom;
         private System.Windows.Forms.TabPage tabPriceList;
         private System.Windows.Forms.DataGridView gridPriceList;
         private System.Windows.Forms.TabPage tabStockStrategyDetail;
-        private System.Windows.Forms.DataGridView gridStockStrategyDetailList;
+        private System.Windows.Forms.DataGridView gridStockStrategyList;
         private System.Windows.Forms.TabPage tabExchangeList;
         private System.Windows.Forms.TabPage tabMaintarget;
         private System.Windows.Forms.TabPage tabZZFZB;
@@ -1232,5 +1229,7 @@
         private System.Windows.Forms.Button btnCancelRemind;
         private System.Windows.Forms.TabPage tabPriceChart;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPrice;
+        private System.Windows.Forms.TabPage tabHoldStockList;
+        private System.Windows.Forms.DataGridView gridAccountStockList;
     }
 }

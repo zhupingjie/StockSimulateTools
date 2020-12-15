@@ -72,7 +72,7 @@ namespace StockPriceTools
                 Action act = delegate ()
                 {
                     this.LoadStockList();
-                    this.LoadStockStrategyList();
+                    this.LoadAccountStockList();
                 };
                 this.Invoke(act);
             });
@@ -114,7 +114,7 @@ namespace StockPriceTools
                         Action act = delegate ()
                         {
                             this.LoadStockList();
-                            this.LoadStockStrategyList();
+                            this.LoadAccountStockList();
                         };
                         this.Invoke(act);
                     }
@@ -184,36 +184,34 @@ namespace StockPriceTools
                 {
                     if (ObjectUtil.EffectStockDealTime())
                     {
-                        var reminds = Repository.QueryAll<RemindEntity>();
+                        var reminds = Repository.QueryAll<RemindEntity>($"Handled='False'");
                         var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
                         var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
 
                         foreach (var stock in stocks)
                         {
-                            var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs((stock.Price - c.BasePrice) / c.BasePrice * 100) > c.Target && !c.Handled);
+                            var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && !c.Handled && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now));
                             if (remind != null)
                             {
-                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.Price - remind.BasePrice > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
+                                remind.Handled = true;
+                                Repository.Update<RemindEntity>(remind);
+
+                                var nextRemind = new RemindEntity()
+                                {
+                                    RType = 0,
+                                    StockCode = remind.StockCode,
+                                    Target = remind.Target,
+                                    Email = remind.Email,
+                                    QQ = remind.QQ,
+                                    PlanRemind = DateTime.Now.Date.AddDays(1)
+                                };
+                                Repository.Insert<RemindEntity>(nextRemind);
+
+                                var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.UDPer > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
                                 MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                                 this.ShowMessage(message);
                                 this.ActionLog(message);
-
-                                //当前提醒设置为已处理
-                                remind.Handled = true;
-                                Repository.Update<RemindEntity>(remind);
-
-                                //创建一条以当前价格为基准的提醒
-                                remind = new RemindEntity()
-                                {
-                                    StockCode = remind.StockCode,
-                                    RType = 0,
-                                    Target = remind.Target,
-                                    BasePrice = stock.Price,
-                                    Email = remind.Email,
-                                    QQ = remind.QQ,
-                                };
-                                Repository.Insert<RemindEntity>(remind);
                             }
 
                             remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
@@ -224,6 +222,9 @@ namespace StockPriceTools
                                 MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                                 this.ShowMessage(message);
                                 this.ActionLog(message);
+
+                                remind.Handled = true;
+                                Repository.Update<RemindEntity>(remind);
                             }
 
                             remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
@@ -234,6 +235,9 @@ namespace StockPriceTools
                                 MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                                 this.ShowMessage(message);
                                 this.ActionLog(message);
+
+                                remind.Handled = true;
+                                Repository.Update<RemindEntity>(remind);
                             }
 
                             remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
@@ -299,19 +303,19 @@ namespace StockPriceTools
             }
         }
 
-        void LoadStockStrategyList()
+        void LoadAccountStockList()
         {
-            var stockStrategys = Repository.QueryAll<StockStrategyEntity>();
-            var dt = ObjectUtil.ConvertTable(stockStrategys);
-            this.gridStockStrategyList.DataSource = null;
-            this.gridStockStrategyList.DataSource = dt.DefaultView;
-            for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
+            var accountStocks = Repository.QueryAll<AccountStockEntity>();
+            var dt = ObjectUtil.ConvertTable(accountStocks);
+            this.gridAccountStockList.DataSource = null;
+            this.gridAccountStockList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridAccountStockList.ColumnCount; i++)
             {
-                var length = this.gridStockStrategyList.Columns[i].Name.Length;
-                this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                var length = this.gridAccountStockList.Columns[i].Name.Length;
+                this.gridAccountStockList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
             }
         }
-        
+
         void LoadPriceChart(string stockCode)
         {
             var series = this.chartPrice.Series.FirstOrDefault();
@@ -445,20 +449,20 @@ namespace StockPriceTools
             }
         }
 
-        void LoadStockStrategyDetailList(string stockCode)
+        void LoadStockStrategyList(string stockCode)
         {
-            var strategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            var strategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
             var dt = ObjectUtil.ConvertTable(strategyDetails);
-            this.gridStockStrategyDetailList.DataSource = null;
-            this.gridStockStrategyDetailList.DataSource = dt.DefaultView;
-            for (var i = 0; i < this.gridStockStrategyDetailList.ColumnCount; i++)
+            this.gridStockStrategyList.DataSource = null;
+            this.gridStockStrategyList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
             {
-                var columnName = this.gridStockStrategyDetailList.Columns[i].Name;
-                if (columnName == "股票代码") this.gridStockStrategyDetailList.Columns[i].Visible = false;
+                var columnName = this.gridStockStrategyList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridStockStrategyList.Columns[i].Visible = false;
                 else
                 {
                     var length = columnName.Length;
-                    this.gridStockStrategyDetailList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                    this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
                 }
             }
         }
@@ -500,7 +504,7 @@ namespace StockPriceTools
         {
             this.lstStrategyInfo.Items.Clear();
 
-            var accountStock = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
+            var accountStock = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
             if (accountStock == null) return;
 
             var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{accountStock.StrategyName}'");
@@ -623,15 +627,15 @@ namespace StockPriceTools
             {
                 Repository.Delete<StockEntity>(stock);
             }
-            var stockStrategy = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
+            var stockStrategy = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
             if(stockStrategy != null)
             {
-                Repository.Delete<StockStrategyEntity>(stockStrategy);
+                Repository.Delete<AccountStockEntity>(stockStrategy);
             }
-            var stockStrategyDetails = Repository.QueryAll<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+            var stockStrategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
             if(stockStrategyDetails.Length > 0)
             {
-                Repository.Delete<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
+                Repository.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
             }
             this.LoadStockList();
         }
@@ -664,82 +668,12 @@ namespace StockPriceTools
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
             var frm = new SetStrategyForm();
+            frm.StockCode = stockCode;
+            frm.StockName = stockName;
             frm.StartPosition = FormStartPosition.CenterParent;
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{frm.StrategyName}'");
-                if (strategy == null) return;
-
-                var account = Repository.QueryFirst<AccountEntity>();
-                if (account == null) return;
-
-                var stockStrategy = Repository.QueryFirst<StockStrategyEntity>($"StockCode='{stockCode}'");
-                if (stockStrategy == null)
-                {
-                    stockStrategy = new StockStrategyEntity()
-                    {
-                        StockCode = stockCode,
-                        StockName = stockName,
-                        StrategyName = frm.StrategyName,
-                        BuyPrice = frm.BuyPrice,
-                        BuyAmount = frm.BuyAmount,
-                        SalePrice = frm.SalePrice,
-                    };
-                    Repository.Insert<StockStrategyEntity>(stockStrategy);
-                }
-                else
-                {
-                    stockStrategy.StockCode = stockCode;
-                    stockStrategy.StockName = stockName;
-                    stockStrategy.StrategyName = frm.StrategyName;
-                    stockStrategy.BuyPrice = frm.BuyPrice;
-                    stockStrategy.BuyAmount = frm.BuyAmount;
-                    stockStrategy.SalePrice = frm.SalePrice;
-                    Repository.Update<StockStrategyEntity>(stockStrategy);
-                }
-                Repository.Delete<StockStrategyDetailEntity>($"StockCode='{stockCode}'");
-                Repository.Delete<RemindEntity>($"StockCode='{stockCode}' and (RType={8} or RType={9})");
-                var dt = StockStrategyService.MakeStrategyData(strategy, stockStrategy.BuyPrice, stockStrategy.BuyAmount, stockStrategy.SalePrice, account.Amount);
-                for (var i = 0; i < dt.Rows.Count; i++)
-                {
-                    var dr = dt.Rows[i];
-                    var detail = new StockStrategyDetailEntity()
-                    {
-                        StockCode = stockCode,
-                        StrategyName = strategy.Name,
-                        Target = dr["操作"].ToString(),
-                        Price = ObjectUtil.ToValue<decimal>(dr["收盘价"].ToString(), 0),
-                        BuyQty = ObjectUtil.ToValue<int>(dr["买入数"].ToString(), 0),
-                        BuyAmount = ObjectUtil.ToValue<decimal>(dr["买入市值"].ToString(), 0),
-                        SaleQty = ObjectUtil.ToValue<int>(dr["卖出数"].ToString(), 0),
-                        SaleAmount = ObjectUtil.ToValue<decimal>(dr["卖出市值"].ToString(), 0),
-                        HoldQty = ObjectUtil.ToValue<int>(dr["持有数"].ToString(), 0),
-                        HoldAmount = ObjectUtil.ToValue<decimal>(dr["持有市值"].ToString(), 0),
-                        TotalBuyAmount = ObjectUtil.ToValue<decimal>(dr["投入市值"].ToString(), 0),
-                        FloatAmount = ObjectUtil.ToValue<decimal>(dr["浮动市值"].ToString(), 0),
-                        Cost = ObjectUtil.ToValue<decimal>(dr["成本"].ToString(), 0),
-                        Profit = ObjectUtil.ToValue<decimal>(dr["盈亏"].ToString(), 0),
-                    };
-                    Repository.Insert<StockStrategyDetailEntity>(detail);
-
-                    if (detail.BuyQty > 0 || detail.SaleQty > 0)
-                    {
-                        var remind = new RemindEntity()
-                        {
-                            StockCode = stockCode,
-                            BasePrice = stockStrategy.BuyPrice,
-                            Target = detail.Price,
-                            RType = detail.BuyQty > 0 ? 8 : 9,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            Title = detail.Target
-                        };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100), 2);
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-                this.LoadStockStrategyList();
+                this.LoadStockStrategyList(stockCode);
             }
         }
 
@@ -747,73 +681,88 @@ namespace StockPriceTools
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
 
-            var account = Repository.QueryFirst<AccountEntity>();
+            var account = Repository.QueryFirst<AccountEntity>($"RealType='True'"); 
             if (account == null) return;
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var price = ObjectUtil.ToValue<decimal>($"{selectRow.Cells["股价"].Value}", 0);
             var frm = new SetRemindForm();
-            frm.BasePrice = price;
             frm.StartPosition = FormStartPosition.CenterParent;
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                if (frm.UDPer > 0)
+                if (!string.IsNullOrEmpty(frm.UDPer))
                 {
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={frm.UDPer} and RType=0");
-                    if (remind == null)
+                    var udPers = ObjectUtil.GetSplitArray(frm.UDPer, ",");
+                    foreach (var udPer in udPers)
                     {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = stockCode,
-                            BasePrice = frm.BasePrice,
-                            Target = frm.UDPer,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 0
-                        };
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-                if (frm.UpPrice > 0)
-                {
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={frm.UpPrice} and RType=1");
-                    if (remind == null)
-                    {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = stockCode,
-                            BasePrice = frm.BasePrice,
-                            Target = frm.UpPrice,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 1
-                        };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2); 
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-                if (frm.DownPrice > 0)
-                {
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={frm.DownPrice} and RType=2");
-                    if (remind == null)
-                    {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = stockCode,
-                            BasePrice = frm.BasePrice,
-                            Target = frm.DownPrice,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 2
-                        };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
+                        var target = ObjectUtil.ToValue<decimal>(udPer, 0);
+                        if (target == 0) continue;
 
+                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={udPer} and RType=0");
+                        if (remind == null)
+                        {
+                            remind = new RemindEntity()
+                            {
+                                StockCode = stockCode,
+                                Target = target,
+                                Email = account.Email,
+                                QQ = account.QQ,
+                                RType = 0
+                            };
+                            Repository.Insert<RemindEntity>(remind);
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(frm.UpPrice))
+                {
+                    var upPrices = ObjectUtil.GetSplitArray(frm.UpPrice, ",");
+                    foreach (var upPrice in upPrices)
+                    {
+                        var target = ObjectUtil.ToValue<decimal>(upPrice, 0);
+                        if (target == 0) continue;
+
+                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={upPrice} and RType=1");
+                        if (remind == null)
+                        {
+                            remind = new RemindEntity()
+                            {
+                                StockCode = stockCode,
+                                Target = target,
+                                Email = account.Email,
+                                QQ = account.QQ,
+                                RType = 0
+                            };
+                            remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
+                            remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
+                            Repository.Insert<RemindEntity>(remind);
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(frm.DownPrice))
+                {
+                    var downPrices = ObjectUtil.GetSplitArray(frm.DownPrice, ",");
+                    foreach (var downPrice in downPrices)
+                    {
+                        var target = ObjectUtil.ToValue<decimal>(downPrice, 0);
+                        if (target == 0) continue;
+
+                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={downPrice} and RType=1");
+                        if (remind == null)
+                        {
+                            remind = new RemindEntity()
+                            {
+                                StockCode = stockCode,
+                                Target = target,
+                                Email = account.Email,
+                                QQ = account.QQ,
+                                RType = 2
+                            };
+                            remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
+                            remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
+                            Repository.Insert<RemindEntity>(remind);
+                        }
+                    }
+                }
                 this.LoadRemindList(stockCode);
             }
         }
@@ -842,7 +791,7 @@ namespace StockPriceTools
                     this.LoadPriceList(stockCode);
                     break;
                 case 3:
-                    this.LoadStockStrategyDetailList(stockCode);
+                    this.LoadStockStrategyList(stockCode);
                     break;
                 case 4:
                     this.LoadRemindList(stockCode);
@@ -953,13 +902,18 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
+            var stockPrice = ObjectUtil.ToValue<decimal>($"{selectRow.Cells["股价"].Value}", 0);
 
             var frm = new NewExchangeForm();
             frm.DealType = 0;
+            frm.StockCode = stockCode;
+            frm.StockName = stockName;
+            frm.DealPrice = stockPrice;
             frm.StartPosition = FormStartPosition.CenterParent;
             if(frm.ShowDialog() == DialogResult.OK)
             {
-
+                this.LoadExchangeList(stockCode);
             }
         }
 
@@ -972,11 +926,12 @@ namespace StockPriceTools
 
             var frm = new NewExchangeForm();
             frm.DealType = 1;
+            frm.StockCode = stockCode;
             frm.DealPrice = stockPrice;
             frm.StartPosition = FormStartPosition.CenterParent;
             if (frm.ShowDialog() == DialogResult.OK)
             {
-
+                this.LoadExchangeList(stockCode);
             }
         }
         #endregion

@@ -9,11 +9,20 @@ namespace StockSimulateCore.Model
 {
     public class AccountEntity: BaseEntity
     {
+        [Description("实体账户")]
+        public bool RealType { get; set; }
+
         [Description("交易者")]
         public string Name { get; set; }
 
         [Description("总投资市值(元)")]
         public decimal Amount { get; set; }
+
+        [Description("持有现金(元)")]
+        public decimal Cash { get; set; }
+
+        [Description("投入市值(元)")]
+        public decimal BuyAmount { get; set; }
 
         [Description("持有市值(元)")]
         public decimal HoldAmount { get; set; }

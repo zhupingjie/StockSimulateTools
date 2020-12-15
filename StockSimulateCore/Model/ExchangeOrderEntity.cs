@@ -9,26 +9,32 @@ namespace StockSimulateCore.Model
 {
     public class ExchangeOrderEntity : BaseEntity
     {
+        [Description("交易者")]
+        public string AccountName { get; set; }
+
         [Description("股票代码")]
         public string StockCode { get; set; }
 
+        [Description("交易类型")]
+        public string ExchangeType { get; set; }
+
         [Description("成交价格")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         [Description("成交数量")]
         public int Qty { get; set; }
 
         [Description("成交市值")]
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Description("手续费")]
-        public double Charge { get; set; }
+        public decimal Charge { get; set; }
 
         [Description("成交时间")]
         public DateTime ExchangeTime { get; set; } = DateTime.Now;
 
         [Description("持有数量")]
-        public double HoldQty { get; set; }
+        public decimal HoldQty { get; set; }
 
         [Description("买卖策略")]
         public string Strategy { get; set; }
