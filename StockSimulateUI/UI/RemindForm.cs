@@ -11,13 +11,13 @@ using System.Windows.Forms;
 
 namespace StockSimulateUI.UI
 {
-    public partial class SetRemindForm : Form
+    public partial class RemindForm : Form
     {
         public string UDPer { get; set; }
         public string UpPrice { get; set; }
         public string DownPrice { get; set; }
 
-        public SetRemindForm()
+        public RemindForm()
         {
             InitializeComponent();
         }

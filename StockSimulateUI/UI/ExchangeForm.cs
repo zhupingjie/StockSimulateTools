@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace StockSimulateUI.UI
 {
-    public partial class NewExchangeForm : Form
+    public partial class ExchangeForm : Form
     {
         private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
         public int DealQty { get; set; }
@@ -25,7 +25,7 @@ namespace StockSimulateUI.UI
 
         public int DealType { get; set; }
 
-        public NewExchangeForm()
+        public ExchangeForm()
         {
             InitializeComponent();
         }

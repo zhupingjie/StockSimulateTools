@@ -27,8 +27,11 @@ namespace StockSimulateCore.Model
         [Description("股价下限")]
         public decimal MinPrice { get; set; }
 
-        [Description("提醒内容")]
-        public string Title { get; set; }
+        [Description("策略名称")]
+        public string StrategyName { get; set; }
+
+        [Description("策略点")]
+        public string StrategyTarget { get; set; }
 
         [Description("提醒邮箱")]
         public string Email { get; set; }

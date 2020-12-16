@@ -15,6 +15,9 @@ namespace StockSimulateCore.Model
         [Description("策略名称")]
         public string Name { get; set; }
 
+        [Description("策略类型")]
+        public int StrategyType { get; set; }
+
         /// <summary>
         /// 加仓股价浮动比例(%)
         /// </summary>
@@ -26,18 +29,6 @@ namespace StockSimulateCore.Model
         /// </summary>
         [Description("加仓市值(元)")]
         public decimal IncreaseAmount { get; set; } = 5000;
-
-        /// <summary>
-        /// 单股最大持仓比例(%)
-        /// </summary>
-        [Description("单股最大持仓比例(%)")]
-        public decimal MaxPositionPer { get; set; } = 20;
-
-        /// <summary>
-        /// 加仓股价下跌最大限制(%)
-        /// </summary>
-        [Description("加仓股价下跌最大限制(%)")]
-        public decimal IncreaseMaxSlidePer { get; set; } = -25;
 
         /// <summary>
         /// 加仓股价浮动比例限值(%)

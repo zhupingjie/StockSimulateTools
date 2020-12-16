@@ -49,21 +49,15 @@ namespace StockSimulateCore.Service
             dr["持有市值"] = $"{totalBuyAmount}";
             dr["投入市值"] = $"{totalBuyAmount}";
             dr["浮动市值"] = "0";
-            dr["成本"] = "0";
+            dr["成本"] = $"{buyPrice}";
             dr["盈亏"] = "0";
 
             dt.Rows.Add(dr);
 
             while (true)
             {
-                var buyPer = totalBuyAmount / maxBuyAmount * 100;
-                //单股持股比率超过最大值
-                if (buyPer >= strategy.MaxPositionPer) break;
-                //跌幅操作最大值
-                if (downPer <= strategy.IncreaseMaxSlidePer) break;
-
+                decimal thsBuyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), 2);
                 decimal thsBuyAmount = strategy.IncreaseAmount;
-                downPer += strategy.IncreasePricePer;
 
                 totalDownPercent += Math.Abs(strategy.IncreasePricePer);
                 if (totalDownPercent >= Math.Abs(strategy.IncreaseMorePer))
@@ -74,25 +68,28 @@ namespace StockSimulateCore.Service
                 {
                     thsBuyAmount = strategy.IncreaseAmount * (1 + strategy.IncreaseMaxAmountPer / 100);
                 }
-                buyPrice = buyPrice * (1 + strategy.IncreasePricePer / 100);
-                buyCount = GetExchangeCount(Math.Floor(thsBuyAmount / buyPrice));
-                thsBuyAmount = Math.Round(buyCount * buyPrice, 2);
+                buyCount = GetExchangeCount(Math.Floor(thsBuyAmount / thsBuyPrice));
+                thsBuyAmount = Math.Round(buyCount * thsBuyPrice, 2);
 
+                if (totalBuyAmount + thsBuyAmount >= maxBuyAmount) break;
+
+                buyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), 2);
                 totalBuyAmount += thsBuyAmount;
+                downPer += strategy.IncreasePricePer;
                 hasCount += buyCount;
                 cost = Math.Round(totalBuyAmount / hasCount, 2);
 
                 dr = dt.NewRow();
                 dr["操作"] = $"下跌{downPer}%";
-                dr["收盘价"] = $"{Math.Round(buyPrice, 2)}";
+                dr["收盘价"] = $"{buyPrice}";
                 dr["买入数"] = $"{buyCount}";
                 dr["买入市值"] = $"{thsBuyAmount}";
                 dr["卖出数"] = $"{saleCount}";
                 dr["卖出市值"] = $"{saleAmount}";
                 dr["持有数"] = $"{hasCount}";
-                dr["持有市值"] = $"{Math.Round(buyPrice * hasCount, 2)}";
+                dr["持有市值"] = $"{buyPrice * hasCount}";
                 dr["投入市值"] = $"{totalBuyAmount}";
-                dr["浮动市值"] = $"{Math.Round(buyPrice * hasCount - totalBuyAmount, 2)}";
+                dr["浮动市值"] = $"{buyPrice * hasCount - totalBuyAmount}";
                 dr["成本"] = $"{cost}";
                 dr["盈亏"] = "0";
                 dt.Rows.Add(dr);
@@ -102,32 +99,34 @@ namespace StockSimulateCore.Service
             decimal upPer = 0;
             while (true)
             {
-                if (lastPer >= Math.Abs(downPer)) break;
+                //if (lastPer >= Math.Abs(downPer)) break;
                 upPer += Math.Abs(strategy.IncreasePricePer);
                 lastPer = downPer + upPer;
 
-                buyPrice = buyPrice * (1 + -1 * strategy.IncreasePricePer / 100);
-                if (lastPer >= strategy.ReducePricePer)
+                buyPrice = Math.Round(buyPrice * (1 + -1 * strategy.IncreasePricePer / 100), 2);
+                if (buyPrice > salePrice)
                 {
                     saleCount = GetExchangeCount(hasCount * strategy.ReducePositionPer / 100);
+                    if (saleCount == 0) break;
                     hasCount -= saleCount;
-                    saleAmount = Math.Round(buyPrice * saleCount, 2);
+                    saleAmount = buyPrice * saleCount;
                     totalBuyAmount -= saleAmount;
                     profit += saleAmount;
-                    cost = Math.Round(totalBuyAmount / hasCount, 2);
+                    if (hasCount == 0) cost = 0;
+                    else cost = Math.Round(totalBuyAmount / hasCount, 2);
                 }
 
                 dr = dt.NewRow();
                 dr["操作"] = $"上涨{lastPer}%";
-                dr["收盘价"] = $"{Math.Round(buyPrice, 2)}";
+                dr["收盘价"] = $"{buyPrice}";
                 dr["买入数"] = $"{0}";
                 dr["买入市值"] = $"{0}";
                 dr["卖出数"] = $"{saleCount}";
                 dr["卖出市值"] = $"{saleAmount}";
                 dr["持有数"] = $"{hasCount}";
-                dr["持有市值"] = $"{Math.Round(buyPrice * hasCount, 2)}";
+                dr["持有市值"] = $"{buyPrice * hasCount}";
                 dr["投入市值"] = $"{totalBuyAmount}";
-                dr["浮动市值"] = $"{Math.Round(buyPrice * hasCount - totalBuyAmount, 2)}";
+                dr["浮动市值"] = $"{buyPrice * hasCount - totalBuyAmount}";
                 dr["成本"] = $"{cost}";
                 dr["盈亏"] = $"{profit}";
                 dt.Rows.Add(dr);

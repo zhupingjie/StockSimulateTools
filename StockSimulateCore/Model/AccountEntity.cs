@@ -35,5 +35,11 @@ namespace StockSimulateCore.Model
 
         [Description("QQ")]
         public string QQ { get; set; } = "47426568";
+
+        [Description("单股最大持仓(%)")]
+        public decimal MaxPositionPer { get; set; }
+
+        [Description("持有总仓位(%)")]
+        public decimal HoldPositionPer { get; set; }
     }
 }

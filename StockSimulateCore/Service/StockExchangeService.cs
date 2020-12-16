@@ -22,7 +22,6 @@ namespace StockSimulateCore.Service
                 Name = "默认策略",
                 IncreasePricePer = -5,
                 IncreaseAmount = 5000,
-                MaxPositionPer = 25,
                 IncreaseMorePer = -20,
                 IncreaseMoreAmountPer = 30,
                 IncreaseMaxPer = -30,

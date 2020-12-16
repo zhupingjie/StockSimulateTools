@@ -1,6 +1,6 @@
 ﻿namespace StockSimulateUI.UI
 {
-    partial class NewExchangeForm
+    partial class ExchangeForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,12 +37,10 @@
             this.txtDealType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtDealAmount = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.txtAccount = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtCouldExchange = new System.Windows.Forms.TextBox();
             this.lblCouldText = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtDealQty
@@ -88,7 +86,7 @@
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(436, 3);
+            this.btnOK.Location = new System.Drawing.Point(436, 434);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(131, 53);
             this.btnOK.TabIndex = 9;
@@ -140,15 +138,6 @@
             this.txtDealAmount.TabIndex = 15;
             this.txtDealAmount.Text = "0";
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 433);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(623, 85);
-            this.panel1.TabIndex = 18;
-            // 
             // txtAccount
             // 
             this.txtAccount.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -193,12 +182,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(623, 518);
+            this.ClientSize = new System.Drawing.Size(623, 499);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtCouldExchange);
             this.Controls.Add(this.lblCouldText);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtAccount);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtDealType);
             this.Controls.Add(this.txtDealAmount);
@@ -210,7 +199,6 @@
             this.Name = "NewExchangeForm";
             this.Text = "买卖交易";
             this.Load += new System.EventHandler(this.NewExchangeForm_Load);
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,7 +214,6 @@
         private System.Windows.Forms.ComboBox txtDealType;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtDealAmount;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox txtAccount;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCouldExchange;

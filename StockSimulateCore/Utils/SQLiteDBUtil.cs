@@ -238,6 +238,10 @@ namespace StockSimulateCore.Utils
                         {
                             val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
                         }
+                        else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                        {
+                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                        }
                         else if (field.PropertyType == typeof(string))
                         {
                             val = value.ToString().Replace("'", "''");
@@ -290,7 +294,24 @@ namespace StockSimulateCore.Utils
                     var value = field.GetValue(entity);
                     if (value != null)
                     {
-                        sb.Append($",{field.Name}='{value}'");
+                        string val = null;
+                        if (field.PropertyType == typeof(DateTime))
+                        {
+                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                        }
+                        else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                        {
+                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                        }
+                        else if (field.PropertyType == typeof(string))
+                        {
+                            val = value.ToString().Replace("'", "''");
+                        }
+                        else
+                        {
+                            val = value.ToString();
+                        }
+                        sb.Append($",{field.Name}='{val}'");
                     }
                 }
                 cmd.CommandText = sql = $"update {table} set lastdate='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where ID={entity.ID}";
@@ -422,8 +443,7 @@ namespace StockSimulateCore.Utils
             }
         }
 
-
-        public bool DeleteEntity(string table, string where)
+        bool DeleteEntity(string table, string where)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
@@ -440,69 +460,6 @@ namespace StockSimulateCore.Utils
                 catch (Exception ex)
                 {
                     LogUtil.Logger.Error(ex);
-                    return false;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            }
-        }
-        public bool ExistsEntity(string table, string column, string value)
-        {
-            using (SQLiteConnection con = new SQLiteConnection(strConn))
-            {
-                con.Open();
-                var cmd = con.CreateCommand();
-
-                cmd.CommandText = $"select count(*) from {table} where {column}='{value}'";
-                try
-                {
-                    var obj = cmd.ExecuteScalar();
-                    if(obj != DBNull.Value)
-                    {
-                        int count = 0;
-                        int.TryParse(obj.ToString(), out count);
-                        return count > 0 ? true : false;
-                    }
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Logger.Error(ex);
-                    //log4net.LogManager.GetLogger("logAppender").Error(ex);
-                    return false;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            }
-        }
-
-        public bool ExistsEntity(string table, string where)
-        {
-            using (SQLiteConnection con = new SQLiteConnection(strConn))
-            {
-                con.Open();
-                var cmd = con.CreateCommand();
-
-                cmd.CommandText = $"select count(*) from {table} where {where}";
-                try
-                {
-                    var obj = cmd.ExecuteScalar();
-                    if (obj != DBNull.Value)
-                    {
-                        int count = 0;
-                        int.TryParse(obj.ToString(), out count);
-                        return count > 0 ? true : false;
-                    }
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Logger.Error(ex);
-                    //log4net.LogManager.GetLogger("logAppender").Error(ex);
                     return false;
                 }
                 finally

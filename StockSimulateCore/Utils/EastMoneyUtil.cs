@@ -28,6 +28,8 @@ namespace StockSimulateCore.Utils
 
             var stockPrice = new StockPriceEntity();
             stockPrice.StockCode = code;
+            stockPrice.DealDate = DateTime.Now.ToString("yyyy-MM-dd");
+            stockPrice.DealTime = DateTime.Now.ToString("HH:mm");
             stockPrice.Price = GetNumberValue(model, "f43");
             stockPrice.UDPer = GetNumberValue(model, "f170");  
             stockPrice.TodayStartPrice = GetNumberValue(model, "f46"); 
