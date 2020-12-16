@@ -3,6 +3,7 @@ using StockSimulateCore.Config;
 using StockSimulateCore.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
+using StockSimulateUI.UC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,100 +26,69 @@ namespace StockSimulateUI.UI
             InitializeComponent();
         }
 
-        private void btnCalcuate_Click(object sender, EventArgs e)
-        {
-            decimal baseBuyAmount = GetTextValue(this.txtBaseBuyAmount);
-            decimal lastBuyPrice = GetTextValue(this.txtBaseBuyPrice);
-            decimal buyRate = GetTextValue(this.txtBuyRate);
-            decimal buyAmount = GetTextValue(this.txtBuyAmount);
-            decimal extraBuyPercent1 = GetTextValue(this.txtExtraBuyPercent1);
-            decimal extraBuyPercent2 = GetTextValue(this.txtExtraBuyPercent2);
-            decimal downPercent1 = GetTextValue(this.txtDownPercent1);
-            decimal downPercent2 = GetTextValue(this.txtDownPercent2);
-            decimal saleRate = GetTextValue(this.txtSaleRate);
-            decimal saleHoldPer = GetTextValue(this.txtSaleHoldPer);
-            decimal salePrice = GetTextValue(this.txtSalePrice);
-            decimal totalBuyAmount = ObjectUtil.ToValue<decimal>(this.txtTotalBuyAmount.Text, 0);
-
-            var strategy = new StrategyEntity()
-            {
-                IncreasePricePer = buyRate,
-                IncreaseAmount = buyAmount,
-                IncreaseMorePer = downPercent1,
-                IncreaseMoreAmountPer = extraBuyPercent1,
-                IncreaseMaxPer = downPercent2,
-                IncreaseMaxAmountPer = extraBuyPercent2,
-                ReducePricePer = saleRate,
-                ReducePositionPer = saleHoldPer,
-            };
-            var dt = StockStrategyService.MakeStrategyData(strategy, lastBuyPrice, baseBuyAmount, salePrice, totalBuyAmount);
-
-            this.dataGridView1.DataSource = dt.DefaultView;
-            for(var i=0; i<this.dataGridView1.Columns.Count; i++)
-            {
-                this.dataGridView1.Columns[i].Width = 80;
-            }
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.txtStockCode.Text = StockCode;
             this.txtStockName.Text = StockName;
         }
 
-
-        decimal GetTextValue(TextBox textBox)
+        private void txtName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            decimal d = 0;
-            decimal.TryParse(textBox.Text, out d);
-            return Math.Round(d, 3);
+            if (this.txtName.Text == "左侧交易")
+            {
+                var uc = new LeftExchangeUC();
+                uc.Dock = DockStyle.Fill;
+                uc.StockCode = StockCode;
+                uc.StockName = StockName;
+                uc.StrategyName = this.txtName.Text;
+
+                if (this.pnlContainer.HasChildren) this.pnlContainer.Controls.Clear();
+                this.pnlContainer.Controls.Add(uc);
+            }
+            else if (this.txtName.Text == "T交易")
+            {
+                var uc = new TExchangeUC();
+                uc.Dock = DockStyle.Fill;
+                uc.StockCode = StockCode;
+                uc.StockName = StockName;
+                uc.StrategyName = this.txtName.Text;
+
+                if (this.pnlContainer.HasChildren) this.pnlContainer.Controls.Clear();
+                this.pnlContainer.Controls.Add(uc);
+            }
         }
 
-        
-
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnCalcuate_Click(object sender, EventArgs e)
         {
-            string strateyName = this.txtName.Text;
-            decimal baseBuyAmount = GetTextValue(this.txtBaseBuyAmount);
-            decimal lastBuyPrice = GetTextValue(this.txtBaseBuyPrice);
-            decimal buyRate = GetTextValue(this.txtBuyRate);
-            decimal buyAmount = GetTextValue(this.txtBuyAmount);
-            decimal extraBuyPercent1 = GetTextValue(this.txtExtraBuyPercent1);
-            decimal extraBuyPercent2 = GetTextValue(this.txtExtraBuyPercent2);
-            decimal downPercent1 = GetTextValue(this.txtDownPercent1);
-            decimal downPercent2 = GetTextValue(this.txtDownPercent2);
-            decimal saleRate = GetTextValue(this.txtSaleRate);
-            decimal saleHoldPer = GetTextValue(this.txtSaleHoldPer);
-            decimal salePrice = GetTextValue(this.txtSalePrice);
-            decimal totalBuyAmount = ObjectUtil.ToValue<decimal>(this.txtTotalBuyAmount.Text, 0);
+            if (!pnlContainer.HasChildren) return;
 
-            var strategy = new StrategyEntity()
-            {
-                IncreasePricePer = buyRate,
-                IncreaseAmount = buyAmount,
-                IncreaseMorePer = downPercent1,
-                IncreaseMoreAmountPer = extraBuyPercent1,
-                IncreaseMaxPer = downPercent2,
-                IncreaseMaxAmountPer = extraBuyPercent2,
-                ReducePricePer = saleRate,
-                ReducePositionPer = saleHoldPer,
+            var uc = pnlContainer.Controls[0] as BaseUC;
+            uc.CalcuateStrategy();
+        }
 
-            };
-            if (string.IsNullOrEmpty(strateyName)) return;
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            var strategyName = this.txtName.Text;
+            if (string.IsNullOrEmpty(strategyName)) return;
+
+            if (!pnlContainer.HasChildren) return;
+
+            var uc = pnlContainer.Controls[0] as BaseUC;
+            var strategy = uc.GetStrategyInfo();
 
             var account = Repository.QueryFirst<AccountEntity>($"RealType='True'");
             if (account == null) return;
 
             Repository.Delete<StockStrategyEntity>($"StockCode='{StockCode}'");
             Repository.Delete<RemindEntity>($"StockCode='{StockCode}' and (RType={8} or RType={9})");
-            var dt = StockStrategyService.MakeStrategyData(strategy, lastBuyPrice, buyAmount, salePrice, totalBuyAmount);
+            var dt = StockStrategyService.MakeStrategyData(strategy);
             for (var i = 0; i < dt.Rows.Count; i++)
             {
                 var dr = dt.Rows[i];
                 var detail = new StockStrategyEntity()
                 {
                     StockCode = StockCode,
-                    StrategyName = strateyName,
+                    StrategyName = strategyName,
                     Target = dr["操作"].ToString(),
                     Price = ObjectUtil.ToValue<decimal>(dr["收盘价"].ToString(), 0),
                     BuyQty = ObjectUtil.ToValue<int>(dr["买入数"].ToString(), 0),
@@ -153,14 +123,6 @@ namespace StockSimulateUI.UI
             }
             this.DialogResult = DialogResult.OK;
             this.Close();
-        }
-
-        private void txtName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(this.txtName.Text == "左侧交易")
-            {
-
-            }
         }
     }
 
