@@ -10,7 +10,7 @@ namespace StockSimulateCore.Service
 {
     public class StockStrategyService
     {
-        public static DataTable MakeStrategyData(StrategyEntity strategy, decimal buyPrice, decimal buyAmount, decimal salePrice, decimal maxBuyAmount)
+        public static DataTable MakeStrategyData(StrategyEntity strategy)
         {
             var dt = new DataTable("stockprice");
             dt.Columns.Add("操作");
@@ -27,13 +27,16 @@ namespace StockSimulateCore.Service
             dt.Columns.Add("盈亏");
             dt.Rows.Clear();
 
-
+            decimal buyPrice = strategy.BuyPrice;
+            decimal buyAmount = strategy.BuyAmount;
+            decimal maxBuyAmount = strategy.TotalBuyAmount;
             decimal buyCount = GetExchangeCount(Math.Floor(buyAmount / buyPrice));
             decimal totalBuyAmount = Math.Round(buyCount * buyPrice, 2);
             decimal hasCount = buyCount;
             decimal totalDownPercent = 0;
             decimal downPer = 0;
             decimal cost = buyPrice;
+            decimal salePrice = strategy.SalePrice;
             decimal saleCount = 0;
             decimal saleAmount = 0;
             decimal profit = 0;

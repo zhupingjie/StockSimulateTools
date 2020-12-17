@@ -18,20 +18,11 @@ namespace StockSimulateCore.Model
         [Description("股票名称")]
         public string StockName { get; set; }
 
-        [Description("买卖策略")]
-        public string StrategyName { get; set; }
-
-        [Description("建仓起始价格")]
-        public decimal BuyPrice { get; set; }
-
-        [Description("建仓市值")]
-        public decimal BuyAmount { get; set; }
-
-        [Description("减仓起始价格")]
-        public decimal SalePrice { get; set; }
-
         [Description("股价")]
         public decimal Price { get; set; }
+
+        [Description("浮动(%)")]
+        public decimal UDPer { get; set; }
 
         [Description("持有数")]
         public int HoldQty { get; set; }

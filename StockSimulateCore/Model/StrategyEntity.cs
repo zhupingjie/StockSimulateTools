@@ -16,7 +16,19 @@ namespace StockSimulateCore.Model
         public string Name { get; set; }
 
         [Description("策略类型")]
-        public int StrategyType { get; set; }
+        public string StrategyType { get; set; }
+
+        [Description("建仓价格")]
+        public decimal BuyPrice { get; set; }
+
+        [Description("建仓市值")]
+        public decimal BuyAmount { get; set; }
+
+        [Description("减仓价格")]
+        public decimal SalePrice { get; set; }
+
+        [Description("买入总市值(元)")]
+        public decimal TotalBuyAmount { get; set; }
 
         /// <summary>
         /// 加仓股价浮动比例(%)

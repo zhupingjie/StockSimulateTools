@@ -89,6 +89,7 @@ namespace StockPriceTools
                     if (ObjectUtil.EffectStockDealTime())
                     {
                         var stocks = Repository.QueryAll<StockEntity>();
+                        var accountStocks = Repository.QueryAll<AccountStockEntity>();
                         foreach (var stock in stocks)
                         {
                             var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
@@ -127,6 +128,17 @@ namespace StockPriceTools
                                 stockInfo.DayPrice.DateType = 1;//分钟
                                 stockInfo.DayPrice.DealTime = dealTime;
                                 Repository.Update<StockPriceEntity>(stockInfo.DayPrice);
+                            }
+
+                            var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
+                            foreach(var item in accStocks)
+                            {
+                                item.Price = stockInfo.DayPrice.Price;
+                                item.HoldAmount = item.Price * item.HoldQty;
+                                item.Profit = item.HoldAmount - item.TotalBuyAmount;
+                                if (item.TotalBuyAmount == 0) item.UDPer = 0;
+                                else item.UDPer = Math.Round(item.Profit / item.TotalBuyAmount * 100, 2);
+                                Repository.Update<AccountStockEntity>(item);
                             }
                             this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price.ToString("####.00").PadLeft(4, ' ')}] [{stockInfo.DayPrice.UDPer}%]");
                         }
@@ -644,41 +656,8 @@ namespace StockPriceTools
                 listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(stock, prep.Name)}");
                 this.lstBaseInfo.Items.Add(listViewItem);
             }
-            //foreach (DataGridViewCell cell in selectRow.Cells)
-            //{
-            //    var listViewItem = new ListViewItem();
-            //    listViewItem.Text = $"{this.gridStockList.Columns[cell.ColumnIndex].Name}";
-            //    listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
-            //    this.lstBaseInfo.Items.Add(listViewItem);
-            //}
         }
-
-        void LoadStockStrategyInfo(string stockCode)
-        {
-            this.lstStrategyInfo.Items.Clear();
-
-            var accountStock = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
-            if (accountStock == null) return;
-
-            var strategy = Repository.QueryFirst<StrategyEntity>($"Name='{accountStock.StrategyName}'");
-            if (strategy == null) return;
-
-            var preps = typeof(StrategyEntity).GetProperties();
-            foreach (var prep in preps)
-            {
-                if (prep.Name == "ID") continue;
-
-                var desc = prep.Name;
-                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
-                if (attr != null) desc = attr.Description;
-
-                var listViewItem = new ListViewItem();
-                listViewItem.Text = $"{desc}";
-                listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(strategy, prep.Name)}");
-                this.lstStrategyInfo.Items.Add(listViewItem);
-            }
-        }
-
+        
         #endregion
 
         #region GridList事件
@@ -687,7 +666,7 @@ namespace StockPriceTools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
             this.lstBaseInfo.Items.Clear();
@@ -695,11 +674,7 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             this.LoadStockBaseInfo(stockCode);
-            this.LoadStockStrategyInfo(stockCode);
             this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
-            //this.LoadPriceList(stockCode);
-            //this.LoadExchangeList(stockCode);
-            //this.LoadMainTargetInfo(stockCode);
         }
 
         /// <summary>
@@ -741,9 +716,23 @@ namespace StockPriceTools
                 listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
                 this.lstExchangeInfo.Items.Add(listViewItem);
             }
-
         }
 
+
+        private void gridStockStrategyList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (this.gridStockStrategyList.SelectedRows.Count == 0) return;
+            this.lstStrategyInfo.Items.Clear();
+
+            var selectRow = this.gridStockStrategyList.SelectedRows[0];
+            foreach (DataGridViewCell cell in selectRow.Cells)
+            {
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{this.gridStockStrategyList.Columns[cell.ColumnIndex].Name}";
+                listViewItem.SubItems.Add($"{selectRow.Cells[cell.ColumnIndex].Value}");
+                this.lstStrategyInfo.Items.Add(listViewItem);
+            }
+        }
         #endregion
 
         #region 工具栏按钮事件
@@ -1178,5 +1167,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }
