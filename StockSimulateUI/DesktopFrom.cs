@@ -249,11 +249,96 @@ namespace StockPriceTools
 
         #endregion
 
-        #region 加载GridList数据
-
-        void LoadStockList()
+        #region 顶部工具栏按钮事件
+        private void btnAddStock_Click(object sender, EventArgs e)
         {
-            var stocks = Repository.QueryAll<StockEntity>();
+            var frm = new NewStockForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                this.LoadStockList();
+            }
+        }
+
+        private void btnDeleteStock_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
+
+            if (MessageBox.Show($"确认要删除自选股[{stockName}]?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock != null)
+            {
+                Repository.Delete<StockEntity>(stock);
+            }
+            var stockStrategy = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
+            if (stockStrategy != null)
+            {
+                Repository.Delete<AccountStockEntity>(stockStrategy);
+            }
+            var stockStrategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
+            if (stockStrategyDetails.Length > 0)
+            {
+                Repository.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
+            }
+            this.LoadStockList();
+        }
+
+        private void btnAccountInfo_Click(object sender, EventArgs e)
+        {
+            var frm = new AccountForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+        }
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            var frm = new ConfigForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog();
+        }
+
+        private void btnSetStrategy_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
+
+            var frm = new StrategyForm();
+            frm.StockCode = stockCode;
+            frm.StockName = stockName;
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                this.LoadStockStrategyList(stockCode);
+            }
+        }
+
+        private void btnAddRmind_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var frm = new RemindForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.StockCode = stockCode;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                this.LoadRemindList(stockCode);
+            }
+        }
+
+        #endregion
+
+        #region 中间TabControl区域事件
+
+        void LoadStockList(string where = "")
+        {
+            var stocks = Repository.QueryAll<StockEntity>(where);
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = null;
             this.gridStockList.DataSource = dt.DefaultView;
@@ -275,6 +360,7 @@ namespace StockPriceTools
                     this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
             }
+            this.lblStockTotal.Text = $"股票总数:[{stocks.Length}]";
         }
 
         void LoadAccountStockList()
@@ -289,6 +375,82 @@ namespace StockPriceTools
                 this.gridAccountStockList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
             }
         }
+
+        /// <summary>
+        /// 自选股列表点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            this.lstBaseInfo.Items.Clear();
+
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            this.LoadStockBaseInfo(stockCode);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
+        }
+
+
+        private void txtAllStock_CheckedChanged(object sender, EventArgs e)
+        {
+            var where = "";
+            if (this.txtSHSZ.Checked) where = $"(Code like 'SZ%' or Code like 'SH%')";
+            else if (this.txtETF.Checked) where = $"Code like 'ZS%'";
+            else where = "";
+
+            this.LoadStockList(where);
+        }
+
+        private void txtSHSZ_CheckedChanged(object sender, EventArgs e)
+        {
+            var where = "";
+            if (this.txtSHSZ.Checked) where = $"(Code like 'SZ%' or Code like 'SH%')";
+            else if (this.txtETF.Checked) where = $"Code like 'ZS%'";
+            else where = "";
+
+            this.LoadStockList(where);
+        }
+
+        private void txtETF_CheckedChanged(object sender, EventArgs e)
+        {
+            var where = "";
+            if (this.txtSHSZ.Checked) where = $"(Code like 'SZ%' or Code like 'SH%')";
+            else if (this.txtETF.Checked) where = $"Code like 'ZS%'";
+            else where = "";
+
+            this.LoadStockList(where);
+        }
+        #endregion
+
+        #region 右侧ListView区域事件
+        void LoadStockBaseInfo(string stockCode)
+        {
+            this.lstBaseInfo.Items.Clear();
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            var preps = typeof(StockEntity).GetProperties();
+            foreach(var prep in preps)
+            {
+                if (prep.Name == "ID") continue;
+
+                var desc = prep.Name;
+                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+                if (attr != null) desc = attr.Description;
+
+                var listViewItem = new ListViewItem();
+                listViewItem.Text = $"{desc}";
+                listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(stock, prep.Name)}");
+                this.lstBaseInfo.Items.Add(listViewItem);
+            }
+        }
+        
+        #endregion
+
+        #region 底部TabControl区域事件
 
         /// <summary>
         /// 0:日,1:周,2:月,3:1分钟,5:5分钟,15:15分钟
@@ -358,7 +520,7 @@ namespace StockPriceTools
             else
             {
                 this.BindChartMinutePoints(series, stockPrices, timeType);
-            }            
+            }
         }
 
         void BindChartDayPoints(Series series, StockPriceEntity[] stockPrices)
@@ -402,7 +564,7 @@ namespace StockPriceTools
             while (true)
             {
                 var endTime = startTime.AddMonths(1).AddDays(-1);
-                
+
                 var start = startTime.ToString("yyyy-MM-dd");
                 var end = endTime.ToString("yyyy-MM-dd");
                 if (start.CompareTo($"{DateTime.Now.Date.AddMonths(1).ToString("yyyy-MM-01")}") >= 0) break;
@@ -427,7 +589,7 @@ namespace StockPriceTools
             while (true)
             {
                 var endTime = startTime.AddMinutes(minute);
-                
+
                 var start = startTime.ToString("HH:mm");
                 var end = endTime.ToString("HH:mm");
                 if (start.CompareTo("11:30") >= 0 && start.CompareTo("13:00") < 0)
@@ -456,7 +618,7 @@ namespace StockPriceTools
 
         void LoadPriceList(string stockCode)
         {
-            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc",  60);
+            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 60);
             var dt = ObjectUtil.ConvertTable(stockPrices);
             this.gridPriceList.DataSource = null;
             this.gridPriceList.DataSource = dt.DefaultView;
@@ -547,7 +709,7 @@ namespace StockPriceTools
                 row.Cells["类型"].Value = (type == 0 ? "涨跌幅" : type == 1 ? "上涨" : type == 2 ? "下跌" : type == 8 ? "买点" : type == 9 ? "卖点" : "");
             }
         }
-       
+
         void LoadExchangeList(string stockCode)
         {
             var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ExchangeTime desc", 60);
@@ -583,50 +745,6 @@ namespace StockPriceTools
             }
         }
 
-        #endregion
-
-        #region 加载ListView数据
-        void LoadStockBaseInfo(string stockCode)
-        {
-            this.lstBaseInfo.Items.Clear();
-
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
-            if (stock == null) return;
-
-            var preps = typeof(StockEntity).GetProperties();
-            foreach(var prep in preps)
-            {
-                if (prep.Name == "ID") continue;
-
-                var desc = prep.Name;
-                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
-                if (attr != null) desc = attr.Description;
-
-                var listViewItem = new ListViewItem();
-                listViewItem.Text = $"{desc}";
-                listViewItem.SubItems.Add($"{ObjectUtil.GetPropertyValue(stock, prep.Name)}");
-                this.lstBaseInfo.Items.Add(listViewItem);
-            }
-        }
-        
-        #endregion
-
-        #region GridList事件
-        /// <summary>
-        /// 自选股列表点击
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            this.lstBaseInfo.Items.Clear();
-
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            this.LoadStockBaseInfo(stockCode);
-            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
-        }
 
         /// <summary>
         /// 历史股价列表点击
@@ -669,7 +787,11 @@ namespace StockPriceTools
             }
         }
 
-
+        /// <summary>
+        /// 买卖策略列表点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridStockStrategyList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridStockStrategyList.SelectedRows.Count == 0) return;
@@ -684,94 +806,6 @@ namespace StockPriceTools
                 this.lstStrategyInfo.Items.Add(listViewItem);
             }
         }
-        #endregion
-
-        #region 工具栏按钮事件
-        private void btnAddStock_Click(object sender, EventArgs e)
-        {
-            var frm = new NewStockForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                this.LoadStockList();
-            }
-        }
-
-        private void btnDeleteStock_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var stockName = $"{selectRow.Cells["股票名称"].Value}";
-
-            if (MessageBox.Show($"确认要删除自选股[{stockName}]?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
-
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
-            if(stock != null)
-            {
-                Repository.Delete<StockEntity>(stock);
-            }
-            var stockStrategy = Repository.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
-            if(stockStrategy != null)
-            {
-                Repository.Delete<AccountStockEntity>(stockStrategy);
-            }
-            var stockStrategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
-            if(stockStrategyDetails.Length > 0)
-            {
-                Repository.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
-            }
-            this.LoadStockList();
-        }
-
-        private void btnAccountInfo_Click(object sender, EventArgs e)
-        {
-            var frm = new AccountForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
-        }
-        private void btnConfig_Click(object sender, EventArgs e)
-        {
-            var frm = new ConfigForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
-        }
-
-        private void btnSetStrategy_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var stockName = $"{selectRow.Cells["股票名称"].Value}";
-
-            var frm = new StrategyForm();
-            frm.StockCode = stockCode;
-            frm.StockName = stockName;
-            frm.StartPosition = FormStartPosition.CenterParent;
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                this.LoadStockStrategyList(stockCode);
-            }
-        }
-
-        private void btnAddRmind_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var frm = new RemindForm();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.StockCode = stockCode;
-            if(frm.ShowDialog() == DialogResult.OK)
-            {
-                this.LoadRemindList(stockCode);
-            }
-        }
-
-        #endregion
-
-        #region 底部TabControl区域事件
 
         private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
         {

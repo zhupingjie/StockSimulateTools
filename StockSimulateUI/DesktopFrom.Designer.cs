@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -49,6 +49,10 @@
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.txtETF = new System.Windows.Forms.RadioButton();
+            this.txtSHSZ = new System.Windows.Forms.RadioButton();
+            this.txtAllStock = new System.Windows.Forms.RadioButton();
             this.tabHoldStockList = new System.Windows.Forms.TabPage();
             this.gridAccountStockList = new System.Windows.Forms.DataGridView();
             this.tabControlBottom = new System.Windows.Forms.TabControl();
@@ -121,6 +125,7 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblStockTotal = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -134,6 +139,7 @@
             this.tabControlMain.SuspendLayout();
             this.tabStockList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridStockList)).BeginInit();
+            this.panel10.SuspendLayout();
             this.tabHoldStockList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).BeginInit();
             this.tabControlBottom.SuspendLayout();
@@ -343,6 +349,7 @@
             // 
             this.tabStockList.BackColor = System.Drawing.SystemColors.Control;
             this.tabStockList.Controls.Add(this.gridStockList);
+            this.tabStockList.Controls.Add(this.panel10);
             this.tabStockList.Location = new System.Drawing.Point(4, 22);
             this.tabStockList.Name = "tabStockList";
             this.tabStockList.Padding = new System.Windows.Forms.Padding(3);
@@ -355,16 +362,63 @@
             this.gridStockList.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridStockList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridStockList.Location = new System.Drawing.Point(3, 3);
+            this.gridStockList.Location = new System.Drawing.Point(3, 32);
             this.gridStockList.MultiSelect = false;
             this.gridStockList.Name = "gridStockList";
             this.gridStockList.ReadOnly = true;
             this.gridStockList.RowHeadersWidth = 10;
             this.gridStockList.RowTemplate.Height = 23;
             this.gridStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockList.Size = new System.Drawing.Size(836, 274);
-            this.gridStockList.TabIndex = 41;
+            this.gridStockList.Size = new System.Drawing.Size(836, 245);
+            this.gridStockList.TabIndex = 48;
             this.gridStockList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockList_RowEnter);
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.lblStockTotal);
+            this.panel10.Controls.Add(this.txtETF);
+            this.panel10.Controls.Add(this.txtSHSZ);
+            this.panel10.Controls.Add(this.txtAllStock);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel10.Location = new System.Drawing.Point(3, 3);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(836, 29);
+            this.panel10.TabIndex = 47;
+            // 
+            // txtETF
+            // 
+            this.txtETF.AutoSize = true;
+            this.txtETF.Location = new System.Drawing.Point(138, 7);
+            this.txtETF.Name = "txtETF";
+            this.txtETF.Size = new System.Drawing.Size(41, 16);
+            this.txtETF.TabIndex = 2;
+            this.txtETF.Text = "ETF";
+            this.txtETF.UseVisualStyleBackColor = true;
+            this.txtETF.CheckedChanged += new System.EventHandler(this.txtETF_CheckedChanged);
+            // 
+            // txtSHSZ
+            // 
+            this.txtSHSZ.AutoSize = true;
+            this.txtSHSZ.Location = new System.Drawing.Point(73, 7);
+            this.txtSHSZ.Name = "txtSHSZ";
+            this.txtSHSZ.Size = new System.Drawing.Size(59, 16);
+            this.txtSHSZ.TabIndex = 1;
+            this.txtSHSZ.Text = "沪深股";
+            this.txtSHSZ.UseVisualStyleBackColor = true;
+            this.txtSHSZ.CheckedChanged += new System.EventHandler(this.txtSHSZ_CheckedChanged);
+            // 
+            // txtAllStock
+            // 
+            this.txtAllStock.AutoSize = true;
+            this.txtAllStock.Checked = true;
+            this.txtAllStock.Location = new System.Drawing.Point(8, 7);
+            this.txtAllStock.Name = "txtAllStock";
+            this.txtAllStock.Size = new System.Drawing.Size(59, 16);
+            this.txtAllStock.TabIndex = 0;
+            this.txtAllStock.TabStop = true;
+            this.txtAllStock.Text = "所有股";
+            this.txtAllStock.UseVisualStyleBackColor = true;
+            this.txtAllStock.CheckedChanged += new System.EventHandler(this.txtAllStock_CheckedChanged);
             // 
             // tabHoldStockList
             // 
@@ -445,11 +499,11 @@
             // 
             // chartPrice
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea3);
+            chartArea10.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea10);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend3);
+            legend10.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend10);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1184,6 +1238,15 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
+            // lblStockTotal
+            // 
+            this.lblStockTotal.AutoSize = true;
+            this.lblStockTotal.Location = new System.Drawing.Point(749, 10);
+            this.lblStockTotal.Name = "lblStockTotal";
+            this.lblStockTotal.Size = new System.Drawing.Size(65, 12);
+            this.lblStockTotal.TabIndex = 3;
+            this.lblStockTotal.Text = "Loading...";
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1212,6 +1275,8 @@
             this.tabControlMain.ResumeLayout(false);
             this.tabStockList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridStockList)).EndInit();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.tabHoldStockList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).EndInit();
             this.tabControlBottom.ResumeLayout(false);
@@ -1263,7 +1328,6 @@
         private System.Windows.Forms.ToolStripButton btnDeleteStock;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.DataGridView gridStockList;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnSetStrategy;
@@ -1347,5 +1411,11 @@
         private System.Windows.Forms.Button btnMonthChart;
         private System.Windows.Forms.Button btnWeekChart;
         private System.Windows.Forms.Button btnFifteenChart;
+        private System.Windows.Forms.DataGridView gridStockList;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.RadioButton txtETF;
+        private System.Windows.Forms.RadioButton txtSHSZ;
+        private System.Windows.Forms.RadioButton txtAllStock;
+        private System.Windows.Forms.Label lblStockTotal;
     }
 }
