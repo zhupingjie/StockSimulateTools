@@ -38,5 +38,11 @@ namespace StockSimulateCore.Entity
 
         [Description("盈亏(元)")]
         public decimal Profit { get; set; }
+
+        [Description("锁定数量")]
+        public int LockQty { get; set; }
+
+        [Description("锁定日期")]
+        public DateTime? LockDate { get; set; }
     }
 }

@@ -92,9 +92,9 @@ namespace StockSimulateCore.Service
                     {
                         item.ExecuteOK = result.Success ? 1 : 2;
                         item.Message = result.Message;
-                        SQLiteDBUtil.Instance.Update<StockStrategyEntity>(item);
                     }
                 }
+                SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
                 #endregion
 
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
@@ -120,11 +120,12 @@ namespace StockSimulateCore.Service
                     item.Profit = item.HoldAmount - item.TotalBuyAmount;
                     if (item.TotalBuyAmount == 0) item.UDPer = 0;
                     else item.UDPer = Math.Round(item.Profit / item.TotalBuyAmount * 100, 2);
-                    SQLiteDBUtil.Instance.Update<AccountStockEntity>(item);
 
                     actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
                 }
             }
+            SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
+
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 

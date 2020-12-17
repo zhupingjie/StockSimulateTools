@@ -689,21 +689,12 @@ namespace StockPriceTools
         #region 工具栏按钮事件
         private void btnAddStock_Click(object sender, EventArgs e)
         {
-            var stockCode = string.Empty;
-            var dlg = new NewStockForm();
-            if (dlg.ShowDialog() == DialogResult.OK) stockCode = dlg.StockCode;
-            if (string.IsNullOrEmpty(stockCode)) return;
-
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
-            if (stock == null)
+            var frm = new NewStockForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                stock = new StockEntity()
-                {
-                    Code = stockCode
-                };
-                Repository.Insert<StockEntity>(stock);
+                this.LoadStockList();
             }
-            this.LoadStockList();
         }
 
         private void btnDeleteStock_Click(object sender, EventArgs e)

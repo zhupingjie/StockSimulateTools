@@ -177,27 +177,41 @@ namespace StockSimulateCore.Utils
         public bool Insert<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
-            return CreateEntity(entity, tableName);
+            return CreateEntity(new TEntity[] { entity }, tableName);
         }
         public bool Insert<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
-            foreach (var entity in entitys)
-            {
-                CreateEntity(entity, tableName);
-            }
-            return true;
+            if (entitys.Length == 0) return false;
+
+            return CreateEntity(entitys, tableName); ;
         }
         public bool Update<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
-            return UpdateEntity(entity, tableName);
+            return UpdateEntity(new TEntity[] { entity }, tableName);
         }
 
-        public bool Delete<TEntity>(TEntity entity) where TEntity:BaseEntity
+        public bool Update<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
-            return DeleteEntity(entity, tableName);
+            if (entitys.Length == 0) return false;
+
+            return UpdateEntity(entitys, tableName);
+        }
+
+        public bool Delete<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            var tableName = GetEntityTypeName<TEntity>();
+            return DeleteEntity(new TEntity[] { entity }, tableName);
+        }
+
+        public bool Delete<TEntity>(TEntity[] entitys) where TEntity:BaseEntity
+        {
+            var tableName = GetEntityTypeName<TEntity>();
+            if (entitys.Length == 0) return false;
+
+            return DeleteEntity(entitys, tableName);
         }
 
         public bool Delete<TEntity>(string where) where TEntity : BaseEntity
@@ -211,7 +225,7 @@ namespace StockSimulateCore.Utils
             return typeof(TEntity).Name.Replace("Entity", "");
         }
 
-        bool CreateEntity(BaseEntity entity, string tableName)
+        bool CreateEntity(BaseEntity[] entitys, string tableName)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
@@ -222,42 +236,48 @@ namespace StockSimulateCore.Utils
                 StringBuilder sbVal = new StringBuilder();
 
                 var sql = string.Empty;
-                var type = entity.GetType();
+                var type = entitys.FirstOrDefault().GetType();
                 var fields = type.GetProperties();
-                foreach (var field in fields)
+
+                foreach(var entity in entitys)
                 {
-                    if (field.Name == "ID") continue;
-
-                    sbCol.Append($",{field.Name}");
-
-                    var value = field.GetValue(entity);
-                    if (value != null)
+                    foreach (var field in fields)
                     {
-                        string val = null;
-                        if (field.PropertyType == typeof(DateTime))
+                        if (field.Name == "ID") continue;
+
+                        sbCol.Append($",{field.Name}");
+
+                        var value = field.GetValue(entity);
+                        if (value != null)
                         {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-                        else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
-                        {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-                        else if (field.PropertyType == typeof(string))
-                        {
-                            val = value.ToString().Replace("'", "''");
+                            string val = null;
+                            if (field.PropertyType == typeof(DateTime))
+                            {
+                                val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                            {
+                                val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            else if (field.PropertyType == typeof(string))
+                            {
+                                val = value.ToString().Replace("'", "''");
+                            }
+                            else
+                            {
+                                val = value.ToString();
+                            }
+                            sbVal.Append($",'{val}'");
                         }
                         else
                         {
-                            val = value.ToString();
+                            sbVal.Append(",NULL");
                         }
-                        sbVal.Append($",'{val}'");
                     }
-                    else
-                    {
-                        sbVal.Append(",NULL");
-                    }
+
+                    sql += $"insert into {tableName} (ID {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
                 }
-                cmd.CommandText = sql = $"insert into {tableName} (ID {sbCol.ToString()}) values (NULL {sbVal.ToString()})";
+                cmd.CommandText = sql;
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -275,7 +295,7 @@ namespace StockSimulateCore.Utils
             }
         }
 
-        bool UpdateEntity(BaseEntity entity, string table, string[] columns = null)
+        bool UpdateEntity(BaseEntity[] entitys, string table, string[] columns = null)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
@@ -284,37 +304,43 @@ namespace StockSimulateCore.Utils
 
                 StringBuilder sb = new StringBuilder();
                 var sql = string.Empty;
-                var type = entity.GetType();
+                var type = entitys.FirstOrDefault().GetType();
                 var fields = type.GetProperties();
-                foreach (var field in fields)
-                {
-                    if (field.Name == "ID" || field.Name == "LastDate") continue;
-                    if (columns != null && !columns.Contains(field.Name)) continue;
 
-                    var value = field.GetValue(entity);
-                    if (value != null)
+                foreach(var entity in entitys)
+                {
+                    foreach (var field in fields)
                     {
-                        string val = null;
-                        if (field.PropertyType == typeof(DateTime))
+                        if (field.Name == "ID" || field.Name == "LastDate") continue;
+                        if (columns != null && !columns.Contains(field.Name)) continue;
+
+                        var value = field.GetValue(entity);
+                        if (value != null)
                         {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                            string val = null;
+                            if (field.PropertyType == typeof(DateTime))
+                            {
+                                val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                            {
+                                val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            else if (field.PropertyType == typeof(string))
+                            {
+                                val = value.ToString().Replace("'", "''");
+                            }
+                            else
+                            {
+                                val = value.ToString();
+                            }
+                            sb.Append($",{field.Name}='{val}'");
                         }
-                        else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
-                        {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-                        else if (field.PropertyType == typeof(string))
-                        {
-                            val = value.ToString().Replace("'", "''");
-                        }
-                        else
-                        {
-                            val = value.ToString();
-                        }
-                        sb.Append($",{field.Name}='{val}'");
                     }
+                    sql += $"update {table} set lastdate='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where ID={entity.ID};";
                 }
-                cmd.CommandText = sql = $"update {table} set lastdate='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where ID={entity.ID}";
+                
+                cmd.CommandText = sql;
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -417,7 +443,7 @@ namespace StockSimulateCore.Utils
 
         #endregion
 
-        public bool DeleteEntity(BaseEntity entity, string table)
+        bool DeleteEntity(BaseEntity[] entitys, string table)
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
@@ -425,7 +451,11 @@ namespace StockSimulateCore.Utils
                 var cmd = con.CreateCommand();
 
                 StringBuilder sb = new StringBuilder();
-                cmd.CommandText = $"delete from {table} where ID='{entity.ID}'";
+                foreach(var entity in entitys)
+                {
+                    sb.Append($"delete from {table} where ID='{entity.ID}';");
+                }
+                cmd.CommandText = sb.ToString();
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -433,7 +463,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error(ex);
+                    LogUtil.Logger.Error($"SQL:{sb.ToString()}", ex);
                     return false;
                 }
                 finally
