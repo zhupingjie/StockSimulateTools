@@ -1,4 +1,6 @@
-﻿using StockSimulateCore.Model;
+﻿using StockSimulateCore.Entity;
+using StockSimulateCore.Model;
+using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -60,91 +62,48 @@ namespace StockSimulateUI.UI
             if (this.DealQty == 0 || this.DealQty % 100 != 0) return;
             if (this.DealPrice <= 0) return;
 
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtAccount.Text}'");
-            if (account == null) return;
+            var accountName = this.txtAccount.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
 
             //买入
             if(this.DealType == 0)
             {
-                if (this.DealQty * this.DealPrice > account.Cash) return;
-
-                var exchange = new ExchangeOrderEntity()
+                var result = StockExchangeService.Buy(new ExchangeInfo()
                 {
-                    AccountName = account.Name,
+                    AccountName = accountName,
                     StockCode = StockCode,
                     Qty = this.DealQty,
-                    Price = this.DealPrice,
-                    ExchangeType = "买入",
-                    Amount = this.DealPrice * this.DealQty,
-                    ExchangeTime = DateTime.Now,
-                    HoldQty = this.DealQty,
-                };
-                Repository.Insert<ExchangeOrderEntity>(exchange);
-
-                account.BuyAmount += exchange.Amount;
-                account.Cash -= exchange.Amount;
-                Repository.Update<AccountEntity>(account);
-
-                var accountStock = Repository.QueryFirst<AccountStockEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}'");
-                if (accountStock == null)
+                    Price = this.DealPrice
+                });
+                if (result.Success)
                 {
-                    accountStock = new AccountStockEntity()
-                    {
-                        AccountName = account.Name,
-                        StockCode = StockCode,
-                        StockName = StockName,
-                        HoldQty = exchange.Qty,
-                        TotalBuyAmount = exchange.Amount,
-                        Cost = exchange.Price,
-                    };
-                    Repository.Insert<AccountStockEntity>(accountStock);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
                 else
                 {
-                    accountStock.HoldQty += exchange.Qty;
-                    accountStock.TotalBuyAmount += exchange.Amount;
-                    accountStock.Cost = Math.Round(accountStock.TotalBuyAmount / accountStock.HoldQty, 2);
-                    Repository.Update<AccountStockEntity>(accountStock);
+                    MessageBox.Show(result.Message, "交易提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                var accountStock = Repository.QueryFirst<AccountStockEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}'");
-                if (accountStock == null) return;
-
-                if (this.DealQty > accountStock.HoldQty) return;
-
-                var exchange = new ExchangeOrderEntity()
+                var result = StockExchangeService.Sale(new ExchangeInfo()
                 {
-                    AccountName = account.Name,
+                    AccountName = accountName,
                     StockCode = StockCode,
                     Qty = this.DealQty,
-                    Price = this.DealPrice,
-                    ExchangeType = "卖出",
-                    Amount = this.DealPrice * this.DealQty,
-                    ExchangeTime = DateTime.Now,
-                    HoldQty = accountStock.HoldQty - this.DealQty
-                };
-                Repository.Insert<ExchangeOrderEntity>(exchange);
-
-                account.BuyAmount -= exchange.Amount;
-                account.Cash += exchange.Amount;
-                Repository.Update<AccountEntity>(account);
-
-                accountStock.HoldQty -= exchange.Qty;
-                accountStock.TotalBuyAmount -= exchange.Amount;
-                if (accountStock.HoldQty == 0)
+                    Price = this.DealPrice
+                });
+                if (result.Success)
                 {
-                    accountStock.Cost = 0;
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
                 else
                 {
-                    accountStock.Cost = Math.Round(accountStock.TotalBuyAmount / accountStock.HoldQty, 2);
+                    MessageBox.Show(result.Message, "交易提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                Repository.Update<AccountStockEntity>(accountStock);
             }
-            this.DialogResult = DialogResult.OK;
-            this.Close();
         }
 
         private void txtDealPrice_TextChanged(object sender, EventArgs e)
@@ -179,6 +138,7 @@ namespace StockSimulateUI.UI
                 else
                 {
                     this.txtCouldExchange.Text = $"{accountStock.HoldQty}";
+                    this.txtDealQty.Enabled = true;
                 }
             }
         }

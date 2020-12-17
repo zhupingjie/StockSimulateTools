@@ -47,15 +47,15 @@
             this.txtLockQty = new System.Windows.Forms.TextBox();
             this.txtUpPer = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtTotalBuyAmount = new System.Windows.Forms.TextBox();
-            this.txtBuyPrice = new System.Windows.Forms.TextBox();
+            this.txtBasePrice = new System.Windows.Forms.TextBox();
             this.label111 = new System.Windows.Forms.Label();
-            this.txtBuyQty = new System.Windows.Forms.TextBox();
+            this.txtHoldQty = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -65,7 +65,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(948, 188);
+            this.panel1.Size = new System.Drawing.Size(872, 187);
             this.panel1.TabIndex = 53;
             // 
             // groupBox1
@@ -90,7 +90,7 @@
             this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox1.Location = new System.Drawing.Point(239, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(709, 188);
+            this.groupBox1.Size = new System.Drawing.Size(633, 187);
             this.groupBox1.TabIndex = 55;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "买卖属性";
@@ -249,48 +249,27 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.txtTotalBuyAmount);
-            this.groupBox2.Controls.Add(this.txtBuyPrice);
+            this.groupBox2.Controls.Add(this.txtBasePrice);
             this.groupBox2.Controls.Add(this.label111);
-            this.groupBox2.Controls.Add(this.txtBuyQty);
+            this.groupBox2.Controls.Add(this.txtHoldQty);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(239, 188);
+            this.groupBox2.Size = new System.Drawing.Size(239, 187);
             this.groupBox2.TabIndex = 53;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "主要属性";
             // 
-            // label1
+            // txtBasePrice
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(7, 105);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(100, 21);
-            this.label1.TabIndex = 49;
-            this.label1.Text = "投入市值(元)";
-            // 
-            // txtTotalBuyAmount
-            // 
-            this.txtTotalBuyAmount.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtTotalBuyAmount.Location = new System.Drawing.Point(113, 103);
-            this.txtTotalBuyAmount.Name = "txtTotalBuyAmount";
-            this.txtTotalBuyAmount.Size = new System.Drawing.Size(107, 29);
-            this.txtTotalBuyAmount.TabIndex = 48;
-            this.txtTotalBuyAmount.Text = "40000";
-            // 
-            // txtBuyPrice
-            // 
-            this.txtBuyPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtBuyPrice.Location = new System.Drawing.Point(113, 30);
-            this.txtBuyPrice.Name = "txtBuyPrice";
-            this.txtBuyPrice.Size = new System.Drawing.Size(107, 29);
-            this.txtBuyPrice.TabIndex = 23;
-            this.txtBuyPrice.Text = "0";
+            this.txtBasePrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtBasePrice.Location = new System.Drawing.Point(113, 30);
+            this.txtBasePrice.Name = "txtBasePrice";
+            this.txtBasePrice.Size = new System.Drawing.Size(107, 29);
+            this.txtBasePrice.TabIndex = 23;
+            this.txtBasePrice.Text = "0";
             // 
             // label111
             // 
@@ -300,16 +279,16 @@
             this.label111.Name = "label111";
             this.label111.Size = new System.Drawing.Size(100, 21);
             this.label111.TabIndex = 26;
-            this.label111.Text = "建仓数量(股)";
+            this.label111.Text = "底仓数量(股)";
             // 
-            // txtBuyQty
+            // txtHoldQty
             // 
-            this.txtBuyQty.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtBuyQty.Location = new System.Drawing.Point(113, 67);
-            this.txtBuyQty.Name = "txtBuyQty";
-            this.txtBuyQty.Size = new System.Drawing.Size(107, 29);
-            this.txtBuyQty.TabIndex = 25;
-            this.txtBuyQty.Text = "500";
+            this.txtHoldQty.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtHoldQty.Location = new System.Drawing.Point(113, 67);
+            this.txtHoldQty.Name = "txtHoldQty";
+            this.txtHoldQty.Size = new System.Drawing.Size(107, 29);
+            this.txtHoldQty.TabIndex = 25;
+            this.txtHoldQty.Text = "500";
             // 
             // label4
             // 
@@ -321,18 +300,35 @@
             this.label4.TabIndex = 24;
             this.label4.Text = "基准价";
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 187);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersWidth = 10;
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(872, 336);
+            this.dataGridView1.TabIndex = 54;
+            // 
             // TExchangeUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel1);
             this.Name = "TExchangeUC";
-            this.Size = new System.Drawing.Size(948, 190);
+            this.Size = new System.Drawing.Size(872, 523);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -341,11 +337,9 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtTotalBuyAmount;
-        private System.Windows.Forms.TextBox txtBuyPrice;
+        private System.Windows.Forms.TextBox txtBasePrice;
         private System.Windows.Forms.Label label111;
-        private System.Windows.Forms.TextBox txtBuyQty;
+        private System.Windows.Forms.TextBox txtHoldQty;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtDownPer;
@@ -364,5 +358,6 @@
         private System.Windows.Forms.TextBox txtMinPriceStop;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtMaxPriceStop;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

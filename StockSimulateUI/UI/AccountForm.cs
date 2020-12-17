@@ -1,4 +1,5 @@
-﻿using StockSimulateCore.Model;
+﻿using StockSimulateCore.Entity;
+using StockSimulateCore.Model;
 using StockSimulateCore.Utils;
 using System;
 using System.Collections.Generic;

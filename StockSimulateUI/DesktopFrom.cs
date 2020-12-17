@@ -1,5 +1,6 @@
 ﻿using StockPriceTools.UI;
 using StockSimulateCore.Config;
+using StockSimulateCore.Entity;
 using StockSimulateCore.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
@@ -80,73 +81,21 @@ namespace StockPriceTools
 
         void GatherData()
         {
+            //采集价格数据
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2000);
-
                 while (true)
                 {
                     if (ObjectUtil.EffectStockDealTime())
                     {
-                        var stocks = Repository.QueryAll<StockEntity>();
-                        var accountStocks = Repository.QueryAll<AccountStockEntity>();
-                        foreach (var stock in stocks)
+                        StockGatherService.GatherPriceData((message) =>
                         {
-                            var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                            if (stockInfo == null) return;
-                            if (stockInfo.DayPrice.Price == 0) return;
-
-                            stockInfo.Stock.ID = stock.ID;
-                            Repository.Update<StockEntity>(stockInfo.Stock);
-
-                            var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
-                            var price = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
-                            if (price == null)
-                            {
-                                stockInfo.DayPrice.DealTime = "";
-                                Repository.Insert<StockPriceEntity>(stockInfo.DayPrice);
-                            }
-                            else
-                            {
-                                stockInfo.DayPrice.ID = price.ID;
-                                stockInfo.DayPrice.DealTime = "";
-                                Repository.Update<StockPriceEntity>(stockInfo.DayPrice);
-                            }
-                            var dealTime = DateTime.Now.ToString("HH:mm");
-                            if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
-
-                            var price2 = Repository.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
-                            if (price2 == null)
-                            {
-                                stockInfo.DayPrice.DateType = 1;//分钟
-                                stockInfo.DayPrice.DealTime = dealTime;
-                                Repository.Insert<StockPriceEntity>(stockInfo.DayPrice);
-                            }
-                            else
-                            {
-                                stockInfo.DayPrice.ID = price2.ID;
-                                stockInfo.DayPrice.DateType = 1;//分钟
-                                stockInfo.DayPrice.DealTime = dealTime;
-                                Repository.Update<StockPriceEntity>(stockInfo.DayPrice);
-                            }
-
-                            var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
-                            foreach(var item in accStocks)
-                            {
-                                item.Price = stockInfo.DayPrice.Price;
-                                item.HoldAmount = item.Price * item.HoldQty;
-                                item.Profit = item.HoldAmount - item.TotalBuyAmount;
-                                if (item.TotalBuyAmount == 0) item.UDPer = 0;
-                                else item.UDPer = Math.Round(item.Profit / item.TotalBuyAmount * 100, 2);
-                                Repository.Update<AccountStockEntity>(item);
-                            }
-                            this.ActionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price.ToString("####.00").PadLeft(4, ' ')}] [{stockInfo.DayPrice.UDPer}%]");
-                        }
-                        this.ActionLog($">------------------------------------------------>");
+                            ActionLog(message);
+                        });
                         Action act = delegate ()
                         {
                             this.LoadStockList();
-                            this.LoadAccountStockList();
                         };
                         this.Invoke(act);
                     }
@@ -154,55 +103,41 @@ namespace StockPriceTools
                 }
             }, CancellationTokenSource.Token);
 
+            //计算盈亏数据
             Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(15 * 1000);
+                Thread.Sleep(5000);
                 while (true)
                 {
-                    var stocks = Repository.QueryAll<StockEntity>();
-                    foreach (var stock in stocks)
+                    if (ObjectUtil.EffectStockDealTime())
                     {
-                        var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
-                        if (mainTargetInfos.Length > 0)
+                        StockGatherService.CalculateProfit((message) =>
                         {
-                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=0 and Date in ('{string.Join("','", dates)}')");
-                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                            if (newMts.Length > 0)
-                            {
-                                Repository.Insert<MainTargetEntity>(newMts);
-                            }
-                        }
-                        mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 1);
-                        if (mainTargetInfos.Length > 0)
+                            ActionLog(message);
+                        });
+                        Action act = delegate ()
                         {
-                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=1 and Date in ('{string.Join("','", dates)}')");
-                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                            if (newMts.Length > 0)
-                            {
-                                Repository.Insert<MainTargetEntity>(newMts);
-                            }
-                        }
-                        mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 2);
-                        if (mainTargetInfos.Length > 0)
-                        {
-                            var dates = mainTargetInfos.Select(c => c.Date).Distinct().ToArray();
-                            var mts = Repository.QueryAll<MainTargetEntity>($"StockCode='{stock.Code}' and Rtype=2 and Date in ('{string.Join("','", dates)}')");
-                            var mtDates = mts.Select(c => c.Date).Distinct().ToArray();
-                            var newMts = mainTargetInfos.Where(c => !mtDates.Contains(c.Date)).ToArray();
-                            if (newMts.Length > 0)
-                            {
-                                Repository.Insert<MainTargetEntity>(newMts);
-                            }
-                        }
-                        this.ActionLog($"已采集[{stock.Name}]主要指标数据...");
+                            this.LoadAccountStockList();
+                        };
+                        this.Invoke(act);
                     }
+                    Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
 
-                    this.ActionLog($">------------------------------------------------>");
-
+            //采集财务数据
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(10000);
+                while (true)
+                {
+                    if (ObjectUtil.EffectStockDealTime())
+                    {
+                        StockGatherService.GatherFinanceData((message) =>
+                        {
+                            ActionLog(message);
+                        });
+                    }
                     Thread.Sleep(RC.GatherStockMainTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -227,6 +162,7 @@ namespace StockPriceTools
                             {
                                 remind.Handled = true;
                                 remind.LastRemind = DateTime.Now;
+                                remind.RemindPrice = stock.Price;
                                 Repository.Update<RemindEntity>(remind);
 
                                 var nextRemind = new RemindEntity()
@@ -258,6 +194,7 @@ namespace StockPriceTools
 
                                 remind.Handled = true;
                                 remind.LastRemind = DateTime.Now;
+                                remind.RemindPrice = stock.Price;
                                 Repository.Update<RemindEntity>(remind);
                             }
 
@@ -272,6 +209,7 @@ namespace StockPriceTools
 
                                 remind.Handled = true;
                                 remind.LastRemind = DateTime.Now;
+                                remind.RemindPrice = stock.Price;
                                 Repository.Update<RemindEntity>(remind);
                             }
 
@@ -285,6 +223,7 @@ namespace StockPriceTools
                                 this.ActionLog(message);
 
                                 remind.LastRemind = DateTime.Now;
+                                remind.RemindPrice = stock.Price;
                                 Repository.Update<RemindEntity>(remind);
                             }
 
@@ -298,6 +237,7 @@ namespace StockPriceTools
                                 this.ActionLog(message);
 
                                 remind.LastRemind = DateTime.Now;
+                                remind.RemindPrice = stock.Price;
                                 Repository.Update<RemindEntity>(remind);
                             }
                         }
@@ -306,7 +246,6 @@ namespace StockPriceTools
                 }
             }, CancellationTokenSource.Token);
         }
-   
 
         #endregion
 
@@ -358,36 +297,31 @@ namespace StockPriceTools
         /// <param name="timeType"></param>
         void LoadPriceChart(string stockCode, int timeType = 0)
         {
-            var series = this.chartPrice.Series.FirstOrDefault();
-            if (series == null)
-            {
-                series = this.chartPrice.Series.Add("");
-                series.ChartType = SeriesChartType.Candlestick;
-                series.BackSecondaryColor = Color.Green;
-                series.Color = Color.Red;
-                series.BorderWidth = 2;
-                series.IsVisibleInLegend = false;
-                series.YValueType = ChartValueType.Double;
-                series.XValueType = ChartValueType.String;
-                series.ShadowColor = Color.Gray;
-                series.ShadowOffset = 2;
-            }
+            var chartType = timeType == 0 ? SeriesChartType.Candlestick : SeriesChartType.Line;
+            this.chartPrice.Series.Clear();
+            var series = this.chartPrice.Series.Add("");
+            series.ChartType = chartType;
+            series.BackSecondaryColor = Color.Green;
+            series.Color = Color.Red;
+            series.BorderWidth = 2;
+            series.IsVisibleInLegend = false;
+            series.YValueType = ChartValueType.Double;
+            series.XValueType = ChartValueType.String;
+            series.ShadowColor = Color.Gray;
+            series.ShadowOffset = 2;
 
             var dateType = new int[] { 0, 1, 2 }.Contains(timeType) ? 0 : 1;
-            var takeCount = timeType == 0 ? 30 : timeType == 1 ? 5 * 30 : timeType == 2 ? 12 * 30 : timeType == 3 ? 30 : timeType * 30;
-            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "DealDate desc", takeCount);
+            var startDate = DateTime.Now.Date;
+            if (timeType == 0) startDate = startDate.AddMonths(-1);
+            else if (timeType == 1) startDate = startDate.AddDays(-5 * 30);
+            else if (timeType == 2) startDate = startDate.AddYears(-1);
+            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
 
-            this.BindChartSeriesPoints(series, stockPrices.OrderBy(c => c.ID).ToArray(), timeType);
+            this.BindChartSeriesPoints(series, stockPrices.OrderBy(c => c.ID).ToArray(), timeType, chartType == SeriesChartType.Candlestick ? 4 : 1);
 
-            double max = 0, min = 0;
-            if(stockPrices.Length > 0)
-            {
-                max = Math.Round((double)stockPrices.Max(c => c.TodayMaxPrice) * 1.02d, 2);
-                min = Math.Round((double)stockPrices.Min(c => c.TodayMinPrice) * 0.98d, 2);
-            }
             var chartArea = this.chartPrice.ChartAreas[0];
-            chartArea.AxisY.Maximum = max;
-            chartArea.AxisY.Minimum = min;
+            //chartArea.AxisY.Maximum = max;
+            //chartArea.AxisY.Minimum = min;
             chartArea.AxisY.IsStartedFromZero = false;
             chartArea.AxisY.MajorGrid.Enabled = true;
             chartArea.AxisY.MajorGrid.LineColor = Color.Gray;
@@ -400,7 +334,8 @@ namespace StockPriceTools
             //chartArea.AxisX.IntervalType = DateTimeIntervalType.Minutes;
         }
 
-        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int timeType)
+        #region 加载走势图
+        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int timeType, int pointCount = 1)
         {
             series.Points.Clear();
 
@@ -450,11 +385,12 @@ namespace StockPriceTools
                 var items = stockPrices.Where(c => c.DealDate.CompareTo(start) >= 0 && c.DealDate.CompareTo(end) <= 0).ToArray();
                 if (items.Length > 0)
                 {
-                    var maxPrice = items.Average(c => c.TodayMaxPrice);
-                    var minPrice = items.Average(c => c.TodayMinPrice);
-                    var startPrice = items.Average(c => c.TodayStartPrice);
+                    //var maxPrice = items.Average(c => c.TodayMaxPrice);
+                    //var minPrice = items.Average(c => c.TodayMinPrice);
+                    //var startPrice = items.Average(c => c.TodayStartPrice);
                     var endPrice = items.Average(c => c.TodayEndPrice);
-                    series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
+                    //series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
+                    series.Points.AddXY(start, endPrice);
                 }
                 startTime = endTime.AddDays(1);
             }
@@ -474,11 +410,12 @@ namespace StockPriceTools
                 var items = stockPrices.Where(c => c.DealDate.CompareTo(start) >= 0 && c.DealDate.CompareTo(end) <= 0).ToArray();
                 if (items.Length > 0)
                 {
-                    var maxPrice = items.Average(c => c.TodayMaxPrice);
-                    var minPrice = items.Average(c => c.TodayMinPrice);
-                    var startPrice = items.Average(c => c.TodayStartPrice);
+                    //var maxPrice = items.Average(c => c.TodayMaxPrice);
+                    //var minPrice = items.Average(c => c.TodayMinPrice);
+                    //var startPrice = items.Average(c => c.TodayStartPrice);
                     var endPrice = items.Average(c => c.TodayEndPrice);
-                    series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
+                    //series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
+                    series.Points.AddXY(start, endPrice);
                 }
                 startTime = endTime.AddDays(1);
             }
@@ -501,18 +438,21 @@ namespace StockPriceTools
                 if (start.CompareTo("15:00") >= 0) break;
                 if (end.CompareTo("15:00") >= 0) end = "15:00";
 
-                var items = stockPrices.Where(c => c.DealTime.CompareTo(start) >= 0 && c.DealTime.CompareTo(end) <= 0).ToArray();
+                var items = stockPrices.Where(c => c.DealDate == DateTime.Now.ToString("yyyy-MM-dd") && c.DealTime.CompareTo(start) >= 0 && c.DealTime.CompareTo(end) <= 0).ToArray();
                 if (items.Length > 0)
                 {
-                    var maxPrice = items.Average(c => c.TodayMaxPrice);
-                    var minPrice = items.Average(c => c.TodayMinPrice);
-                    var startPrice = items.Average(c => c.TodayStartPrice);
-                    var endPrice = items.Average(c => c.TodayEndPrice);
-                    series.Points.AddXY(end, maxPrice, minPrice, startPrice, endPrice);
+                    //var maxPrice = items.Average(c => c.TodayMaxPrice);
+                    //var minPrice = items.Average(c => c.TodayMinPrice);
+                    //var startPrice = items.Average(c => c.TodayStartPrice);
+                    var endPrice = items.Average(c => c.UDPer);
+                    //series.Points.AddXY(end, maxPrice, minPrice, startPrice, endPrice);
+                    series.Points.AddXY(end, endPrice);
                 }
                 startTime = endTime;
             }
         }
+
+        #endregion
 
         void LoadPriceList(string stockCode)
         {
@@ -542,6 +482,36 @@ namespace StockPriceTools
                 {
                     this.gridPriceList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
+            }
+        }
+
+        void LoadStockStrategyList(string stockCode)
+        {
+            var strategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'", "ID asc");
+            var dt = ObjectUtil.ConvertTable(strategyDetails);
+            this.gridStockStrategyList.DataSource = null;
+            this.gridStockStrategyList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
+            {
+                var columnName = this.gridStockStrategyList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridStockStrategyList.Columns[i].Visible = false;
+                else
+                {
+                    var length = columnName.Length;
+                    this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
+                }
+            }
+            for (var i = 0; i < this.gridStockStrategyList.Rows.Count; i++)
+            {
+                var row = this.gridStockStrategyList.Rows[i];
+                var value = ObjectUtil.ToValue<int>(row.Cells["执行策略"].Value, -1);
+                this.gridStockStrategyList.Rows[i].Cells["执行策略"].Value = (value == 1 ? "自动模拟交易" : value == 0 ? "买卖点提醒" : "");
+
+                var mode = ObjectUtil.ToValue<int>(row.Cells["条件"].Value, -1);
+                this.gridStockStrategyList.Rows[i].Cells["条件"].Value = (mode == 0 ? "低于" : mode == 1 ? "高于" : mode == 2 ? "等待" : "");
+
+                var ok = ObjectUtil.ToValue<int>(row.Cells["执行结果"].Value, -1);
+                this.gridStockStrategyList.Rows[i].Cells["执行结果"].Value = (ok == 1 ? "成功" : ok == 2 ? "失败" : ok == 0 ? "等待" : "");
             }
         }
 
@@ -577,7 +547,7 @@ namespace StockPriceTools
                 row.Cells["类型"].Value = (type == 0 ? "涨跌幅" : type == 1 ? "上涨" : type == 2 ? "下跌" : type == 8 ? "买点" : type == 9 ? "卖点" : "");
             }
         }
-
+       
         void LoadExchangeList(string stockCode)
         {
             var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ExchangeTime desc", 60);
@@ -596,7 +566,6 @@ namespace StockPriceTools
             }
         }
 
-
         void LoadMainTargetInfo(string stockCode, int rtype = 0)
         {
             var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
@@ -610,24 +579,6 @@ namespace StockPriceTools
                 else
                 {
                     this.gridMaintargetList.Columns[i].Width = 100;
-                }
-            }
-        }
-
-        void LoadStockStrategyList(string stockCode)
-        {
-            var strategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
-            var dt = ObjectUtil.ConvertTable(strategyDetails);
-            this.gridStockStrategyList.DataSource = null;
-            this.gridStockStrategyList.DataSource = dt.DefaultView;
-            for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
-            {
-                var columnName = this.gridStockStrategyList.Columns[i].Name;
-                if (columnName == "股票代码") this.gridStockStrategyList.Columns[i].Visible = false;
-                else
-                {
-                    var length = columnName.Length;
-                    this.gridStockStrategyList.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
                 }
             }
         }
@@ -816,88 +767,13 @@ namespace StockPriceTools
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
 
-            var account = Repository.QueryFirst<AccountEntity>($"RealType='True'"); 
-            if (account == null) return;
-
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var frm = new RemindForm();
             frm.StartPosition = FormStartPosition.CenterParent;
+            frm.StockCode = stockCode;
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                if (!string.IsNullOrEmpty(frm.UDPer))
-                {
-                    var udPers = ObjectUtil.GetSplitArray(frm.UDPer, ",");
-                    foreach (var udPer in udPers)
-                    {
-                        var target = ObjectUtil.ToValue<decimal>(udPer, 0);
-                        if (target == 0) continue;
-
-                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={udPer} and RType=0");
-                        if (remind == null)
-                        {
-                            remind = new RemindEntity()
-                            {
-                                StockCode = stockCode,
-                                Target = target,
-                                Email = account.Email,
-                                QQ = account.QQ,
-                                RType = 0
-                            };
-                            Repository.Insert<RemindEntity>(remind);
-                        }
-                    }
-                }
-                if (!string.IsNullOrEmpty(frm.UpPrice))
-                {
-                    var upPrices = ObjectUtil.GetSplitArray(frm.UpPrice, ",");
-                    foreach (var upPrice in upPrices)
-                    {
-                        var target = ObjectUtil.ToValue<decimal>(upPrice, 0);
-                        if (target == 0) continue;
-
-                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={upPrice} and RType=1");
-                        if (remind == null)
-                        {
-                            remind = new RemindEntity()
-                            {
-                                StockCode = stockCode,
-                                Target = target,
-                                Email = account.Email,
-                                QQ = account.QQ,
-                                RType = 0
-                            };
-                            remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
-                            remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
-                            Repository.Insert<RemindEntity>(remind);
-                        }
-                    }
-                }
-                if (!string.IsNullOrEmpty(frm.DownPrice))
-                {
-                    var downPrices = ObjectUtil.GetSplitArray(frm.DownPrice, ",");
-                    foreach (var downPrice in downPrices)
-                    {
-                        var target = ObjectUtil.ToValue<decimal>(downPrice, 0);
-                        if (target == 0) continue;
-
-                        var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and Target={downPrice} and RType=1");
-                        if (remind == null)
-                        {
-                            remind = new RemindEntity()
-                            {
-                                StockCode = stockCode,
-                                Target = target,
-                                Email = account.Email,
-                                QQ = account.QQ,
-                                RType = 2
-                            };
-                            remind.MaxPrice = Math.Round(remind.Target * (1 + RC.RemindStockPriceFloatPer / 100m), 2);
-                            remind.MinPrice = Math.Round(remind.Target * (1 - RC.RemindStockPriceFloatPer / 100m), 2);
-                            Repository.Insert<RemindEntity>(remind);
-                        }
-                    }
-                }
                 this.LoadRemindList(stockCode);
             }
         }
@@ -920,7 +796,7 @@ namespace StockPriceTools
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceChart(stockCode);
+                    this.LoadPriceChart(stockCode, 3);
                     break;
                 case 2:
                     this.LoadPriceList(stockCode);
@@ -1167,6 +1043,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }

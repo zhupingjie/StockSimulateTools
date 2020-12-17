@@ -36,14 +36,14 @@
             this.txtUpPrice = new System.Windows.Forms.TextBox();
             this.txtDownPrice = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtAccount = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(468, 14);
+            this.btnOK.Location = new System.Drawing.Point(468, 304);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(131, 53);
             this.btnOK.TabIndex = 3;
@@ -55,7 +55,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(42, 25);
+            this.label1.Location = new System.Drawing.Point(42, 86);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(320, 46);
             this.label1.TabIndex = 6;
@@ -64,7 +64,7 @@
             // txtUDPer
             // 
             this.txtUDPer.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUDPer.Location = new System.Drawing.Point(382, 22);
+            this.txtUDPer.Location = new System.Drawing.Point(382, 83);
             this.txtUDPer.Name = "txtUDPer";
             this.txtUDPer.Size = new System.Drawing.Size(217, 54);
             this.txtUDPer.TabIndex = 5;
@@ -74,7 +74,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(42, 92);
+            this.label2.Location = new System.Drawing.Point(42, 153);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(324, 46);
             this.label2.TabIndex = 7;
@@ -83,7 +83,7 @@
             // txtUpPrice
             // 
             this.txtUpPrice.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUpPrice.Location = new System.Drawing.Point(382, 89);
+            this.txtUpPrice.Location = new System.Drawing.Point(382, 150);
             this.txtUpPrice.Name = "txtUpPrice";
             this.txtUpPrice.Size = new System.Drawing.Size(217, 54);
             this.txtUpPrice.TabIndex = 8;
@@ -91,7 +91,7 @@
             // txtDownPrice
             // 
             this.txtDownPrice.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtDownPrice.Location = new System.Drawing.Point(382, 162);
+            this.txtDownPrice.Location = new System.Drawing.Point(382, 223);
             this.txtDownPrice.Name = "txtDownPrice";
             this.txtDownPrice.Size = new System.Drawing.Size(217, 54);
             this.txtDownPrice.TabIndex = 14;
@@ -100,27 +100,39 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(42, 162);
+            this.label3.Location = new System.Drawing.Point(42, 223);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(324, 46);
             this.label3.TabIndex = 13;
             this.label3.Text = "股价下跌到价格(元)";
             // 
-            // panel1
+            // label5
             // 
-            this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 241);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(631, 79);
-            this.panel1.TabIndex = 15;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(202, 20);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(160, 46);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "交易账户";
             // 
-            // SetRemindForm
+            // txtAccount
+            // 
+            this.txtAccount.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtAccount.FormattingEnabled = true;
+            this.txtAccount.Location = new System.Drawing.Point(382, 12);
+            this.txtAccount.Name = "txtAccount";
+            this.txtAccount.Size = new System.Drawing.Size(217, 54);
+            this.txtAccount.TabIndex = 21;
+            // 
+            // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 320);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(631, 369);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtAccount);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtDownPrice);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtUpPrice);
@@ -128,10 +140,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtUDPer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "SetRemindForm";
+            this.Name = "RemindForm";
             this.Text = "设置提醒";
             this.Load += new System.EventHandler(this.SetRemindForm_Load);
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,6 +157,7 @@
         private System.Windows.Forms.TextBox txtUpPrice;
         private System.Windows.Forms.TextBox txtDownPrice;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox txtAccount;
     }
 }

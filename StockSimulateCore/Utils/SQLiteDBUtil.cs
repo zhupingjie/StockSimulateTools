@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
 using System.Reflection;
-using StockSimulateCore.Model;
+using StockSimulateCore.Entity;
 using ServiceStack;
 using System.IO;
 
@@ -159,7 +159,7 @@ namespace StockSimulateCore.Utils
 
         #region CRUD
 
-        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "", int takeSize = 0) where TEntity : BaseEntity, new()
+        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "ID desc", int takeSize = 0) where TEntity : BaseEntity, new()
         {
             var tableName = GetEntityTypeName<TEntity>();
 

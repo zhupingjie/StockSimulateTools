@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExchangeForm));
             this.txtDealQty = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -178,7 +179,7 @@
             this.lblCouldText.TabIndex = 21;
             this.lblCouldText.Text = "可交易金额";
             // 
-            // NewExchangeForm
+            // ExchangeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -196,7 +197,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtDealPrice);
-            this.Name = "NewExchangeForm";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "ExchangeForm";
             this.Text = "买卖交易";
             this.Load += new System.EventHandler(this.NewExchangeForm_Load);
             this.ResumeLayout(false);

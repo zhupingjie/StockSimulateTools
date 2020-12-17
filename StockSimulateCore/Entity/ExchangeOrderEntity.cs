@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class ExchangeOrderEntity : BaseEntity
     {
-        [Description("交易者")]
+        [Description("交易账户")]
         public string AccountName { get; set; }
 
         [Description("股票代码")]
@@ -30,9 +30,6 @@ namespace StockSimulateCore.Model
         [Description("手续费")]
         public decimal Charge { get; set; }
 
-        [Description("成交时间")]
-        public DateTime ExchangeTime { get; set; } = DateTime.Now;
-
         [Description("持有数量")]
         public decimal HoldQty { get; set; }
 
@@ -41,5 +38,9 @@ namespace StockSimulateCore.Model
 
         [Description("买卖点")]
         public string Target { get; set; }
+
+        [Description("最后成交时间")]
+        public DateTime ExchangeTime { get; set; } = DateTime.Now;
+
     }
 }

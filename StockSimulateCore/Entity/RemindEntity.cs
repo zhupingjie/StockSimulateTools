@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class RemindEntity : BaseEntity
     {
@@ -32,6 +32,9 @@ namespace StockSimulateCore.Model
 
         [Description("策略点")]
         public string StrategyTarget { get; set; }
+
+        [Description("实际股价")]
+        public decimal RemindPrice { get; set; }
 
         [Description("提醒邮箱")]
         public string Email { get; set; }

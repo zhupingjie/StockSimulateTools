@@ -7,17 +7,8 @@ using System.Threading.Tasks;
 
 namespace StockSimulateCore.Model
 {
-    public class StrategyEntity: BaseEntity
+    public class LeftExchangeStrategyInfo : StrategyInfo
     {
-        /// <summary>
-        /// 策略名称
-        /// </summary>
-        [Description("策略名称")]
-        public string Name { get; set; }
-
-        [Description("策略类型")]
-        public string StrategyType { get; set; }
-
         [Description("建仓价格")]
         public decimal BuyPrice { get; set; }
 

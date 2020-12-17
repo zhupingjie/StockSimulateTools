@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class BaseEntity : IBaseEntity
     {
         public int ID { get; set; }
 
-        [Description("更新时间")]
+        [Description("最后更新时间")]
         public DateTime LastDate { get; set; } = DateTime.Now;
     }
 }

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class AccountStockEntity :BaseEntity
     {
-        [Description("交易者")]
+        [Description("交易账户")]
         public string AccountName { get; set; }
 
         [Description("股票代码")]

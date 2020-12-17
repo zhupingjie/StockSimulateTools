@@ -104,7 +104,7 @@ namespace StockSimulateCore.Utils
                     }
                 }
             }
-            client.Send(oMail);
+            client.SendAsync(oMail, new CancellationTokenSource().Token);
             return true;
         }
     }

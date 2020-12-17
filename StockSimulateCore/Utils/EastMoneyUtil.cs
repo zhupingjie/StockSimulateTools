@@ -1,6 +1,6 @@
 ﻿using ServiceStack;
 using ServiceStack.Text;
-using StockSimulateCore.Model;
+using StockSimulateCore.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

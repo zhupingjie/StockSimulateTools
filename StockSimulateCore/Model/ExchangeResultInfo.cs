@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace StockSimulateCore.Model
 {
-    public interface IBaseEntity
+    public class ExchangeResultInfo
     {
-        int ID { get; set; }
-
-        DateTime LastDate { get; set; }
+        public bool Success { get; set; } = true;
+        public string Message { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class StockStrategyEntity : BaseEntity
     {
@@ -15,8 +15,17 @@ namespace StockSimulateCore.Model
         [Description("策略名称")]
         public string StrategyName { get; set; }
 
+        [Description("交易账户")]
+        public string AccountName { get; set; }
+
+        [Description("执行策略")]
+        public int ExecuteMode { get; set; }
+
         [Description("买卖点")]
         public string Target { get; set; }
+
+        [Description("条件")]
+        public int Condition { get; set; }
 
         [Description("股价")]
         public decimal Price { get; set; }
@@ -50,5 +59,11 @@ namespace StockSimulateCore.Model
 
         [Description("盈亏(元)")]
         public decimal Profit { get; set; }
+
+        [Description("执行结果")]
+        public int ExecuteOK { get; set; }
+
+        [Description("异常信息")]
+        public string Message { get; set; }
     }
 }

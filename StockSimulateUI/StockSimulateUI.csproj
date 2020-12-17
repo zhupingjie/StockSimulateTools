@@ -146,6 +146,12 @@
     <Compile Include="UC\BaseUC.Designer.cs">
       <DependentUpon>BaseUC.cs</DependentUpon>
     </Compile>
+    <Compile Include="UC\RightExchangeUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC\RightExchangeUC.Designer.cs">
+      <DependentUpon>RightExchangeUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC\TExchangeUC.cs">
       <SubType>UserControl</SubType>
     </Compile>

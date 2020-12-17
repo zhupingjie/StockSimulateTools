@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Model
+namespace StockSimulateCore.Entity
 {
     public class AccountEntity: BaseEntity
     {
         [Description("实体账户")]
         public bool RealType { get; set; }
 
-        [Description("交易者")]
+        [Description("交易账户")]
         public string Name { get; set; }
 
         [Description("总投资市值(元)")]

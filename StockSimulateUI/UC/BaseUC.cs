@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateCore.Model;
+using StockSimulateCore.Service;
 
 namespace StockSimulateUI.UC
 {
@@ -24,12 +25,12 @@ namespace StockSimulateUI.UC
             InitializeComponent();
         }
 
-        public virtual void CalcuateStrategy()
+        public virtual void CalcuateStrategy(string accountName, string strategyName, string stockCode)
         {
 
         }
 
-        public virtual StrategyEntity GetStrategyInfo()
+        public virtual StrategyInfo GetStrategyInfo()
         {
             return null;
         }

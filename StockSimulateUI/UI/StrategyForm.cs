@@ -1,5 +1,6 @@
 ﻿using StockPriceTools;
 using StockSimulateCore.Config;
+using StockSimulateCore.Entity;
 using StockSimulateCore.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
@@ -30,28 +31,45 @@ namespace StockSimulateUI.UI
         {
             this.txtStockCode.Text = StockCode;
             this.txtStockName.Text = StockName;
+
+            var accounts = Repository.QueryAll<AccountEntity>();
+            if (accounts.Length == 0) return;
+
+            this.txtAccountName.Items.Clear();
+            this.txtAccountName.Items.AddRange(accounts.Select(c => c.Name).ToArray());
         }
 
         private void txtName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.txtName.Text == "左侧交易")
+            if (this.txtStrategyName.Text == "左侧交易")
             {
                 var uc = new LeftExchangeUC();
                 uc.Dock = DockStyle.Fill;
                 uc.StockCode = StockCode;
                 uc.StockName = StockName;
-                uc.StrategyName = this.txtName.Text;
+                uc.StrategyName = this.txtStrategyName.Text;
 
                 if (this.pnlContainer.HasChildren) this.pnlContainer.Controls.Clear();
                 this.pnlContainer.Controls.Add(uc);
             }
-            else if (this.txtName.Text == "T交易")
+            else if (this.txtStrategyName.Text == "右侧交易")
+            {
+                var uc = new RightExchangeUC();
+                uc.Dock = DockStyle.Fill;
+                uc.StockCode = StockCode;
+                uc.StockName = StockName;
+                uc.StrategyName = this.txtStrategyName.Text;
+
+                if (this.pnlContainer.HasChildren) this.pnlContainer.Controls.Clear();
+                this.pnlContainer.Controls.Add(uc);
+            }
+            else if (this.txtStrategyName.Text == "差价交易")
             {
                 var uc = new TExchangeUC();
                 uc.Dock = DockStyle.Fill;
                 uc.StockCode = StockCode;
                 uc.StockName = StockName;
-                uc.StrategyName = this.txtName.Text;
+                uc.StrategyName = this.txtStrategyName.Text;
 
                 if (this.pnlContainer.HasChildren) this.pnlContainer.Controls.Clear();
                 this.pnlContainer.Controls.Add(uc);
@@ -62,65 +80,39 @@ namespace StockSimulateUI.UI
         {
             if (!pnlContainer.HasChildren) return;
 
+            var strategyName = this.txtStrategyName.Text;
+            if (string.IsNullOrEmpty(strategyName)) return;
+
+            var accountName = this.txtAccountName.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
+
+            var executeMode = this.txtAutoBS.Checked ? 1 : 0;
+
             var uc = pnlContainer.Controls[0] as BaseUC;
-            uc.CalcuateStrategy();
+            uc.CalcuateStrategy(accountName, strategyName, StockCode);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            var strategyName = this.txtName.Text;
+            var strategyName = this.txtStrategyName.Text;
             if (string.IsNullOrEmpty(strategyName)) return;
+
+            var accountName = this.txtAccountName.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
+
+            var executeMode = this.txtAutoBS.Checked ? 1 : 0;
 
             if (!pnlContainer.HasChildren) return;
 
             var uc = pnlContainer.Controls[0] as BaseUC;
             var strategy = uc.GetStrategyInfo();
+            strategy.AccountName = accountName;
+            strategy.StockCode = StockCode;
+            strategy.Name = strategyName;
+            strategy.ExecuteMode = executeMode;
 
-            var account = Repository.QueryFirst<AccountEntity>($"RealType='True'");
-            if (account == null) return;
-
-            Repository.Delete<StockStrategyEntity>($"StockCode='{StockCode}'");
-            Repository.Delete<RemindEntity>($"StockCode='{StockCode}' and (RType={8} or RType={9})");
-            var dt = StockStrategyService.MakeStrategyData(strategy);
-            for (var i = 0; i < dt.Rows.Count; i++)
-            {
-                var dr = dt.Rows[i];
-                var detail = new StockStrategyEntity()
-                {
-                    StockCode = StockCode,
-                    StrategyName = strategyName,
-                    Target = dr["操作"].ToString(),
-                    Price = ObjectUtil.ToValue<decimal>(dr["收盘价"].ToString(), 0),
-                    BuyQty = ObjectUtil.ToValue<int>(dr["买入数"].ToString(), 0),
-                    BuyAmount = ObjectUtil.ToValue<decimal>(dr["买入市值"].ToString(), 0),
-                    SaleQty = ObjectUtil.ToValue<int>(dr["卖出数"].ToString(), 0),
-                    SaleAmount = ObjectUtil.ToValue<decimal>(dr["卖出市值"].ToString(), 0),
-                    HoldQty = ObjectUtil.ToValue<int>(dr["持有数"].ToString(), 0),
-                    HoldAmount = ObjectUtil.ToValue<decimal>(dr["持有市值"].ToString(), 0),
-                    TotalBuyAmount = ObjectUtil.ToValue<decimal>(dr["投入市值"].ToString(), 0),
-                    FloatAmount = ObjectUtil.ToValue<decimal>(dr["浮动市值"].ToString(), 0),
-                    Cost = ObjectUtil.ToValue<decimal>(dr["成本"].ToString(), 0),
-                    Profit = ObjectUtil.ToValue<decimal>(dr["盈亏"].ToString(), 0),
-                };
-                Repository.Insert<StockStrategyEntity>(detail);
-
-                if (detail.BuyQty > 0 || detail.SaleQty > 0)
-                {
-                    var remind = new RemindEntity()
-                    {
-                        StockCode = StockCode,
-                        Target = detail.Price,
-                        RType = detail.BuyQty > 0 ? 8 : 9,
-                        Email = account.Email,
-                        QQ = account.QQ,
-                        StrategyName = detail.StrategyName,
-                        StrategyTarget = detail.Target
-                    };
-                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), 2);
-                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), 2);
-                    Repository.Insert<RemindEntity>(remind);
-                }
-            }
+            StockStrategyService.MakeStockStrategys(strategy);
+            
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

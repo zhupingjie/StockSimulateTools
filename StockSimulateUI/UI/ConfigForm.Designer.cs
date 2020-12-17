@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtUpdateAccountStockProfitInterval = new System.Windows.Forms.TextBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -40,8 +42,6 @@
             this.txtGatherStockMainTargetInterval = new System.Windows.Forms.TextBox();
             this.txtGatherStockPriceInterval = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtUpdateAccountStockProfitInterval = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,10 +66,28 @@
             this.panel1.Size = new System.Drawing.Size(794, 446);
             this.panel1.TabIndex = 4;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(43, 103);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(359, 46);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "持股盈亏计算时间(秒)";
+            // 
+            // txtUpdateAccountStockProfitInterval
+            // 
+            this.txtUpdateAccountStockProfitInterval.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtUpdateAccountStockProfitInterval.Location = new System.Drawing.Point(428, 100);
+            this.txtUpdateAccountStockProfitInterval.Name = "txtUpdateAccountStockProfitInterval";
+            this.txtUpdateAccountStockProfitInterval.Size = new System.Drawing.Size(331, 54);
+            this.txtUpdateAccountStockProfitInterval.TabIndex = 10;
+            // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(684, 380);
+            this.btnOK.Location = new System.Drawing.Point(684, 388);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 41);
             this.btnOK.TabIndex = 0;
@@ -80,7 +98,7 @@
             // btnClose
             // 
             this.btnClose.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnClose.Location = new System.Drawing.Point(595, 380);
+            this.btnClose.Location = new System.Drawing.Point(595, 388);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 41);
             this.btnClose.TabIndex = 1;
@@ -158,24 +176,6 @@
             this.label2.Size = new System.Drawing.Size(359, 46);
             this.label2.TabIndex = 2;
             this.label2.Text = "股票价格采集时间(秒)";
-            // 
-            // txtUpdateAccountStockProfitInterval
-            // 
-            this.txtUpdateAccountStockProfitInterval.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUpdateAccountStockProfitInterval.Location = new System.Drawing.Point(428, 100);
-            this.txtUpdateAccountStockProfitInterval.Name = "txtUpdateAccountStockProfitInterval";
-            this.txtUpdateAccountStockProfitInterval.Size = new System.Drawing.Size(331, 54);
-            this.txtUpdateAccountStockProfitInterval.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(43, 103);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(359, 46);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "持股盈亏计算时间(秒)";
             // 
             // ConfigForm
             // 

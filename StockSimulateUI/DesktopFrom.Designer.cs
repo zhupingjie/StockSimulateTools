@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -109,14 +109,14 @@
             this.lstBaseInfo = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabStrategyData = new System.Windows.Forms.TabPage();
-            this.lstStrategyInfo = new System.Windows.Forms.ListView();
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPriceData = new System.Windows.Forms.TabPage();
             this.lstPriceInfo = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabStrategyData = new System.Windows.Forms.TabPage();
+            this.lstStrategyInfo = new System.Windows.Forms.ListView();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabExchange = new System.Windows.Forms.TabPage();
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -166,8 +166,8 @@
             this.panel1.SuspendLayout();
             this.tabControlLeft.SuspendLayout();
             this.tabBaseData.SuspendLayout();
-            this.tabStrategyData.SuspendLayout();
             this.tabPriceData.SuspendLayout();
+            this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -445,11 +445,11 @@
             // 
             // chartPrice
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea4);
+            chartArea3.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea3);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend4);
+            legend3.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend3);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -541,7 +541,8 @@
             // 
             // btnOneChart
             // 
-            this.btnOneChart.BackColor = System.Drawing.Color.White;
+            this.btnOneChart.BackColor = System.Drawing.Color.Gold;
+            this.btnOneChart.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnOneChart.Location = new System.Drawing.Point(124, 3);
             this.btnOneChart.Name = "btnOneChart";
             this.btnOneChart.Size = new System.Drawing.Size(47, 23);
@@ -1071,6 +1072,43 @@
             this.columnHeader2.Text = "数据";
             this.columnHeader2.Width = 140;
             // 
+            // tabPriceData
+            // 
+            this.tabPriceData.Controls.Add(this.lstPriceInfo);
+            this.tabPriceData.Location = new System.Drawing.Point(4, 22);
+            this.tabPriceData.Name = "tabPriceData";
+            this.tabPriceData.Size = new System.Drawing.Size(346, 531);
+            this.tabPriceData.TabIndex = 2;
+            this.tabPriceData.Text = "股价数据";
+            this.tabPriceData.UseVisualStyleBackColor = true;
+            // 
+            // lstPriceInfo
+            // 
+            this.lstPriceInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6});
+            this.lstPriceInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstPriceInfo.FullRowSelect = true;
+            this.lstPriceInfo.GridLines = true;
+            this.lstPriceInfo.HideSelection = false;
+            this.lstPriceInfo.Location = new System.Drawing.Point(0, 0);
+            this.lstPriceInfo.MultiSelect = false;
+            this.lstPriceInfo.Name = "lstPriceInfo";
+            this.lstPriceInfo.Size = new System.Drawing.Size(346, 531);
+            this.lstPriceInfo.TabIndex = 1;
+            this.lstPriceInfo.UseCompatibleStateImageBehavior = false;
+            this.lstPriceInfo.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "项目";
+            this.columnHeader5.Width = 180;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "数据";
+            this.columnHeader6.Width = 140;
+            // 
             // tabStrategyData
             // 
             this.tabStrategyData.Controls.Add(this.lstStrategyInfo);
@@ -1108,43 +1146,6 @@
             // 
             this.columnHeader4.Text = "数据";
             this.columnHeader4.Width = 140;
-            // 
-            // tabPriceData
-            // 
-            this.tabPriceData.Controls.Add(this.lstPriceInfo);
-            this.tabPriceData.Location = new System.Drawing.Point(4, 22);
-            this.tabPriceData.Name = "tabPriceData";
-            this.tabPriceData.Size = new System.Drawing.Size(346, 531);
-            this.tabPriceData.TabIndex = 2;
-            this.tabPriceData.Text = "股价数据";
-            this.tabPriceData.UseVisualStyleBackColor = true;
-            // 
-            // lstPriceInfo
-            // 
-            this.lstPriceInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.lstPriceInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstPriceInfo.FullRowSelect = true;
-            this.lstPriceInfo.GridLines = true;
-            this.lstPriceInfo.HideSelection = false;
-            this.lstPriceInfo.Location = new System.Drawing.Point(0, 0);
-            this.lstPriceInfo.MultiSelect = false;
-            this.lstPriceInfo.Name = "lstPriceInfo";
-            this.lstPriceInfo.Size = new System.Drawing.Size(346, 531);
-            this.lstPriceInfo.TabIndex = 1;
-            this.lstPriceInfo.UseCompatibleStateImageBehavior = false;
-            this.lstPriceInfo.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "项目";
-            this.columnHeader5.Width = 180;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "数据";
-            this.columnHeader6.Width = 140;
             // 
             // tabExchange
             // 
@@ -1247,8 +1248,8 @@
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
-            this.tabStrategyData.ResumeLayout(false);
             this.tabPriceData.ResumeLayout(false);
+            this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
