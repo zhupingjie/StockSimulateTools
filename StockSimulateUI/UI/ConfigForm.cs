@@ -27,6 +27,7 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.GatherStockMainTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<int>(this.txtRemindStockPriceFloatPer.Text, 0);
+            RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
 
             var configs = Repository.QueryAll<GlobalConfigEntity>();
             var dic = ObjectUtil.GetPropertyValues(RunningConfig.Instance, true);
@@ -58,6 +59,7 @@ namespace StockSimulateUI.UI
             this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockMainTargetInterval}";
             this.txtRemindStockStrategyInterval.Text = $"{RunningConfig.Instance.RemindStockStrategyInterval}";
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
+            this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";
         }
     }
 }
