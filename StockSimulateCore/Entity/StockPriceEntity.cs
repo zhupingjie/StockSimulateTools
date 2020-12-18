@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,20 @@ namespace StockSimulateCore.Entity
         public string StockCode { get; set; }
 
         [Description("时间类型")]
+        [GridColumnIgnore]
         public int DateType { get; set; }
 
-        [Description("结算日")]
+        [Description("时间类型")]
+        [NotMapped]
+        public string DateTypeText
+        {
+            get
+            {
+                return DateType == 0 ? "日" : DateType == 1 ? "分钟" : "";
+            }
+        }
+
+        [Description("结算日期")]
         public string DealDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
 
         [Description("结算时间点")]

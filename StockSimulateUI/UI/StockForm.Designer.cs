@@ -34,12 +34,14 @@
             this.txtType = new System.Windows.Forms.ComboBox();
             this.txtDay = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtSType = new System.Windows.Forms.ComboBox();
+            this.txtSTypeValue = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(98, 12);
+            this.textBox1.Location = new System.Drawing.Point(277, 12);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(155, 54);
             this.textBox1.TabIndex = 0;
@@ -49,7 +51,7 @@
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(394, 13);
+            this.btnOK.Location = new System.Drawing.Point(573, 13);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(68, 53);
             this.btnOK.TabIndex = 1;
@@ -65,7 +67,7 @@
             "SZ",
             "SH",
             "ZS"});
-            this.txtType.Location = new System.Drawing.Point(12, 12);
+            this.txtType.Location = new System.Drawing.Point(197, 12);
             this.txtType.Name = "txtType";
             this.txtType.Size = new System.Drawing.Size(68, 54);
             this.txtType.TabIndex = 2;
@@ -78,7 +80,7 @@
             this.txtDay.Items.AddRange(new object[] {
             "0",
             "1"});
-            this.txtDay.Location = new System.Drawing.Point(326, 12);
+            this.txtDay.Location = new System.Drawing.Point(505, 12);
             this.txtDay.Name = "txtDay";
             this.txtDay.Size = new System.Drawing.Size(50, 54);
             this.txtDay.TabIndex = 3;
@@ -88,17 +90,40 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(260, 19);
+            this.label1.Location = new System.Drawing.Point(439, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 41);
             this.label1.TabIndex = 4;
             this.label1.Text = "T+";
             // 
+            // txtSType
+            // 
+            this.txtSType.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtSType.FormattingEnabled = true;
+            this.txtSType.Items.AddRange(new object[] {
+            "沪深股",
+            "基金(ETF)"});
+            this.txtSType.Location = new System.Drawing.Point(12, 12);
+            this.txtSType.Name = "txtSType";
+            this.txtSType.Size = new System.Drawing.Size(173, 54);
+            this.txtSType.TabIndex = 5;
+            this.txtSType.Text = "沪深股";
+            // 
+            // txtSTypeValue
+            // 
+            this.txtSTypeValue.Location = new System.Drawing.Point(13, 73);
+            this.txtSTypeValue.Name = "txtSTypeValue";
+            this.txtSTypeValue.Size = new System.Drawing.Size(100, 21);
+            this.txtSTypeValue.TabIndex = 6;
+            this.txtSTypeValue.Visible = false;
+            // 
             // NewStockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(479, 90);
+            this.ClientSize = new System.Drawing.Size(660, 90);
+            this.Controls.Add(this.txtSTypeValue);
+            this.Controls.Add(this.txtSType);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtDay);
             this.Controls.Add(this.txtType);
@@ -122,5 +147,7 @@
         private System.Windows.Forms.ComboBox txtType;
         private System.Windows.Forms.ComboBox txtDay;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox txtSType;
+        private System.Windows.Forms.TextBox txtSTypeValue;
     }
 }

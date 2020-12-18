@@ -63,7 +63,8 @@ namespace StockSimulateCore.Utils
             foreach(var type in types)
             {
                 var sqlCols = new List<SQLiteColumn>();
-                var preps = type.GetProperties();
+                var preps = ObjectUtil.GetPropertyInfos(type);
+
                 foreach(var prep in preps)
                 {
                     var col = GetSQLiteColumnType(prep.Name, prep.PropertyType);
@@ -237,9 +238,8 @@ namespace StockSimulateCore.Utils
 
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
-                var fields = type.GetProperties();
-
-                foreach(var entity in entitys)
+                var fields = ObjectUtil.GetPropertyInfos(type);
+                foreach (var entity in entitys)
                 {
                     foreach (var field in fields)
                     {
@@ -305,9 +305,9 @@ namespace StockSimulateCore.Utils
                 StringBuilder sb = new StringBuilder();
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
-                var fields = type.GetProperties();
+                var fields = ObjectUtil.GetPropertyInfos(type);
 
-                foreach(var entity in entitys)
+                foreach (var entity in entitys)
                 {
                     foreach (var field in fields)
                     {
@@ -357,7 +357,6 @@ namespace StockSimulateCore.Utils
                 }
             }
         }
-
 
         TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0) where TEntity : BaseEntity, new()
         {

@@ -118,6 +118,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\GridColumnIgnoreAttribute.cs" />
     <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Config\SenderMailConfig.cs" />
     <Compile Include="Entity\AccountEntity.cs" />
@@ -138,8 +139,10 @@
     <Compile Include="Model\StrategyInfo.cs" />
     <Compile Include="Model\TExchangeStrategyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\RemindService.cs" />
     <Compile Include="Service\StockExchangeService.cs" />
     <Compile Include="Service\StockGatherService.cs" />
+    <Compile Include="Service\StockService.cs" />
     <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Utils\AssemblyUtil.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />

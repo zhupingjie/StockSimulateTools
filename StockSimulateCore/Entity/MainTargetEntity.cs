@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +21,19 @@ namespace StockSimulateCore.Entity
         /// 1=年度
         /// 2=季度
         /// </summary>
-        [Description("指标周期类型")]
+        [Description("指标类型")]
+        [GridColumnIgnore]
         public int Rtype { get; set; }
+        [Description("指标类型")]
+        [NotMapped]
+        public string RtypeText
+        {
+            get
+            {
+                return Rtype == 0 ? "报告期" : Rtype == 1 ? "年度" : Rtype == 2 ? "季度" : "";
+            }
+        }
+
         /// <summary>
         /// 报告期
         /// </summary>

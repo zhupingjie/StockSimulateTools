@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,32 @@ namespace StockSimulateCore.Entity
 {
     public class StockEntity : BaseEntity
     {
+        [Description("股票类型")]
+        [GridColumnIgnore]
+        public int Type { get; set; }
+
+        [Description("股票类型")]
+        [NotMapped]
+        public string TypeText
+        {
+            get
+            {
+                return Type == 0 ? "沪深股" : Type == 1 ? "基金(ETF)" : "";
+            }
+        }
+
+        [Description("关注")]
+        [GridColumnIgnore]
+        public int Foucs { get; set; }
+
+        [Description("关注")]
+        [NotMapped]
+        public string FoucsText {
+            get {
+                return Foucs == 1 ? "✔" : Foucs == 0 ? "×" : "";
+            }
+        }
+
         [Description("股票代码")]
         public string Code { get; set; }
 
@@ -20,6 +47,9 @@ namespace StockSimulateCore.Entity
 
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
+
+        [Description("目标价")]
+        public decimal Target { get; set; }
 
         [Description("总股本(万股)")]
         public decimal Capital { get; set; }

@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -50,6 +50,7 @@
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.lblStockTotal = new System.Windows.Forms.Label();
             this.txtETF = new System.Windows.Forms.RadioButton();
             this.txtSHSZ = new System.Windows.Forms.RadioButton();
             this.txtAllStock = new System.Windows.Forms.RadioButton();
@@ -61,13 +62,9 @@
             this.tabPriceChart = new System.Windows.Forms.TabPage();
             this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.btnFifteenChart = new System.Windows.Forms.Button();
             this.btnWeekChart = new System.Windows.Forms.Button();
             this.btnMonthChart = new System.Windows.Forms.Button();
-            this.btnSixtyChart = new System.Windows.Forms.Button();
-            this.btnThirtyChart = new System.Windows.Forms.Button();
-            this.btnFiveChart = new System.Windows.Forms.Button();
-            this.btnOneChart = new System.Windows.Forms.Button();
+            this.btnMinuteChart = new System.Windows.Forms.Button();
             this.btnDayChart = new System.Windows.Forms.Button();
             this.tabPriceList = new System.Windows.Forms.TabPage();
             this.gridPriceList = new System.Windows.Forms.DataGridView();
@@ -125,7 +122,9 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lblStockTotal = new System.Windows.Forms.Label();
+            this.txtFoucST = new System.Windows.Forms.RadioButton();
+            this.btnFoucsStock = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -371,10 +370,15 @@
             this.gridStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridStockList.Size = new System.Drawing.Size(836, 245);
             this.gridStockList.TabIndex = 48;
+            this.gridStockList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridStockList_DataBindingComplete);
             this.gridStockList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockList_RowEnter);
+            this.gridStockList.SelectionChanged += new System.EventHandler(this.gridStockList_SelectionChanged);
             // 
             // panel10
             // 
+            this.panel10.Controls.Add(this.btnFoucsStock);
+            this.panel10.Controls.Add(this.txtSearch);
+            this.panel10.Controls.Add(this.txtFoucST);
             this.panel10.Controls.Add(this.lblStockTotal);
             this.panel10.Controls.Add(this.txtETF);
             this.panel10.Controls.Add(this.txtSHSZ);
@@ -385,21 +389,30 @@
             this.panel10.Size = new System.Drawing.Size(836, 29);
             this.panel10.TabIndex = 47;
             // 
+            // lblStockTotal
+            // 
+            this.lblStockTotal.AutoSize = true;
+            this.lblStockTotal.Location = new System.Drawing.Point(633, 9);
+            this.lblStockTotal.Name = "lblStockTotal";
+            this.lblStockTotal.Size = new System.Drawing.Size(77, 12);
+            this.lblStockTotal.TabIndex = 3;
+            this.lblStockTotal.Text = "总股票数:[0]";
+            // 
             // txtETF
             // 
             this.txtETF.AutoSize = true;
-            this.txtETF.Location = new System.Drawing.Point(138, 7);
+            this.txtETF.Location = new System.Drawing.Point(147, 7);
             this.txtETF.Name = "txtETF";
-            this.txtETF.Size = new System.Drawing.Size(41, 16);
+            this.txtETF.Size = new System.Drawing.Size(77, 16);
             this.txtETF.TabIndex = 2;
-            this.txtETF.Text = "ETF";
+            this.txtETF.Text = "基金(ETF)";
             this.txtETF.UseVisualStyleBackColor = true;
             this.txtETF.CheckedChanged += new System.EventHandler(this.txtETF_CheckedChanged);
             // 
             // txtSHSZ
             // 
             this.txtSHSZ.AutoSize = true;
-            this.txtSHSZ.Location = new System.Drawing.Point(73, 7);
+            this.txtSHSZ.Location = new System.Drawing.Point(82, 7);
             this.txtSHSZ.Name = "txtSHSZ";
             this.txtSHSZ.Size = new System.Drawing.Size(59, 16);
             this.txtSHSZ.TabIndex = 1;
@@ -410,13 +423,11 @@
             // txtAllStock
             // 
             this.txtAllStock.AutoSize = true;
-            this.txtAllStock.Checked = true;
-            this.txtAllStock.Location = new System.Drawing.Point(8, 7);
+            this.txtAllStock.Location = new System.Drawing.Point(230, 7);
             this.txtAllStock.Name = "txtAllStock";
-            this.txtAllStock.Size = new System.Drawing.Size(59, 16);
+            this.txtAllStock.Size = new System.Drawing.Size(47, 16);
             this.txtAllStock.TabIndex = 0;
-            this.txtAllStock.TabStop = true;
-            this.txtAllStock.Text = "所有股";
+            this.txtAllStock.Text = "全部";
             this.txtAllStock.UseVisualStyleBackColor = true;
             this.txtAllStock.CheckedChanged += new System.EventHandler(this.txtAllStock_CheckedChanged);
             // 
@@ -499,11 +510,11 @@
             // 
             // chartPrice
             // 
-            chartArea10.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea10);
+            chartArea7.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea7);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend10.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend10);
+            legend7.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend7);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -513,13 +524,9 @@
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.btnFifteenChart);
             this.panel9.Controls.Add(this.btnWeekChart);
             this.panel9.Controls.Add(this.btnMonthChart);
-            this.panel9.Controls.Add(this.btnSixtyChart);
-            this.panel9.Controls.Add(this.btnThirtyChart);
-            this.panel9.Controls.Add(this.btnFiveChart);
-            this.panel9.Controls.Add(this.btnOneChart);
+            this.panel9.Controls.Add(this.btnMinuteChart);
             this.panel9.Controls.Add(this.btnDayChart);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
@@ -527,93 +534,49 @@
             this.panel9.Size = new System.Drawing.Size(842, 29);
             this.panel9.TabIndex = 48;
             // 
-            // btnFifteenChart
-            // 
-            this.btnFifteenChart.BackColor = System.Drawing.Color.White;
-            this.btnFifteenChart.Location = new System.Drawing.Point(218, 3);
-            this.btnFifteenChart.Name = "btnFifteenChart";
-            this.btnFifteenChart.Size = new System.Drawing.Size(51, 23);
-            this.btnFifteenChart.TabIndex = 7;
-            this.btnFifteenChart.Text = "15分线";
-            this.btnFifteenChart.UseVisualStyleBackColor = false;
-            this.btnFifteenChart.Click += new System.EventHandler(this.btnFifteenChart_Click);
-            // 
             // btnWeekChart
             // 
             this.btnWeekChart.BackColor = System.Drawing.Color.White;
-            this.btnWeekChart.Location = new System.Drawing.Point(46, 3);
+            this.btnWeekChart.Location = new System.Drawing.Point(106, 3);
             this.btnWeekChart.Name = "btnWeekChart";
-            this.btnWeekChart.Size = new System.Drawing.Size(41, 23);
+            this.btnWeekChart.Size = new System.Drawing.Size(49, 23);
             this.btnWeekChart.TabIndex = 6;
-            this.btnWeekChart.Text = "周线";
+            this.btnWeekChart.Text = "周时图";
             this.btnWeekChart.UseVisualStyleBackColor = false;
             this.btnWeekChart.Click += new System.EventHandler(this.btnWeekChart_Click);
             // 
             // btnMonthChart
             // 
             this.btnMonthChart.BackColor = System.Drawing.Color.White;
-            this.btnMonthChart.Location = new System.Drawing.Point(86, 3);
+            this.btnMonthChart.Location = new System.Drawing.Point(155, 3);
             this.btnMonthChart.Name = "btnMonthChart";
-            this.btnMonthChart.Size = new System.Drawing.Size(41, 23);
+            this.btnMonthChart.Size = new System.Drawing.Size(52, 23);
             this.btnMonthChart.TabIndex = 5;
-            this.btnMonthChart.Text = "月线";
+            this.btnMonthChart.Text = "月时图";
             this.btnMonthChart.UseVisualStyleBackColor = false;
             this.btnMonthChart.Click += new System.EventHandler(this.btnMonthChart_Click);
             // 
-            // btnSixtyChart
+            // btnMinuteChart
             // 
-            this.btnSixtyChart.BackColor = System.Drawing.Color.White;
-            this.btnSixtyChart.Location = new System.Drawing.Point(317, 3);
-            this.btnSixtyChart.Name = "btnSixtyChart";
-            this.btnSixtyChart.Size = new System.Drawing.Size(51, 23);
-            this.btnSixtyChart.TabIndex = 4;
-            this.btnSixtyChart.Text = "60分线";
-            this.btnSixtyChart.UseVisualStyleBackColor = false;
-            this.btnSixtyChart.Click += new System.EventHandler(this.btnSixtyChart_Click);
-            // 
-            // btnThirtyChart
-            // 
-            this.btnThirtyChart.BackColor = System.Drawing.Color.White;
-            this.btnThirtyChart.Location = new System.Drawing.Point(267, 3);
-            this.btnThirtyChart.Name = "btnThirtyChart";
-            this.btnThirtyChart.Size = new System.Drawing.Size(51, 23);
-            this.btnThirtyChart.TabIndex = 3;
-            this.btnThirtyChart.Text = "30分线";
-            this.btnThirtyChart.UseVisualStyleBackColor = false;
-            this.btnThirtyChart.Click += new System.EventHandler(this.btnThirtyChart_Click);
-            // 
-            // btnFiveChart
-            // 
-            this.btnFiveChart.BackColor = System.Drawing.Color.White;
-            this.btnFiveChart.Location = new System.Drawing.Point(171, 3);
-            this.btnFiveChart.Name = "btnFiveChart";
-            this.btnFiveChart.Size = new System.Drawing.Size(47, 23);
-            this.btnFiveChart.TabIndex = 2;
-            this.btnFiveChart.Text = "5分线";
-            this.btnFiveChart.UseVisualStyleBackColor = false;
-            this.btnFiveChart.Click += new System.EventHandler(this.btnFiveChart_Click);
-            // 
-            // btnOneChart
-            // 
-            this.btnOneChart.BackColor = System.Drawing.Color.Gold;
-            this.btnOneChart.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnOneChart.Location = new System.Drawing.Point(124, 3);
-            this.btnOneChart.Name = "btnOneChart";
-            this.btnOneChart.Size = new System.Drawing.Size(47, 23);
-            this.btnOneChart.TabIndex = 1;
-            this.btnOneChart.Text = "1分线";
-            this.btnOneChart.UseVisualStyleBackColor = false;
-            this.btnOneChart.Click += new System.EventHandler(this.btnOneChart_Click);
+            this.btnMinuteChart.BackColor = System.Drawing.Color.Gold;
+            this.btnMinuteChart.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnMinuteChart.Location = new System.Drawing.Point(2, 3);
+            this.btnMinuteChart.Name = "btnMinuteChart";
+            this.btnMinuteChart.Size = new System.Drawing.Size(54, 23);
+            this.btnMinuteChart.TabIndex = 1;
+            this.btnMinuteChart.Text = "分时图";
+            this.btnMinuteChart.UseVisualStyleBackColor = false;
+            this.btnMinuteChart.Click += new System.EventHandler(this.btnMinuteChart_Click);
             // 
             // btnDayChart
             // 
             this.btnDayChart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnDayChart.ForeColor = System.Drawing.Color.White;
-            this.btnDayChart.Location = new System.Drawing.Point(5, 3);
+            this.btnDayChart.Location = new System.Drawing.Point(56, 3);
             this.btnDayChart.Name = "btnDayChart";
-            this.btnDayChart.Size = new System.Drawing.Size(41, 23);
+            this.btnDayChart.Size = new System.Drawing.Size(50, 23);
             this.btnDayChart.TabIndex = 0;
-            this.btnDayChart.Text = "日线";
+            this.btnDayChart.Text = "日时图";
             this.btnDayChart.UseVisualStyleBackColor = false;
             this.btnDayChart.Click += new System.EventHandler(this.btnDayChart_Click);
             // 
@@ -1238,14 +1201,35 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
             // 
-            // lblStockTotal
+            // txtFoucST
             // 
-            this.lblStockTotal.AutoSize = true;
-            this.lblStockTotal.Location = new System.Drawing.Point(749, 10);
-            this.lblStockTotal.Name = "lblStockTotal";
-            this.lblStockTotal.Size = new System.Drawing.Size(65, 12);
-            this.lblStockTotal.TabIndex = 3;
-            this.lblStockTotal.Text = "Loading...";
+            this.txtFoucST.AutoSize = true;
+            this.txtFoucST.Checked = true;
+            this.txtFoucST.Location = new System.Drawing.Point(5, 7);
+            this.txtFoucST.Name = "txtFoucST";
+            this.txtFoucST.Size = new System.Drawing.Size(71, 16);
+            this.txtFoucST.TabIndex = 4;
+            this.txtFoucST.Text = "重点关注";
+            this.txtFoucST.UseVisualStyleBackColor = true;
+            // 
+            // btnFoucsStock
+            // 
+            this.btnFoucsStock.BackColor = System.Drawing.Color.White;
+            this.btnFoucsStock.Location = new System.Drawing.Point(793, 3);
+            this.btnFoucsStock.Name = "btnFoucsStock";
+            this.btnFoucsStock.Size = new System.Drawing.Size(43, 23);
+            this.btnFoucsStock.TabIndex = 6;
+            this.btnFoucsStock.Text = "关注";
+            this.btnFoucsStock.UseVisualStyleBackColor = false;
+            this.btnFoucsStock.Click += new System.EventHandler(this.btnFoucsStock_Click);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(716, 4);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(74, 21);
+            this.txtSearch.TabIndex = 7;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // DesktopFrom
             // 
@@ -1403,19 +1387,18 @@
         private System.Windows.Forms.DataGridView gridAccountStockList;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPrice;
         private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Button btnOneChart;
+        private System.Windows.Forms.Button btnMinuteChart;
         private System.Windows.Forms.Button btnDayChart;
-        private System.Windows.Forms.Button btnFiveChart;
-        private System.Windows.Forms.Button btnThirtyChart;
-        private System.Windows.Forms.Button btnSixtyChart;
         private System.Windows.Forms.Button btnMonthChart;
         private System.Windows.Forms.Button btnWeekChart;
-        private System.Windows.Forms.Button btnFifteenChart;
         private System.Windows.Forms.DataGridView gridStockList;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.RadioButton txtETF;
         private System.Windows.Forms.RadioButton txtSHSZ;
         private System.Windows.Forms.RadioButton txtAllStock;
         private System.Windows.Forms.Label lblStockTotal;
+        private System.Windows.Forms.RadioButton txtFoucST;
+        private System.Windows.Forms.Button btnFoucsStock;
+        private System.Windows.Forms.TextBox txtSearch;
     }
 }

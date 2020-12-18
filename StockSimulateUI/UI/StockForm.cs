@@ -32,6 +32,9 @@ namespace StockPriceTools.UI
             var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null)
             {
+                //类型
+                stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
+
                 Repository.Insert<StockEntity>(stockInfo.Stock);
 
                 this.DialogResult = DialogResult.OK;
@@ -42,10 +45,30 @@ namespace StockPriceTools.UI
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.textBox1.Text.Length > 6) this.textBox1.Text = this.textBox1.Text.Substring(0, 6);
-            if (this.textBox1.Text.StartsWith("6")) this.txtType.Text = "SH";
-            if (this.textBox1.Text.StartsWith("0")) this.txtType.Text = "SZ";
-            if (this.textBox1.Text.StartsWith("5")) this.txtType.Text = "ZS";
-            if (this.textBox1.Text.StartsWith("1")) this.txtType.Text = "SZ";
+            if (this.textBox1.Text.StartsWith("6"))
+            {
+                this.txtType.Text = "SH";
+                this.txtSType.Text = "沪深股";
+                this.txtSTypeValue.Text = "0";
+            }
+            if (this.textBox1.Text.StartsWith("0"))
+            {
+                this.txtType.Text = "SZ";
+                this.txtSType.Text = "沪深股";
+                this.txtSTypeValue.Text = "0";
+            }
+            if (this.textBox1.Text.StartsWith("5"))
+            {
+                this.txtType.Text = "ZS";
+                this.txtSType.Text = "基金(ETF)";
+                this.txtSTypeValue.Text = "1";
+            }
+            if (this.textBox1.Text.StartsWith("1"))
+            {
+                this.txtType.Text = "SZ";
+                this.txtSType.Text = "基金(ETF)";
+                this.txtSTypeValue.Text = "1";
+            }
         }
 
         private void NewStockForm_KeyDown(object sender, KeyEventArgs e)
