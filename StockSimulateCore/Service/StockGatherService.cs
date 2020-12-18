@@ -23,10 +23,15 @@ namespace StockSimulateCore.Service
             foreach (var stock in stocks)
             {
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                if (stockInfo == null) return;
-                if (stockInfo.DayPrice.Price == 0) return;
+                if (stockInfo == null) continue;;
+                if (stockInfo.DayPrice.Price == 0) continue;
 
                 stockInfo.Stock.ID = stock.ID;
+                stockInfo.Stock.Type = stock.Type;
+                stockInfo.Stock.Target = stock.Target;
+                stockInfo.Stock.Foucs = stock.Foucs;
+                stockInfo.Stock.Growth = stock.Growth;
+                stockInfo.Stock.EPE = stock.EPE;
                 SQLiteDBUtil.Instance.Update<StockEntity>(stockInfo.Stock);
 
                 #region 更新当前股价
@@ -43,24 +48,27 @@ namespace StockSimulateCore.Service
                     stockInfo.DayPrice.DealTime = "";
                     SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
                 }
-                var dealTime = DateTime.Now.ToString("HH:mm");
-                if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
-
-                var price2 = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
-                if (price2 == null)
+                if (stock.Foucs > 0)
                 {
-                    stockInfo.DayPrice.DateType = 1;//分钟
-                    stockInfo.DayPrice.DealTime = dealTime;
-                    SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
-                }
-                else
-                {
-                    stockInfo.DayPrice.ID = price2.ID;
-                    stockInfo.DayPrice.DateType = 1;//分钟
-                    stockInfo.DayPrice.DealTime = dealTime;
-                    SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
-                }
+                    var dealTime = DateTime.Now.ToString("HH:mm");
+                    if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
+                    if (dealTime.CompareTo("09:25") <= 0) dealTime = "09:25";
 
+                    var price2 = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
+                    if (price2 == null)
+                    {
+                        stockInfo.DayPrice.DateType = 1;//分钟
+                        stockInfo.DayPrice.DealTime = dealTime;
+                        SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                    }
+                    else
+                    {
+                        stockInfo.DayPrice.ID = price2.ID;
+                        stockInfo.DayPrice.DateType = 1;//分钟
+                        stockInfo.DayPrice.DealTime = dealTime;
+                        SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                    }
+                }
                 #endregion
 
                 #region 检测自动交易策略
@@ -135,7 +143,7 @@ namespace StockSimulateCore.Service
         /// <param name="actionLog"></param>
         public static void GatherFinanceData(Action<string> actionLog)
         {
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code like 'SZ%' or Code like 'SH%'");
             foreach (var stock in stocks)
             {
                 var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);

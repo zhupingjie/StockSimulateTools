@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,35 @@ namespace StockSimulateCore.Entity
         public string AccountName { get; set; }
 
         [Description("执行策略")]
+        [GridColumnIgnore]
         public int ExecuteMode { get; set; }
+
+        [Description("执行策略")]
+        [NotMapped]
+        public string ExecuteModeText
+        {
+            get
+            {
+                return ExecuteMode == 0 ? "买卖点提醒" : ExecuteMode == 1 ? "自动模拟交易" : "";
+            }
+        }
 
         [Description("买卖点")]
         public string Target { get; set; }
 
         [Description("条件")]
+        [GridColumnIgnore]
         public int Condition { get; set; }
+        [Description("条件")]
+        [NotMapped]
+        public string 条件Text
+        {
+            get
+            {
+                return Condition == 0 ? "低于" : Condition == 1 ? "高于" : Condition == 2 ? "等待" : "";
+            }
+        }
+        
 
         [Description("股价")]
         public decimal Price { get; set; }
@@ -61,7 +84,17 @@ namespace StockSimulateCore.Entity
         public decimal Profit { get; set; }
 
         [Description("执行结果")]
+        [GridColumnIgnore]
         public int ExecuteOK { get; set; }
+        [Description("执行结果")]
+        [NotMapped]
+        public string ExecuteOKText
+        {
+            get
+            {
+                return ExecuteOK == 1 ? "成功" : ExecuteOK == 2 ? "失败" : ExecuteOK == 0 ? "等待" : "";
+            }
+        }
 
         [Description("异常信息")]
         public string Message { get; set; }

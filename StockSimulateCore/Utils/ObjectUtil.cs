@@ -3,6 +3,7 @@ using StockSimulateCore.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +21,7 @@ namespace StockSimulateCore.Utils
             foreach(var prep in preps)
             {
                 if (prep.Name == "ID") continue;
+                if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
 
                 var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
                 if (attr != null)
@@ -33,6 +35,7 @@ namespace StockSimulateCore.Utils
                 foreach (var prep in preps)
                 {
                     if (prep.Name == "ID") continue;
+                    if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
 
                     var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
                     if(attr != null)
@@ -120,6 +123,19 @@ namespace StockSimulateCore.Utils
             return result;
         }
 
+        public static PropertyInfo[] GetPropertyInfos(Type objType)
+        {
+            var pInfos = new List<PropertyInfo>();
+            var types = objType.GetProperties();
+            foreach(var type in types)
+            {
+                if (type.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+
+                pInfos.Add(type);
+            }
+            return pInfos.ToArray();
+        }
+
         public static PropertyInfo GetPropertyInfo(object obj, string propertyName)
         {
             if (obj == null) return null;
@@ -157,7 +173,7 @@ namespace StockSimulateCore.Utils
             }
             catch (Exception ex)
             {
-                throw new Exception($"数据[{value}]转换为类型[{typeof(T).Name}]错误:{ex.Message}");
+                return defaultValue;
             }
         }
 
@@ -188,6 +204,16 @@ namespace StockSimulateCore.Utils
         {
             if (text == null) return new string[] { };
             return $"{text}".Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static int GetGridColumnLength(string name = "")
+        {
+            var length = name.Length;
+            if (name.Contains("(%)")) length = length - 2;
+            else if (name.Contains("(PE)")) length = length - 2;
+            else if (name.Contains("(TTM)")) length = length - 3;
+            else if (name.Contains("(")) length = length - 1;
+            return length <= 2 ? 50 : length <= 3 ? 55 : length <= 4 ? 70 : length <= 6 ? 90 : length <= 8 ? 100 : 120;
         }
     }
 }

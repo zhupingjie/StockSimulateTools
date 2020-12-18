@@ -202,6 +202,12 @@
     <Compile Include="UI\StockForm.Designer.cs">
       <DependentUpon>StockForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\ValuateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ValuateForm.Designer.cs">
+      <DependentUpon>ValuateForm.cs</DependentUpon>
+    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\StockForm.resx">
       <DependentUpon>StockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ValuateForm.resx">
+      <DependentUpon>ValuateForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

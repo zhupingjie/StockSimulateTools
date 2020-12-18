@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,17 @@ namespace StockSimulateCore.Entity
         /// 0:涨跌幅,1:股价涨跌,2:买卖策略
         /// </summary>
         [Description("类型")]
+        [GridColumnIgnore]
         public int RType { get; set; }
+        [Description("类型")]
+        [NotMapped]
+        public string RTypeText
+        {
+            get
+            {
+                return RType == 0 ? "涨跌幅" : RType == 1 ? "上涨" : RType == 2 ? "下跌" : RType == 8 ? "买点" : RType == 9 ? "卖点" : "";
+            }
+        }
 
         [Description("目标")]
         public decimal Target { get; set; }
@@ -43,7 +54,18 @@ namespace StockSimulateCore.Entity
         public string QQ { get; set; }
 
         [Description("是否执行")]
+        [GridColumnIgnore]
         public bool Handled { get; set; }
+        [Description("是否执行")]
+        [NotMapped]
+        public string HandledText
+        {
+            get
+            {
+                return Handled ? "✔" : "×";
+            }
+        }
+
 
         [Description("计划提醒时间")]
         public DateTime? PlanRemind { get; set; }
