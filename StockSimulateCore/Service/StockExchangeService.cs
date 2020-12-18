@@ -114,10 +114,12 @@ namespace StockSimulateCore.Service
                 return result;
             }
 
-            if (exchangeInfo.Qty > accountStock.HoldQty)
+            var couldQty = accountStock.HoldQty;
+            if (accountStock.LockDate.HasValue && accountStock.LockDate == DateTime.Now.Date) couldQty -= accountStock.LockQty;
+            if (exchangeInfo.Qty > couldQty)
             {
                 result.Success = false;
-                result.Message = $"交易账户[{exchangeInfo.AccountName}]持有股票不足[{exchangeInfo.Qty - accountStock.HoldQty}]";
+                result.Message = $"交易账户[{exchangeInfo.AccountName}]持有股票不足[{exchangeInfo.Qty - couldQty}]";
                 return result;
             }
 

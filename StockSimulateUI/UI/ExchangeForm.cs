@@ -137,7 +137,10 @@ namespace StockSimulateUI.UI
                 }
                 else
                 {
-                    this.txtCouldExchange.Text = $"{accountStock.HoldQty}";
+                    var couldQty = accountStock.HoldQty;
+                    if (accountStock.LockDate.HasValue && accountStock.LockDate == DateTime.Now.Date) couldQty -= accountStock.LockQty;
+
+                    this.txtCouldExchange.Text = $"{couldQty}";
                     this.txtDealQty.Enabled = true;
                 }
             }

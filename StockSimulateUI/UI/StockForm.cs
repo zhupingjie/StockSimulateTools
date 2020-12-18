@@ -1,4 +1,7 @@
-﻿using System;
+﻿using StockSimulateCore.Entity;
+using StockSimulateCore.Service;
+using StockSimulateCore.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +15,7 @@ namespace StockPriceTools.UI
 {
     public partial class NewStockForm : Form
     {
-        public string StockCode { get; set; }
+        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
         public NewStockForm()
         {
             InitializeComponent();
@@ -20,18 +23,29 @@ namespace StockPriceTools.UI
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.StockCode = $"{this.comboBox1.Text}{this.textBox1.Text.Trim()}";
-            if (string.IsNullOrEmpty(StockCode)) return;
+            var stockCode = $"{this.txtType.Text}{this.textBox1.Text.Trim()}";
+            if (string.IsNullOrEmpty(stockCode)) return;
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            var stockInfo = EastMoneyUtil.GetStockPrice(stockCode);
+            if (stockInfo == null) return;
+
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null)
+            {
+                Repository.Insert<StockEntity>(stockInfo.Stock);
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.textBox1.Text.Length > 6) this.textBox1.Text = this.textBox1.Text.Substring(0, 6);
-            if (this.textBox1.Text.StartsWith("6")) this.comboBox1.Text = "SH";
-            if (this.textBox1.Text.StartsWith("0")) this.comboBox1.Text = "SZ";
+            if (this.textBox1.Text.StartsWith("6")) this.txtType.Text = "SH";
+            if (this.textBox1.Text.StartsWith("0")) this.txtType.Text = "SZ";
+            if (this.textBox1.Text.StartsWith("5")) this.txtType.Text = "ZS";
+            if (this.textBox1.Text.StartsWith("1")) this.txtType.Text = "SZ";
         }
 
         private void NewStockForm_KeyDown(object sender, KeyEventArgs e)
