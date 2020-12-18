@@ -137,12 +137,14 @@
     <Compile Include="Model\LeftExchangeStrategyInfo.cs" />
     <Compile Include="Model\StrategyInfo.cs" />
     <Compile Include="Model\TExchangeStrategyInfo.cs" />
+    <Compile Include="Model\ValuateResultInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\RemindService.cs" />
     <Compile Include="Service\StockExchangeService.cs" />
     <Compile Include="Service\StockGatherService.cs" />
     <Compile Include="Service\StockService.cs" />
     <Compile Include="Service\StockStrategyService.cs" />
+    <Compile Include="Service\StockValuateService.cs" />
     <Compile Include="Utils\AssemblyUtil.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />

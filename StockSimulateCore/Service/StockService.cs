@@ -1,4 +1,5 @@
 ﻿using StockSimulateCore.Entity;
+using StockSimulateCore.Model;
 using StockSimulateCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace StockSimulateCore.Service
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
 
-        public static void Valate(string stockCode, decimal target, decimal growth, decimal pe)
+        public static void SaveValuateResult(string stockCode, decimal target, decimal growth, decimal pe, string advise)
         {
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
@@ -28,7 +29,27 @@ namespace StockSimulateCore.Service
             stock.EPE = pe;
             stock.Growth = growth;
             stock.Target = target;
+            stock.Advise = advise;
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+        }
+
+        public static void SaveValuateResult(ValuateResultInfo[] results)
+        {
+            var codes = results.Select(c => c.StockCode).ToArray();
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in '{string.Join("','", codes)}'");
+            if (stocks.Length == 0) return;
+
+            foreach (var stock in stocks)
+            {
+                var result = results.FirstOrDefault(c => c.StockCode == stock.Code);
+                if (result == null) continue;
+
+                stock.EPE = result.PE;
+                stock.Growth = result.Growth;
+                stock.Target = result.Price;
+                stock.Advise = result.Advise;
+            }
+            SQLiteDBUtil.Instance.Update<StockEntity>(stocks);
         }
     }
 }

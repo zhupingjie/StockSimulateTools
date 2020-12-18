@@ -173,7 +173,7 @@ namespace StockSimulateCore.Utils
             }
             catch (Exception ex)
             {
-                throw new Exception($"数据[{value}]转换为类型[{typeof(T).Name}]错误:{ex.Message}");
+                return defaultValue;
             }
         }
 

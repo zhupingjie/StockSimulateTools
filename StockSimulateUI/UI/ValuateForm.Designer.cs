@@ -66,16 +66,19 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.txtYetLostNetProfit = new System.Windows.Forms.TextBox();
+            this.btnValuateAll = new System.Windows.Forms.Button();
+            this.txtAdvise = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(597, 451);
+            this.btnOK.Location = new System.Drawing.Point(597, 490);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(162, 42);
             this.btnOK.TabIndex = 15;
-            this.btnOK.Text = "确认";
+            this.btnOK.Text = "保存预测结果";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -114,7 +117,7 @@
             this.txtWantNetProfit.Location = new System.Drawing.Point(597, 211);
             this.txtWantNetProfit.Name = "txtWantNetProfit";
             this.txtWantNetProfit.Size = new System.Drawing.Size(162, 34);
-            this.txtWantNetProfit.TabIndex = 23;
+            this.txtWantNetProfit.TabIndex = 4;
             this.txtWantNetProfit.TextChanged += new System.EventHandler(this.txtWantNetProfit_TextChanged);
             // 
             // label3
@@ -171,7 +174,7 @@
             this.txtWantPE.Location = new System.Drawing.Point(597, 114);
             this.txtWantPE.Name = "txtWantPE";
             this.txtWantPE.Size = new System.Drawing.Size(162, 34);
-            this.txtWantPE.TabIndex = 28;
+            this.txtWantPE.TabIndex = 2;
             this.txtWantPE.TextChanged += new System.EventHandler(this.txtWantPE_TextChanged);
             // 
             // label5
@@ -208,8 +211,9 @@
             this.txtTarget.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtTarget.Location = new System.Drawing.Point(597, 398);
             this.txtTarget.Name = "txtTarget";
+            this.txtTarget.ReadOnly = true;
             this.txtTarget.Size = new System.Drawing.Size(162, 34);
-            this.txtTarget.TabIndex = 32;
+            this.txtTarget.TabIndex = 8;
             // 
             // txtYetNetProfit
             // 
@@ -245,7 +249,7 @@
             this.txtWantProfitGrow.Location = new System.Drawing.Point(597, 66);
             this.txtWantProfitGrow.Name = "txtWantProfitGrow";
             this.txtWantProfitGrow.Size = new System.Drawing.Size(162, 34);
-            this.txtWantProfitGrow.TabIndex = 40;
+            this.txtWantProfitGrow.TabIndex = 1;
             this.txtWantProfitGrow.TextChanged += new System.EventHandler(this.txtWantProfitGrow_TextChanged);
             // 
             // label10
@@ -311,8 +315,9 @@
             this.txtWantEPS.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtWantEPS.Location = new System.Drawing.Point(597, 350);
             this.txtWantEPS.Name = "txtWantEPS";
+            this.txtWantEPS.ReadOnly = true;
             this.txtWantEPS.Size = new System.Drawing.Size(162, 34);
-            this.txtWantEPS.TabIndex = 47;
+            this.txtWantEPS.TabIndex = 7;
             // 
             // label14
             // 
@@ -338,8 +343,9 @@
             this.txtWantAmount.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtWantAmount.Location = new System.Drawing.Point(597, 301);
             this.txtWantAmount.Name = "txtWantAmount";
+            this.txtWantAmount.ReadOnly = true;
             this.txtWantAmount.Size = new System.Drawing.Size(162, 34);
-            this.txtWantAmount.TabIndex = 50;
+            this.txtWantAmount.TabIndex = 6;
             // 
             // label15
             // 
@@ -357,7 +363,7 @@
             this.txtSafeRate.Location = new System.Drawing.Point(597, 163);
             this.txtSafeRate.Name = "txtSafeRate";
             this.txtSafeRate.Size = new System.Drawing.Size(162, 34);
-            this.txtSafeRate.TabIndex = 52;
+            this.txtSafeRate.TabIndex = 3;
             this.txtSafeRate.Text = "100";
             this.txtSafeRate.TextChanged += new System.EventHandler(this.txtSafeRate_TextChanged);
             // 
@@ -386,8 +392,9 @@
             this.txtLostNetProfit.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtLostNetProfit.Location = new System.Drawing.Point(597, 256);
             this.txtLostNetProfit.Name = "txtLostNetProfit";
+            this.txtLostNetProfit.ReadOnly = true;
             this.txtLostNetProfit.Size = new System.Drawing.Size(162, 34);
-            this.txtLostNetProfit.TabIndex = 53;
+            this.txtLostNetProfit.TabIndex = 5;
             // 
             // label8
             // 
@@ -418,11 +425,44 @@
             this.txtYetLostNetProfit.Size = new System.Drawing.Size(162, 34);
             this.txtYetLostNetProfit.TabIndex = 56;
             // 
+            // btnValuateAll
+            // 
+            this.btnValuateAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnValuateAll.Location = new System.Drawing.Point(123, 490);
+            this.btnValuateAll.Name = "btnValuateAll";
+            this.btnValuateAll.Size = new System.Drawing.Size(265, 42);
+            this.btnValuateAll.TabIndex = 58;
+            this.btnValuateAll.Text = "按去年业绩预测所有股票";
+            this.btnValuateAll.UseVisualStyleBackColor = true;
+            this.btnValuateAll.Click += new System.EventHandler(this.btnValuateAll_Click);
+            // 
+            // txtAdvise
+            // 
+            this.txtAdvise.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtAdvise.Location = new System.Drawing.Point(597, 442);
+            this.txtAdvise.Name = "txtAdvise";
+            this.txtAdvise.ReadOnly = true;
+            this.txtAdvise.Size = new System.Drawing.Size(162, 34);
+            this.txtAdvise.TabIndex = 59;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("微软雅黑", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label19.Location = new System.Drawing.Point(449, 444);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(138, 28);
+            this.label19.TabIndex = 60;
+            this.label19.Text = "预测结果推荐";
+            // 
             // ValuateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(799, 527);
+            this.ClientSize = new System.Drawing.Size(799, 553);
+            this.Controls.Add(this.label19);
+            this.Controls.Add(this.txtAdvise);
+            this.Controls.Add(this.btnValuateAll);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.txtYetLostNetProfit);
             this.Controls.Add(this.label8);
@@ -508,5 +548,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox txtYetLostNetProfit;
+        private System.Windows.Forms.Button btnValuateAll;
+        private System.Windows.Forms.TextBox txtAdvise;
+        private System.Windows.Forms.Label label19;
     }
 }

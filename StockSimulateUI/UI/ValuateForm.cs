@@ -58,29 +58,18 @@ namespace StockSimulateUI.UI
 
         private void Valuate()
         {
-            var capital = ObjectUtil.ToValue<decimal>(this.txtCapital.Text, 0);
-            var yetNetProfit = ObjectUtil.ToValue<decimal>(this.txtYetNetProfit.Text, 0);
-            var wantProfitGrow = ObjectUtil.ToValue<decimal>(this.txtWantProfitGrow.Text, 0);
-            var price = ObjectUtil.ToValue<decimal>(this.txtPrice.Text, 0);
-            var yetEPS = ObjectUtil.ToValue<decimal>(this.txtYetEPS.Text, 0);
+            var wantGrowth = ObjectUtil.ToValue<decimal>(this.txtWantProfitGrow.Text, 0);
             var wantPE = ObjectUtil.ToValue<decimal>(this.txtWantPE.Text, 0);
-            var safeRate = ObjectUtil.ToValue<decimal>(this.txtSafeRate.Text, 0);
-            var yetLostNetProfit = ObjectUtil.ToValue<decimal>(this.txtYetLostNetProfit.Text, 0);
 
-            var wantNetProfit = yetNetProfit * (1 + wantProfitGrow / 100m);
-            this.txtWantNetProfit.Text = $"{wantNetProfit}";
+            var result = StockValuateService.Valuate(StockCode, wantGrowth, wantPE);
+            if (result == null) return;
 
-            var lostNetProfig = wantNetProfit - yetLostNetProfit;
-            this.txtLostNetProfit.Text = $"{lostNetProfig}";
-
-            var wantEPS = Math.Round(wantNetProfit / capital, 3);
-            this.txtWantEPS.Text = $"{wantEPS}";
-
-            var wantAmount = Math.Round(wantPE * wantNetProfit, 2);
-            this.txtWantAmount.Text = $"{wantAmount}";
-
-            var wantPrice = Math.Round(wantPE * wantEPS, 2) * (safeRate / 100m); ;
-            this.txtTarget.Text = $"{wantPrice}";
+            this.txtWantNetProfit.Text = $"{result.NetProfit}";
+            this.txtLostNetProfit.Text = $"{result.LostNetProfit}";
+            this.txtWantEPS.Text = $"{result.EPS}";
+            this.txtWantAmount.Text = $"{result.Amount}";
+            this.txtTarget.Text = $"{result.Price}";
+            this.txtAdvise.Text = result.Advise;
         }
 
         private void txtWantProfitGrow_TextChanged(object sender, EventArgs e)
@@ -105,13 +94,22 @@ namespace StockSimulateUI.UI
             var target = ObjectUtil.ToValue<decimal>(this.txtTarget.Text, 0);
             var growth = ObjectUtil.ToValue<decimal>(this.txtWantProfitGrow.Text, 0);
             var pe = ObjectUtil.ToValue<decimal>(this.txtWantPE.Text, 0);
+            var advise = this.txtAdvise.Text;
 
-            if (target == 0 || growth == 0 || pe == 0) return;
+            if (growth == 0 || pe == 0) return;
 
-            StockService.Valate(StockCode, target, growth, pe);
-
+            StockService.SaveValuateResult(StockCode, target, growth, pe, advise);
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void btnValuateAll_Click(object sender, EventArgs e)
+        {
+            var results = StockValuateService.Valuate();
+            if(results.Length > 0)
+            {
+                StockService.SaveValuateResult(results);
+            }
         }
     }
 }
