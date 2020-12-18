@@ -48,7 +48,10 @@ namespace StockSimulateCore.Entity
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
 
-        [Description("预测估计")]
+        [Description("安全股价")]
+        public decimal Safety { get; set; }
+
+        [Description("预测股价")]
         public decimal Target { get; set; }
 
         [Description("预测增长率(%)")]
@@ -56,6 +59,17 @@ namespace StockSimulateCore.Entity
 
         [Description("预测PE")]
         public decimal EPE { get; set; }
+
+        [Description("预测盈利(%)")]
+        [NotMapped]
+        public decimal UPPer
+        {
+            get
+            {
+                if (Safety == 0) return 0;
+                return Math.Round((Target - Safety) / Safety * 100m, 2);
+            }
+        }
 
         [Description("预测结果")]
         public string Advise { get; set; }

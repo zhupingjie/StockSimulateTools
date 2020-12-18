@@ -341,10 +341,11 @@ namespace StockPriceTools
             var frm = new ValuateForm();
             frm.StockCode = stockCode;
             frm.StartPosition = FormStartPosition.CenterParent;
-            if(frm.ShowDialog() == DialogResult.OK)
-            {
-                this.LoadStockList();
-            }
+            frm.Show();
+            //if(frm.ShowDialog() == DialogResult.OK)
+            //{
+            //    this.LoadStockList();
+            //}
         }
         #endregion
 
@@ -444,8 +445,21 @@ namespace StockPriceTools
             this.Invoke(act);
         }
 
+
+        private void txtFoucST_CheckedChanged(object sender, EventArgs e)
+        {
+            this.CurrentStockListSelectedIndex = -1;
+
+            Action act = delegate ()
+            {
+                this.LoadStockList();
+            };
+            this.Invoke(act);
+        }
         private void txtAllStock_CheckedChanged(object sender, EventArgs e)
         {
+            this.CurrentStockListSelectedIndex = -1;
+
             Action act = delegate ()
             {
                 this.LoadStockList();
@@ -455,6 +469,8 @@ namespace StockPriceTools
 
         private void txtSHSZ_CheckedChanged(object sender, EventArgs e)
         {
+            this.CurrentStockListSelectedIndex = -1;
+
             Action act = delegate ()
             {
                 this.LoadStockList();
@@ -464,6 +480,8 @@ namespace StockPriceTools
 
         private void txtETF_CheckedChanged(object sender, EventArgs e)
         {
+            this.CurrentStockListSelectedIndex = -1;
+
             Action act = delegate ()
             {
                 this.LoadStockList();
@@ -1080,5 +1098,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }

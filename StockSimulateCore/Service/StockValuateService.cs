@@ -26,7 +26,7 @@ namespace StockSimulateCore.Service
             return result.ToArray();
         }
 
-        public static ValuateResultInfo Valuate(string stockCode, decimal growth = 0, decimal pe = 0)
+        public static ValuateResultInfo Valuate(string stockCode, decimal growth = 0, decimal pe = 0, decimal safeRate = 80, decimal netProfit = 0)
         {
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Type=0 and Code='{stockCode}'");
             if (stock == null) return null;
@@ -57,21 +57,32 @@ namespace StockSimulateCore.Service
 
             //预测净利润
             var wantNetProfit = yetNetProfit * (1 + wantGrowth / 100m);
+            if (netProfit > 0) wantNetProfit = netProfit;
 
             //净利润差值
-            var lostNetProfit = wantNetProfit - yetLostNetProfit;
+            var lostNetProfit = wantNetProfit - stock.NetProfit;
 
             //预测每股收益
-            var wantEPS = Math.Round(wantNetProfit / capital, 3);
+            var wantEPS = capital > 0 ? Math.Round(wantNetProfit / capital, 3) : 0;
 
             //预测市值
             var wantAmount = Math.Round(wantPE * wantNetProfit, 2);
 
             //预测股价
             var wantPrice = Math.Round(wantPE * wantEPS, 2);
+            if (wantPrice < 0) wantPrice = 0;
+
+            //预测盈利
+            var wantUPPer = price > 0 ? Math.Round((wantPrice - price) / price * 100m, 2) : 0;
+
+            //预测安全买入价格
+            var safePrice = Math.Round(wantPrice * safeRate / 100m, 2);
+
+            //预测安全盈利
+            var safeUPPer = safePrice > 0 ? Math.Round((wantPrice - safePrice) / safePrice * 100m, 2) : 0;
 
             //推荐
-            var advise = "观望";
+            var advise = "等待";
             if (wantPrice >= price * 1.4m)
             {
                 advise = "重仓";
@@ -82,7 +93,7 @@ namespace StockSimulateCore.Service
             }
             else if(wantPrice >= price * 0.8m)
             {
-                advise = "观望";
+                advise = "等待";
             }
             else if(wantPrice >= price * 0.6m)
             {
@@ -95,15 +106,18 @@ namespace StockSimulateCore.Service
 
             return new ValuateResultInfo()
             {
-                 StockCode = stockCode,
-                 Growth = wantGrowth,
-                 PE = wantPE,
-                 NetProfit = wantNetProfit,
-                 LostNetProfit = lostNetProfit,
-                 EPS = wantEPS,
-                 Amount = wantAmount,
-                 Price = wantPrice,
-                 Advise = advise
+                StockCode = stockCode,
+                Growth = wantGrowth,
+                PE = wantPE,
+                NetProfit = wantNetProfit,
+                LostNetProfit = lostNetProfit,
+                EPS = wantEPS,
+                Amount = wantAmount,
+                Price = wantPrice,
+                UPPer = wantUPPer,
+                SafePrice = safePrice,
+                SafeUPPer = safeUPPer,
+                Advise = advise
             };
         }
     }

@@ -129,5 +129,37 @@ namespace StockSimulateUI.UI
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void btnRemindAll_Click(object sender, EventArgs e)
+        {
+            var accountName = this.txtAccount.Text;
+            var account = Repository.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            if (account == null) return;
+
+            var reminds = new List<RemindEntity>();
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
+            foreach (var stock in stocks)
+            {
+                var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stock.Code}' and Target={stock.Safety} and RType=2");
+                if (remind == null)
+                {
+                    remind = new RemindEntity()
+                    {
+                        StockCode = stock.Code,
+                        Target = stock.Safety,
+                        Email = account.Email,
+                        QQ = account.QQ,
+                        RType = 2,
+                        StrategyName = "订阅",
+                        StrategyTarget = $"下跌至{stock.Safety}"
+                    };
+                    reminds.Add(remind);
+                }
+            }
+            Repository.Insert<RemindEntity>(reminds.ToArray());
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
     }
 }

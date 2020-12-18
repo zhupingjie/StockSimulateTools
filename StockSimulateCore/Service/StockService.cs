@@ -21,7 +21,7 @@ namespace StockSimulateCore.Service
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
 
-        public static void SaveValuateResult(string stockCode, decimal target, decimal growth, decimal pe, string advise)
+        public static void SaveValuateResult(string stockCode, decimal target, decimal safety, decimal growth, decimal pe, string advise)
         {
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
@@ -29,6 +29,7 @@ namespace StockSimulateCore.Service
             stock.EPE = pe;
             stock.Growth = growth;
             stock.Target = target;
+            stock.Safety = safety;
             stock.Advise = advise;
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
@@ -47,6 +48,7 @@ namespace StockSimulateCore.Service
                 stock.EPE = result.PE;
                 stock.Growth = result.Growth;
                 stock.Target = result.Price;
+                stock.Safety = result.SafePrice;
                 stock.Advise = result.Advise;
             }
             SQLiteDBUtil.Instance.Update<StockEntity>(stocks);

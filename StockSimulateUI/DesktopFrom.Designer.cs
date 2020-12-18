@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -41,6 +41,8 @@
             this.btnSetStrategy = new System.Windows.Forms.ToolStripButton();
             this.btnAddRmind = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnValuate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblMessage = new System.Windows.Forms.Label();
@@ -50,6 +52,9 @@
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.btnFoucsStock = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.txtFoucST = new System.Windows.Forms.RadioButton();
             this.lblStockTotal = new System.Windows.Forms.Label();
             this.txtETF = new System.Windows.Forms.RadioButton();
             this.txtSHSZ = new System.Windows.Forms.RadioButton();
@@ -122,11 +127,6 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.txtFoucST = new System.Windows.Forms.RadioButton();
-            this.btnFoucsStock = new System.Windows.Forms.Button();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.btnValuate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -271,6 +271,21 @@
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
             this.toolStripSplitButton1.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnValuate
+            // 
+            this.btnValuate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnValuate.Image = ((System.Drawing.Image)(resources.GetObject("btnValuate.Image")));
+            this.btnValuate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnValuate.Name = "btnValuate";
+            this.btnValuate.Size = new System.Drawing.Size(60, 22);
+            this.btnValuate.Text = "预测估值";
+            this.btnValuate.Click += new System.EventHandler(this.btnValuate_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // btnConfig
             // 
             this.btnConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -375,7 +390,6 @@
             this.gridStockList.Size = new System.Drawing.Size(836, 245);
             this.gridStockList.TabIndex = 48;
             this.gridStockList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridStockList_DataBindingComplete);
-            this.gridStockList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockList_RowEnter);
             this.gridStockList.SelectionChanged += new System.EventHandler(this.gridStockList_SelectionChanged);
             // 
             // panel10
@@ -392,6 +406,38 @@
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(836, 29);
             this.panel10.TabIndex = 47;
+            // 
+            // btnFoucsStock
+            // 
+            this.btnFoucsStock.BackColor = System.Drawing.Color.White;
+            this.btnFoucsStock.Location = new System.Drawing.Point(793, 3);
+            this.btnFoucsStock.Name = "btnFoucsStock";
+            this.btnFoucsStock.Size = new System.Drawing.Size(43, 23);
+            this.btnFoucsStock.TabIndex = 6;
+            this.btnFoucsStock.Text = "关注";
+            this.btnFoucsStock.UseVisualStyleBackColor = false;
+            this.btnFoucsStock.Click += new System.EventHandler(this.btnFoucsStock_Click);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(716, 4);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(74, 21);
+            this.txtSearch.TabIndex = 7;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            // 
+            // txtFoucST
+            // 
+            this.txtFoucST.AutoSize = true;
+            this.txtFoucST.Checked = true;
+            this.txtFoucST.Location = new System.Drawing.Point(5, 7);
+            this.txtFoucST.Name = "txtFoucST";
+            this.txtFoucST.Size = new System.Drawing.Size(71, 16);
+            this.txtFoucST.TabIndex = 4;
+            this.txtFoucST.TabStop = true;
+            this.txtFoucST.Text = "重点关注";
+            this.txtFoucST.UseVisualStyleBackColor = true;
+            this.txtFoucST.CheckedChanged += new System.EventHandler(this.txtFoucST_CheckedChanged);
             // 
             // lblStockTotal
             // 
@@ -514,11 +560,11 @@
             // 
             // chartPrice
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea3);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend3);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1204,51 +1250,6 @@
             // 
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 140;
-            // 
-            // txtFoucST
-            // 
-            this.txtFoucST.AutoSize = true;
-            this.txtFoucST.Checked = true;
-            this.txtFoucST.Location = new System.Drawing.Point(5, 7);
-            this.txtFoucST.Name = "txtFoucST";
-            this.txtFoucST.Size = new System.Drawing.Size(71, 16);
-            this.txtFoucST.TabIndex = 4;
-            this.txtFoucST.Text = "重点关注";
-            this.txtFoucST.UseVisualStyleBackColor = true;
-            // 
-            // btnFoucsStock
-            // 
-            this.btnFoucsStock.BackColor = System.Drawing.Color.White;
-            this.btnFoucsStock.Location = new System.Drawing.Point(793, 3);
-            this.btnFoucsStock.Name = "btnFoucsStock";
-            this.btnFoucsStock.Size = new System.Drawing.Size(43, 23);
-            this.btnFoucsStock.TabIndex = 6;
-            this.btnFoucsStock.Text = "关注";
-            this.btnFoucsStock.UseVisualStyleBackColor = false;
-            this.btnFoucsStock.Click += new System.EventHandler(this.btnFoucsStock_Click);
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(716, 4);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(74, 21);
-            this.txtSearch.TabIndex = 7;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
-            // 
-            // btnValuate
-            // 
-            this.btnValuate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnValuate.Image = ((System.Drawing.Image)(resources.GetObject("btnValuate.Image")));
-            this.btnValuate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnValuate.Name = "btnValuate";
-            this.btnValuate.Size = new System.Drawing.Size(60, 22);
-            this.btnValuate.Text = "预测估值";
-            this.btnValuate.Click += new System.EventHandler(this.btnValuate_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // DesktopFrom
             // 

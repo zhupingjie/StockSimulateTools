@@ -56,12 +56,15 @@ namespace StockSimulateUI.UI
             this.txtAmount.Text = $"{stock.Amount}";
         }
 
-        private void Valuate()
+        private void Valuate(bool changeNetProfit = false)
         {
+            var price = ObjectUtil.ToValue<decimal>(this.txtPrice.Text, 0);
             var wantGrowth = ObjectUtil.ToValue<decimal>(this.txtWantProfitGrow.Text, 0);
             var wantPE = ObjectUtil.ToValue<decimal>(this.txtWantPE.Text, 0);
+            var wantNetProfit = ObjectUtil.ToValue<decimal>(this.txtWantNetProfit.Text, 0);
+            var safeRate = ObjectUtil.ToValue<decimal>(this.txtSafeRate.Text, 0);
 
-            var result = StockValuateService.Valuate(StockCode, wantGrowth, wantPE);
+            var result = StockValuateService.Valuate(StockCode, wantGrowth, wantPE, safeRate, changeNetProfit ? wantNetProfit : 0);
             if (result == null) return;
 
             this.txtWantNetProfit.Text = $"{result.NetProfit}";
@@ -70,6 +73,9 @@ namespace StockSimulateUI.UI
             this.txtWantAmount.Text = $"{result.Amount}";
             this.txtTarget.Text = $"{result.Price}";
             this.txtAdvise.Text = result.Advise;
+            this.txtUPPer.Text = $"{result.UPPer}%";
+            this.txtSafePrice.Text = $"{result.SafePrice}";
+            this.txtSafeUPPer.Text = $"{result.SafeUPPer}%";
         }
 
         private void txtWantProfitGrow_TextChanged(object sender, EventArgs e)
@@ -87,18 +93,21 @@ namespace StockSimulateUI.UI
         }
         private void txtWantNetProfit_TextChanged(object sender, EventArgs e)
         {
-            this.Valuate();
+            this.Valuate(true);
         }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             var target = ObjectUtil.ToValue<decimal>(this.txtTarget.Text, 0);
             var growth = ObjectUtil.ToValue<decimal>(this.txtWantProfitGrow.Text, 0);
             var pe = ObjectUtil.ToValue<decimal>(this.txtWantPE.Text, 0);
+            var safety = ObjectUtil.ToValue<decimal>(this.txtSafePrice.Text, 0);
             var advise = this.txtAdvise.Text;
 
             if (growth == 0 || pe == 0) return;
 
-            StockService.SaveValuateResult(StockCode, target, growth, pe, advise);
+            StockService.SaveValuateResult(StockCode, target, safety, growth, pe, advise);
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -110,6 +119,9 @@ namespace StockSimulateUI.UI
             {
                 StockService.SaveValuateResult(results);
             }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

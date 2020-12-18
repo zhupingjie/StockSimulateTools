@@ -22,7 +22,7 @@ namespace StockSimulateCore.Service
 
         public static void Cancel(string stockCode, int rType, decimal target)
         {
-            var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target} and Handled='False'");
+            var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target}");
             if (remind != null)
             {
                 remind.Handled = true;

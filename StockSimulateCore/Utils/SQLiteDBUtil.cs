@@ -232,15 +232,15 @@ namespace StockSimulateCore.Utils
             {
                 con.Open();
                 var cmd = con.CreateCommand();
-
-                StringBuilder sbCol = new StringBuilder();
-                StringBuilder sbVal = new StringBuilder();
-
+                
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
                 var fields = ObjectUtil.GetPropertyInfos(type);
                 foreach (var entity in entitys)
                 {
+                    StringBuilder sbCol = new StringBuilder();
+                    StringBuilder sbVal = new StringBuilder();
+
                     foreach (var field in fields)
                     {
                         if (field.Name == "ID") continue;
@@ -302,13 +302,14 @@ namespace StockSimulateCore.Utils
                 con.Open();
                 var cmd = con.CreateCommand();
 
-                StringBuilder sb = new StringBuilder();
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
                 var fields = ObjectUtil.GetPropertyInfos(type);
 
                 foreach (var entity in entitys)
                 {
+                    StringBuilder sb = new StringBuilder();
+
                     foreach (var field in fields)
                     {
                         if (field.Name == "ID" || field.Name == "LastDate") continue;

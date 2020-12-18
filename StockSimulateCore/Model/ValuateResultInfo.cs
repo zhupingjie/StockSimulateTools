@@ -16,6 +16,9 @@ namespace StockSimulateCore.Model
         public decimal EPS { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
+        public decimal UPPer { get; set; }
+        public decimal SafePrice { get; set; }
+        public decimal SafeUPPer { get; set; }
         public string Advise { get; set; }
     }
 }
