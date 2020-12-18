@@ -122,7 +122,6 @@
     <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Config\SenderMailConfig.cs" />
     <Compile Include="Entity\AccountEntity.cs" />
-    <Compile Include="Entity\ActionLogEntity.cs" />
     <Compile Include="Entity\GlobalConfigEntity.cs" />
     <Compile Include="Entity\RemindEntity.cs" />
     <Compile Include="Entity\AccountStockEntity.cs" />

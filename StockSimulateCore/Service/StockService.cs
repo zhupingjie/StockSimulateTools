@@ -19,5 +19,16 @@ namespace StockSimulateCore.Service
             else stock.Foucs = 0;
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
+
+        public static void Valate(string stockCode, decimal target, decimal growth, decimal pe)
+        {
+            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            stock.EPE = pe;
+            stock.Growth = growth;
+            stock.Target = target;
+            SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+        }
     }
 }

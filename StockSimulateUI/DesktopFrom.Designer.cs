@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -125,6 +125,8 @@
             this.txtFoucST = new System.Windows.Forms.RadioButton();
             this.btnFoucsStock = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnValuate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -195,6 +197,8 @@
             this.btnSetStrategy,
             this.btnAddRmind,
             this.toolStripSplitButton1,
+            this.btnValuate,
+            this.toolStripSeparator3,
             this.btnConfig});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -510,11 +514,11 @@
             // 
             // chartPrice
             // 
-            chartArea7.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea7);
+            chartArea3.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea3);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend7.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend7);
+            legend3.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend3);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1231,6 +1235,21 @@
             this.txtSearch.TabIndex = 7;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
+            // btnValuate
+            // 
+            this.btnValuate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnValuate.Image = ((System.Drawing.Image)(resources.GetObject("btnValuate.Image")));
+            this.btnValuate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnValuate.Name = "btnValuate";
+            this.btnValuate.Size = new System.Drawing.Size(60, 22);
+            this.btnValuate.Text = "预测估值";
+            this.btnValuate.Click += new System.EventHandler(this.btnValuate_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1400,5 +1419,7 @@
         private System.Windows.Forms.RadioButton txtFoucST;
         private System.Windows.Forms.Button btnFoucsStock;
         private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.ToolStripButton btnValuate;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

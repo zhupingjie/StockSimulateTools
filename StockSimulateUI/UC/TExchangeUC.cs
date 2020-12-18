@@ -31,26 +31,12 @@ namespace StockSimulateUI.UC
 
             var stockStrategys = StockStrategyService.MakeStockStrategys(strategy);
             var dt = ObjectUtil.ConvertTable<StockStrategyEntity>(stockStrategys);
-
             this.dataGridView1.DataSource = null;
             this.dataGridView1.DataSource = dt.DefaultView;
             for (var i = 0; i < this.dataGridView1.Columns.Count; i++)
             {
                 var columnName = this.dataGridView1.Columns[i].Name;
-                var length = columnName.Length;
-                this.dataGridView1.Columns[i].Width = length < 6 ? 80 : length < 8 ? 120 : 140;
-            }
-            for (var i = 0; i < this.dataGridView1.Rows.Count; i++)
-            {
-                var row = this.dataGridView1.Rows[i];
-                var value = ObjectUtil.ToValue<int>(row.Cells["执行策略"].Value, -1);
-                this.dataGridView1.Rows[i].Cells["执行策略"].Value = (value == 1 ? "自动模拟交易" : value == 0 ? "买卖点提醒" : "");
-
-                var mode = ObjectUtil.ToValue<int>(row.Cells["条件"].Value, -1);
-                this.dataGridView1.Rows[i].Cells["条件"].Value = (mode == 0 ? "低于" : mode == 1 ? "高于" : mode == 2 ? "等待" : "");
-
-                var ok = ObjectUtil.ToValue<int>(row.Cells["执行结果"].Value, -1);
-                this.dataGridView1.Rows[i].Cells["执行结果"].Value = (ok == 1 ? "成功" : ok == 2 ? "失败" : ok == 0 ? "等待" : "");
+                this.dataGridView1.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
             }
         }
 

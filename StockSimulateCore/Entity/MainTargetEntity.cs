@@ -117,7 +117,7 @@ namespace StockSimulateCore.Entity
         /// <summary>
         /// 每股经营现金流(元)
         /// </summary>
-        [Description("归属净利润")]
+        [Description("每股经营现金流(元)")]
         public decimal Mgjyxjl { get; set; } //: "4.0423"
         /// <summary>
         /// 每股净资产(元)

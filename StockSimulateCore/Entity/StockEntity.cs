@@ -48,10 +48,16 @@ namespace StockSimulateCore.Entity
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
 
-        [Description("目标价")]
+        [Description("预测估计")]
         public decimal Target { get; set; }
 
-        [Description("总股本(万股)")]
+        [Description("预测增长率(%)")]
+        public decimal Growth { get; set; }
+
+        [Description("预测PE")]
+        public decimal EPE { get; set; }
+
+        [Description("总股本(亿股)")]
         public decimal Capital { get; set; }
 
         [Description("总市值(亿元)")]

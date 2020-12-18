@@ -320,9 +320,9 @@ namespace StockPriceTools
         private void btnAddRmind_Click(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
-
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
             var frm = new RemindForm();
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.StockCode = stockCode;
@@ -332,6 +332,20 @@ namespace StockPriceTools
             }
         }
 
+        private void btnValuate_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            var frm = new ValuateForm();
+            frm.StockCode = stockCode;
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+                this.LoadStockList();
+            }
+        }
         #endregion
 
         #region 中间TabControl区域事件

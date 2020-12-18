@@ -41,8 +41,8 @@ namespace StockSimulateCore.Utils
                 stockPrice.YesterdayEndPrice = GetNumberValue(model, "f60");
                 stockPrice.DealQty = GetNumberValue(model, "f47");
                 stockPrice.DealAmount = GetMillionValue(model, "f48");
-                stockPrice.Capital = GetMillionValue(model, "f116");
-                stockPrice.Amount = GetMillionValue(model, "f117");
+                stockPrice.Capital = GetMillionValue(model, "f84");
+                stockPrice.Amount = GetMillionValue(model, "f116");
                 stockPrice.TTM = GetNumberValue(model, "f163");
                 stockPrice.PE = GetNumberValue(model, "f162");
 
@@ -58,8 +58,8 @@ namespace StockSimulateCore.Utils
                 stock.PEG = 0;
                 stock.ROE = 0;
                 stock.ROIC = 0;
-                stock.Capital = GetMillionValue(model, "f116");
-                stock.Amount = GetMillionValue(model, "f117");
+                stock.Capital = GetMillionValue(model, "f84");
+                stock.Amount = GetMillionValue(model, "f116");
                 stock.Price = GetNumberValue(model, "f43");
                 stock.DebtRage = GetNumberValue(model, "f188");
                 stock.GrossRate = GetNumberValue(model, "f186");
@@ -119,7 +119,7 @@ namespace StockSimulateCore.Utils
         {
             var dt = new DataTable();
             dt.Columns.Add("指标");
-            var dates = data.GroupBy(c => c.Date).Select(c => c.Key).OrderByDescending(c => c).ToArray();
+            var dates = data.Where(c=>!string.IsNullOrEmpty(c.Date)).GroupBy(c => c.Date).Select(c => c.Key).OrderByDescending(c => c).ToArray();
             foreach (var date in dates)
             {
                 dt.Columns.Add(date);
@@ -149,6 +149,8 @@ namespace StockSimulateCore.Utils
             BuildTargetRow(dt, "Gsjlrtbzz", dates, data);
             //毛利率(%)
             BuildTargetRow(dt, "Mll", dates, data);
+            //净利率(%)
+            BuildTargetRow(dt, "Jll", dates, data);
             //资产负债率(%)
             BuildTargetRow(dt, "Zcfzl", dates, data);
 
@@ -187,8 +189,11 @@ namespace StockSimulateCore.Utils
                     vals.Clear();
                 }
             }
-            dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
-            dr["近期增长"] = $"{percent.FirstOrDefault()}%";
+            if (percent.Count > 0)
+            {
+                dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
+                dr["近期增长"] = $"{percent.FirstOrDefault()}%";
+            }
             dt.Rows.Add(dr);
         }
 
