@@ -27,7 +27,7 @@ namespace StockSimulateUI.UI
             var stock = Repository.QueryFirst<StockEntity>($"Code='{StockCode}'");
             if (stock == null) return;
 
-            var newMainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{StockCode}' and Rtype=2", "Date desc", 8);
+            var newMainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{StockCode}' and Date<>'' and Rtype=2", "Date desc", 8);
             if (newMainTargets.Length == 0) return;
 
             var lastMainTarget = newMainTargets.FirstOrDefault();

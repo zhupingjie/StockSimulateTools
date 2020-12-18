@@ -36,7 +36,7 @@ namespace StockSimulateCore.Service
         public static void SaveValuateResult(ValuateResultInfo[] results)
         {
             var codes = results.Select(c => c.StockCode).ToArray();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in '{string.Join("','", codes)}'");
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", codes)}')");
             if (stocks.Length == 0) return;
 
             foreach (var stock in stocks)
