@@ -139,7 +139,7 @@
     <Compile Include="Model\TExchangeStrategyInfo.cs" />
     <Compile Include="Model\ValuateResultInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\RemindService.cs" />
+    <Compile Include="Service\StockRemindService.cs" />
     <Compile Include="Service\StockExchangeService.cs" />
     <Compile Include="Service\StockGatherService.cs" />
     <Compile Include="Service\StockService.cs" />

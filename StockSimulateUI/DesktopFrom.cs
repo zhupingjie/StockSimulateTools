@@ -1,4 +1,5 @@
 ﻿using StockPriceTools.UI;
+using StockSimulateCore;
 using StockSimulateCore.Config;
 using StockSimulateCore.Entity;
 using StockSimulateCore.Model;
@@ -73,7 +74,6 @@ namespace StockPriceTools
                 Action act = delegate ()
                 {
                     this.LoadStockList();
-                    this.LoadAccountStockList();
                 };
                 this.Invoke(act);
             });
@@ -342,10 +342,6 @@ namespace StockPriceTools
             frm.StockCode = stockCode;
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.Show();
-            //if(frm.ShowDialog() == DialogResult.OK)
-            //{
-            //    this.LoadStockList();
-            //}
         }
         #endregion
 
@@ -365,12 +361,20 @@ namespace StockPriceTools
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = null;
             this.gridStockList.DataSource = dt.DefaultView;
-            for(var i=0; i<this.gridStockList.ColumnCount; i++)
+
+            var goodCellStyle = new DataGridViewCellStyle();
+            //goodCellStyle.Font = new Font("宋体", 8.5f, FontStyle.Bold);
+            goodCellStyle.BackColor = Color.LightYellow;
+            for (var i=0; i<this.gridStockList.ColumnCount; i++)
             {
                 this.gridStockList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-
+                
                 var columnName = this.gridStockList.Columns[i].Name;
                 this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
+                if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
+                {
+                    this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
+                }
             }
             for(var i=0; i<this.gridStockList.Rows.Count; i++)
             {
@@ -403,14 +407,12 @@ namespace StockPriceTools
             }
         }
 
-        /// <summary>
-        /// 自选股列表点击
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if(this.tabControlMain.SelectedIndex == 1)
+            {
+                this.LoadAccountStockList();
+            }
         }
 
         private void gridStockList_SelectionChanged(object sender, EventArgs e)
@@ -444,7 +446,6 @@ namespace StockPriceTools
             };
             this.Invoke(act);
         }
-
 
         private void txtFoucST_CheckedChanged(object sender, EventArgs e)
         {
@@ -502,6 +503,7 @@ namespace StockPriceTools
                 {
                     this.LoadStockList();
                 };
+                this.Invoke(act);
             }
         }
         #endregion
@@ -518,6 +520,7 @@ namespace StockPriceTools
             foreach(var prep in preps)
             {
                 if (prep.Name == "ID") continue;
+                if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
 
                 var desc = prep.Name;
                 var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
@@ -558,10 +561,18 @@ namespace StockPriceTools
             if (timeType == 0) startDate = startDate.AddMonths(-1);
             else if (timeType == 1) startDate = startDate.AddDays(-5 * 30);
             else if (timeType == 2) startDate = startDate.AddYears(-1);
-
+            else if(timeType == 3)
+            {
+                var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc", 1).FirstOrDefault();
+                if(lastDate != null)
+                {
+                    startDate = DateTime.Parse(lastDate.DealDate);
+                }
+            }
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
+            stockPrices = stockPrices.OrderBy(c => c.ID).ToArray();
 
-            this.BindChartSeriesPoints(series, stockPrices.OrderBy(c => c.ID).ToArray(), timeType, timeType == 3 ? 1 : 4);
+            this.BindChartSeriesPoints(series, stockPrices, timeType, startDate);
 
             var chartArea = this.chartPrice.ChartAreas[0];
             //chartArea.AxisY.Maximum = max;
@@ -579,7 +590,7 @@ namespace StockPriceTools
         }
 
         #region 加载走势图
-        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int timeType, int pointCount = 1)
+        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int timeType, DateTime startDate)
         {
             series.Points.Clear();
 
@@ -597,11 +608,11 @@ namespace StockPriceTools
             }
             else if (timeType == 3)
             {
-                this.BindChartMinutePoints(series, stockPrices, 1);
+                this.BindChartMinutePoints(series, stockPrices, 1, startDate);
             }
             else
             {
-                this.BindChartMinutePoints(series, stockPrices, timeType);
+                this.BindChartMinutePoints(series, stockPrices, timeType, startDate);
             }
         }
 
@@ -666,9 +677,9 @@ namespace StockPriceTools
             }
         }
 
-        void BindChartMinutePoints(Series series, StockPriceEntity[] stockPrices, int minute = 1)
+        void BindChartMinutePoints(Series series, StockPriceEntity[] stockPrices, int minute, DateTime startDate)
         {
-            var startTime = DateTime.Now.Date.AddHours(9);
+            var startTime = startDate.Date.AddHours(9);
             while (true)
             {
                 var endTime = startTime.AddMinutes(minute);
@@ -683,7 +694,7 @@ namespace StockPriceTools
                 if (start.CompareTo("15:00") >= 0) break;
                 if (end.CompareTo("15:00") >= 0) end = "15:00";
 
-                var items = stockPrices.Where(c => c.DealDate == DateTime.Now.ToString("yyyy-MM-dd") && c.DealTime.CompareTo(start) >= 0 && c.DealTime.CompareTo(end) <= 0).ToArray();
+                var items = stockPrices.Where(c => c.DealDate == startDate.ToString("yyyy-MM-dd") && c.DealTime.CompareTo(start) >= 0 && c.DealTime.CompareTo(end) <= 0).ToArray();
                 if (items.Length > 0)
                 {
                     //var maxPrice = items.Average(c => c.TodayMaxPrice);
@@ -691,7 +702,7 @@ namespace StockPriceTools
                     //var startPrice = items.Average(c => c.TodayStartPrice);
                     var endPrice = items.Average(c => c.UDPer);
                     //series.Points.AddXY(end, maxPrice, minPrice, startPrice, endPrice);
-                    series.Points.AddXY($"{endTime.ToString("yy-MM-dd HH:mm")}", endPrice);
+                    series.Points.AddXY($"{endTime.ToString("yy/MM/dd HH:mm")}", endPrice);
                 }
                 startTime = endTime;
             }
@@ -970,7 +981,7 @@ namespace StockPriceTools
                 var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
                 var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
 
-                RemindService.Handle(stockCode, rtype, target);
+                StockRemindService.Handle(stockCode, rtype, target);
             }
             this.LoadRemindList(stockCode);
         }
@@ -993,7 +1004,7 @@ namespace StockPriceTools
                 var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
                 var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
 
-                RemindService.Cancel(stockCode, rtype, target);
+                StockRemindService.Cancel(stockCode, rtype, target);
             }
             this.LoadRemindList(stockCode);
         }
@@ -1098,6 +1109,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }

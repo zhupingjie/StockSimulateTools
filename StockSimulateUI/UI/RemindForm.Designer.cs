@@ -39,16 +39,17 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtAccount = new System.Windows.Forms.ComboBox();
             this.btnRemindAll = new System.Windows.Forms.Button();
+            this.btnOKAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(468, 298);
+            this.btnOK.Location = new System.Drawing.Point(517, 298);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(131, 53);
+            this.btnOK.Size = new System.Drawing.Size(82, 53);
             this.btnOK.TabIndex = 3;
-            this.btnOK.Text = "确认";
+            this.btnOK.Text = "设置";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -137,11 +138,23 @@
             this.btnRemindAll.UseVisualStyleBackColor = true;
             this.btnRemindAll.Click += new System.EventHandler(this.btnRemindAll_Click);
             // 
+            // btnOKAll
+            // 
+            this.btnOKAll.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnOKAll.Location = new System.Drawing.Point(382, 298);
+            this.btnOKAll.Name = "btnOKAll";
+            this.btnOKAll.Size = new System.Drawing.Size(129, 53);
+            this.btnOKAll.TabIndex = 60;
+            this.btnOKAll.Text = "全部设置";
+            this.btnOKAll.UseVisualStyleBackColor = true;
+            this.btnOKAll.Click += new System.EventHandler(this.btnOKAll_Click);
+            // 
             // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(631, 369);
+            this.Controls.Add(this.btnOKAll);
             this.Controls.Add(this.btnRemindAll);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtAccount);
@@ -173,5 +186,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox txtAccount;
         private System.Windows.Forms.Button btnRemindAll;
+        private System.Windows.Forms.Button btnOKAll;
     }
 }

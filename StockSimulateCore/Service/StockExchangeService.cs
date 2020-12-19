@@ -72,6 +72,11 @@ namespace StockSimulateCore.Service
                     TotalBuyAmount = exchangeInfo.Qty * exchangeInfo.Price,
                     Cost = exchangeInfo.Price
                 };
+                if (stock.LockDay > 0)
+                {
+                    accountStock.LockQty = exchangeInfo.Qty;
+                    accountStock.LockDate = DateTime.Now.Date;
+                }
                 SQLiteDBUtil.Instance.Insert<AccountStockEntity>(accountStock);
             }
             else
@@ -79,6 +84,21 @@ namespace StockSimulateCore.Service
                 accountStock.HoldQty += exchange.Qty;
                 accountStock.TotalBuyAmount += exchange.Amount;
                 accountStock.Cost = Math.Round(accountStock.TotalBuyAmount / accountStock.HoldQty, 2);
+                if (stock.LockDay > 0)
+                {
+                    if (accountStock.LockDate.HasValue)
+                    {
+                        if(accountStock.LockDate < DateTime.Now.Date)
+                        {
+                            accountStock.LockQty  = exchangeInfo.Qty;
+                            accountStock.LockDate = DateTime.Now.Date;
+                        }
+                        else 
+                        {
+                            accountStock.LockQty += exchangeInfo.Qty;
+                        }
+                    }
+                }
                 SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStock);
             }
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]买入[{stock.Name}]{exchange.Qty}股({exchange.Price})合计{exchange.Amount}元,请注意!";

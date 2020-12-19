@@ -23,7 +23,7 @@ namespace StockSimulateCore.Config
 
         public int RemindStockStrategyInterval { get; set; } = 30;
 
-        public int RemindStockPriceFloatPer { get; set; } = 2;
+        public decimal RemindStockPriceFloatPer { get; set; } = 2;
 
         public int UpdateAccountStockProfitInterval { get; set; } = 5 * 60;
     }

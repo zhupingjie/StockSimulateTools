@@ -74,6 +74,9 @@ namespace StockSimulateCore.Entity
         [Description("预测结果")]
         public string Advise { get; set; }
 
+        [Description("交易锁定(天)")]
+        public int LockDay { get; set; }
+
         [Description("总股本(亿股)")]
         public decimal Capital { get; set; }
 

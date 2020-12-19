@@ -23,7 +23,7 @@ namespace StockPriceTools.UI
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            var stockCode = $"{this.txtType.Text}{this.textBox1.Text.Trim()}";
+            var stockCode = $"{this.txtType.Text}{this.txtCode.Text.Trim()}";
             if (string.IsNullOrEmpty(stockCode)) return;
 
             var stockInfo = EastMoneyUtil.GetStockPrice(stockCode);
@@ -34,6 +34,7 @@ namespace StockPriceTools.UI
             {
                 //类型
                 stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
+                stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
 
                 Repository.Insert<StockEntity>(stockInfo.Stock);
 
@@ -44,26 +45,26 @@ namespace StockPriceTools.UI
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (this.textBox1.Text.Length > 6) this.textBox1.Text = this.textBox1.Text.Substring(0, 6);
-            if (this.textBox1.Text.StartsWith("6"))
+            if (this.txtCode.Text.Length > 6) this.txtCode.Text = this.txtCode.Text.Substring(0, 6);
+            if (this.txtCode.Text.StartsWith("6"))
             {
                 this.txtType.Text = "SH";
                 this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
-            if (this.textBox1.Text.StartsWith("0"))
+            if (this.txtCode.Text.StartsWith("0"))
             {
                 this.txtType.Text = "SZ";
                 this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
-            if (this.textBox1.Text.StartsWith("5"))
+            if (this.txtCode.Text.StartsWith("5"))
             {
                 this.txtType.Text = "ZS";
                 this.txtSType.Text = "基金(ETF)";
                 this.txtSTypeValue.Text = "1";
             }
-            if (this.textBox1.Text.StartsWith("1"))
+            if (this.txtCode.Text.StartsWith("1"))
             {
                 this.txtType.Text = "SZ";
                 this.txtSType.Text = "基金(ETF)";

@@ -29,9 +29,12 @@ namespace StockSimulateCore.Service
                 stockInfo.Stock.ID = stock.ID;
                 stockInfo.Stock.Type = stock.Type;
                 stockInfo.Stock.Target = stock.Target;
+                stockInfo.Stock.Safety = stock.Safety;
                 stockInfo.Stock.Foucs = stock.Foucs;
                 stockInfo.Stock.Growth = stock.Growth;
                 stockInfo.Stock.EPE = stock.EPE;
+                stockInfo.Stock.Advise = stock.Advise;
+                stockInfo.Stock.LockDay = stock.LockDay;
                 SQLiteDBUtil.Instance.Update<StockEntity>(stockInfo.Stock);
 
                 #region 更新当前股价

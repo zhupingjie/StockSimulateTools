@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewStockForm));
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtCode = new System.Windows.Forms.TextBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.txtType = new System.Windows.Forms.ComboBox();
             this.txtDay = new System.Windows.Forms.ComboBox();
@@ -38,15 +38,15 @@
             this.txtSTypeValue = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // textBox1
+            // txtCode
             // 
-            this.textBox1.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(277, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(155, 54);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "股票代码";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txtCode.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtCode.Location = new System.Drawing.Point(277, 12);
+            this.txtCode.Name = "txtCode";
+            this.txtCode.Size = new System.Drawing.Size(155, 54);
+            this.txtCode.TabIndex = 0;
+            this.txtCode.Text = "股票代码";
+            this.txtCode.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnOK
             // 
@@ -128,7 +128,7 @@
             this.Controls.Add(this.txtDay);
             this.Controls.Add(this.txtType);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtCode);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NewStockForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -142,7 +142,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtCode;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.ComboBox txtType;
         private System.Windows.Forms.ComboBox txtDay;

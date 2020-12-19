@@ -83,26 +83,11 @@ namespace StockSimulateCore.Service
 
             //推荐
             var advise = "等待";
-            if (wantPrice >= price * 1.4m)
-            {
-                advise = "重仓";
-            }
-            else if(wantPrice >= price * 1.2m)
-            {
-                advise = "买入";
-            }
-            else if(wantPrice >= price * 0.8m)
-            {
-                advise = "等待";
-            }
-            else if(wantPrice >= price * 0.6m)
-            {
-                advise = "卖出";
-            }
-            else
-            {
-                advise = "清仓";
-            }
+            if (price <= safePrice * 0.8m) advise = "重仓";
+            else if (price <= safePrice) advise = "买入";
+            else if (price > safePrice && price <= wantPrice) advise = "等待";
+            else if (price > wantPrice && price <= wantPrice * 1.2m) advise = "减仓";
+            else if (price > wantPrice * 1.2m) advise = "卖出";
 
             return new ValuateResultInfo()
             {

@@ -1,5 +1,6 @@
 ﻿using StockSimulateCore.Config;
 using StockSimulateCore.Entity;
+using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,6 @@ namespace StockSimulateUI.UI
     public partial class RemindForm : Form
     {
         private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
-        public string UDPer { get; set; }
-        public string UpPrice { get; set; }
-        public string DownPrice { get; set; }
-
         public string StockCode { get; set; }
 
         public RemindForm()
@@ -38,93 +35,14 @@ namespace StockSimulateUI.UI
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.UDPer = this.txtUDPer.Text;
-            this.UpPrice = this.txtUpPrice.Text;
-            this.DownPrice = this.txtDownPrice.Text;
-
             var accountName = this.txtAccount.Text;
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{accountName}'");
-            if (account == null) return;
+            if (string.IsNullOrEmpty(accountName)) return;
 
-            if (!string.IsNullOrEmpty(this.UDPer))
-            {
-                var udPers = ObjectUtil.GetSplitArray(this.UDPer, ",");
-                foreach (var udPer in udPers)
-                {
-                    var target = ObjectUtil.ToValue<decimal>(udPer, 0);
-                    if (target == 0) continue;
+            var uDPer = this.txtUDPer.Text;
+            var upPrice = this.txtUpPrice.Text;
+            var downPrice = this.txtDownPrice.Text;
 
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{StockCode}' and Target={udPer} and RType=0");
-                    if (remind == null)
-                    {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = StockCode,
-                            Target = target,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 0,
-                            StrategyName = "订阅",
-                            StrategyTarget = $"波动{target}%"
-                        };
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-            }
-            if (!string.IsNullOrEmpty(this.UpPrice))
-            {
-                var upPrices = ObjectUtil.GetSplitArray(this.UpPrice, ",");
-                foreach (var upPrice in upPrices)
-                {
-                    var target = ObjectUtil.ToValue<decimal>(upPrice, 0);
-                    if (target == 0) continue;
-
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{StockCode}' and Target={upPrice} and RType=1");
-                    if (remind == null)
-                    {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = StockCode,
-                            Target = target,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 0,
-                            StrategyName = "订阅",
-                            StrategyTarget = $"上涨至{target}"
-                        };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-            }
-            if (!string.IsNullOrEmpty(this.DownPrice))
-            {
-                var downPrices = ObjectUtil.GetSplitArray(this.DownPrice, ",");
-                foreach (var downPrice in downPrices)
-                {
-                    var target = ObjectUtil.ToValue<decimal>(downPrice, 0);
-                    if (target == 0) continue;
-
-                    var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{StockCode}' and Target={downPrice} and RType=1");
-                    if (remind == null)
-                    {
-                        remind = new RemindEntity()
-                        {
-                            StockCode = StockCode,
-                            Target = target,
-                            Email = account.Email,
-                            QQ = account.QQ,
-                            RType = 2,
-                            StrategyName = "订阅",
-                            StrategyTarget = $"下跌至{target}"
-                        };
-                        remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                        remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                        Repository.Insert<RemindEntity>(remind);
-                    }
-                }
-            }
+            StockRemindService.Create(accountName, StockCode, uDPer, upPrice, downPrice);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -133,30 +51,23 @@ namespace StockSimulateUI.UI
         private void btnRemindAll_Click(object sender, EventArgs e)
         {
             var accountName = this.txtAccount.Text;
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{accountName}'");
-            if (account == null) return;
+            if (string.IsNullOrEmpty(accountName)) return;
 
-            var reminds = new List<RemindEntity>();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
-            foreach (var stock in stocks)
-            {
-                var remind = Repository.QueryFirst<RemindEntity>($"StockCode='{stock.Code}' and Target={stock.Safety} and RType=2");
-                if (remind == null)
-                {
-                    remind = new RemindEntity()
-                    {
-                        StockCode = stock.Code,
-                        Target = stock.Safety,
-                        Email = account.Email,
-                        QQ = account.QQ,
-                        RType = 2,
-                        StrategyName = "订阅",
-                        StrategyTarget = $"下跌至{stock.Safety}"
-                    };
-                    reminds.Add(remind);
-                }
-            }
-            Repository.Insert<RemindEntity>(reminds.ToArray());
+            StockRemindService.AutoCreate(accountName);
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void btnOKAll_Click(object sender, EventArgs e)
+        {
+            var accountName = this.txtAccount.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
+
+            var uDPer = this.txtUDPer.Text;
+            if (string.IsNullOrEmpty(uDPer)) return;
+
+            StockRemindService.Create(accountName, uDPer);
 
             this.DialogResult = DialogResult.OK;
             this.Close();

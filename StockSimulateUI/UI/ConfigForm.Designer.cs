@@ -33,7 +33,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtUpdateAccountStockProfitInterval = new System.Windows.Forms.TextBox();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.txtRemindStockPriceFloatPer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -51,7 +50,6 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtUpdateAccountStockProfitInterval);
             this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Controls.Add(this.btnClose);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.txtRemindStockPriceFloatPer);
             this.panel1.Controls.Add(this.label4);
@@ -94,16 +92,6 @@
             this.btnOK.Text = "保存";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnClose.Location = new System.Drawing.Point(595, 388);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 41);
-            this.btnClose.TabIndex = 1;
-            this.btnClose.Text = "关闭";
-            this.btnClose.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -202,7 +190,6 @@
         private System.Windows.Forms.TextBox txtGatherStockMainTargetInterval;
         private System.Windows.Forms.TextBox txtGatherStockPriceInterval;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtRemindStockPriceFloatPer;

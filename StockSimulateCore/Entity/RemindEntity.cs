@@ -41,18 +41,12 @@ namespace StockSimulateCore.Entity
         [Description("策略名称")]
         public string StrategyName { get; set; }
 
-        [Description("策略点")]
+        [Description("策略买卖点")]
         public string StrategyTarget { get; set; }
 
         [Description("实际股价")]
         public decimal RemindPrice { get; set; }
-
-        [Description("提醒邮箱")]
-        public string Email { get; set; }
-
-        [Description("提醒QQ")]
-        public string QQ { get; set; }
-
+        
         [Description("是否执行")]
         [GridColumnIgnore]
         public bool Handled { get; set; }
@@ -66,11 +60,17 @@ namespace StockSimulateCore.Entity
             }
         }
 
-
         [Description("计划提醒时间")]
         public DateTime? PlanRemind { get; set; }
 
         [Description("最后提醒时间")]
         public DateTime? LastRemind { get; set; }
+
+
+        [Description("提醒邮箱")]
+        public string Email { get; set; }
+
+        [Description("提醒QQ")]
+        public string QQ { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace StockSimulateCore.Entity
         [Description("买卖策略")]
         public string Strategy { get; set; }
 
-        [Description("买卖点")]
+        [Description("买卖交易点")]
         public string Target { get; set; }
 
         [Description("最后成交时间")]
