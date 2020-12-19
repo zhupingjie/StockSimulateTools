@@ -215,5 +215,16 @@ namespace StockSimulateCore.Utils
             else if (name.Contains("(")) length = length - 1;
             return length <= 2 ? 50 : length <= 3 ? 55 : length <= 4 ? 70 : length <= 6 ? 90 : length <= 8 ? 100 : 120;
         }
+
+        public static string FormatMoney(decimal value)
+        {
+            var mil = value / 100000000m;
+            if (Math.Abs(mil) >= 1) return $"{Math.Round(mil, 2)}亿";
+
+            var ten = value / 10000m;
+            if (Math.Abs(ten) >= 1) return $"{Math.Round(ten, 2)}万";
+
+            return $"{Math.Round(value, 2)}元";
+        }
     }
 }

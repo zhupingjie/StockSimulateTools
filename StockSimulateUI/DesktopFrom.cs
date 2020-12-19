@@ -131,7 +131,7 @@ namespace StockPriceTools
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    if (ObjectUtil.EffectStockDealTime())
+                    //if (ObjectUtil.EffectStockDealTime())
                     {
                         StockGatherService.GatherFinanceData((message) =>
                         {
@@ -831,6 +831,62 @@ namespace StockPriceTools
             }
         }
 
+        void LoadBalanceTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var balanceTargets = Repository.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            //var dt = ObjectUtil.ConvertTable(mainTargets);
+            var dt = EastMoneyUtil.ConvertBalanceTargetData(balanceTargets);
+            this.gridBalanceTargetList.DataSource = null;
+            this.gridBalanceTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridBalanceTargetList.ColumnCount; i++)
+            {
+                this.gridBalanceTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridBalanceTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridBalanceTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadProfitTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var profitTargets = Repository.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            //var dt = ObjectUtil.ConvertTable(mainTargets);
+            var dt = EastMoneyUtil.ConvertProfitTargetData(profitTargets);
+            this.gridProfitTargetList.DataSource = null;
+            this.gridProfitTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridProfitTargetList.ColumnCount; i++)
+            {
+                this.gridProfitTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridProfitTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridProfitTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadCashTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var cashTargets = Repository.QueryAll<CashTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            //var dt = ObjectUtil.ConvertTable(mainTargets);
+            var dt = EastMoneyUtil.ConvertCashTargetData(cashTargets);
+            this.gridCashTargetList.DataSource = null;
+            this.gridCashTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridCashTargetList.ColumnCount; i++)
+            {
+                this.gridCashTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridCashTargetList.Columns[i].Width = 250;
+                else
+                {
+                    this.gridCashTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
 
         /// <summary>
         /// 历史股价列表点击
@@ -924,6 +980,15 @@ namespace StockPriceTools
                 case 6:
                     this.LoadMainTargetInfo(stockCode);
                     break;
+                case 7:
+                    this.LoadBalanceTargetInfo(stockCode);
+                    break;
+                case 8:
+                    this.LoadProfitTargetInfo(stockCode);
+                    break;
+                case 9:
+                    this.LoadCashTargetInfo(stockCode);
+                    break;
             }
         }
 
@@ -959,10 +1024,106 @@ namespace StockPriceTools
 
             if (this.txtByQuarter.Checked)
             {
-                this.LoadMainTargetInfo(stockCode, 2);
+                this.LoadCashTargetInfo(stockCode, 2);
+            }
+        }
+
+        private void txtByReportOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByReportOfZCFZB.Checked)
+            {
+                this.LoadBalanceTargetInfo(stockCode, 1, 1);
+            }
+        }
+
+        private void txtByYearOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByYearOfZCFZB.Checked)
+            {
+                this.LoadBalanceTargetInfo(stockCode, 1, 1);
+            }
+        }
+
+        private void txtByReportOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByReportOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(stockCode, 1, 1);
+            }
+        }
+
+        private void txtByYearOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByYearOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(stockCode, 1, 1);
+            }
+        }
+
+        private void txtByQuarterOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByQuarterOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(stockCode, 1, 1);
             }
         }
         
+        private void txtByReportOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByReportOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(stockCode, 0, 1);
+            }
+        }
+
+        private void txtByYearOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByYearOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(stockCode, 1, 1);
+            }
+        }
+
+        private void txtByQuarterOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.txtByQuarterOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(stockCode, 0, 2);
+            }
+        }
+
         private void btnHandleRemind_Click(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;

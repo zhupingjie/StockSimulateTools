@@ -103,6 +103,44 @@ namespace StockSimulateCore.Service
                     {
                         item.ExecuteOK = result.Success ? 1 : 2;
                         item.Message = result.Message;
+
+                        //检测是否需要生成Next策略
+                        if (result.Success)
+                        {
+                            //差价交易
+                            if(item.StrategyInfoType == typeof(TExchangeStrategyInfo).FullName && !string.IsNullOrEmpty(item.StrategySource))
+                            {
+                                var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(item.StrategySource) as TExchangeStrategyInfo;
+                                if (strategyInfo != null)
+                                {
+                                    if (item.BuyQty > 0)
+                                    {
+                                        strategyInfo.ActualSingleBuy += 1;
+                                        strategyInfo.ActualSingleSale = 0;
+
+                                        if (strategyInfo.ActualSingleBuy <= strategyInfo.MaxSingleBS)
+                                        {
+                                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
+                                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                                        }
+                                    }
+                                    if (item.SaleQty > 0)
+                                    {
+                                        strategyInfo.ActualSingleSale += 1;
+                                        strategyInfo.ActualSingleBuy = 0;
+
+                                        if (strategyInfo.ActualSingleSale <= strategyInfo.MaxSingleBS)
+                                        {
+                                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
+                                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                                        }
+                                    }
+
+                                    //删除批策略号的对立数据
+                                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{item.BatchNo}'");
+                                }
+                            }
+                        }
                     }
                 }
                 SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
@@ -146,9 +184,10 @@ namespace StockSimulateCore.Service
         /// <param name="actionLog"></param>
         public static void GatherFinanceData(Action<string> actionLog)
         {
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code like 'SZ%' or Code like 'SH%'");
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
             foreach (var stock in stocks)
             {
+                #region 主要指标
                 var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
                 if (mainTargetInfos.Length > 0)
                 {
@@ -186,6 +225,115 @@ namespace StockSimulateCore.Service
                     }
                 }
                 actionLog($"已采集[{stock.Name}]主要指标数据...");
+                #endregion
+
+                #region 资产负债表
+                var balanceTargetInfos = EastMoneyUtil.GetBalanceTargets(stock.Code, 0, 1);
+                if (balanceTargetInfos.Length > 0)
+                {
+                    var dates = balanceTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = balanceTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<BalanceTargetEntity>(newMts);
+                    }
+                }
+                balanceTargetInfos = EastMoneyUtil.GetBalanceTargets(stock.Code, 1, 1);
+                if (balanceTargetInfos.Length > 0)
+                {
+                    var dates = balanceTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = balanceTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<BalanceTargetEntity>(newMts);
+                    }
+                }
+                actionLog($"已采集[{stock.Name}]资产负债表数据...");
+                #endregion
+
+                #region 利润表
+                var profitTargetInfos = EastMoneyUtil.GetProfitTargets(stock.Code, 0, 1);
+                if (profitTargetInfos.Length > 0)
+                {
+                    var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<ProfitTargetEntity>(newMts);
+                    }
+                }
+                profitTargetInfos = EastMoneyUtil.GetProfitTargets(stock.Code, 1, 1);
+                if (profitTargetInfos.Length > 0)
+                {
+                    var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<ProfitTargetEntity>(newMts);
+                    }
+                }
+                profitTargetInfos = EastMoneyUtil.GetProfitTargets(stock.Code, 0, 2);
+                if (profitTargetInfos.Length > 0)
+                {
+                    var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<ProfitTargetEntity>(newMts);
+                    }
+                }
+                actionLog($"已采集[{stock.Name}]利润表数据...");
+                #endregion
+
+                #region 现金流量表
+                var cashTargetInfos = EastMoneyUtil.GetCashTargets(stock.Code, 0, 1);
+                if(cashTargetInfos.Length > 0)
+                {
+                    var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<CashTargetEntity>(newMts);
+                    }
+                }
+                cashTargetInfos = EastMoneyUtil.GetCashTargets(stock.Code, 1, 1);
+                if (cashTargetInfos.Length > 0)
+                {
+                    var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<CashTargetEntity>(newMts);
+                    }
+                }
+                cashTargetInfos = EastMoneyUtil.GetCashTargets(stock.Code, 0, 2);
+                if (cashTargetInfos.Length > 0)
+                {
+                    var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
+                    var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
+                    if (newMts.Length > 0)
+                    {
+                        SQLiteDBUtil.Instance.Insert<CashTargetEntity>(newMts);
+                    }
+                }
+                actionLog($"已采集[{stock.Name}]现金流量表数据...");
+                #endregion
             }
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }

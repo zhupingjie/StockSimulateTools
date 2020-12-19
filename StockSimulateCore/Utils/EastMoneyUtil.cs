@@ -84,14 +84,14 @@ namespace StockSimulateCore.Utils
 
         #region 财务主要指标
 
-        public static MainTargetEntity[] GetMainTargets(string stockCode, int type)
+        public static MainTargetEntity[] GetMainTargets(string stockCode, int rtype)
         {
             try
             {
                 var josnParam = ServiceStack.Text.JsonSerializer.SerializeToString(new
                 {
-                    type = type,
-                    code = stockCode
+                    type = rtype,
+                    code = stockCode,
                 });
                 var retStr = "http://f10.eastmoney.com/NewFinanceAnalysis/MainTargetAjax".PostJsonToUrl(josnParam, requestFilter =>
                 {
@@ -104,7 +104,7 @@ namespace StockSimulateCore.Utils
                     result.ToList().ForEach(x =>
                     {
                         x.StockCode = stockCode;
-                        x.Rtype = type;
+                        x.Rtype = rtype;
                     });
                 }
                 return result;
@@ -127,33 +127,12 @@ namespace StockSimulateCore.Utils
             dt.Columns.Add("平均增长");
             dt.Columns.Add("近期增长");
 
-            //基本每股收益
-            BuildTargetRow(dt, "Jbmgsy", dates, data);
-            //每股净资产(元)
-            BuildTargetRow(dt, "Mgjzc", dates, data);
-            //每股公积金(元)
-            BuildTargetRow(dt, "Mggjj", dates, data);
-            //每股未分配利润(元)
-            BuildTargetRow(dt, "Mgwfply", dates, data);
-            //每股经营现金流(元)
-            BuildTargetRow(dt, "Mgjyxjl", dates, data);
-            //营业总收入(元)
-            BuildTargetRow(dt, "Yyzsr", dates, data);
-            //归属净利润(元)
-            BuildTargetRow(dt, "Gsjlr", dates, data);
-            //扣非净利润(元)
-            BuildTargetRow(dt, "Kfjlr", dates, data);
-            //营业总收入同比增长(%)
-            BuildTargetRow(dt, "Yyzsrtbzz", dates, data);
-            //归属净利润同比增长(%)
-            BuildTargetRow(dt, "Gsjlrtbzz", dates, data);
-            //毛利率(%)
-            BuildTargetRow(dt, "Mll", dates, data);
-            //净利率(%)
-            BuildTargetRow(dt, "Jll", dates, data);
-            //资产负债率(%)
-            BuildTargetRow(dt, "Zcfzl", dates, data);
-
+            var preps = typeof(MainTargetEntity).GetProperties();
+            foreach (var prep in preps)
+            {
+                if (new string[] { "ID", "LastDate", "StockCode", "Rtype", "RtypeText", "Date" }.Contains(prep.Name)) continue;
+                BuildTargetRow(dt, prep.Name, dates, data);
+            }
             return dt;
         }
 
@@ -193,6 +172,226 @@ namespace StockSimulateCore.Utils
             {
                 dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
                 dr["近期增长"] = $"{percent.FirstOrDefault()}%";
+            }
+            dt.Rows.Add(dr);
+        }
+
+        #endregion
+
+        #region 现金流量表
+        public static CashTargetEntity[] GetCashTargets(string stockCode, int rtype, int type, string endDate = "")
+        {
+            try
+            {
+                var josnParam = ServiceStack.Text.JsonSerializer.SerializeToString(new
+                {
+                    reportDateType = rtype,
+                    reportType = type,
+                    code = stockCode,
+                    companyType = 4,
+                    endDate
+                });
+                var retStr = "http://f10.eastmoney.com/NewFinanceAnalysis/xjllbAjax".PostJsonToUrl(josnParam, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                retStr = retStr.Substring(1);
+                retStr = retStr.Substring(0, retStr.Length - 1);
+                retStr = retStr.Replace("\\\"", "\"");
+                var result = ServiceStack.Text.JsonSerializer.DeserializeFromString<CashTargetEntity[]>(retStr);
+                if (result != null)
+                {
+                    result.ToList().ForEach(x =>
+                    {
+                        x.SECURITYCODE = stockCode;
+                        x.REPORTDATETYPE = rtype;
+                        x.REPORTDATE = Convert.ToDateTime(x.REPORTDATE).ToString("yyyy-MM-dd");
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new CashTargetEntity[] { };
+            }
+        }
+
+        public static DataTable ConvertCashTargetData(CashTargetEntity[] data)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("指标");
+            var dates = data.Where(c => !string.IsNullOrEmpty(c.REPORTDATE)).GroupBy(c => c.REPORTDATE).Select(c => c.Key).OrderByDescending(c => c).ToArray();
+            foreach (var date in dates)
+            {
+                dt.Columns.Add(date);
+            }
+
+            var preps = typeof(CashTargetEntity).GetProperties();
+            foreach(var prep in preps)
+            {
+                if (new string[] { "ID", "LastDate", "SECURITYCODE", "REPORTTYPE", "REPORTDATETYPE", "TYPE", "CURRENCY", "REPORTDATE" }.Contains(prep.Name)) continue;
+                BuildTargetRow(dt, prep.Name, dates, data);
+            }
+            return dt;
+        }
+
+        static void BuildTargetRow(DataTable dt, string field, string[] dates, CashTargetEntity[] data)
+        {
+            var dr = dt.NewRow();
+            dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(CashTargetEntity), field);
+            foreach (var date in dates)
+            {
+                var item = data.FirstOrDefault(c => c.REPORTDATE == date);
+
+                var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
+                dr[date] = ObjectUtil.FormatMoney(value);
+            }
+            dt.Rows.Add(dr);
+        }
+
+        #endregion
+
+        #region 资产负债表
+
+        public static BalanceTargetEntity[] GetBalanceTargets(string stockCode, int rtype, int type, string endDate = "")
+        {
+            try
+            {
+                var josnParam = ServiceStack.Text.JsonSerializer.SerializeToString(new
+                {
+                    reportDateType = rtype,
+                    reportType = type,
+                    code = stockCode,
+                    companyType = 4,
+                    endDate
+                });
+                var retStr = "http://f10.eastmoney.com/NewFinanceAnalysis/zcfzbAjax".PostJsonToUrl(josnParam, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                retStr = retStr.Substring(1);
+                retStr = retStr.Substring(0, retStr.Length - 1);
+                retStr = retStr.Replace("\\\"", "\"");
+                var result = ServiceStack.Text.JsonSerializer.DeserializeFromString<BalanceTargetEntity[]>(retStr);
+                if (result != null)
+                {
+                    result.ToList().ForEach(x =>
+                    {
+                        x.SECURITYCODE = stockCode;
+                        x.REPORTDATETYPE = rtype;
+                        x.REPORTDATE = Convert.ToDateTime(x.REPORTDATE).ToString("yyyy-MM-dd");
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new BalanceTargetEntity[] { };
+            }
+        }
+
+        public static DataTable ConvertBalanceTargetData(BalanceTargetEntity[] data)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("指标");
+            var dates = data.Where(c => !string.IsNullOrEmpty(c.REPORTDATE)).GroupBy(c => c.REPORTDATE).Select(c => c.Key).OrderByDescending(c => c).ToArray();
+            foreach (var date in dates)
+            {
+                dt.Columns.Add(date);
+            }
+
+            var preps = typeof(BalanceTargetEntity).GetProperties();
+            foreach (var prep in preps)
+            {
+                if (new string[] { "ID", "LastDate", "SECURITYCODE", "REPORTTYPE", "REPORTDATETYPE", "TYPE", "CURRENCY", "REPORTDATE" }.Contains(prep.Name)) continue;
+                BuildTargetRow(dt, prep.Name, dates, data);
+            }
+            return dt;
+        }
+
+        static void BuildTargetRow(DataTable dt, string field, string[] dates, BalanceTargetEntity[] data)
+        {
+            var dr = dt.NewRow();
+            dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(BalanceTargetEntity), field);
+            foreach (var date in dates)
+            {
+                var item = data.FirstOrDefault(c => c.REPORTDATE == date);
+
+                var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
+                dr[date] = ObjectUtil.FormatMoney(value);
+            }
+            dt.Rows.Add(dr);
+        }
+
+        #endregion
+
+        #region 利润表
+        public static ProfitTargetEntity[] GetProfitTargets(string stockCode, int rtype, int type, string endDate = "")
+        {
+            try
+            {
+                var josnParam = ServiceStack.Text.JsonSerializer.SerializeToString(new
+                {
+                    reportDateType = rtype,
+                    reportType = type,
+                    code = stockCode,
+                    companyType = 4,
+                    endDate
+                });
+                var retStr = "http://f10.eastmoney.com/NewFinanceAnalysis/lrbAjax".PostJsonToUrl(josnParam, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                retStr = retStr.Substring(1);
+                retStr = retStr.Substring(0, retStr.Length - 1);
+                retStr = retStr.Replace("\\\"", "\"");
+                var result = ServiceStack.Text.JsonSerializer.DeserializeFromString<ProfitTargetEntity[]>(retStr);
+                if (result != null)
+                {
+                    result.ToList().ForEach(x =>
+                    {
+                        x.SECURITYCODE = stockCode;
+                        x.REPORTDATETYPE = rtype;
+                        x.REPORTDATE = Convert.ToDateTime(x.REPORTDATE).ToString("yyyy-MM-dd");
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ProfitTargetEntity[] { };
+            }
+        }
+
+        public static DataTable ConvertProfitTargetData(ProfitTargetEntity[] data)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("指标");
+            var dates = data.Where(c => !string.IsNullOrEmpty(c.REPORTDATE)).GroupBy(c => c.REPORTDATE).Select(c => c.Key).OrderByDescending(c => c).ToArray();
+            foreach (var date in dates)
+            {
+                dt.Columns.Add(date);
+            }
+
+            var preps = typeof(ProfitTargetEntity).GetProperties();
+            foreach (var prep in preps)
+            {
+                if (new string[] { "ID", "LastDate", "SECURITYCODE", "REPORTTYPE", "REPORTDATETYPE", "TYPE", "CURRENCY", "REPORTDATE" }.Contains(prep.Name)) continue;
+                BuildTargetRow(dt, prep.Name, dates, data);
+            }
+            return dt;
+        }
+
+        static void BuildTargetRow(DataTable dt, string field, string[] dates, ProfitTargetEntity[] data)
+        {
+            var dr = dt.NewRow();
+            dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(ProfitTargetEntity), field);
+            foreach (var date in dates)
+            {
+                var item = data.FirstOrDefault(c => c.REPORTDATE == date);
+
+                var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
+                dr[date] = ObjectUtil.FormatMoney(value);
             }
             dt.Rows.Add(dr);
         }

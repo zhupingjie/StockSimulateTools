@@ -122,7 +122,10 @@
     <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Config\SenderMailConfig.cs" />
     <Compile Include="Entity\AccountEntity.cs" />
+    <Compile Include="Entity\BalanceTargetEntity.cs" />
+    <Compile Include="Entity\CashTargetEntity.cs" />
     <Compile Include="Entity\GlobalConfigEntity.cs" />
+    <Compile Include="Entity\ProfitTargetEntity.cs" />
     <Compile Include="Entity\RemindEntity.cs" />
     <Compile Include="Entity\AccountStockEntity.cs" />
     <Compile Include="Entity\BaseEntity.cs" />

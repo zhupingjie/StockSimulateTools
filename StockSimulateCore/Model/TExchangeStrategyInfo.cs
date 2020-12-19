@@ -38,5 +38,14 @@ namespace StockSimulateCore.Model
 
         [Description("股价下跌达到终止")]
         public decimal MinPriceStop { get; set; }
+
+        [Description("实际单向低吸次数")]
+        public int ActualSingleBuy { get; set; }
+
+        [Description("实际单向高抛次数")]
+        public int ActualSingleSale { get; set; }
+
+        [Description("实际匹配失败次数")]
+        public int ActualErrorMatch { get; set; }
     }
 }

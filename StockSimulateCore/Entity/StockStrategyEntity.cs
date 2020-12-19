@@ -33,7 +33,7 @@ namespace StockSimulateCore.Entity
             }
         }
 
-        [Description("买卖点")]
+        [Description("策略买卖点")]
         public string Target { get; set; }
 
         [Description("条件")]
@@ -98,5 +98,14 @@ namespace StockSimulateCore.Entity
 
         [Description("异常信息")]
         public string Message { get; set; }
+
+        [Description("批策略号")]
+        public string BatchNo { get; set; }
+
+        [Description("策略源类型")]
+        public string StrategyInfoType { get; set; }
+
+        [Description("策略源内容")]
+        public string StrategySource { get; set; }
     }
 }

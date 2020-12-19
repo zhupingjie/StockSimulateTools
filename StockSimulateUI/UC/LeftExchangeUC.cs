@@ -37,6 +37,8 @@ namespace StockSimulateUI.UC
             this.dataGridView1.DataSource = dt.DefaultView;
             for (var i = 0; i < this.dataGridView1.Columns.Count; i++)
             {
+                this.dataGridView1.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
                 var columnName = this.dataGridView1.Columns[i].Name;
                 this.dataGridView1.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
             }

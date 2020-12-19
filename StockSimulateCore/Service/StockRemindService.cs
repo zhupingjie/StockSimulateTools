@@ -21,7 +21,7 @@ namespace StockSimulateCore.Service
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
             {
-                Create(account, stock.Code, strUPPer, null, null, true);
+                Create(account, stock, strUPPer, null, null, true);
             }
         }
 
@@ -30,17 +30,22 @@ namespace StockSimulateCore.Service
             var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
-            Create(account, stockCode, strUPPer, strUPPrice, strDOWNPrice, batchCreate);
+            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            Create(account, stock, strUPPer, strUPPrice, strDOWNPrice, batchCreate);
         }
 
-        public static void Create(AccountEntity account, string stockCode, string strUPPer, string strUPPrice, string strDOWNPrice, bool batchCreate = false)
+        public static void Create(AccountEntity account, StockEntity stock, string strUPPer, string strUPPrice, string strDOWNPrice, bool batchCreate = false)
         {
+            var decNum = stock.Type == 0 ? 2 : 3;
+
             var reminds = new List<RemindEntity>();
             if (!string.IsNullOrEmpty(strUPPer))
             {
                 if (!batchCreate)
                 {
-                    SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stockCode}' and StrategyName='主动设置' and RType=0");
+                    SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
                 }
                 var udPers = ObjectUtil.GetSplitArray(strUPPer, ",");
                 foreach (var udPer in udPers)
@@ -50,7 +55,7 @@ namespace StockSimulateCore.Service
 
                     var remind = new RemindEntity()
                     {
-                        StockCode = stockCode,
+                        StockCode = stock.Code,
                         Target = target,
                         Email = account.Email,
                         QQ = account.QQ,
@@ -63,7 +68,7 @@ namespace StockSimulateCore.Service
             }
             if (!string.IsNullOrEmpty(strUPPrice))
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stockCode}' and StrategyName='主动设置' and RType=1");
+                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=1");
 
                 var upPrices = ObjectUtil.GetSplitArray(strUPPrice, ",");
                 foreach (var upPrice in upPrices)
@@ -73,7 +78,7 @@ namespace StockSimulateCore.Service
 
                     var remind = new RemindEntity()
                     {
-                        StockCode = stockCode,
+                        StockCode = stock.Code,
                         Target = target,
                         Email = account.Email,
                         QQ = account.QQ,
@@ -81,15 +86,15 @@ namespace StockSimulateCore.Service
                         StrategyName = "主动设置",
                         StrategyTarget = $"上涨至{target}"
                     };
-                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
+                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
+                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
 
                     reminds.Add(remind);
                 }
             }
             if (!string.IsNullOrEmpty(strDOWNPrice))
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stockCode}' and StrategyName='主动设置' and RType=2");
+                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=2");
 
                 var downPrices = ObjectUtil.GetSplitArray(strDOWNPrice, ",");
                 foreach (var downPrice in downPrices)
@@ -99,7 +104,7 @@ namespace StockSimulateCore.Service
 
                     var remind = new RemindEntity()
                     {
-                        StockCode = stockCode,
+                        StockCode = stock.Code,
                         Target = target,
                         Email = account.Email,
                         QQ = account.QQ,
@@ -107,8 +112,8 @@ namespace StockSimulateCore.Service
                         StrategyName = "主动设置",
                         StrategyTarget = $"下跌至{target}"
                     };
-                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
+                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
+                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
                     reminds.Add(remind);
                 }
             }
@@ -124,6 +129,8 @@ namespace StockSimulateCore.Service
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
             foreach (var stock in stocks)
             {
+                var decNum = stock.Type == 0 ? 2 : 3;
+
                 var remind = new RemindEntity()
                 {
                     StockCode = stock.Code,
@@ -134,8 +141,8 @@ namespace StockSimulateCore.Service
                     StrategyName = "自动设置",
                     StrategyTarget = $"下跌至{stock.Safety}"
                 };
-                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
-                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), 2);
+                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
+                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
                 reminds.Add(remind);
             }
             SQLiteDBUtil.Instance.Delete<RemindEntity>($"StrategyName='自动设置' and RType=2");

@@ -38,13 +38,23 @@ namespace StockSimulateCore.Service
             return stockStrategys.ToArray();
         }
 
-        static List<StockStrategyEntity> MakeLeftExchangeStrategys(LeftExchangeStrategyInfo strategy)
+        public static List<StockStrategyEntity> MakeLeftExchangeStrategys(LeftExchangeStrategyInfo strategy)
         {
+            var stockStrategys = new List<StockStrategyEntity>();
+
+            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
+            if (account == null) return stockStrategys;
+
+            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            if (stock == null) return stockStrategys;
+
+            var decNum = stock.Type == 0 ? 2 : 3;
+
             decimal buyPrice = strategy.BuyPrice;
             decimal buyAmount = strategy.BuyAmount;
             decimal maxBuyAmount = strategy.TotalBuyAmount;
             int buyCount = GetExchangeCount(Math.Floor(buyAmount / buyPrice));
-            decimal totalBuyAmount = Math.Round(buyCount * buyPrice, 2);
+            decimal totalBuyAmount = Math.Round(buyCount * buyPrice, decNum);
             int hasCount = buyCount;
             decimal totalDownPercent = 0;
             decimal downPer = 0;
@@ -52,13 +62,8 @@ namespace StockSimulateCore.Service
             decimal salePrice = strategy.SalePrice;
             int saleCount = 0;
             decimal saleAmount = 0;
+
             decimal profit = 0;
-
-            var stockStrategys = new List<StockStrategyEntity>();
-
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
-            if (account == null) return stockStrategys;
-
             stockStrategys.Add(new StockStrategyEntity()
             {
                 StrategyName = strategy.Name,
@@ -82,7 +87,7 @@ namespace StockSimulateCore.Service
 
             while (true)
             {
-                decimal thsBuyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), 2);
+                decimal thsBuyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), decNum);
                 decimal thsBuyAmount = strategy.IncreaseAmount;
 
                 totalDownPercent += Math.Abs(strategy.IncreasePricePer);
@@ -95,15 +100,15 @@ namespace StockSimulateCore.Service
                     thsBuyAmount = strategy.IncreaseAmount * (1 + strategy.IncreaseMaxAmountPer / 100);
                 }
                 buyCount = GetExchangeCount(Math.Floor(thsBuyAmount / thsBuyPrice));
-                thsBuyAmount = Math.Round(buyCount * thsBuyPrice, 2);
+                thsBuyAmount = Math.Round(buyCount * thsBuyPrice, decNum);
 
                 if (totalBuyAmount + thsBuyAmount >= maxBuyAmount) break;
 
-                buyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), 2);
+                buyPrice = Math.Round(buyPrice * (1 + strategy.IncreasePricePer / 100), decNum);
                 totalBuyAmount += thsBuyAmount;
                 downPer += strategy.IncreasePricePer;
                 hasCount += buyCount;
-                cost = Math.Round(totalBuyAmount / hasCount, 2);
+                cost = Math.Round(totalBuyAmount / hasCount, decNum);
 
                 stockStrategys.Add(new StockStrategyEntity()
                 {
@@ -135,7 +140,7 @@ namespace StockSimulateCore.Service
                 upPer += Math.Abs(strategy.IncreasePricePer);
                 lastPer = downPer + upPer;
 
-                buyPrice = Math.Round(buyPrice * (1 + -1 * strategy.IncreasePricePer / 100), 2);
+                buyPrice = Math.Round(buyPrice * (1 + -1 * strategy.IncreasePricePer / 100), decNum);
                 if (buyPrice > salePrice)
                 {
                     saleCount = GetExchangeCount(hasCount * strategy.ReducePositionPer / 100);
@@ -145,7 +150,7 @@ namespace StockSimulateCore.Service
                     totalBuyAmount -= saleAmount;
                     profit += saleAmount;
                     if (hasCount == 0) cost = 0;
-                    else cost = Math.Round(totalBuyAmount / hasCount, 2);
+                    else cost = Math.Round(totalBuyAmount / hasCount, decNum);
                 }
 
                 stockStrategys.Add(new StockStrategyEntity()
@@ -183,20 +188,25 @@ namespace StockSimulateCore.Service
                     StrategyName = detail.StrategyName,
                     StrategyTarget = detail.Target
                 };
-                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), 2);
-                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), 2);
+                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                 SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
             }
             return stockStrategys;
         }
-        static List<StockStrategyEntity> MakeTExchangeStrategys(TExchangeStrategyInfo strategy)
+        public static List<StockStrategyEntity> MakeTExchangeStrategys(TExchangeStrategyInfo strategy)
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
             var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
             if (account == null) return stockStrategys;
 
-            var buyPrice = Math.Round((1 + strategy.ReducePricePer / 100m) * strategy.BasePrice, 2);
+            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            if (stock == null) return stockStrategys;
+
+            var batchNo = DateTime.Now.Ticks.ToString();
+            var decNum = stock.Type == 0 ? 2 : 3;
+            var buyPrice = Math.Round((1 + strategy.ReducePricePer / 100m) * strategy.BasePrice, decNum);
             stockStrategys.Add(new StockStrategyEntity()
             {
                 StrategyName = strategy.Name,
@@ -210,14 +220,12 @@ namespace StockSimulateCore.Service
                 BuyAmount = buyPrice * strategy.BSQty,
                 SaleQty = 0,
                 SaleAmount = 0,
-                HoldQty = strategy.HoldQty + strategy.BSQty,
-                HoldAmount = strategy.BasePrice * strategy.HoldQty + buyPrice * strategy.BSQty,
-                TotalBuyAmount = buyPrice * strategy.BSQty,
-                FloatAmount = 0,
-                Cost = buyPrice,
-                Profit = 0
+                BatchNo = batchNo,
+                StrategyInfoType = typeof(TExchangeStrategyInfo).FullName,
+                StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
             });
-            var salePrice = Math.Round((1 + strategy.IncreasePricePer / 100m) * strategy.BasePrice, 2);
+
+            var salePrice = Math.Round((1 + strategy.IncreasePricePer / 100m) * strategy.BasePrice, decNum);
             stockStrategys.Add(new StockStrategyEntity()
             {
                 StrategyName = strategy.Name,
@@ -231,13 +239,29 @@ namespace StockSimulateCore.Service
                 BuyAmount = 0,
                 SaleQty = strategy.BSQty,
                 SaleAmount = salePrice * strategy.BSQty,
-                HoldQty = strategy.HoldQty - strategy.BSQty,
-                HoldAmount = strategy.BasePrice * strategy.HoldQty - salePrice * strategy.BSQty,
-                TotalBuyAmount = strategy.BasePrice * strategy.HoldQty - salePrice * strategy.BSQty,
-                FloatAmount = 0,
-                Cost = buyPrice,
-                Profit = 0
+                BatchNo = batchNo,
+                StrategyInfoType = typeof(TExchangeStrategyInfo).FullName,
+                StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
             });
+
+            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 1 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
+            foreach (var detail in stockReminds)
+            {
+                var remind = new RemindEntity()
+                {
+                    StockCode = strategy.StockCode,
+                    Target = detail.Price,
+                    RType = detail.BuyQty > 0 ? 8 : 9,
+                    Email = account.Email,
+                    QQ = account.QQ,
+                    StrategyName = detail.StrategyName,
+                    StrategyTarget = detail.Target
+                };
+                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+            }
+
             return stockStrategys;
         }
         static int GetExchangeCount(decimal amount)

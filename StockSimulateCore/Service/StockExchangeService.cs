@@ -30,7 +30,7 @@ namespace StockSimulateCore.Service
                 result.Message = $"股票代码[{exchangeInfo.StockCode}]不存在";
                 return result;
             }
-
+            var decNum = stock.Type == 0 ? 2 : 3;
             var buyAmount = exchangeInfo.Qty * exchangeInfo.Price;
             if(buyAmount > account.Cash)
             {
@@ -83,7 +83,7 @@ namespace StockSimulateCore.Service
             {
                 accountStock.HoldQty += exchange.Qty;
                 accountStock.TotalBuyAmount += exchange.Amount;
-                accountStock.Cost = Math.Round(accountStock.TotalBuyAmount / accountStock.HoldQty, 2);
+                accountStock.Cost = Math.Round(accountStock.TotalBuyAmount / accountStock.HoldQty, decNum);
                 if (stock.LockDay > 0)
                 {
                     if (accountStock.LockDate.HasValue)
