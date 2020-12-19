@@ -175,7 +175,7 @@ namespace StockSimulateCore.Service
                 });
             }
 
-            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 1 && c.BuyQty > 0).ToArray();
+            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && c.BuyQty > 0).ToArray();
             foreach (var detail in stockReminds)
             {
                 var remind = new RemindEntity()
@@ -244,7 +244,7 @@ namespace StockSimulateCore.Service
                 StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
             });
 
-            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 1 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
+            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
             foreach (var detail in stockReminds)
             {
                 var remind = new RemindEntity()

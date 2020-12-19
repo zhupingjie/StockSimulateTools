@@ -29,7 +29,7 @@ namespace StockSimulateCore.Entity
         {
             get
             {
-                return ExecuteMode == 0 ? "买卖点提醒" : ExecuteMode == 1 ? "自动模拟交易" : "";
+                return ExecuteMode == 0 ? "买卖提醒" : ExecuteMode == 1 ? "自动交易" : "";
             }
         }
 
