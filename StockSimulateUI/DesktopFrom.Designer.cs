@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -67,8 +67,7 @@
             this.tabPriceChart = new System.Windows.Forms.TabPage();
             this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.btnWeekChart = new System.Windows.Forms.Button();
-            this.btnMonthChart = new System.Windows.Forms.Button();
+            this.btnWebChart = new System.Windows.Forms.Button();
             this.btnMinuteChart = new System.Windows.Forms.Button();
             this.btnDayChart = new System.Windows.Forms.Button();
             this.tabPriceList = new System.Windows.Forms.TabPage();
@@ -453,7 +452,7 @@
             // txtETF
             // 
             this.txtETF.AutoSize = true;
-            this.txtETF.Location = new System.Drawing.Point(147, 7);
+            this.txtETF.Location = new System.Drawing.Point(143, 7);
             this.txtETF.Name = "txtETF";
             this.txtETF.Size = new System.Drawing.Size(77, 16);
             this.txtETF.TabIndex = 2;
@@ -475,7 +474,7 @@
             // txtAllStock
             // 
             this.txtAllStock.AutoSize = true;
-            this.txtAllStock.Location = new System.Drawing.Point(230, 7);
+            this.txtAllStock.Location = new System.Drawing.Point(223, 7);
             this.txtAllStock.Name = "txtAllStock";
             this.txtAllStock.Size = new System.Drawing.Size(47, 16);
             this.txtAllStock.TabIndex = 0;
@@ -562,11 +561,11 @@
             // 
             // chartPrice
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea6);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
+            legend6.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend6);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -576,8 +575,7 @@
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.btnWeekChart);
-            this.panel9.Controls.Add(this.btnMonthChart);
+            this.panel9.Controls.Add(this.btnWebChart);
             this.panel9.Controls.Add(this.btnMinuteChart);
             this.panel9.Controls.Add(this.btnDayChart);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
@@ -586,27 +584,16 @@
             this.panel9.Size = new System.Drawing.Size(842, 29);
             this.panel9.TabIndex = 48;
             // 
-            // btnWeekChart
+            // btnWebChart
             // 
-            this.btnWeekChart.BackColor = System.Drawing.Color.White;
-            this.btnWeekChart.Location = new System.Drawing.Point(106, 3);
-            this.btnWeekChart.Name = "btnWeekChart";
-            this.btnWeekChart.Size = new System.Drawing.Size(49, 23);
-            this.btnWeekChart.TabIndex = 6;
-            this.btnWeekChart.Text = "周时图";
-            this.btnWeekChart.UseVisualStyleBackColor = false;
-            this.btnWeekChart.Click += new System.EventHandler(this.btnWeekChart_Click);
-            // 
-            // btnMonthChart
-            // 
-            this.btnMonthChart.BackColor = System.Drawing.Color.White;
-            this.btnMonthChart.Location = new System.Drawing.Point(155, 3);
-            this.btnMonthChart.Name = "btnMonthChart";
-            this.btnMonthChart.Size = new System.Drawing.Size(52, 23);
-            this.btnMonthChart.TabIndex = 5;
-            this.btnMonthChart.Text = "月时图";
-            this.btnMonthChart.UseVisualStyleBackColor = false;
-            this.btnMonthChart.Click += new System.EventHandler(this.btnMonthChart_Click);
+            this.btnWebChart.BackColor = System.Drawing.Color.White;
+            this.btnWebChart.Location = new System.Drawing.Point(106, 3);
+            this.btnWebChart.Name = "btnWebChart";
+            this.btnWebChart.Size = new System.Drawing.Size(79, 23);
+            this.btnWebChart.TabIndex = 6;
+            this.btnWebChart.Text = "在线走势图";
+            this.btnWebChart.UseVisualStyleBackColor = false;
+            this.btnWebChart.Click += new System.EventHandler(this.btnWebChart_Click);
             // 
             // btnMinuteChart
             // 
@@ -1417,8 +1404,7 @@
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.Button btnMinuteChart;
         private System.Windows.Forms.Button btnDayChart;
-        private System.Windows.Forms.Button btnMonthChart;
-        private System.Windows.Forms.Button btnWeekChart;
+        private System.Windows.Forms.Button btnWebChart;
         private System.Windows.Forms.DataGridView gridStockList;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.RadioButton txtETF;

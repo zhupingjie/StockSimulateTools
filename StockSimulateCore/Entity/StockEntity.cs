@@ -20,7 +20,7 @@ namespace StockSimulateCore.Entity
         {
             get
             {
-                return Type == 0 ? "沪深股" : Type == 1 ? "基金(ETF)" : "";
+                return Type == 0 ? "沪深股" : Type == 1 ? "基金(ETF)" : Type == 2 ? "指数" : "";
             }
         }
 

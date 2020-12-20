@@ -1,10 +1,12 @@
-﻿using ServiceStack.Text;
+﻿using Microsoft.Win32;
+using ServiceStack.Text;
 using StockSimulateCore.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -225,6 +227,56 @@ namespace StockSimulateCore.Utils
             if (Math.Abs(ten) >= 1) return $"{Math.Round(ten, 2)}万";
 
             return $"{Math.Round(value, 2)}元";
+        }
+
+        public static void OpenBrowserUrl(string url)
+        {
+            try
+            {
+                // 64位注册表路径
+                var openKey = @"SOFTWARE\Wow6432Node\Google\Chrome";
+                if (IntPtr.Size == 4)
+                {
+                    // 32位注册表路径
+                    openKey = @"SOFTWARE\Google\Chrome";
+                }
+                RegistryKey appPath = Registry.LocalMachine.OpenSubKey(openKey);
+                // 谷歌浏览器就用谷歌打开，没找到就用系统默认的浏览器
+                // 谷歌卸载了，注册表还没有清空，程序会返回一个"系统找不到指定的文件。"的bug
+                if (appPath != null)
+                {
+                    var result = Process.Start("chrome.exe", url);
+                    if (result == null)
+                    {
+                        OpenIe(url);
+                    }
+                }
+                else
+                {
+                    var result = Process.Start("chrome.exe", url);
+                    if (result == null)
+                    {
+                        OpenIe(url);
+                    }
+                }
+            }
+            catch
+            {
+                //出错调用IE
+                OpenIe(url);
+            }
+        }
+
+        /// <summary>
+        /// 用IE打开浏览器
+        /// </summary>
+        /// <param name="url"></param>
+        public static void OpenIe(string url)
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "iexplore.exe";   //IE浏览器，可以更换
+            process.StartInfo.Arguments = url;
+            process.Start();
         }
     }
 }

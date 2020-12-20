@@ -1152,22 +1152,14 @@ namespace StockPriceTools
             this.LoadPriceChart(stockCode, 0);
         }
 
-        private void btnWeekChart_Click(object sender, EventArgs e)
+
+        private void btnWebChart_Click(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
 
-            this.LoadPriceChart(stockCode, 1);
-        }
-
-        private void btnMonthChart_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-
-            this.LoadPriceChart(stockCode, 2);
+            ObjectUtil.OpenBrowserUrl($"http://quote.eastmoney.com/concept/{stockCode}.html?from=classic");
         }
 
         private void btnMinuteChart_Click(object sender, EventArgs e)
@@ -1202,6 +1194,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }

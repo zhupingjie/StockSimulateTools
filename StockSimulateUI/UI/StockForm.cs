@@ -49,26 +49,26 @@ namespace StockPriceTools.UI
             if (this.txtCode.Text.StartsWith("6"))
             {
                 this.txtType.Text = "SH";
-                this.txtSType.Text = "沪深股";
+                this.txtSType.Text = "沪深";
                 this.txtSTypeValue.Text = "0";
             }
             if (this.txtCode.Text.StartsWith("0"))
             {
                 this.txtType.Text = "SZ";
-                this.txtSType.Text = "沪深股";
+                this.txtSType.Text = "沪深";
                 this.txtSTypeValue.Text = "0";
             }
             if (this.txtCode.Text.StartsWith("5"))
             {
-                this.txtType.Text = "ZS";
-                this.txtSType.Text = "基金(ETF)";
+                this.txtType.Text = "SH";
+                this.txtSType.Text = "ETF";
                 this.txtSTypeValue.Text = "1";
             }
             if (this.txtCode.Text.StartsWith("1"))
             {
                 this.txtType.Text = "SZ";
-                this.txtSType.Text = "基金(ETF)";
-                this.txtSTypeValue.Text = "1";
+                this.txtSType.Text = "指数";
+                this.txtSTypeValue.Text = "2";
             }
         }
 
