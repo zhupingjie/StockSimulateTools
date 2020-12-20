@@ -12,6 +12,7 @@ namespace StockSimulateCore.Entity
         public int ID { get; set; }
 
         [Description("最后更新时间")]
+        [GridColumnIgnore]
         public DateTime LastDate { get; set; } = DateTime.Now;
     }
 }

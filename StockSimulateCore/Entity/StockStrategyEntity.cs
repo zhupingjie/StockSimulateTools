@@ -100,12 +100,15 @@ namespace StockSimulateCore.Entity
         public string Message { get; set; }
 
         [Description("批策略号")]
+        [GridColumnIgnore]
         public string BatchNo { get; set; }
 
         [Description("策略源类型")]
+        [GridColumnIgnore]
         public string StrategyInfoType { get; set; }
 
         [Description("策略源内容")]
+        [GridColumnIgnore]
         public string StrategySource { get; set; }
     }
 }

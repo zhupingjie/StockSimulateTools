@@ -124,8 +124,8 @@ namespace StockSimulateCore.Utils
             {
                 dt.Columns.Add(date);
             }
-            dt.Columns.Add("平均增长");
-            dt.Columns.Add("近期增长");
+            //dt.Columns.Add("平均增长");
+            //dt.Columns.Add("近期增长");
 
             var preps = typeof(MainTargetEntity).GetProperties();
             foreach (var prep in preps)
@@ -142,37 +142,37 @@ namespace StockSimulateCore.Utils
             var dr = dt.NewRow();
             dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(MainTargetEntity), field);//"基本每股收益(元)";
 
-            var vals = new List<decimal>();
-            var percent = new List<decimal>();
+            //var vals = new List<decimal>();
+            //var percent = new List<decimal>();
             foreach (var date in dates)
             {
                 var item = data.FirstOrDefault(c => c.Date == date);
 
                 var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
                 dr[date] = value;
-                if (vals.Count == 0)
-                {
-                    vals.Add(value);
-                }
-                else if (vals.Count == 1)
-                {
-                    if (value != 0)
-                    {
-                        var p = Math.Round((vals.FirstOrDefault() - value) / value, 2) * 100;
-                        percent.Add(p);
-                    }
-                    else
-                    {
-                        percent.Add(0);
-                    }
-                    vals.Clear();
-                }
+                //if (vals.Count == 0)
+                //{
+                //    vals.Add(value);
+                //}
+                //else if (vals.Count == 1)
+                //{
+                //    if (value != 0)
+                //    {
+                //        var p = Math.Round((vals.FirstOrDefault() - value) / value, 2) * 100;
+                //        percent.Add(p);
+                //    }
+                //    else
+                //    {
+                //        percent.Add(0);
+                //    }
+                //    vals.Clear();
+                //}
             }
-            if (percent.Count > 0)
-            {
-                dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
-                dr["近期增长"] = $"{percent.FirstOrDefault()}%";
-            }
+            //if (percent.Count > 0)
+            //{
+            //    dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
+            //    dr["近期增长"] = $"{percent.FirstOrDefault()}%";
+            //}
             dt.Rows.Add(dr);
         }
 

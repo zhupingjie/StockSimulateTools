@@ -1,4 +1,5 @@
-﻿using StockSimulateCore.Entity;
+﻿using StockSimulateCore.Config;
+using StockSimulateCore.Entity;
 using StockSimulateCore.Model;
 using StockSimulateCore.Utils;
 using System;
@@ -18,133 +19,23 @@ namespace StockSimulateCore.Service
         public static void GatherPriceData(Action<string> actionLog)
         {
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
-            var accountStocks = SQLiteDBUtil.Instance.QueryAll<AccountStockEntity>();
-            var stockStrategys = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
             foreach (var stock in stocks)
             {
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
                 if (stockInfo == null) continue;;
                 if (stockInfo.DayPrice.Price == 0) continue;
 
-                stockInfo.Stock.ID = stock.ID;
-                stockInfo.Stock.Type = stock.Type;
-                stockInfo.Stock.Target = stock.Target;
-                stockInfo.Stock.Safety = stock.Safety;
-                stockInfo.Stock.Foucs = stock.Foucs;
-                stockInfo.Stock.Growth = stock.Growth;
-                stockInfo.Stock.EPE = stock.EPE;
-                stockInfo.Stock.Advise = stock.Advise;
-                stockInfo.Stock.LockDay = stock.LockDay;
-                SQLiteDBUtil.Instance.Update<StockEntity>(stockInfo.Stock);
+                //更新当前股票信息
+                StockService.Update(stock, stockInfo);
 
-                #region 更新当前股价
-                var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
-                var price = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
-                if (price == null)
+                if (!RunningConfig.Instance.DebugMode)
                 {
-                    stockInfo.DayPrice.DealTime = "";
-                    SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                    //更新当前股价
+                    StockPriceService.Update(stock, stockInfo);
+
+                    //检测自动交易策略 
+                    StockStrategyService.CheckAutoRun(stock.Code, stockInfo.Stock.Price);
                 }
-                else
-                {
-                    stockInfo.DayPrice.ID = price.ID;
-                    stockInfo.DayPrice.DealTime = "";
-                    SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
-                }
-                if (stock.Foucs > 0)
-                {
-                    var dealTime = DateTime.Now.ToString("HH:mm");
-                    if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
-                    if (dealTime.CompareTo("09:25") <= 0) dealTime = "09:25";
-
-                    var price2 = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
-                    if (price2 == null)
-                    {
-                        stockInfo.DayPrice.DateType = 1;//分钟
-                        stockInfo.DayPrice.DealTime = dealTime;
-                        SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
-                    }
-                    else
-                    {
-                        stockInfo.DayPrice.ID = price2.ID;
-                        stockInfo.DayPrice.DateType = 1;//分钟
-                        stockInfo.DayPrice.DealTime = dealTime;
-                        SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
-                    }
-                }
-                #endregion
-
-                #region 检测自动交易策略
-                var runStrategys = stockStrategys.Where(c => c.StockCode == stock.Code
-                    && (c.Condition == 0 && c.Price >= stock.Price || c.Condition == 1 && c.Price <= stock.Price)
-                    && (c.BuyQty > 0 || c.SaleQty > 0))
-                .ToArray();
-                foreach (var item in runStrategys)
-                {
-                    var exchangeInfo = new ExchangeInfo()
-                    {
-                        AccountName = item.AccountName,
-                        StockCode = item.StockCode,
-                        StrategyName = item.StrategyName,
-                        Target = item.Target,
-                        Price = stockInfo.DayPrice.Price,
-                        Qty = item.BuyQty
-                    };
-                    ExchangeResultInfo result = null;
-                    if (item.BuyQty > 0)
-                    {
-                        result = StockExchangeService.Buy(exchangeInfo);
-                    }
-                    if (item.SaleQty > 0)
-                    {
-                        result = StockExchangeService.Sale(exchangeInfo);
-                    }
-                    if (result != null)
-                    {
-                        item.ExecuteOK = result.Success ? 1 : 2;
-                        item.Message = result.Message;
-
-                        //检测是否需要生成Next策略
-                        if (result.Success)
-                        {
-                            //差价交易
-                            if(item.StrategyInfoType == typeof(TExchangeStrategyInfo).FullName && !string.IsNullOrEmpty(item.StrategySource))
-                            {
-                                var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(item.StrategySource) as TExchangeStrategyInfo;
-                                if (strategyInfo != null)
-                                {
-                                    if (item.BuyQty > 0)
-                                    {
-                                        strategyInfo.ActualSingleBuy += 1;
-                                        strategyInfo.ActualSingleSale = 0;
-
-                                        if (strategyInfo.ActualSingleBuy <= strategyInfo.MaxSingleBS)
-                                        {
-                                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-                                        }
-                                    }
-                                    if (item.SaleQty > 0)
-                                    {
-                                        strategyInfo.ActualSingleSale += 1;
-                                        strategyInfo.ActualSingleBuy = 0;
-
-                                        if (strategyInfo.ActualSingleSale <= strategyInfo.MaxSingleBS)
-                                        {
-                                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-                                        }
-                                    }
-
-                                    //删除批策略号的对立数据
-                                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{item.BatchNo}'");
-                                }
-                            }
-                        }
-                    }
-                }
-                SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
-                #endregion
 
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
             }

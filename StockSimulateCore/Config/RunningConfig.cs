@@ -17,14 +17,34 @@ namespace StockSimulateCore.Config
             }
         }
 
+        /// <summary>
+        /// 调试模式
+        /// </summary>
+        public bool DebugMode { get; set; }
+
+        /// <summary>
+        /// 股票价格采集时间频率(秒)
+        /// </summary>
         public int GatherStockPriceInterval { get; set; } = 30;
 
-        public int GatherStockMainTargetInterval { get; set; } = 12 * 60 * 60;
+        /// <summary>
+        /// 股票财务指标采集时间频率(秒)
+        /// </summary>
+        public int GatherStockFinanceTargetInterval { get; set; } = 24 * 60 * 60;
 
+        /// <summary>
+        /// 股票策略提醒时间频率(秒)
+        /// </summary>
         public int RemindStockStrategyInterval { get; set; } = 30;
 
+        /// <summary>
+        /// 股票价格买卖点浮动比例(%)
+        /// </summary>
         public decimal RemindStockPriceFloatPer { get; set; } = 2;
 
+        /// <summary>
+        /// 股票持仓盈更新时间频率(秒)
+        /// </summary>
         public int UpdateAccountStockProfitInterval { get; set; } = 5 * 60;
     }
 }

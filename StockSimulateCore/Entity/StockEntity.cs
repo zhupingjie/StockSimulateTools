@@ -43,9 +43,11 @@ namespace StockSimulateCore.Entity
         public string Name { get; set; }
 
         [Description("股价")]
+        [GatherColumn]
         public decimal Price { get; set; }
 
         [Description("浮动(%)")]
+        [GatherColumn]
         public decimal UDPer { get; set; }
 
         [Description("安全股价")]
@@ -75,57 +77,92 @@ namespace StockSimulateCore.Entity
         public string Advise { get; set; }
 
         [Description("交易锁定(天)")]
+        [GridColumnIgnore]
         public int LockDay { get; set; }
 
         [Description("总股本(亿股)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal Capital { get; set; }
 
         [Description("总市值(亿元)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal Amount { get; set; }
 
         [Description("市盈率(动)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal PE { get; set; }
 
         [Description("市盈率(TTM)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal TTM { get; set; }
 
         [Description("市净率")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal PB { get; set; }
 
         [Description("市盈率增长率")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal PEG { get; set; }
 
         [Description("净资产收益率")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal ROE { get; set; }
 
         [Description("投入资本回报率")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal ROIC { get; set; }
 
         [Description("每股收益(元)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal EPS { get; set; }
 
         [Description("每股净资产(元)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal BVPS { get; set; }
 
         [Description("总营收(亿元)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal TotalRevenue { get; set; }
 
         [Description("净利润(亿元)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal NetProfit { get; set; }
 
         [Description("营收同比(%)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal RevenueGrewPer { get; set; }
 
         [Description("净利润同比(%)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal ProfitGrewPer { get; set; }
 
         [Description("毛利率(%)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal GrossRate { get; set; }
 
         [Description("净利率(%)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal NetRate { get; set; }
 
         [Description("负债率(%)")]
+        [GatherColumn]
+        [GridColumnIgnore]
         public decimal DebtRage { get; set; }
 
     }

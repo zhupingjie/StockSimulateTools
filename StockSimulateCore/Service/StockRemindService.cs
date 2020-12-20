@@ -168,5 +168,99 @@ namespace StockSimulateCore.Service
                 SQLiteDBUtil.Instance.Delete<RemindEntity>(remind);
             }
         }
+
+        public static void CheckAutoRun(Action<string> action)
+        {
+            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled='False'");
+            var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
+
+            foreach (var stock in stocks)
+            {
+                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && !c.Handled && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now));
+                if (remind != null)
+                {
+                    remind.Handled = true;
+                    remind.LastRemind = DateTime.Now;
+                    remind.RemindPrice = stock.Price;
+                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+
+                    var nextRemind = new RemindEntity()
+                    {
+                        RType = 0,
+                        StockCode = remind.StockCode,
+                        Target = remind.Target,
+                        Email = remind.Email,
+                        QQ = remind.QQ,
+                        PlanRemind = DateTime.Now.Date.AddDays(1)
+                    };
+                    SQLiteDBUtil.Instance.Insert<RemindEntity>(nextRemind);
+
+                    var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.UDPer > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
+
+                    MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                    action(message);
+                    action(message);
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
+                if (remind != null)
+                {
+                    var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已上涨高于股价[{remind.Target}],请注意!";
+
+                    MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                    action(message);
+                    action(message);
+
+                    remind.Handled = true;
+                    remind.LastRemind = DateTime.Now;
+                    remind.RemindPrice = stock.Price;
+                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
+                if (remind != null)
+                {
+                    var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
+
+                    MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                    action(message);
+                    action(message);
+
+                    remind.Handled = true;
+                    remind.LastRemind = DateTime.Now;
+                    remind.RemindPrice = stock.Price;
+                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                if (remind != null)
+                {
+                    var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.StrategyTarget} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+
+                    MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                    action(message);
+                    action(message);
+
+                    remind.LastRemind = DateTime.Now;
+                    remind.RemindPrice = stock.Price;
+                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                if (remind != null)
+                {
+                    var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.StrategyTarget} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
+
+                    MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                    action(message);
+                    action(message);
+
+                    remind.LastRemind = DateTime.Now;
+                    remind.RemindPrice = stock.Price;
+                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                }
+            }
+        }
     }
 }

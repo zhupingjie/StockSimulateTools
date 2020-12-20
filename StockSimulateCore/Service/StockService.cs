@@ -21,6 +21,39 @@ namespace StockSimulateCore.Service
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
 
+        public static void Update(StockEntity stock, StockInfo stockInfo)
+        {
+            var preps = typeof(StockEntity).GetProperties();
+            foreach(var prep in preps)
+            {
+                if (prep.GetCustomAttributes(typeof(GatherColumnAttribute), true).Length == 0) continue;
+
+                var prepValue = ObjectUtil.GetPropertyValue(stockInfo.Stock, prep.Name);
+
+                ObjectUtil.SetPropertyValue(stock, prep.Name, prepValue);
+            }
+            SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+        }
+
+        public static void Delete(string stockCode)
+        {
+            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock != null)
+            {
+                SQLiteDBUtil.Instance.Delete<StockEntity>(stock);
+            }
+            //var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
+            //if (stockStrategy != null)
+            //{
+            //    SQLiteDBUtil.Instance.Delete<AccountStockEntity>(stockStrategy);
+            //}
+            var stockStrategyDetails = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
+            if (stockStrategyDetails.Length > 0)
+            {
+                SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
+            }
+        }
+
         public static void SaveValuateResult(string stockCode, decimal target, decimal safety, decimal growth, decimal pe, string advise)
         {
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");

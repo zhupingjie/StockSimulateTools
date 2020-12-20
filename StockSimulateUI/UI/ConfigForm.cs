@@ -24,8 +24,9 @@ namespace StockSimulateUI.UI
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            RunningConfig.Instance.DebugMode = this.txtDebugMode.Checked;
             RunningConfig.Instance.GatherStockPriceInterval = ObjectUtil.ToValue<int>(this.txtGatherStockPriceInterval.Text, 0);
-            RunningConfig.Instance.GatherStockMainTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
+            RunningConfig.Instance.GatherStockFinanceTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<decimal>(this.txtRemindStockPriceFloatPer.Text, 0);
             RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
@@ -57,10 +58,11 @@ namespace StockSimulateUI.UI
         private void ConfigForm_Load(object sender, EventArgs e)
         {
             this.txtGatherStockPriceInterval.Text = $"{RunningConfig.Instance.GatherStockPriceInterval}";
-            this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockMainTargetInterval}";
+            this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockFinanceTargetInterval}";
             this.txtRemindStockStrategyInterval.Text = $"{RunningConfig.Instance.RemindStockStrategyInterval}";
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
             this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";
+            this.txtDebugMode.Checked = RunningConfig.Instance.DebugMode;
         }
     }
 }
