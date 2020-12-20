@@ -72,5 +72,9 @@ namespace StockSimulateCore.Entity
 
         [Description("市盈率(PE)")]
         public decimal PE { get; set; }
+
+        [Description("调试数据")]
+        [GridColumnIgnore]
+        public int Debug { get; set; }
     }
 }

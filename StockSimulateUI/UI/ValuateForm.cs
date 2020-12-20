@@ -114,7 +114,9 @@ namespace StockSimulateUI.UI
 
         private void btnValuateAll_Click(object sender, EventArgs e)
         {
-            var results = StockValuateService.Valuate();
+            var safety = ObjectUtil.ToValue<decimal>(this.txtSafePrice.Text, 0);
+
+            var results = StockValuateService.Valuate(safety);
             if(results.Length > 0)
             {
                 StockService.SaveValuateResult(results);

@@ -30,8 +30,8 @@ namespace StockSimulateCore.Entity
         [Description("持有市值(元)")]
         public decimal HoldAmount { get; set; }
 
-        [Description("买入总市值(元)")]
-        public decimal TotalBuyAmount { get; set; }
+        [Description("总市值(元)")]
+        public decimal TotalAmount { get; set; }
 
         [Description("成本(元)")]
         public decimal Cost { get; set; }

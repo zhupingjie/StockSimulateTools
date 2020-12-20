@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -126,6 +126,7 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -197,6 +198,7 @@
             this.btnAddRmind,
             this.toolStripSplitButton1,
             this.btnValuate,
+            this.btnDebug,
             this.toolStripSeparator3,
             this.btnConfig});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -560,11 +562,11 @@
             // 
             // chartPrice
             // 
-            chartArea5.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea5);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend5.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend5);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1134,7 +1136,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "数据";
-            this.columnHeader2.Width = 140;
+            this.columnHeader2.Width = 120;
             // 
             // tabPriceData
             // 
@@ -1171,7 +1173,7 @@
             // columnHeader6
             // 
             this.columnHeader6.Text = "数据";
-            this.columnHeader6.Width = 140;
+            this.columnHeader6.Width = 120;
             // 
             // tabStrategyData
             // 
@@ -1209,7 +1211,7 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "数据";
-            this.columnHeader4.Width = 140;
+            this.columnHeader4.Width = 120;
             // 
             // tabExchange
             // 
@@ -1246,7 +1248,17 @@
             // columnHeader8
             // 
             this.columnHeader8.Text = "数据";
-            this.columnHeader8.Width = 140;
+            this.columnHeader8.Width = 120;
+            // 
+            // btnDebug
+            // 
+            this.btnDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnDebug.Image = ((System.Drawing.Image)(resources.GetObject("btnDebug.Image")));
+            this.btnDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(60, 22);
+            this.btnDebug.Text = "策略调试";
+            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
             // 
             // DesktopFrom
             // 
@@ -1418,5 +1430,6 @@
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ToolStripButton btnValuate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton btnDebug;
     }
 }

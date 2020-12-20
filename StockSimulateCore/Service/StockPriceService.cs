@@ -48,5 +48,47 @@ namespace StockSimulateCore.Service
                 }
             }
         }
+
+        /// <summary>
+        /// 计算账户盈亏
+        /// </summary>
+        /// <param name="actionLog"></param>
+        public static void CalculateProfit(Action<string> actionLog)
+        {
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
+            var accountStocks = SQLiteDBUtil.Instance.QueryAll<AccountStockEntity>();
+            foreach (var stock in stocks)
+            {
+                var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
+                foreach (var item in accStocks)
+                {
+                    item.Price = stock.Price;
+                    item.HoldAmount = item.Price * item.HoldQty;
+                    item.Profit = item.HoldAmount - item.TotalAmount;
+
+                    if (item.TotalAmount == 0) item.UDPer = 0;
+                    else item.UDPer = Math.Round(item.Profit / item.HoldAmount * 100, 2);
+
+                    actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
+                }
+            }
+            SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
+
+            if (stocks.Length > 0) actionLog($">------------------------------------------------>");
+        }
+
+        public static void CalculateProfit(string accountName, string stockCode, decimal stockPrice)
+        {
+            var account = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
+            if (account == null) return;
+
+            account.Price = stockPrice;
+            account.HoldAmount = account.Price * account.HoldQty;
+            account.Profit = account.HoldAmount - account.TotalAmount;
+            if (account.TotalAmount == 0) account.UDPer = 0;
+            else account.UDPer = Math.Round(account.Profit / account.HoldAmount * 100, 2);
+
+            SQLiteDBUtil.Instance.Update<AccountStockEntity>(account);
+        }
     }
 }

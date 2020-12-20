@@ -11,13 +11,13 @@ namespace StockSimulateCore.Service
 {
     public class StockValuateService
     {
-        public static ValuateResultInfo[] Valuate()
+        public static ValuateResultInfo[] Valuate(decimal safeRate)
         {
             var result = new List<ValuateResultInfo>();
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
             foreach(var stock in stocks)
             {
-                var info = Valuate(stock.Code);
+                var info = Valuate(stock.Code, safeRate: safeRate);
                 if(info != null)
                 {
                     result.Add(info);

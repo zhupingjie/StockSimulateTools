@@ -47,5 +47,8 @@ namespace StockSimulateCore.Model
 
         [Description("实际匹配失败次数")]
         public int ActualErrorMatch { get; set; }
+
+        [Description("实际买卖价格")]
+        public decimal ActualPrice { get; set; }
     }
 }

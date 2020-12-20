@@ -15,5 +15,7 @@ namespace StockSimulateCore.Model
         public int Qty { get; set; }
         public decimal Price { get; set; }
 
+        public DateTime ExchangeTime { get; set; } = DateTime.Now;
+
     }
 }

@@ -34,7 +34,7 @@ namespace StockSimulateCore.Service
                     StockPriceService.Update(stock, stockInfo);
 
                     //检测自动交易策略 
-                    StockStrategyService.CheckAutoRun(stock.Code, stockInfo.Stock.Price);
+                    StockStrategyService.CheckAutoRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
                 }
 
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
@@ -42,32 +42,6 @@ namespace StockSimulateCore.Service
             if(stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
-        /// <summary>
-        /// 计算账户盈亏
-        /// </summary>
-        /// <param name="actionLog"></param>
-        public static void CalculateProfit(Action<string> actionLog)
-        {
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
-            var accountStocks = SQLiteDBUtil.Instance.QueryAll<AccountStockEntity>();
-            foreach (var stock in stocks)
-            {
-                var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
-                foreach (var item in accStocks)
-                {
-                    item.Price = stock.Price;
-                    item.HoldAmount = item.Price * item.HoldQty;
-                    item.Profit = item.HoldAmount - item.TotalBuyAmount;
-                    if (item.TotalBuyAmount == 0) item.UDPer = 0;
-                    else item.UDPer = Math.Round(item.Profit / item.TotalBuyAmount * 100, 2);
-
-                    actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
-                }
-            }
-            SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
-
-            if (stocks.Length > 0) actionLog($">------------------------------------------------>");
-        }
 
         /// <summary>
         /// 采集自选股财务数据

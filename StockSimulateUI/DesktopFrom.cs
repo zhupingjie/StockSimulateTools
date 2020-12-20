@@ -111,7 +111,7 @@ namespace StockPriceTools
                 {
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        StockGatherService.CalculateProfit((message) =>
+                        StockPriceService.CalculateProfit((message) =>
                         {
                             this.ActionLog(message);
                         });
@@ -245,6 +245,19 @@ namespace StockPriceTools
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.Show();
         }
+
+
+        private void btnDebug_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            var frm = new DebugForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.StockCode = stockCode;
+            frm.Show();
+        }
         #endregion
 
         #region 中间TabControl区域事件
@@ -324,7 +337,7 @@ namespace StockPriceTools
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            if(selectRow.Index > 0) this.CurrentStockListSelectedIndex = selectRow.Index;
+            if(selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
             Action act = delegate ()
             {
@@ -394,7 +407,7 @@ namespace StockPriceTools
         private void gridStockList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             this.gridStockList.ClearSelection();
-            if (CurrentStockListSelectedIndex > 0) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
+            if (CurrentStockListSelectedIndex >= 0) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
@@ -422,7 +435,7 @@ namespace StockPriceTools
             foreach(var prep in preps)
             {
                 if (prep.Name == "ID") continue;
-                if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
+                //if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
 
                 var desc = prep.Name;
                 var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
@@ -661,6 +674,23 @@ namespace StockPriceTools
                     this.gridStockStrategyList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 }
             }
+            for (var i = 0; i < this.gridStockStrategyList.Rows.Count; i++)
+            {
+                var row = this.gridStockStrategyList.Rows[i];
+                var value = ObjectUtil.ToValue<string>(row.Cells["执行结果"].Value, "");
+                if (value == "成功")
+                {
+                    this.gridStockStrategyList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                else if(value == "失败")
+                {
+                    this.gridStockStrategyList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    this.gridStockStrategyList.Rows[i].DefaultCellStyle.ForeColor = Color.Blue;
+                }
+            }
         }
 
         void LoadRemindList(string stockCode)
@@ -697,7 +727,7 @@ namespace StockPriceTools
 
         void LoadExchangeList(string stockCode)
         {
-            var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ExchangeTime desc", 60);
+            var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ID desc", 60);
             var dt = ObjectUtil.ConvertTable(exchangeOrders);
             this.gridExchangeList.DataSource = null;
             this.gridExchangeList.DataSource = dt.DefaultView;
@@ -1172,5 +1202,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }

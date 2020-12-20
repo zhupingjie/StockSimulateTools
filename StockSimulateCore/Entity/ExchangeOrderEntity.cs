@@ -27,11 +27,11 @@ namespace StockSimulateCore.Entity
         [Description("成交市值")]
         public decimal Amount { get; set; }
 
-        [Description("手续费")]
-        public decimal Charge { get; set; }
-
         [Description("持有数量")]
         public decimal HoldQty { get; set; }
+
+        [Description("成本")]
+        public decimal Cost { get; set; }
 
         [Description("买卖策略")]
         public string Strategy { get; set; }
