@@ -224,57 +224,90 @@ namespace StockSimulateUI.UI
 
         private void txtByReport_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByReport.Checked)
+            {
+                this.LoadMainTargetInfo(StockCode, 0);
+            }
         }
 
         private void txtByYear_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByYear.Checked)
+            {
+                this.LoadMainTargetInfo(StockCode, 1);
+            }
         }
 
         private void txtByQuarter_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByQuarter.Checked)
+            {
+                this.LoadCashTargetInfo(StockCode, 2);
+            }
         }
 
         private void txtByReportOfZCFZB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByReportOfZCFZB.Checked)
+            {
+                this.LoadBalanceTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByYearOfZCFZB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByYearOfZCFZB.Checked)
+            {
+                this.LoadBalanceTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByReportOfLRB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByReportOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByYearOfLRB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByYearOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByQuarterOfLRB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByQuarterOfLRB.Checked)
+            {
+                this.LoadProfitTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByReportOfXJLLB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByReportOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(StockCode, 0, 1);
+            }
         }
 
         private void txtByYearOfXJLLB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByYearOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(StockCode, 1, 1);
+            }
         }
 
         private void txtByQuarterOfXJLLB_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.txtByQuarterOfXJLLB.Checked)
+            {
+                this.LoadCashTargetInfo(StockCode, 0, 2);
+            }
         }
     }
 }

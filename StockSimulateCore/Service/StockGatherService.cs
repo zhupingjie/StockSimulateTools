@@ -52,6 +52,8 @@ namespace StockSimulateCore.Service
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
             foreach (var stock in stocks)
             {
+                if (!ObjectUtil.ColudGatherFinanceReport(stock.ReportDate)) continue;
+
                 #region 主要指标
                 var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
                 if (mainTargetInfos.Length > 0)
@@ -200,7 +202,7 @@ namespace StockSimulateCore.Service
                 actionLog($"已采集[{stock.Name}]现金流量表数据...");
                 #endregion
             }
-            if (stocks.Length > 0) actionLog($">------------------------------------------------>");
+            //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
     }
 }

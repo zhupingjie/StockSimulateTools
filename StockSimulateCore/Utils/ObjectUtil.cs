@@ -278,5 +278,30 @@ namespace StockSimulateCore.Utils
             process.StartInfo.Arguments = url;
             process.Start();
         }
+
+        public static bool ColudGatherFinanceReport(string reportDate)
+        {
+            var date = DateTime.Now.Date;
+            if (!DateTime.TryParse(reportDate, out date)) return false;
+
+            //等待一季报
+            if(date.Month == 12)
+            {
+                if (DateTime.Now.Date.Month != 4) return false;
+            }
+            else if(date.Month == 3)
+            {
+                if (DateTime.Now.Date.Month != 7 && DateTime.Now.Date.Month != 8) return false;
+            }
+            else if (date.Month == 6)
+            {
+                if (DateTime.Now.Date.Month != 10) return false;
+            }
+            else if (date.Month == 9)
+            {
+                if (DateTime.Now.Date.Month > 4) return false;
+            }
+            return true;
+        }
     }
 }
