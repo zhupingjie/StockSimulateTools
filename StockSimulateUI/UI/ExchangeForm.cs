@@ -65,15 +65,20 @@ namespace StockSimulateUI.UI
             var accountName = this.txtAccount.Text;
             if (string.IsNullOrEmpty(accountName)) return;
 
+            var strategyName = this.txtStrategyName.Text;
+            var strategyTarget = this.txtStrategyTarget.Text;
+
             //买入
-            if(this.DealType == 0)
+            if (this.DealType == 0)
             {
                 var result = StockExchangeService.Buy(new ExchangeInfo()
                 {
                     AccountName = accountName,
                     StockCode = StockCode,
                     Qty = this.DealQty,
-                    Price = this.DealPrice
+                    Price = this.DealPrice,
+                    StrategyName = strategyName,
+                    Target = strategyTarget
                 });
                 if (result.Success)
                 {
@@ -92,7 +97,9 @@ namespace StockSimulateUI.UI
                     AccountName = accountName,
                     StockCode = StockCode,
                     Qty = this.DealQty,
-                    Price = this.DealPrice
+                    Price = this.DealPrice,
+                    StrategyName = strategyName,
+                    Target = strategyTarget
                 });
                 if (result.Success)
                 {
@@ -126,6 +133,12 @@ namespace StockSimulateUI.UI
             if (this.DealType == 0)
             {
                 this.txtCouldExchange.Text = $"{account.Cash}";
+
+                var stockStrategys = Repository.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and ExecuteOK != 1");
+
+                this.txtStrategyName.Items.Clear();
+                this.txtStrategyName.Items.AddRange(stockStrategys.Select(c => c.StrategyName).Distinct().ToArray());
+
             }
             else
             {
@@ -144,6 +157,19 @@ namespace StockSimulateUI.UI
                     this.txtDealQty.Enabled = true;
                 }
             }
+        }
+
+        private void txtStrategyName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var strategyName = this.txtStrategyName.Text;
+            var accountName = this.txtAccount.Text;
+
+            if (string.IsNullOrEmpty(strategyName) || string.IsNullOrEmpty(accountName)) return;
+
+            var stockStrategys = Repository.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and StrategyName='{strategyName}' and Condition={this.DealType} and ExecuteOK != 1");
+
+            this.txtStrategyTarget.Items.Clear();
+            this.txtStrategyTarget.Items.AddRange(stockStrategys.Select(c => c.Target).Distinct().ToArray());
         }
     }
 }

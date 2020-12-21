@@ -31,7 +31,7 @@ namespace StockSimulateCore.Service
             price.UDPer = Math.Round((stockPrice - stock.Price) / stock.Price * 100, stock.Type == 0 ? 2 : 3);
             SQLiteDBUtil.Instance.Insert<StockPriceEntity>(price);
 
-            StockStrategyService.CheckAutoRun(stockCode, stockPrice, dealTime, accountName);
+            StockStrategyService.CheckRun(stockCode, stockPrice, dealTime, accountName);
             StockPriceService.CalculateProfit(accountName, stockCode, stockPrice);
         }
 

@@ -309,7 +309,11 @@ namespace StockPriceTools
 
         void LoadAccountStockList()
         {
-            var accountStocks = Repository.QueryAll<AccountStockEntity>();
+            var where = "HoldQty>0";
+            var search = this.txtAccountSearch.Text.Trim();
+            if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
+
+            var accountStocks = Repository.QueryAll<AccountStockEntity>(where);
             var dt = ObjectUtil.ConvertTable(accountStocks);
             this.gridAccountStockList.DataSource = null;
             this.gridAccountStockList.DataSource = dt.DefaultView;
@@ -320,6 +324,24 @@ namespace StockPriceTools
                 var columnName = this.gridAccountStockList.Columns[i].Name;
                 this.gridAccountStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
             }
+            for (var i = 0; i < this.gridAccountStockList.Rows.Count; i++)
+            {
+                var row = this.gridStockList.Rows[i];
+                var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
+                if (value > 0)
+                {
+                    this.gridAccountStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    this.gridAccountStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+            }
+            var totalAmount =  ObjectUtil.FormatMoney(accountStocks.Sum(c => c.TotalAmount));
+            var holdAmount = ObjectUtil.FormatMoney(accountStocks.Sum(c => c.HoldAmount));
+            var profit = ObjectUtil.FormatMoney(accountStocks.Sum(c => c.Profit));
+            this.lblAccountStockTotal.Text = $"总股票数:[{accountStocks.Length}]";
+            this.lblAccountStockInfo.Text = $"总投入市值【{totalAmount}】元，持有总市值【{holdAmount}】元，盈亏【{profit}】元";
         }
 
         private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
@@ -330,14 +352,15 @@ namespace StockPriceTools
             }
         }
 
-        private void gridStockList_SelectionChanged(object sender, EventArgs e)
+
+        private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
             this.lstBaseInfo.Items.Clear();
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            if(selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
+            if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
             Action act = delegate ()
             {
@@ -421,6 +444,17 @@ namespace StockPriceTools
                 this.Invoke(act);
             }
         }
+        private void txtAccountStock_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadAccountStockList();
+                };
+                this.Invoke(act);
+            }
+        }
         #endregion
 
         #region 右侧ListView区域事件
@@ -456,12 +490,12 @@ namespace StockPriceTools
         ///  加载走势图
         /// </summary>
         /// <param name="stockCode"></param>
-        /// <param name="timeType">0:日,1:周,2:月,3:分钟</param>
-        void LoadPriceChart(string stockCode, int timeType = 0)
+        /// <param name="dateType">0:日,1:分钟</param>
+        void LoadPriceChart(string stockCode, int dateType = 0)
         {
             var series = this.chartPrice.Series.FirstOrDefault();
             if (series == null) series = this.chartPrice.Series.Add("");
-            series.ChartType = timeType == 3? SeriesChartType.Line : SeriesChartType.Candlestick;
+            series.ChartType = dateType == 1? SeriesChartType.Line : SeriesChartType.Candlestick;
             series.BackSecondaryColor = Color.Green;
             series.Color = Color.Red;
             series.BorderWidth = 2;
@@ -471,12 +505,9 @@ namespace StockPriceTools
             series.ShadowColor = Color.Gray;
             series.ShadowOffset = 2;
 
-            var dateType = new int[] { 0, 1, 2 }.Contains(timeType) ? 0 : 1;
             var startDate = DateTime.Now.Date;
-            if (timeType == 0) startDate = startDate.AddMonths(-1);
-            else if (timeType == 1) startDate = startDate.AddDays(-5 * 30);
-            else if (timeType == 2) startDate = startDate.AddYears(-1);
-            else if(timeType == 3)
+            if (dateType == 0) startDate = startDate.AddMonths(-1);
+            else
             {
                 var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc", 1).FirstOrDefault();
                 if(lastDate != null)
@@ -487,7 +518,7 @@ namespace StockPriceTools
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
             stockPrices = stockPrices.OrderBy(c => c.ID).ToArray();
 
-            this.BindChartSeriesPoints(series, stockPrices, timeType, startDate);
+            this.BindChartSeriesPoints(series, stockPrices, dateType, startDate);
 
             var chartArea = this.chartPrice.ChartAreas[0];
             //chartArea.AxisY.Maximum = max;
@@ -505,33 +536,21 @@ namespace StockPriceTools
         }
 
         #region 加载走势图
-        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int timeType, DateTime startDate)
+        void BindChartSeriesPoints(Series series, StockPriceEntity[] stockPrices, int dateType, DateTime startDate)
         {
             series.Points.Clear();
 
-            if (timeType == 0)
+            if (dateType == 0)
             {
-                this.BindChartDayPoints(series, stockPrices);
-            }
-            else if (timeType == 1)
-            {
-                this.BindChartWeekPoints(series, stockPrices);
-            }
-            else if (timeType == 2)
-            {
-                this.BindChartMonthPoints(series, stockPrices);
-            }
-            else if (timeType == 3)
-            {
-                this.BindChartMinutePoints(series, stockPrices, 1, startDate);
+                this.BindChartDayPoints(series, stockPrices, dateType);
             }
             else
             {
-                this.BindChartMinutePoints(series, stockPrices, timeType, startDate);
+                this.BindChartMinutePoints(series, stockPrices, dateType, startDate);
             }
         }
 
-        void BindChartDayPoints(Series series, StockPriceEntity[] stockPrices)
+        void BindChartDayPoints(Series series, StockPriceEntity[] stockPrices, int dateType)
         {
             foreach (var item in stockPrices)
             {
@@ -540,58 +559,7 @@ namespace StockPriceTools
                 //series.Points.AddXY(xvalue, item.TodayEndPrice);
             }
         }
-
-        void BindChartWeekPoints(Series series, StockPriceEntity[] stockPrices)
-        {
-            for (var i = 29; i >= 0; i--)
-            {
-                var preDay = DateTime.Now.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)DateTime.Now.DayOfWeek - 1;
-                preDay = preDay + i * 7;
-                var startTime = DateTime.Now.Date.AddDays(-1 * preDay);
-                var endTime = startTime.AddDays(5);
-
-                var start = startTime.ToString("yyyy-MM-dd");
-                var end = endTime.ToString("yyyy-MM-dd");
-
-                var items = stockPrices.Where(c => c.DealDate.CompareTo(start) >= 0 && c.DealDate.CompareTo(end) <= 0).ToArray();
-                if (items.Length > 0)
-                {
-                    var maxPrice = items.Average(c => c.TodayMaxPrice);
-                    var minPrice = items.Average(c => c.TodayMinPrice);
-                    var startPrice = items.Average(c => c.TodayStartPrice);
-                    var endPrice = items.Average(c => c.TodayEndPrice);
-                    series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
-                    //series.Points.AddXY(start, endPrice);
-                }
-                startTime = endTime.AddDays(1);
-            }
-        }
-
-        void BindChartMonthPoints(Series series, StockPriceEntity[] stockPrices)
-        {
-            var startTime = DateTime.Now.Date.AddYears(-1).AddDays(-1 * DateTime.Now.Day + 1);
-            while (true)
-            {
-                var endTime = startTime.AddMonths(1).AddDays(-1);
-
-                var start = startTime.ToString("yyyy-MM-dd");
-                var end = endTime.ToString("yyyy-MM-dd");
-                if (start.CompareTo($"{DateTime.Now.Date.AddMonths(1).ToString("yyyy-MM-01")}") >= 0) break;
-
-                var items = stockPrices.Where(c => c.DealDate.CompareTo(start) >= 0 && c.DealDate.CompareTo(end) <= 0).ToArray();
-                if (items.Length > 0)
-                {
-                    var maxPrice = items.Average(c => c.TodayMaxPrice);
-                    var minPrice = items.Average(c => c.TodayMinPrice);
-                    var startPrice = items.Average(c => c.TodayStartPrice);
-                    var endPrice = items.Average(c => c.TodayEndPrice);
-                    series.Points.AddXY(start, maxPrice, minPrice, startPrice, endPrice);
-                    //series.Points.AddXY(start, endPrice);
-                }
-                startTime = endTime.AddDays(1);
-            }
-        }
-
+        
         void BindChartMinutePoints(Series series, StockPriceEntity[] stockPrices, int minute, DateTime startDate)
         {
             var startTime = startDate.Date.AddHours(9);
@@ -895,7 +863,7 @@ namespace StockPriceTools
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceChart(stockCode, 3);
+                    this.LoadPriceChart(stockCode, 1);
                     break;
                 case 2:
                     this.LoadPriceList(stockCode);
@@ -924,6 +892,7 @@ namespace StockPriceTools
             }
         }
 
+        #region 财务数据报告期切换
         private void txtByReport_CheckedChanged(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
@@ -1056,6 +1025,35 @@ namespace StockPriceTools
             }
         }
 
+        #endregion
+
+        private void btnDayChart_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            this.LoadPriceChart(stockCode, 0);
+        }
+
+        private void btnWebChart_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            ObjectUtil.OpenBrowserUrl($"http://quote.eastmoney.com/concept/{stockCode}.html?from=classic");
+        }
+
+        private void btnMinuteChart_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            this.LoadPriceChart(stockCode, 1);
+        }
+
         private void btnHandleRemind_Click(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
@@ -1074,7 +1072,7 @@ namespace StockPriceTools
                 var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
                 var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
 
-                StockRemindService.Handle(stockCode, rtype, target);
+                StockRemindService.Mark(stockCode, rtype, target);
             }
             this.LoadRemindList(stockCode);
         }
@@ -1100,6 +1098,52 @@ namespace StockPriceTools
                 StockRemindService.Cancel(stockCode, rtype, target);
             }
             this.LoadRemindList(stockCode);
+        }
+
+        private void btnRunStrategy_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.gridStockStrategyList.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show($"确认要标记选中的策略数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            for (var i = 0; i < this.gridStockStrategyList.SelectedRows.Count; i++)
+            {
+                var row = this.gridStockStrategyList.SelectedRows[i];
+
+                var strategyName = $"{row.Cells["策略名称"].Value}";
+                var target = $"{row.Cells["策略买卖点"].Value}";
+                var price = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
+
+                StockStrategyService.Mark(strategyName, stockCode, target, price);
+            }
+            this.LoadStockStrategyList(stockCode);
+        }
+
+        private void btnCancelStrategy_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            if (this.gridStockStrategyList.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show($"确认要取消选中的策略数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            for (var i = 0; i < this.gridStockStrategyList.SelectedRows.Count; i++)
+            {
+                var row = this.gridStockStrategyList.SelectedRows[i];
+
+                var strategyName = $"{row.Cells["策略名称"].Value}";
+                var target = $"{row.Cells["策略买卖点"].Value}";
+                var price = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
+
+                StockStrategyService.Cancel(strategyName, stockCode, target, price);
+            }
+            this.LoadStockStrategyList(stockCode);
         }
 
         private void btnBuyExchange_Click(object sender, EventArgs e)
@@ -1142,34 +1186,6 @@ namespace StockPriceTools
             }
         }
 
-
-        private void btnDayChart_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-
-            this.LoadPriceChart(stockCode, 0);
-        }
-
-
-        private void btnWebChart_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-
-            ObjectUtil.OpenBrowserUrl($"http://quote.eastmoney.com/concept/{stockCode}.html?from=classic");
-        }
-
-        private void btnMinuteChart_Click(object sender, EventArgs e)
-        {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-
-            this.LoadPriceChart(stockCode, 3);
-        }
         #endregion
 
         #region 操作日志事件

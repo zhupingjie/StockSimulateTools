@@ -42,6 +42,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtCouldExchange = new System.Windows.Forms.TextBox();
             this.lblCouldText = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtStrategyName = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtStrategyTarget = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtDealQty
@@ -87,7 +91,7 @@
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(436, 434);
+            this.btnOK.Location = new System.Drawing.Point(436, 569);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(131, 53);
             this.btnOK.TabIndex = 9;
@@ -179,11 +183,54 @@
             this.lblCouldText.TabIndex = 21;
             this.lblCouldText.Text = "可交易金额";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(94, 436);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(160, 46);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "交易策略";
+            // 
+            // txtStrategyName
+            // 
+            this.txtStrategyName.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtStrategyName.FormattingEnabled = true;
+            this.txtStrategyName.Location = new System.Drawing.Point(285, 428);
+            this.txtStrategyName.Name = "txtStrategyName";
+            this.txtStrategyName.Size = new System.Drawing.Size(282, 54);
+            this.txtStrategyName.TabIndex = 23;
+            this.txtStrategyName.SelectedIndexChanged += new System.EventHandler(this.txtStrategyName_SelectedIndexChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(59, 505);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(195, 46);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "策略买卖点";
+            // 
+            // txtStrategyTarget
+            // 
+            this.txtStrategyTarget.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtStrategyTarget.FormattingEnabled = true;
+            this.txtStrategyTarget.Location = new System.Drawing.Point(285, 497);
+            this.txtStrategyTarget.Name = "txtStrategyTarget";
+            this.txtStrategyTarget.Size = new System.Drawing.Size(282, 54);
+            this.txtStrategyTarget.TabIndex = 25;
+            // 
             // ExchangeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(623, 499);
+            this.ClientSize = new System.Drawing.Size(623, 634);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtStrategyTarget);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtStrategyName);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtCouldExchange);
             this.Controls.Add(this.lblCouldText);
@@ -220,5 +267,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCouldExchange;
         private System.Windows.Forms.Label lblCouldText;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox txtStrategyName;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox txtStrategyTarget;
     }
 }

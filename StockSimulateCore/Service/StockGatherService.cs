@@ -28,13 +28,13 @@ namespace StockSimulateCore.Service
                 //更新当前股票信息
                 StockService.Update(stock, stockInfo);
 
-                if (!RunningConfig.Instance.DebugMode)
+                if (ObjectUtil.EffectStockDealTime())
                 {
                     //更新当前股价
                     StockPriceService.Update(stock, stockInfo);
 
                     //检测自动交易策略 
-                    StockStrategyService.CheckAutoRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
+                    StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
                 }
 
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");

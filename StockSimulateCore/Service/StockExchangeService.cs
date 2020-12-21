@@ -76,8 +76,20 @@ namespace StockSimulateCore.Service
                 Cost = cost,
                 ExchangeTime = exchangeInfo.ExchangeTime,
             };
-            if (string.IsNullOrEmpty(exchange.Strategy)) exchange.Strategy = "临时";
-            if (string.IsNullOrEmpty(exchange.Target)) exchange.Target = $"{(stock.UDPer > 0 ? "上涨" : "下跌")}{stock.UDPer}%";
+
+            if (string.IsNullOrEmpty(exchange.Target))
+            {
+                exchange.Strategy = "临时";
+                exchange.Target = $"{(stock.UDPer > 0 ? "上涨" : "下跌")}{stock.UDPer}%";
+            }
+            else
+            {
+                var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<StockStrategyEntity>($"AccountName='{exchange.AccountName}' and StockCode='{exchange.StockCode}' and StrategyName='{exchange.Strategy}' and Target='{exchange.Target}'");
+                if (stockStrategy != null)
+                {
+                    StockStrategyService.ExchangeRun(stockStrategy, exchangeInfo);
+                }
+            }
 
             SQLiteDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
 

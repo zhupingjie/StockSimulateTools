@@ -149,7 +149,7 @@ namespace StockSimulateCore.Service
             SQLiteDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
 
-        public static void Handle(string stockCode, int rType, decimal target)
+        public static void Mark(string stockCode, int rType, decimal target)
         {
             var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target} and Handled='False'");
             if (remind != null)

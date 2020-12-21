@@ -283,7 +283,29 @@ namespace StockSimulateCore.Service
             }
         }
 
-        public static void CheckAutoRun(string stockCode, decimal stockPrice, DateTime dealTime, string accountName = "")
+        public static void Mark(string strategyName, string stockCode, string target, decimal price)
+        {
+            var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price} and ExecuteOK !=1");
+            if (stockStrategy == null) return;
+
+            stockStrategy.ExecuteOK = 1;
+            SQLiteDBUtil.Instance.Update<StockStrategyEntity>(stockStrategy);
+        }
+
+        public static void Cancel(string strategyName, string stockCode, string target, decimal price)
+        {
+            SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price}");
+            SQLiteDBUtil.Instance.Delete<RemindEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and StrategyTarget='{target}' and Target={price}");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stockCode"></param>
+        /// <param name="stockPrice"></param>
+        /// <param name="dealTime"></param>
+        /// <param name="accountName"></param>
+        public static void CheckRun(string stockCode, decimal stockPrice, DateTime dealTime, string accountName = "")
         {
             var stockStrategys = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
 
@@ -306,45 +328,7 @@ namespace StockSimulateCore.Service
                 };
 
                 //差价交易
-                if (item.StrategyInfoType == typeof(TExchangeStrategyInfo).FullName && !string.IsNullOrEmpty(item.StrategySource))
-                {
-                    var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(item.StrategySource) as TExchangeStrategyInfo;
-                    if (strategyInfo == null) continue;
-                    if (item.BuyQty > 0)
-                    {
-                        strategyInfo.ActualSingleBuy += 1;
-                        strategyInfo.ActualSingleSale = 0;
-                        strategyInfo.ActualPrice = stockPrice;
-
-                        if (strategyInfo.ActualSingleBuy > strategyInfo.MaxSingleBS) continue;
-
-                        if (StockExchangeService.CouldBuy(exchangeInfo))
-                        {
-                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-
-                            //删除批策略号的对立数据
-                            SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{item.BatchNo}' and ID<>{item.ID}");
-                        }
-                    }
-                    if (item.SaleQty > 0)
-                    {
-                        strategyInfo.ActualSingleSale += 1;
-                        strategyInfo.ActualSingleBuy = 0;
-                        strategyInfo.ActualPrice = stockPrice;
-
-                        if (strategyInfo.ActualSingleSale > strategyInfo.MaxSingleBS) continue;
-
-                        if (StockExchangeService.CouldSale(exchangeInfo))
-                        {
-                            var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-
-                            //删除批策略号的对立数据
-                            SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{item.BatchNo}' and ID<>{item.ID}");
-                        }
-                    }
-                }
+                ExchangeRun(item, exchangeInfo);
 
                 ExchangeResultInfo result = null;
                 if (item.BuyQty > 0)
@@ -364,6 +348,49 @@ namespace StockSimulateCore.Service
                 }
             }
             SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
+        }
+
+        public static void ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
+        {
+            if (stockStrategy.StrategyInfoType == typeof(TExchangeStrategyInfo).FullName && !string.IsNullOrEmpty(stockStrategy.StrategySource))
+            {
+                var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
+                if (strategyInfo == null) return;
+                if (stockStrategy.BuyQty > 0)
+                {
+                    strategyInfo.ActualSingleBuy += 1;
+                    strategyInfo.ActualSingleSale = 0;
+                    strategyInfo.ActualPrice = exchangeInfo.Price;
+
+                    if (strategyInfo.ActualSingleBuy > strategyInfo.MaxSingleBS) return;
+
+                    if (StockExchangeService.CouldBuy(exchangeInfo))
+                    {
+                        var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
+                        SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+
+                        //删除批策略号的对立数据
+                        SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    }
+                }
+                if (stockStrategy.SaleQty > 0)
+                {
+                    strategyInfo.ActualSingleSale += 1;
+                    strategyInfo.ActualSingleBuy = 0;
+                    strategyInfo.ActualPrice = exchangeInfo.Price;
+
+                    if (strategyInfo.ActualSingleSale > strategyInfo.MaxSingleBS) return;
+
+                    if (StockExchangeService.CouldSale(exchangeInfo))
+                    {
+                        var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
+                        SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+
+                        //删除批策略号的对立数据
+                        SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    }
+                }
+            }
         }
     }
 }
