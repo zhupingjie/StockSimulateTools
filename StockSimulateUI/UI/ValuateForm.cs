@@ -125,5 +125,156 @@ namespace StockSimulateUI.UI
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, StockCode);
+        }
+
+        void LoadTabGridList(int tabIndex, string stockCode)
+        {
+            switch (tabIndex)
+            {
+                case 0:
+                    this.LoadMainTargetInfo(stockCode);
+                    break;
+                case 1:
+                    this.LoadBalanceTargetInfo(stockCode);
+                    break;
+                case 2:
+                    this.LoadProfitTargetInfo(stockCode);
+                    break;
+                case 3:
+                    this.LoadCashTargetInfo(stockCode);
+                    break;
+            }
+        }
+
+        void LoadMainTargetInfo(string stockCode, int rtype = 0)
+        {
+            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
+            var dt = EastMoneyUtil.ConvertMainTargetData(mainTargets);
+            this.gridMaintargetList.DataSource = null;
+            this.gridMaintargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridMaintargetList.ColumnCount; i++)
+            {
+                this.gridMaintargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridMaintargetList.Columns[i].Width = 160;
+                else
+                {
+                    this.gridMaintargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadBalanceTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var balanceTargets = Repository.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertBalanceTargetData(balanceTargets);
+            this.gridBalanceTargetList.DataSource = null;
+            this.gridBalanceTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridBalanceTargetList.ColumnCount; i++)
+            {
+                this.gridBalanceTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridBalanceTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridBalanceTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadProfitTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var profitTargets = Repository.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertProfitTargetData(profitTargets);
+            this.gridProfitTargetList.DataSource = null;
+            this.gridProfitTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridProfitTargetList.ColumnCount; i++)
+            {
+                this.gridProfitTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridProfitTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridProfitTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadCashTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var cashTargets = Repository.QueryAll<CashTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertCashTargetData(cashTargets);
+            this.gridCashTargetList.DataSource = null;
+            this.gridCashTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridCashTargetList.ColumnCount; i++)
+            {
+                this.gridCashTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridCashTargetList.Columns[i].Width = 250;
+                else
+                {
+                    this.gridCashTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        private void txtByReport_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByYear_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByQuarter_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByReportOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByYearOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByReportOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByYearOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByQuarterOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByReportOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByYearOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtByQuarterOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
