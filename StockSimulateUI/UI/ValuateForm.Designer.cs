@@ -687,7 +687,7 @@
             this.tabBalanceTarget.Location = new System.Drawing.Point(4, 26);
             this.tabBalanceTarget.Name = "tabBalanceTarget";
             this.tabBalanceTarget.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBalanceTarget.Size = new System.Drawing.Size(949, 388);
+            this.tabBalanceTarget.Size = new System.Drawing.Size(949, 431);
             this.tabBalanceTarget.TabIndex = 1;
             this.tabBalanceTarget.Text = "资产负债表";
             this.tabBalanceTarget.UseVisualStyleBackColor = true;
@@ -698,7 +698,8 @@
             this.tabProfitTarget.Controls.Add(this.panel5);
             this.tabProfitTarget.Location = new System.Drawing.Point(4, 26);
             this.tabProfitTarget.Name = "tabProfitTarget";
-            this.tabProfitTarget.Size = new System.Drawing.Size(949, 388);
+            this.tabProfitTarget.Padding = new System.Windows.Forms.Padding(3);
+            this.tabProfitTarget.Size = new System.Drawing.Size(949, 431);
             this.tabProfitTarget.TabIndex = 2;
             this.tabProfitTarget.Text = "利润表";
             this.tabProfitTarget.UseVisualStyleBackColor = true;
@@ -709,7 +710,8 @@
             this.tabCashTarget.Controls.Add(this.panel6);
             this.tabCashTarget.Location = new System.Drawing.Point(4, 26);
             this.tabCashTarget.Name = "tabCashTarget";
-            this.tabCashTarget.Size = new System.Drawing.Size(949, 388);
+            this.tabCashTarget.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCashTarget.Size = new System.Drawing.Size(949, 431);
             this.tabCashTarget.TabIndex = 3;
             this.tabCashTarget.Text = "现金流量表";
             this.tabCashTarget.UseVisualStyleBackColor = true;
@@ -787,7 +789,7 @@
             this.gridBalanceTargetList.RowHeadersWidth = 10;
             this.gridBalanceTargetList.RowTemplate.Height = 23;
             this.gridBalanceTargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridBalanceTargetList.Size = new System.Drawing.Size(943, 353);
+            this.gridBalanceTargetList.Size = new System.Drawing.Size(943, 396);
             this.gridBalanceTargetList.TabIndex = 50;
             // 
             // panel4
@@ -829,14 +831,14 @@
             this.gridProfitTargetList.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridProfitTargetList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridProfitTargetList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridProfitTargetList.Location = new System.Drawing.Point(0, 29);
+            this.gridProfitTargetList.Location = new System.Drawing.Point(3, 32);
             this.gridProfitTargetList.MultiSelect = false;
             this.gridProfitTargetList.Name = "gridProfitTargetList";
             this.gridProfitTargetList.ReadOnly = true;
             this.gridProfitTargetList.RowHeadersWidth = 10;
             this.gridProfitTargetList.RowTemplate.Height = 23;
             this.gridProfitTargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridProfitTargetList.Size = new System.Drawing.Size(949, 359);
+            this.gridProfitTargetList.Size = new System.Drawing.Size(943, 396);
             this.gridProfitTargetList.TabIndex = 50;
             // 
             // panel5
@@ -845,9 +847,9 @@
             this.panel5.Controls.Add(this.txtByYearOfLRB);
             this.panel5.Controls.Add(this.txtByReportOfLRB);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Location = new System.Drawing.Point(3, 3);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(949, 29);
+            this.panel5.Size = new System.Drawing.Size(943, 29);
             this.panel5.TabIndex = 49;
             // 
             // txtByQuarterOfLRB
@@ -890,14 +892,14 @@
             this.gridCashTargetList.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridCashTargetList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridCashTargetList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridCashTargetList.Location = new System.Drawing.Point(0, 29);
+            this.gridCashTargetList.Location = new System.Drawing.Point(3, 32);
             this.gridCashTargetList.MultiSelect = false;
             this.gridCashTargetList.Name = "gridCashTargetList";
             this.gridCashTargetList.ReadOnly = true;
             this.gridCashTargetList.RowHeadersWidth = 10;
             this.gridCashTargetList.RowTemplate.Height = 23;
             this.gridCashTargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridCashTargetList.Size = new System.Drawing.Size(949, 359);
+            this.gridCashTargetList.Size = new System.Drawing.Size(943, 396);
             this.gridCashTargetList.TabIndex = 50;
             // 
             // panel6
@@ -906,9 +908,9 @@
             this.panel6.Controls.Add(this.txtByYearOfXJLLB);
             this.panel6.Controls.Add(this.txtByReportOfXJLLB);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Location = new System.Drawing.Point(3, 3);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(949, 29);
+            this.panel6.Size = new System.Drawing.Size(943, 29);
             this.panel6.TabIndex = 49;
             // 
             // txtByQuarterOfXJLLB

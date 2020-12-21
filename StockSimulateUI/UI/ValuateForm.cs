@@ -54,6 +54,12 @@ namespace StockSimulateUI.UI
             this.txtNetProfit.Text = $"{stock.NetProfit}";
             this.txtPrice.Text = $"{stock.Price}";
             this.txtAmount.Text = $"{stock.Amount}";
+
+            Action act = delegate ()
+            {
+                this.LoadMainTargetInfo(StockCode, 0);
+            };
+            this.Invoke(act);
         }
 
         private void Valuate(bool changeNetProfit = false)
@@ -226,7 +232,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByReport.Checked)
             {
-                this.LoadMainTargetInfo(StockCode, 0);
+                Action act = delegate ()
+                {
+                    this.LoadMainTargetInfo(StockCode, 0);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -234,7 +244,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByYear.Checked)
             {
-                this.LoadMainTargetInfo(StockCode, 1);
+                Action act = delegate ()
+                {
+                    this.LoadMainTargetInfo(StockCode, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -242,7 +256,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByQuarter.Checked)
             {
-                this.LoadCashTargetInfo(StockCode, 2);
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 2);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -250,7 +268,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByReportOfZCFZB.Checked)
             {
-                this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -258,7 +280,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByYearOfZCFZB.Checked)
             {
-                this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -266,7 +292,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByReportOfLRB.Checked)
             {
-                this.LoadProfitTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -274,7 +304,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByYearOfLRB.Checked)
             {
-                this.LoadProfitTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -282,7 +316,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByQuarterOfLRB.Checked)
             {
-                this.LoadProfitTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -290,7 +328,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByReportOfXJLLB.Checked)
             {
-                this.LoadCashTargetInfo(StockCode, 0, 1);
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 0, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -298,7 +340,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByYearOfXJLLB.Checked)
             {
-                this.LoadCashTargetInfo(StockCode, 1, 1);
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
             }
         }
 
@@ -306,7 +352,11 @@ namespace StockSimulateUI.UI
         {
             if (this.txtByQuarterOfXJLLB.Checked)
             {
-                this.LoadCashTargetInfo(StockCode, 0, 2);
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 0, 2);
+                };
+                this.Invoke(act);
             }
         }
     }
