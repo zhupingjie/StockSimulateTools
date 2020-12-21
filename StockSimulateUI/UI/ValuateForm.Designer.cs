@@ -125,7 +125,7 @@
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(173, 274);
+            this.btnOK.Location = new System.Drawing.Point(173, 229);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(129, 60);
             this.btnOK.TabIndex = 15;
@@ -136,7 +136,7 @@
             // txtNetProfit
             // 
             this.txtNetProfit.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtNetProfit.Location = new System.Drawing.Point(164, 17);
+            this.txtNetProfit.Location = new System.Drawing.Point(143, 86);
             this.txtNetProfit.Name = "txtNetProfit";
             this.txtNetProfit.ReadOnly = true;
             this.txtNetProfit.Size = new System.Drawing.Size(129, 29);
@@ -146,7 +146,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(42, 25);
+            this.label1.Location = new System.Drawing.Point(21, 86);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 21);
             this.label1.TabIndex = 18;
@@ -156,7 +156,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(51, 98);
+            this.label6.Location = new System.Drawing.Point(51, 89);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 21);
             this.label6.TabIndex = 22;
@@ -165,7 +165,7 @@
             // txtWantNetProfit
             // 
             this.txtWantNetProfit.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtWantNetProfit.Location = new System.Drawing.Point(173, 95);
+            this.txtWantNetProfit.Location = new System.Drawing.Point(173, 86);
             this.txtWantNetProfit.Name = "txtWantNetProfit";
             this.txtWantNetProfit.Size = new System.Drawing.Size(129, 29);
             this.txtWantNetProfit.TabIndex = 4;
@@ -194,16 +194,16 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(6, 195);
+            this.label2.Location = new System.Drawing.Point(28, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(134, 21);
             this.label2.TabIndex = 27;
-            this.label2.Text = "当前市盈率(TTM)";
+            this.label2.Text = "参考市盈率(TTM)";
             // 
             // txtTTM
             // 
             this.txtTTM.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtTTM.Location = new System.Drawing.Point(143, 192);
+            this.txtTTM.Location = new System.Drawing.Point(166, 51);
             this.txtTTM.Name = "txtTTM";
             this.txtTTM.ReadOnly = true;
             this.txtTTM.Size = new System.Drawing.Size(129, 29);
@@ -213,7 +213,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(48, 63);
+            this.label4.Location = new System.Drawing.Point(48, 54);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(119, 21);
             this.label4.TabIndex = 29;
@@ -222,7 +222,7 @@
             // txtWantPE
             // 
             this.txtWantPE.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtWantPE.Location = new System.Drawing.Point(173, 60);
+            this.txtWantPE.Location = new System.Drawing.Point(173, 51);
             this.txtWantPE.Name = "txtWantPE";
             this.txtWantPE.Size = new System.Drawing.Size(129, 29);
             this.txtWantPE.TabIndex = 2;
@@ -232,7 +232,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(37, 301);
+            this.label5.Location = new System.Drawing.Point(37, 229);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 21);
             this.label5.TabIndex = 31;
@@ -241,7 +241,7 @@
             // txtPrice
             // 
             this.txtPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtPrice.Location = new System.Drawing.Point(143, 298);
+            this.txtPrice.Location = new System.Drawing.Point(143, 226);
             this.txtPrice.Name = "txtPrice";
             this.txtPrice.ReadOnly = true;
             this.txtPrice.Size = new System.Drawing.Size(129, 29);
@@ -251,7 +251,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(58, 170);
+            this.label7.Location = new System.Drawing.Point(60, 229);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(100, 21);
             this.label7.TabIndex = 33;
@@ -260,7 +260,7 @@
             // txtTarget
             // 
             this.txtTarget.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtTarget.Location = new System.Drawing.Point(164, 162);
+            this.txtTarget.Location = new System.Drawing.Point(166, 226);
             this.txtTarget.Name = "txtTarget";
             this.txtTarget.ReadOnly = true;
             this.txtTarget.Size = new System.Drawing.Size(129, 29);
@@ -269,7 +269,7 @@
             // txtYetNetProfit
             // 
             this.txtYetNetProfit.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtYetNetProfit.Location = new System.Drawing.Point(143, 86);
+            this.txtYetNetProfit.Location = new System.Drawing.Point(166, 86);
             this.txtYetNetProfit.Name = "txtYetNetProfit";
             this.txtYetNetProfit.ReadOnly = true;
             this.txtYetNetProfit.Size = new System.Drawing.Size(129, 29);
@@ -297,7 +297,7 @@
             // txtWantProfitGrow
             // 
             this.txtWantProfitGrow.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtWantProfitGrow.Location = new System.Drawing.Point(173, 25);
+            this.txtWantProfitGrow.Location = new System.Drawing.Point(173, 17);
             this.txtWantProfitGrow.Name = "txtWantProfitGrow";
             this.txtWantProfitGrow.Size = new System.Drawing.Size(129, 29);
             this.txtWantProfitGrow.TabIndex = 1;
@@ -307,16 +307,16 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label10.Location = new System.Drawing.Point(21, 28);
+            this.label10.Location = new System.Drawing.Point(51, 20);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(146, 21);
+            this.label10.Size = new System.Drawing.Size(114, 21);
             this.label10.TabIndex = 39;
-            this.label10.Text = "预测今年增长率(%)";
+            this.label10.Text = "预测增长率(%)";
             // 
             // txtYetGrow
             // 
             this.txtYetGrow.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtYetGrow.Location = new System.Drawing.Point(143, 157);
+            this.txtYetGrow.Location = new System.Drawing.Point(166, 17);
             this.txtYetGrow.Name = "txtYetGrow";
             this.txtYetGrow.ReadOnly = true;
             this.txtYetGrow.Size = new System.Drawing.Size(129, 29);
@@ -326,17 +326,17 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(23, 164);
+            this.label11.Location = new System.Drawing.Point(46, 20);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(114, 21);
             this.label11.TabIndex = 41;
-            this.label11.Text = "去年增长率(%)";
+            this.label11.Text = "参考增长率(%)";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label12.Location = new System.Drawing.Point(37, 231);
+            this.label12.Location = new System.Drawing.Point(37, 159);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(100, 21);
             this.label12.TabIndex = 44;
@@ -345,7 +345,7 @@
             // txtAmount
             // 
             this.txtAmount.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtAmount.Location = new System.Drawing.Point(143, 228);
+            this.txtAmount.Location = new System.Drawing.Point(143, 156);
             this.txtAmount.Name = "txtAmount";
             this.txtAmount.ReadOnly = true;
             this.txtAmount.Size = new System.Drawing.Size(129, 29);
@@ -355,7 +355,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label13.Location = new System.Drawing.Point(26, 130);
+            this.label13.Location = new System.Drawing.Point(30, 194);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(132, 21);
             this.label13.TabIndex = 48;
@@ -364,7 +364,7 @@
             // txtWantEPS
             // 
             this.txtWantEPS.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtWantEPS.Location = new System.Drawing.Point(164, 127);
+            this.txtWantEPS.Location = new System.Drawing.Point(166, 194);
             this.txtWantEPS.Name = "txtWantEPS";
             this.txtWantEPS.ReadOnly = true;
             this.txtWantEPS.Size = new System.Drawing.Size(129, 29);
@@ -374,7 +374,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(37, 266);
+            this.label14.Location = new System.Drawing.Point(37, 194);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(100, 21);
             this.label14.TabIndex = 46;
@@ -383,7 +383,7 @@
             // txtYetEPS
             // 
             this.txtYetEPS.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtYetEPS.Location = new System.Drawing.Point(143, 263);
+            this.txtYetEPS.Location = new System.Drawing.Point(143, 191);
             this.txtYetEPS.Name = "txtYetEPS";
             this.txtYetEPS.ReadOnly = true;
             this.txtYetEPS.Size = new System.Drawing.Size(129, 29);
@@ -392,7 +392,7 @@
             // txtWantAmount
             // 
             this.txtWantAmount.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtWantAmount.Location = new System.Drawing.Point(164, 90);
+            this.txtWantAmount.Location = new System.Drawing.Point(166, 159);
             this.txtWantAmount.Name = "txtWantAmount";
             this.txtWantAmount.ReadOnly = true;
             this.txtWantAmount.Size = new System.Drawing.Size(129, 29);
@@ -402,7 +402,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label15.Location = new System.Drawing.Point(58, 95);
+            this.label15.Location = new System.Drawing.Point(60, 162);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(100, 21);
             this.label15.TabIndex = 49;
@@ -411,7 +411,7 @@
             // txtSafeRate
             // 
             this.txtSafeRate.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtSafeRate.Location = new System.Drawing.Point(173, 130);
+            this.txtSafeRate.Location = new System.Drawing.Point(173, 121);
             this.txtSafeRate.Name = "txtSafeRate";
             this.txtSafeRate.Size = new System.Drawing.Size(129, 29);
             this.txtSafeRate.TabIndex = 3;
@@ -422,7 +422,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label16.Location = new System.Drawing.Point(69, 133);
+            this.label16.Location = new System.Drawing.Point(69, 124);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(98, 21);
             this.label16.TabIndex = 51;
@@ -432,7 +432,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label17.Location = new System.Drawing.Point(42, 57);
+            this.label17.Location = new System.Drawing.Point(44, 124);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(116, 21);
             this.label17.TabIndex = 54;
@@ -441,7 +441,7 @@
             // txtLostNetProfit
             // 
             this.txtLostNetProfit.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtLostNetProfit.Location = new System.Drawing.Point(164, 52);
+            this.txtLostNetProfit.Location = new System.Drawing.Point(166, 121);
             this.txtLostNetProfit.Name = "txtLostNetProfit";
             this.txtLostNetProfit.ReadOnly = true;
             this.txtLostNetProfit.Size = new System.Drawing.Size(129, 29);
@@ -451,11 +451,11 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label8.Location = new System.Drawing.Point(21, 89);
+            this.label8.Location = new System.Drawing.Point(44, 89);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(116, 21);
             this.label8.TabIndex = 55;
-            this.label8.Text = "去年净利润(亿)";
+            this.label8.Text = "参考净利润(亿)";
             // 
             // label18
             // 
@@ -479,7 +479,7 @@
             // btnValuateAll
             // 
             this.btnValuateAll.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnValuateAll.Location = new System.Drawing.Point(38, 274);
+            this.btnValuateAll.Location = new System.Drawing.Point(38, 230);
             this.btnValuateAll.Name = "btnValuateAll";
             this.btnValuateAll.Size = new System.Drawing.Size(129, 60);
             this.btnValuateAll.TabIndex = 58;
@@ -490,7 +490,7 @@
             // txtAdvise
             // 
             this.txtAdvise.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtAdvise.Location = new System.Drawing.Point(164, 311);
+            this.txtAdvise.Location = new System.Drawing.Point(143, 262);
             this.txtAdvise.Name = "txtAdvise";
             this.txtAdvise.ReadOnly = true;
             this.txtAdvise.Size = new System.Drawing.Size(129, 29);
@@ -500,7 +500,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label19.Location = new System.Drawing.Point(84, 314);
+            this.label19.Location = new System.Drawing.Point(63, 265);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(74, 21);
             this.label19.TabIndex = 60;
@@ -509,7 +509,7 @@
             // txtUPPer
             // 
             this.txtUPPer.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUPPer.Location = new System.Drawing.Point(164, 198);
+            this.txtUPPer.Location = new System.Drawing.Point(166, 261);
             this.txtUPPer.Name = "txtUPPer";
             this.txtUPPer.ReadOnly = true;
             this.txtUPPer.Size = new System.Drawing.Size(129, 29);
@@ -519,7 +519,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label20.Location = new System.Drawing.Point(58, 242);
+            this.label20.Location = new System.Drawing.Point(67, 162);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(100, 21);
             this.label20.TabIndex = 63;
@@ -528,7 +528,7 @@
             // txtSafePrice
             // 
             this.txtSafePrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtSafePrice.Location = new System.Drawing.Point(164, 239);
+            this.txtSafePrice.Location = new System.Drawing.Point(173, 159);
             this.txtSafePrice.Name = "txtSafePrice";
             this.txtSafePrice.ReadOnly = true;
             this.txtSafePrice.Size = new System.Drawing.Size(129, 29);
@@ -537,7 +537,7 @@
             // txtSafeUPPer
             // 
             this.txtSafeUPPer.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtSafeUPPer.Location = new System.Drawing.Point(164, 274);
+            this.txtSafeUPPer.Location = new System.Drawing.Point(173, 194);
             this.txtSafeUPPer.Name = "txtSafeUPPer";
             this.txtSafeUPPer.ReadOnly = true;
             this.txtSafeUPPer.Size = new System.Drawing.Size(129, 29);
@@ -551,21 +551,17 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(957, 343);
+            this.panel1.Size = new System.Drawing.Size(957, 300);
             this.panel1.TabIndex = 65;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.txtYetGrow);
-            this.groupBox1.Controls.Add(this.txtTTM);
             this.groupBox1.Controls.Add(this.txtCapital);
-            this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label19);
             this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.txtYetNetProfit);
-            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.txtAdvise);
             this.groupBox1.Controls.Add(this.txtYetLostNetProfit);
             this.groupBox1.Controls.Add(this.label18);
             this.groupBox1.Controls.Add(this.txtAmount);
@@ -574,70 +570,74 @@
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.txtPrice);
+            this.groupBox1.Controls.Add(this.txtNetProfit);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(312, 343);
+            this.groupBox1.Size = new System.Drawing.Size(312, 300);
             this.groupBox1.TabIndex = 43;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "历史数据";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label22);
             this.groupBox2.Controls.Add(this.txtWantProfitGrow);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.txtWantPE);
             this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.txtSafeUPPer);
             this.groupBox2.Controls.Add(this.txtWantNetProfit);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.btnOK);
+            this.groupBox2.Controls.Add(this.txtSafePrice);
             this.groupBox2.Controls.Add(this.btnValuateAll);
+            this.groupBox2.Controls.Add(this.label20);
             this.groupBox2.Controls.Add(this.txtSafeRate);
             this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox2.Location = new System.Drawing.Point(628, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(329, 343);
+            this.groupBox2.Size = new System.Drawing.Size(329, 300);
             this.groupBox2.TabIndex = 44;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "预测数据";
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.label22);
             this.groupBox3.Controls.Add(this.label21);
-            this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.txtTTM);
+            this.groupBox3.Controls.Add(this.txtYetGrow);
             this.groupBox3.Controls.Add(this.txtWantAmount);
-            this.groupBox3.Controls.Add(this.txtAdvise);
-            this.groupBox3.Controls.Add(this.txtSafeUPPer);
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Controls.Add(this.txtYetNetProfit);
+            this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.label15);
+            this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Controls.Add(this.txtUPPer);
-            this.groupBox3.Controls.Add(this.txtSafePrice);
-            this.groupBox3.Controls.Add(this.label20);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.txtWantEPS);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.txtTarget);
-            this.groupBox3.Controls.Add(this.txtNetProfit);
-            this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.txtLostNetProfit);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox3.Location = new System.Drawing.Point(312, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(316, 343);
+            this.groupBox3.Size = new System.Drawing.Size(316, 300);
             this.groupBox3.TabIndex = 45;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "当前数据";
+            this.groupBox3.Text = "对比数据";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label21.Location = new System.Drawing.Point(44, 205);
+            this.label21.Location = new System.Drawing.Point(46, 264);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(114, 21);
             this.label21.TabIndex = 62;
@@ -647,7 +647,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label22.Location = new System.Drawing.Point(44, 277);
+            this.label22.Location = new System.Drawing.Point(53, 197);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(114, 21);
             this.label22.TabIndex = 63;
@@ -661,10 +661,10 @@
             this.tabControlBottom.Controls.Add(this.tabCashTarget);
             this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlBottom.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControlBottom.Location = new System.Drawing.Point(0, 343);
+            this.tabControlBottom.Location = new System.Drawing.Point(0, 300);
             this.tabControlBottom.Name = "tabControlBottom";
             this.tabControlBottom.SelectedIndex = 0;
-            this.tabControlBottom.Size = new System.Drawing.Size(957, 418);
+            this.tabControlBottom.Size = new System.Drawing.Size(957, 461);
             this.tabControlBottom.TabIndex = 66;
             this.tabControlBottom.SelectedIndexChanged += new System.EventHandler(this.tabControlBottom_SelectedIndexChanged);
             // 
@@ -675,7 +675,7 @@
             this.tabMaintarget.Location = new System.Drawing.Point(4, 26);
             this.tabMaintarget.Name = "tabMaintarget";
             this.tabMaintarget.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaintarget.Size = new System.Drawing.Size(949, 388);
+            this.tabMaintarget.Size = new System.Drawing.Size(949, 431);
             this.tabMaintarget.TabIndex = 0;
             this.tabMaintarget.Text = "主要指标";
             this.tabMaintarget.UseVisualStyleBackColor = true;
@@ -726,7 +726,7 @@
             this.gridMaintargetList.RowHeadersWidth = 10;
             this.gridMaintargetList.RowTemplate.Height = 23;
             this.gridMaintargetList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridMaintargetList.Size = new System.Drawing.Size(943, 353);
+            this.gridMaintargetList.Size = new System.Drawing.Size(943, 396);
             this.gridMaintargetList.TabIndex = 49;
             // 
             // panel3
