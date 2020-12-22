@@ -177,7 +177,7 @@ namespace StockSimulateCore.Service
 
             foreach (var stock in stocks)
             {
-                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && !c.Handled && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now));
+                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && !c.Handled && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate));
                 if (remind != null)
                 {
                     remind.Handled = true;
