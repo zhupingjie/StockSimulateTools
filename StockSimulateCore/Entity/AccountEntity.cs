@@ -10,7 +10,7 @@ namespace StockSimulateCore.Entity
     public class AccountEntity: BaseEntity
     {
         [Description("实体账户")]
-        public bool RealType { get; set; }
+        public int RealType { get; set; }
 
         [Description("交易账户")]
         public string Name { get; set; }

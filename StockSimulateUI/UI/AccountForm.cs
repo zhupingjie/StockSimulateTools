@@ -34,7 +34,7 @@ namespace StockSimulateUI.UI
             this.txtName.Items.Clear();
             this.txtName.Items.AddRange(accounts.Select(c => c.Name).ToArray());
 
-            var realAccount = accounts.FirstOrDefault(c => c.RealType);
+            var realAccount = accounts.FirstOrDefault(c => c.RealType == 1);
             if (realAccount != null)
             {
                 this.txtName.Text = realAccount.Name;
@@ -45,7 +45,7 @@ namespace StockSimulateUI.UI
                 this.txtProfit.Text = $"{realAccount.Profit}";
                 this.txtEmail.Text = realAccount.Email;
                 this.txtQQ.Text = realAccount.QQ;
-                this.txtRealType.Checked = realAccount.RealType;
+                this.txtRealType.Checked = realAccount.RealType == 1 ? true : false;
             }
         }
 
@@ -60,7 +60,7 @@ namespace StockSimulateUI.UI
                 account.Cash = account.Amount;
                 account.Email = this.txtEmail.Text;
                 account.QQ = this.txtQQ.Text;
-                account.RealType = this.txtRealType.Checked;
+                account.RealType = this.txtRealType.Checked ? 1 : 0;
                 Repository.Insert<AccountEntity>(account);
             }
             else
@@ -70,7 +70,7 @@ namespace StockSimulateUI.UI
                 account.Email = this.txtEmail.Text;
                 account.Cash = account.Amount - account.BuyAmount;
                 account.QQ = this.txtQQ.Text;
-                account.RealType = this.txtRealType.Checked;
+                account.RealType = this.txtRealType.Checked ? 1 : 0;
                 Repository.Update<AccountEntity>(account);
             }
             this.DialogResult = DialogResult.OK;
@@ -95,7 +95,7 @@ namespace StockSimulateUI.UI
                 this.txtProfit.Text = $"{account.Profit}";
                 this.txtEmail.Text = account.Email;
                 this.txtQQ.Text = account.QQ;
-                this.txtRealType.Checked = account.RealType;
+                this.txtRealType.Checked = account.RealType == 1 ? true : false;
             }
         }
 

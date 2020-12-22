@@ -326,7 +326,7 @@ namespace StockPriceTools
             }
             for (var i = 0; i < this.gridAccountStockList.Rows.Count; i++)
             {
-                var row = this.gridStockList.Rows[i];
+                var row = this.gridAccountStockList.Rows[i];
                 var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
                 if (value > 0)
                 {
@@ -337,11 +337,18 @@ namespace StockPriceTools
                     this.gridAccountStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
             }
-            var totalAmount =  ObjectUtil.FormatMoney(accountStocks.Sum(c => c.TotalAmount));
-            var holdAmount = ObjectUtil.FormatMoney(accountStocks.Sum(c => c.HoldAmount));
-            var profit = ObjectUtil.FormatMoney(accountStocks.Sum(c => c.Profit));
+
+            string totalAmount = "", holdAmount = "", profit = "";
+            var account = Repository.QueryFirst<AccountEntity>($"RealType=1");
+            if (account != null)
+            {
+                totalAmount = ObjectUtil.FormatMoney(accountStocks.Where(c=>c.AccountName == account.Name).Sum(c => c.TotalAmount));
+                holdAmount = ObjectUtil.FormatMoney(accountStocks.Where(c => c.AccountName == account.Name).Sum(c => c.HoldAmount));
+                profit = ObjectUtil.FormatMoney(accountStocks.Where(c => c.AccountName == account.Name).Sum(c => c.Profit));
+            }
+            
             this.lblAccountStockTotal.Text = $"总股票数:[{accountStocks.Length}]";
-            this.lblAccountStockInfo.Text = $"总投入市值【{totalAmount}】元，持有总市值【{holdAmount}】元，盈亏【{profit}】元";
+            this.lblAccountStockInfo.Text = $"总投入市值【{totalAmount}】，持有总市值【{holdAmount}】，盈亏【{profit}】";
         }
 
         private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
