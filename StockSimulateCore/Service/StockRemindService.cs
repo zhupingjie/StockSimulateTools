@@ -192,6 +192,8 @@ namespace StockSimulateCore.Service
                         Target = remind.Target,
                         Email = remind.Email,
                         QQ = remind.QQ,
+                        StrategyName = remind.StrategyName,
+                        StrategyTarget = remind.StrategyTarget,
                         PlanRemind = DateTime.Now.Date.AddDays(1)
                     };
                     SQLiteDBUtil.Instance.Insert<RemindEntity>(nextRemind);
@@ -210,7 +212,6 @@ namespace StockSimulateCore.Service
 
                     MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                     action(message);
-                    action(message);
 
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
@@ -224,7 +225,6 @@ namespace StockSimulateCore.Service
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
 
                     MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                    action(message);
                     action(message);
 
                     remind.Handled = 1;
@@ -240,7 +240,6 @@ namespace StockSimulateCore.Service
 
                     MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                     action(message);
-                    action(message);
 
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
@@ -253,7 +252,6 @@ namespace StockSimulateCore.Service
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.StrategyTarget} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
 
                     MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                    action(message);
                     action(message);
 
                     remind.LastRemind = DateTime.Now;

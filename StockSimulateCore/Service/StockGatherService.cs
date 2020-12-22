@@ -209,5 +209,24 @@ namespace StockSimulateCore.Service
 
             //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
+
+        public static void GatherReportData(Action<string> actionLog)
+        {
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
+            foreach (var stock in stocks)
+            {
+                var reports = EastMoneyUtil.GetReports(stock.Code);
+                var codes = reports.Select(c => c.PdfCode).ToArray();
+
+                var hasReports = SQLiteDBUtil.Instance.QueryAll<ReportEntity>($"StockCode='{stock.Code}'  and PdfCode in ('{string.Join("','", codes)}')");
+                var hasCodes = hasReports.Select(c => c.PdfCode).Distinct().ToArray();
+
+                var newReports = reports.Where(c => !hasCodes.Contains(c.PdfCode)).ToArray();
+                if (newReports.Length > 0)
+                {
+                    SQLiteDBUtil.Instance.Insert<ReportEntity>(newReports);
+                }
+            }
+        }
     }
 }

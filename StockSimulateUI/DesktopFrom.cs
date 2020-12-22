@@ -141,6 +141,20 @@ namespace StockPriceTools
                     Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
+
+            //采集研报数据
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(10000);
+                while (true)
+                {
+                    StockGatherService.GatherReportData((message) =>
+                    {
+                        this.ActionLog(message);
+                    });
+                    Thread.Sleep(RC.GatherStockReportInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
         }
 
         void RemindData()
@@ -367,12 +381,13 @@ namespace StockPriceTools
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
             if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
             Action act = delegate ()
             {
                 this.LoadStockBaseInfo(stockCode);
-                this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
+                this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
             };
             this.Invoke(act);
         }
@@ -498,8 +513,11 @@ namespace StockPriceTools
         /// </summary>
         /// <param name="stockCode"></param>
         /// <param name="dateType">0:日,1:分钟</param>
-        void LoadPriceChart(string stockCode, int dateType = 0)
+        void LoadPriceChart(string stockCode, string stockName, int dateType = 0)
         {
+            var title = this.chartPrice.Titles.FirstOrDefault();
+            if (title == null) title = this.chartPrice.Titles.Add("");
+            title.Text = $"【{stockName}】分时图";
             var series = this.chartPrice.Series.FirstOrDefault();
             if (series == null) series = this.chartPrice.Series.Add("");
             series.ChartType = dateType == 1? SeriesChartType.Line : SeriesChartType.Candlestick;
@@ -719,6 +737,26 @@ namespace StockPriceTools
             }
         }
 
+        void LoadReportList(string stockCode)
+        {
+            var reports = Repository.QueryAll<ReportEntity>($"StockCode='{stockCode}'", "PublishDate desc", 60);
+            var dt = ObjectUtil.ConvertTable(reports);
+            this.gridReportList.DataSource = null;
+            this.gridReportList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridReportList.ColumnCount; i++)
+            {
+                this.gridReportList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                var columnName = this.gridReportList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridReportList.Columns[i].Visible = false;
+                else
+                {
+                    if (columnName == "研报标题") this.gridReportList.Columns[i].Width = 250;
+                    else this.gridReportList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
+                }
+            }
+        }
+
         /// <summary>
         /// 历史股价列表点击
         /// </summary>
@@ -785,16 +823,17 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
-            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
         }
 
-        void LoadTabGridList(int tabIndex, string stockCode)
+        void LoadTabGridList(int tabIndex, string stockCode, string stockName)
         {
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceChart(stockCode, 1);
+                    this.LoadPriceChart(stockCode, stockName, 1);
                     break;
                 case 2:
                     this.LoadPriceList(stockCode);
@@ -808,6 +847,9 @@ namespace StockPriceTools
                 case 5:
                     this.LoadExchangeList(stockCode);
                     break;
+                case 6:
+                    this.LoadReportList(stockCode);
+                    break;
             }
         }
 
@@ -818,8 +860,9 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
-            this.LoadPriceChart(stockCode, 0);
+            this.LoadPriceChart(stockCode, stockName, 0);
         }
 
         private void btnWebChart_Click(object sender, EventArgs e)
@@ -836,8 +879,9 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
-            this.LoadPriceChart(stockCode, 1);
+            this.LoadPriceChart(stockCode, stockName, 1);
         }
 
         private void btnHandleRemind_Click(object sender, EventArgs e)
@@ -970,6 +1014,19 @@ namespace StockPriceTools
                 this.LoadExchangeList(stockCode);
                 this.LoadAccountStockList();
             }
+        }
+
+        private void btnOpenBrower_Click(object sender, EventArgs e)
+        {
+            if (this.gridReportList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridReportList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var pdfCode = $"{selectRow.Cells["编号"].Value}";
+
+            var report = Repository.QueryFirst<ReportEntity>($"StockCode='{stockCode}' and PdfCode='{pdfCode}'");
+            if (report == null) return;
+
+            ObjectUtil.OpenBrowserUrl(report.PdfUrl);
         }
 
         #region 操作日志事件

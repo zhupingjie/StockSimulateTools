@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -62,6 +62,10 @@
             this.txtAllStock = new System.Windows.Forms.RadioButton();
             this.tabHoldStockList = new System.Windows.Forms.TabPage();
             this.gridAccountStockList = new System.Windows.Forms.DataGridView();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.lblAccountStockInfo = new System.Windows.Forms.Label();
+            this.txtAccountSearch = new System.Windows.Forms.TextBox();
+            this.lblAccountStockTotal = new System.Windows.Forms.Label();
             this.tabControlBottom = new System.Windows.Forms.TabControl();
             this.tabActionLog = new System.Windows.Forms.TabPage();
             this.txtActionLog = new System.Windows.Forms.RichTextBox();
@@ -75,6 +79,9 @@
             this.gridPriceList = new System.Windows.Forms.DataGridView();
             this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
             this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.btnCancelStrategy = new System.Windows.Forms.Button();
+            this.btnRunStrategy = new System.Windows.Forms.Button();
             this.tabRemind = new System.Windows.Forms.TabPage();
             this.gridRemindList = new System.Windows.Forms.DataGridView();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -103,13 +110,10 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.btnCancelStrategy = new System.Windows.Forms.Button();
-            this.btnRunStrategy = new System.Windows.Forms.Button();
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.txtAccountSearch = new System.Windows.Forms.TextBox();
-            this.lblAccountStockTotal = new System.Windows.Forms.Label();
-            this.lblAccountStockInfo = new System.Windows.Forms.Label();
+            this.tabReport = new System.Windows.Forms.TabPage();
+            this.gridReportList = new System.Windows.Forms.DataGridView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnOpenBrower = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,6 +130,7 @@
             this.panel10.SuspendLayout();
             this.tabHoldStockList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).BeginInit();
+            this.panel12.SuspendLayout();
             this.tabControlBottom.SuspendLayout();
             this.tabActionLog.SuspendLayout();
             this.tabPriceChart.SuspendLayout();
@@ -135,6 +140,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).BeginInit();
             this.tabStockStrategyDetail.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
+            this.panel11.SuspendLayout();
             this.tabRemind.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).BeginInit();
             this.panel8.SuspendLayout();
@@ -147,8 +153,9 @@
             this.tabPriceData.SuspendLayout();
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
-            this.panel11.SuspendLayout();
-            this.panel12.SuspendLayout();
+            this.tabReport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -492,6 +499,45 @@
             this.gridAccountStockList.Size = new System.Drawing.Size(842, 251);
             this.gridAccountStockList.TabIndex = 43;
             // 
+            // panel12
+            // 
+            this.panel12.Controls.Add(this.lblAccountStockInfo);
+            this.panel12.Controls.Add(this.txtAccountSearch);
+            this.panel12.Controls.Add(this.lblAccountStockTotal);
+            this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel12.Location = new System.Drawing.Point(0, 0);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(842, 29);
+            this.panel12.TabIndex = 48;
+            // 
+            // lblAccountStockInfo
+            // 
+            this.lblAccountStockInfo.AutoSize = true;
+            this.lblAccountStockInfo.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblAccountStockInfo.ForeColor = System.Drawing.Color.Blue;
+            this.lblAccountStockInfo.Location = new System.Drawing.Point(4, 4);
+            this.lblAccountStockInfo.Name = "lblAccountStockInfo";
+            this.lblAccountStockInfo.Size = new System.Drawing.Size(91, 22);
+            this.lblAccountStockInfo.TabIndex = 8;
+            this.lblAccountStockInfo.Text = "Loading...";
+            // 
+            // txtAccountSearch
+            // 
+            this.txtAccountSearch.Location = new System.Drawing.Point(765, 4);
+            this.txtAccountSearch.Name = "txtAccountSearch";
+            this.txtAccountSearch.Size = new System.Drawing.Size(74, 21);
+            this.txtAccountSearch.TabIndex = 7;
+            this.txtAccountSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtAccountStock_KeyDown);
+            // 
+            // lblAccountStockTotal
+            // 
+            this.lblAccountStockTotal.AutoSize = true;
+            this.lblAccountStockTotal.Location = new System.Drawing.Point(682, 9);
+            this.lblAccountStockTotal.Name = "lblAccountStockTotal";
+            this.lblAccountStockTotal.Size = new System.Drawing.Size(77, 12);
+            this.lblAccountStockTotal.TabIndex = 3;
+            this.lblAccountStockTotal.Text = "总股票数:[0]";
+            // 
             // tabControlBottom
             // 
             this.tabControlBottom.Controls.Add(this.tabActionLog);
@@ -500,6 +546,7 @@
             this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
             this.tabControlBottom.Controls.Add(this.tabRemind);
             this.tabControlBottom.Controls.Add(this.tabExchangeList);
+            this.tabControlBottom.Controls.Add(this.tabReport);
             this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlBottom.Location = new System.Drawing.Point(0, 0);
             this.tabControlBottom.Name = "tabControlBottom";
@@ -542,11 +589,11 @@
             // 
             // chartPrice
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -652,6 +699,38 @@
             this.gridStockStrategyList.Size = new System.Drawing.Size(842, 192);
             this.gridStockStrategyList.TabIndex = 45;
             this.gridStockStrategyList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockStrategyList_RowEnter);
+            // 
+            // panel11
+            // 
+            this.panel11.Controls.Add(this.btnCancelStrategy);
+            this.panel11.Controls.Add(this.btnRunStrategy);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(842, 29);
+            this.panel11.TabIndex = 51;
+            // 
+            // btnCancelStrategy
+            // 
+            this.btnCancelStrategy.BackColor = System.Drawing.Color.White;
+            this.btnCancelStrategy.Location = new System.Drawing.Point(79, 3);
+            this.btnCancelStrategy.Name = "btnCancelStrategy";
+            this.btnCancelStrategy.Size = new System.Drawing.Size(68, 23);
+            this.btnCancelStrategy.TabIndex = 1;
+            this.btnCancelStrategy.Text = "取消策略";
+            this.btnCancelStrategy.UseVisualStyleBackColor = false;
+            this.btnCancelStrategy.Click += new System.EventHandler(this.btnCancelStrategy_Click);
+            // 
+            // btnRunStrategy
+            // 
+            this.btnRunStrategy.BackColor = System.Drawing.Color.White;
+            this.btnRunStrategy.Location = new System.Drawing.Point(5, 3);
+            this.btnRunStrategy.Name = "btnRunStrategy";
+            this.btnRunStrategy.Size = new System.Drawing.Size(68, 23);
+            this.btnRunStrategy.TabIndex = 0;
+            this.btnRunStrategy.Text = "标记策略";
+            this.btnRunStrategy.UseVisualStyleBackColor = false;
+            this.btnRunStrategy.Click += new System.EventHandler(this.btnRunStrategy_Click);
             // 
             // tabRemind
             // 
@@ -942,76 +1021,51 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 120;
             // 
-            // panel11
+            // tabReport
             // 
-            this.panel11.Controls.Add(this.btnCancelStrategy);
-            this.panel11.Controls.Add(this.btnRunStrategy);
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel11.Location = new System.Drawing.Point(0, 0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(842, 29);
-            this.panel11.TabIndex = 51;
+            this.tabReport.Controls.Add(this.gridReportList);
+            this.tabReport.Controls.Add(this.panel3);
+            this.tabReport.Location = new System.Drawing.Point(4, 22);
+            this.tabReport.Name = "tabReport";
+            this.tabReport.Size = new System.Drawing.Size(842, 221);
+            this.tabReport.TabIndex = 10;
+            this.tabReport.Text = "机构研报";
+            this.tabReport.UseVisualStyleBackColor = true;
             // 
-            // btnCancelStrategy
+            // gridReportList
             // 
-            this.btnCancelStrategy.BackColor = System.Drawing.Color.White;
-            this.btnCancelStrategy.Location = new System.Drawing.Point(79, 3);
-            this.btnCancelStrategy.Name = "btnCancelStrategy";
-            this.btnCancelStrategy.Size = new System.Drawing.Size(68, 23);
-            this.btnCancelStrategy.TabIndex = 1;
-            this.btnCancelStrategy.Text = "取消策略";
-            this.btnCancelStrategy.UseVisualStyleBackColor = false;
-            this.btnCancelStrategy.Click += new System.EventHandler(this.btnCancelStrategy_Click);
+            this.gridReportList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridReportList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridReportList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridReportList.Location = new System.Drawing.Point(0, 29);
+            this.gridReportList.MultiSelect = false;
+            this.gridReportList.Name = "gridReportList";
+            this.gridReportList.ReadOnly = true;
+            this.gridReportList.RowHeadersWidth = 10;
+            this.gridReportList.RowTemplate.Height = 23;
+            this.gridReportList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridReportList.Size = new System.Drawing.Size(842, 192);
+            this.gridReportList.TabIndex = 50;
             // 
-            // btnRunStrategy
+            // panel3
             // 
-            this.btnRunStrategy.BackColor = System.Drawing.Color.White;
-            this.btnRunStrategy.Location = new System.Drawing.Point(5, 3);
-            this.btnRunStrategy.Name = "btnRunStrategy";
-            this.btnRunStrategy.Size = new System.Drawing.Size(68, 23);
-            this.btnRunStrategy.TabIndex = 0;
-            this.btnRunStrategy.Text = "标记策略";
-            this.btnRunStrategy.UseVisualStyleBackColor = false;
-            this.btnRunStrategy.Click += new System.EventHandler(this.btnRunStrategy_Click);
+            this.panel3.Controls.Add(this.btnOpenBrower);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(842, 29);
+            this.panel3.TabIndex = 49;
             // 
-            // panel12
+            // btnOpenBrower
             // 
-            this.panel12.Controls.Add(this.lblAccountStockInfo);
-            this.panel12.Controls.Add(this.txtAccountSearch);
-            this.panel12.Controls.Add(this.lblAccountStockTotal);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel12.Location = new System.Drawing.Point(0, 0);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(842, 29);
-            this.panel12.TabIndex = 48;
-            // 
-            // txtAccountSearch
-            // 
-            this.txtAccountSearch.Location = new System.Drawing.Point(765, 4);
-            this.txtAccountSearch.Name = "txtAccountSearch";
-            this.txtAccountSearch.Size = new System.Drawing.Size(74, 21);
-            this.txtAccountSearch.TabIndex = 7;
-            this.txtAccountSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtAccountStock_KeyDown);
-            // 
-            // lblAccountStockTotal
-            // 
-            this.lblAccountStockTotal.AutoSize = true;
-            this.lblAccountStockTotal.Location = new System.Drawing.Point(682, 9);
-            this.lblAccountStockTotal.Name = "lblAccountStockTotal";
-            this.lblAccountStockTotal.Size = new System.Drawing.Size(77, 12);
-            this.lblAccountStockTotal.TabIndex = 3;
-            this.lblAccountStockTotal.Text = "总股票数:[0]";
-            // 
-            // lblAccountStockInfo
-            // 
-            this.lblAccountStockInfo.AutoSize = true;
-            this.lblAccountStockInfo.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblAccountStockInfo.ForeColor = System.Drawing.Color.Blue;
-            this.lblAccountStockInfo.Location = new System.Drawing.Point(4, 4);
-            this.lblAccountStockInfo.Name = "lblAccountStockInfo";
-            this.lblAccountStockInfo.Size = new System.Drawing.Size(91, 22);
-            this.lblAccountStockInfo.TabIndex = 8;
-            this.lblAccountStockInfo.Text = "Loading...";
+            this.btnOpenBrower.BackColor = System.Drawing.Color.White;
+            this.btnOpenBrower.Location = new System.Drawing.Point(5, 3);
+            this.btnOpenBrower.Name = "btnOpenBrower";
+            this.btnOpenBrower.Size = new System.Drawing.Size(64, 23);
+            this.btnOpenBrower.TabIndex = 0;
+            this.btnOpenBrower.Text = "浏览";
+            this.btnOpenBrower.UseVisualStyleBackColor = false;
+            this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
             // 
             // DesktopFrom
             // 
@@ -1045,6 +1099,8 @@
             this.panel10.PerformLayout();
             this.tabHoldStockList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).EndInit();
+            this.panel12.ResumeLayout(false);
+            this.panel12.PerformLayout();
             this.tabControlBottom.ResumeLayout(false);
             this.tabActionLog.ResumeLayout(false);
             this.tabPriceChart.ResumeLayout(false);
@@ -1054,6 +1110,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
             this.tabStockStrategyDetail.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
+            this.panel11.ResumeLayout(false);
             this.tabRemind.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).EndInit();
             this.panel8.ResumeLayout(false);
@@ -1066,9 +1123,9 @@
             this.tabPriceData.ResumeLayout(false);
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
-            this.panel11.ResumeLayout(false);
-            this.panel12.ResumeLayout(false);
-            this.panel12.PerformLayout();
+            this.tabReport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1154,5 +1211,9 @@
         private System.Windows.Forms.TextBox txtAccountSearch;
         private System.Windows.Forms.Label lblAccountStockTotal;
         private System.Windows.Forms.Label lblAccountStockInfo;
+        private System.Windows.Forms.TabPage tabReport;
+        private System.Windows.Forms.DataGridView gridReportList;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button btnOpenBrower;
     }
 }

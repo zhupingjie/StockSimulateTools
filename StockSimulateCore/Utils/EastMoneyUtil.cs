@@ -398,6 +398,53 @@ namespace StockSimulateCore.Utils
 
         #endregion
 
+        #region 研报信息
+
+        public static ReportEntity[] GetReports(string stockCode)
+        {
+            try
+            {
+                var retStr = $"http://data.eastmoney.com/report/{stockCode.Substring(2, 6)}.html".GetStringFromUrl();
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(retStr);
+
+                var jsonNode = doc.DocumentNode.ChildNodes.FirstOrDefault(c => c.Name == "script" && c.InnerText.Contains("var initdata ="));
+                if(jsonNode != null)
+                {
+                    var initData = jsonNode.InnerHtml.Substring(jsonNode.InnerHtml.IndexOf("var initdata ="));
+                    var jsonData = initData.Replace("var initdata = ", "");
+                    jsonData = jsonData.Substring(0, jsonData.Length - 1);
+
+                    var result = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyReportModel>(jsonData);
+                    if (result == null || result.data == null) return new ReportEntity[] { };
+
+                    var gatherDate = DateTime.Now.Date.AddMonths(-3);
+                    return result.data.Where(c => c.publishDate > gatherDate).Select(c => new ReportEntity()
+                    {
+                        StockCode = stockCode,
+                        Title = c.title,
+                        PublishDate = c.publishDate.ToString("yyyy-MM-dd"),
+                        PdfCode = c.infoCode,
+                        OrgNam = c.orgSName,
+                        ThisYearPE = c.predictThisYearPe,
+                        ThisYearEPS = c.predictThisYearEps,
+                        NextYearPE = c.predictNextYearPe,
+                        NextYearEPS = c.predictThisYearEps,
+                        NextTwoYearPE = c.predictNextYearPe,
+                        NextTwoYearEPS = c.predictNextYearEps,
+                    }).ToArray();
+                }
+                return new ReportEntity[] { };
+            }
+            catch (Exception ex)
+            {
+                return new ReportEntity[] { };
+            }
+        }
+
+
+        #endregion
+
         #region 辅助方法
 
         static string GetStockSecid(string code)
@@ -436,6 +483,26 @@ namespace StockSimulateCore.Utils
     public class EastMoneyAPIModel
     {
         public Dictionary<string, object> data { get; set; }
+    }
+
+    public class EastMoneyReportModel
+    {
+        public ReportModel[] data { get; set; }
+    }
+
+    public class ReportModel
+    { 
+        public string title { get; set; }
+        public DateTime publishDate { get; set; }
+        public decimal predictThisYearPe { get; set; }
+        public decimal predictThisYearEps { get; set; }
+        public decimal predictNextYearPe { get; set; }
+        public decimal predictNextYearEps { get; set; }
+        public decimal predictNextTwoYearPe { get; set; }
+        public decimal predictNextTwoYearEps { get; set; }
+        public string orgSName { get; set; }
+        public string infoCode { get; set; }
+        public string indvInduName { get; set; }
     }
 
     public class StockInfo
