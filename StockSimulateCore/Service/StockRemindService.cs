@@ -171,13 +171,13 @@ namespace StockSimulateCore.Service
 
         public static void CheckAutoRun(Action<string> action)
         {
-            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled=1");
+            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled=0");
             var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
 
             foreach (var stock in stocks)
             {
-                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && c.Handled == 0 && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate));
+                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && c.Handled == 0 && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate.Date));
                 if (remind != null)
                 {
                     remind.Handled = 1;
@@ -201,7 +201,6 @@ namespace StockSimulateCore.Service
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.UDPer > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
                     MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
-                    action(message);
                     action(message);
                 }
 
