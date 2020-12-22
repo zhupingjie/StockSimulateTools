@@ -201,7 +201,12 @@ namespace StockSimulateCore.Service
                 }
                 actionLog($"已采集[{stock.Name}]现金流量表数据...");
                 #endregion
+
+                //同步更新报告期
+                stock.ReportDate = mainTargetInfos.Max(c => c.Date);
+                SQLiteDBUtil.Instance.Update<StockEntity>(stock);
             }
+
             //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
     }

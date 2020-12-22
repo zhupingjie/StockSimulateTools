@@ -154,7 +154,7 @@ namespace StockSimulateCore.Service
             var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target} and Handled='False'");
             if (remind != null)
             {
-                remind.Handled = true;
+                remind.Handled = 1;
                 SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
             }
         }
@@ -164,23 +164,23 @@ namespace StockSimulateCore.Service
             var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target}");
             if (remind != null)
             {
-                remind.Handled = true;
+                remind.Handled = 1;
                 SQLiteDBUtil.Instance.Delete<RemindEntity>(remind);
             }
         }
 
         public static void CheckAutoRun(Action<string> action)
         {
-            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled='False'");
+            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled=1");
             var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
 
             foreach (var stock in stocks)
             {
-                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && !c.Handled && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate));
+                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && c.Handled == 0 && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate));
                 if (remind != null)
                 {
-                    remind.Handled = true;
+                    remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
                     SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
@@ -203,7 +203,7 @@ namespace StockSimulateCore.Service
                     action(message);
                 }
 
-                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && !c.Handled);
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 1 && c.Target <= stock.Price && c.Handled == 0);
                 if (remind != null)
                 {
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已上涨高于股价[{remind.Target}],请注意!";
@@ -212,13 +212,13 @@ namespace StockSimulateCore.Service
                     action(message);
                     action(message);
 
-                    remind.Handled = true;
+                    remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
                     SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
-                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && !c.Handled);
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && c.Handled == 0);
                 if (remind != null)
                 {
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已下跌低于股价[{remind.Target}],请注意!";
@@ -227,13 +227,13 @@ namespace StockSimulateCore.Service
                     action(message);
                     action(message);
 
-                    remind.Handled = true;
+                    remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
                     SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
-                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && c.Handled == 0 && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
                 if (remind != null)
                 {
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.StrategyTarget} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";
@@ -247,7 +247,7 @@ namespace StockSimulateCore.Service
                     SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
-                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && !c.Handled && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && c.Handled == 0 && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
                 if (remind != null)
                 {
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已达成买卖点[{remind.StrategyTarget} ({remind.MinPrice}-{remind.MaxPrice})],请注意!";

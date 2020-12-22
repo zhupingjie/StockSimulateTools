@@ -972,8 +972,6 @@ namespace StockPriceTools
             }
         }
 
-        #endregion
-
         #region 操作日志事件
 
         public void ActionLog(string message)

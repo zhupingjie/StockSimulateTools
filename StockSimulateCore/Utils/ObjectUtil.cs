@@ -281,6 +281,8 @@ namespace StockSimulateCore.Utils
 
         public static bool ColudGatherFinanceReport(string reportDate)
         {
+            if (string.IsNullOrEmpty(reportDate)) return true;
+
             var date = DateTime.Now.Date;
             if (!DateTime.TryParse(reportDate, out date)) return false;
 

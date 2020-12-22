@@ -49,14 +49,14 @@ namespace StockSimulateCore.Entity
         
         [Description("是否执行")]
         [GridColumnIgnore]
-        public bool Handled { get; set; }
+        public int Handled { get; set; }
         [Description("是否执行")]
         [NotMapped]
         public string HandledText
         {
             get
             {
-                return Handled ? "✔" : "×";
+                return Handled == 1 ? "✔" : "×";
             }
         }
 
