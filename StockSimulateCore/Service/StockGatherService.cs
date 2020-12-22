@@ -52,6 +52,8 @@ namespace StockSimulateCore.Service
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
             foreach (var stock in stocks)
             {
+                if (!ObjectUtil.ColudGatherFinanceReport(stock.ReportDate)) continue;
+
                 #region 主要指标
                 var mainTargetInfos = EastMoneyUtil.GetMainTargets(stock.Code, 0);
                 if (mainTargetInfos.Length > 0)
@@ -97,7 +99,7 @@ namespace StockSimulateCore.Service
                 if (balanceTargetInfos.Length > 0)
                 {
                     var dates = balanceTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = balanceTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -109,7 +111,7 @@ namespace StockSimulateCore.Service
                 if (balanceTargetInfos.Length > 0)
                 {
                     var dates = balanceTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = balanceTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -125,7 +127,7 @@ namespace StockSimulateCore.Service
                 if (profitTargetInfos.Length > 0)
                 {
                     var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -137,7 +139,7 @@ namespace StockSimulateCore.Service
                 if (profitTargetInfos.Length > 0)
                 {
                     var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -149,7 +151,7 @@ namespace StockSimulateCore.Service
                 if (profitTargetInfos.Length > 0)
                 {
                     var dates = profitTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = profitTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -165,7 +167,7 @@ namespace StockSimulateCore.Service
                 if(cashTargetInfos.Length > 0)
                 {
                     var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -177,7 +179,7 @@ namespace StockSimulateCore.Service
                 if (cashTargetInfos.Length > 0)
                 {
                     var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=1 and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -189,7 +191,7 @@ namespace StockSimulateCore.Service
                 if (cashTargetInfos.Length > 0)
                 {
                     var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
-                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"StockCode='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
+                    var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0 and REPORTTYPE=2 and REPORTDATE in ('{string.Join("','", dates)}')");
                     var mtDates = mts.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var newMts = cashTargetInfos.Where(c => !mtDates.Contains(c.REPORTDATE)).ToArray();
                     if (newMts.Length > 0)
@@ -200,7 +202,7 @@ namespace StockSimulateCore.Service
                 actionLog($"已采集[{stock.Name}]现金流量表数据...");
                 #endregion
             }
-            if (stocks.Length > 0) actionLog($">------------------------------------------------>");
+            //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
     }
 }

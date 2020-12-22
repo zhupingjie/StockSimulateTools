@@ -54,6 +54,12 @@ namespace StockSimulateUI.UI
             this.txtNetProfit.Text = $"{stock.NetProfit}";
             this.txtPrice.Text = $"{stock.Price}";
             this.txtAmount.Text = $"{stock.Amount}";
+
+            Action act = delegate ()
+            {
+                this.LoadMainTargetInfo(StockCode, 0);
+            };
+            this.Invoke(act);
         }
 
         private void Valuate(bool changeNetProfit = false)
@@ -124,6 +130,234 @@ namespace StockSimulateUI.UI
 
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void tabControlBottom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, StockCode);
+        }
+
+        void LoadTabGridList(int tabIndex, string stockCode)
+        {
+            switch (tabIndex)
+            {
+                case 0:
+                    this.LoadMainTargetInfo(stockCode);
+                    break;
+                case 1:
+                    this.LoadBalanceTargetInfo(stockCode);
+                    break;
+                case 2:
+                    this.LoadProfitTargetInfo(stockCode);
+                    break;
+                case 3:
+                    this.LoadCashTargetInfo(stockCode);
+                    break;
+            }
+        }
+
+        void LoadMainTargetInfo(string stockCode, int rtype = 0)
+        {
+            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
+            var dt = EastMoneyUtil.ConvertMainTargetData(mainTargets);
+            this.gridMaintargetList.DataSource = null;
+            this.gridMaintargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridMaintargetList.ColumnCount; i++)
+            {
+                this.gridMaintargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridMaintargetList.Columns[i].Width = 160;
+                else
+                {
+                    this.gridMaintargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadBalanceTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var balanceTargets = Repository.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertBalanceTargetData(balanceTargets);
+            this.gridBalanceTargetList.DataSource = null;
+            this.gridBalanceTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridBalanceTargetList.ColumnCount; i++)
+            {
+                this.gridBalanceTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridBalanceTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridBalanceTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadProfitTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var profitTargets = Repository.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertProfitTargetData(profitTargets);
+            this.gridProfitTargetList.DataSource = null;
+            this.gridProfitTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridProfitTargetList.ColumnCount; i++)
+            {
+                this.gridProfitTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridProfitTargetList.Columns[i].Width = 200;
+                else
+                {
+                    this.gridProfitTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        void LoadCashTargetInfo(string stockCode, int rtype = 0, int type = 1)
+        {
+            var cashTargets = Repository.QueryAll<CashTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var dt = EastMoneyUtil.ConvertCashTargetData(cashTargets);
+            this.gridCashTargetList.DataSource = null;
+            this.gridCashTargetList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridCashTargetList.ColumnCount; i++)
+            {
+                this.gridCashTargetList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                if (i == 0) this.gridCashTargetList.Columns[i].Width = 250;
+                else
+                {
+                    this.gridCashTargetList.Columns[i].Width = 100;
+                }
+            }
+        }
+
+        private void txtByReport_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByReport.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadMainTargetInfo(StockCode, 0);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByYear_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByYear.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadMainTargetInfo(StockCode, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByQuarter_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByQuarter.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 2);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByReportOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByReportOfZCFZB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByYearOfZCFZB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByYearOfZCFZB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByReportOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByReportOfLRB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByYearOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByYearOfLRB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByQuarterOfLRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByQuarterOfLRB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByReportOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByReportOfXJLLB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 0, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByYearOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByYearOfXJLLB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 1, 1);
+                };
+                this.Invoke(act);
+            }
+        }
+
+        private void txtByQuarterOfXJLLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.txtByQuarterOfXJLLB.Checked)
+            {
+                Action act = delegate ()
+                {
+                    this.LoadCashTargetInfo(StockCode, 0, 2);
+                };
+                this.Invoke(act);
+            }
         }
     }
 }

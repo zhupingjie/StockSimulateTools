@@ -165,5 +165,7 @@ namespace StockSimulateCore.Entity
         [GridColumnIgnore]
         public decimal DebtRage { get; set; }
 
+        [Description("报告日期")]
+        public string ReportDate { get; set; }
     }
 }
