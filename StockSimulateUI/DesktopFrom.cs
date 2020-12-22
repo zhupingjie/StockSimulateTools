@@ -323,9 +323,18 @@ namespace StockPriceTools
 
         void LoadAccountStockList()
         {
-            var where = "HoldQty>0";
+            var where = "1>0";
             var search = this.txtAccountSearch.Text.Trim();
             if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
+            if (this.txtHoldQty.Checked) where += " and HoldQty>0";
+            if (this.txtRealType.Checked)
+            {
+                var accounts = Repository.QueryAll<AccountEntity>($"RealType=1");
+                if(accounts.Length > 0)
+                {
+                    where += $" and AccountName in ('{string.Join("','", accounts.Select(c => c.Name))}')";
+                }
+            }
 
             var accountStocks = Repository.QueryAll<AccountStockEntity>(where);
             var dt = ObjectUtil.ConvertTable(accountStocks);
@@ -476,6 +485,24 @@ namespace StockPriceTools
                 };
                 this.Invoke(act);
             }
+        }
+
+        private void txtHoldQty_CheckedChanged(object sender, EventArgs e)
+        {
+            Action act = delegate ()
+            {
+                this.LoadAccountStockList();
+            };
+            this.Invoke(act);
+        }
+
+        private void txtRealType_CheckedChanged(object sender, EventArgs e)
+        {
+            Action act = delegate ()
+            {
+                this.LoadAccountStockList();
+            };
+            this.Invoke(act);
         }
         #endregion
 
@@ -1051,5 +1078,6 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
     }
 }

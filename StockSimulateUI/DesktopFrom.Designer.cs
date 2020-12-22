@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -114,6 +114,8 @@
             this.gridReportList = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnOpenBrower = new System.Windows.Forms.Button();
+            this.txtHoldQty = new System.Windows.Forms.CheckBox();
+            this.txtRealType = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -501,6 +503,8 @@
             // 
             // panel12
             // 
+            this.panel12.Controls.Add(this.txtRealType);
+            this.panel12.Controls.Add(this.txtHoldQty);
             this.panel12.Controls.Add(this.lblAccountStockInfo);
             this.panel12.Controls.Add(this.txtAccountSearch);
             this.panel12.Controls.Add(this.lblAccountStockTotal);
@@ -589,11 +593,11 @@
             // 
             // chartPrice
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
+            chartArea5.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea5);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
+            legend5.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend5);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1067,6 +1071,28 @@
             this.btnOpenBrower.UseVisualStyleBackColor = false;
             this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
             // 
+            // txtHoldQty
+            // 
+            this.txtHoldQty.AutoSize = true;
+            this.txtHoldQty.Location = new System.Drawing.Point(628, 8);
+            this.txtHoldQty.Name = "txtHoldQty";
+            this.txtHoldQty.Size = new System.Drawing.Size(48, 16);
+            this.txtHoldQty.TabIndex = 9;
+            this.txtHoldQty.Text = "持有";
+            this.txtHoldQty.UseVisualStyleBackColor = true;
+            this.txtHoldQty.CheckedChanged += new System.EventHandler(this.txtHoldQty_CheckedChanged);
+            // 
+            // txtRealType
+            // 
+            this.txtRealType.AutoSize = true;
+            this.txtRealType.Location = new System.Drawing.Point(574, 8);
+            this.txtRealType.Name = "txtRealType";
+            this.txtRealType.Size = new System.Drawing.Size(48, 16);
+            this.txtRealType.TabIndex = 49;
+            this.txtRealType.Text = "实盘";
+            this.txtRealType.UseVisualStyleBackColor = true;
+            this.txtRealType.CheckedChanged += new System.EventHandler(this.txtRealType_CheckedChanged);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1215,5 +1241,7 @@
         private System.Windows.Forms.DataGridView gridReportList;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnOpenBrower;
+        private System.Windows.Forms.CheckBox txtHoldQty;
+        private System.Windows.Forms.CheckBox txtRealType;
     }
 }
