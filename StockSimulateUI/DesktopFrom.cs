@@ -574,7 +574,17 @@ namespace StockPriceTools
         {
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
-            title.Text = $"【{stockName}】分时图";
+            var text = $"【{stockName}】分时图";
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock != null)
+            {
+                text += $"【M5:{stock.AvgPrice5}{(stock.Price > stock.AvgPrice5 ? "↗" : stock.Price < stock.AvgPrice5 ? "↘" : "→")}】";
+                if (stock.AvgPrice10 > 0) text += $"【M10:{stock.AvgPrice10}{(stock.Price > stock.AvgPrice10 ? "↗" : stock.Price < stock.AvgPrice10 ? "↘" : "→")}】";
+                if (stock.AvgPrice20 > 0) text += $"【M20:{stock.AvgPrice20}{(stock.Price > stock.AvgPrice20 ? "↗" : stock.Price < stock.AvgPrice20 ? "↘" : "→")}】";
+                if (stock.AvgPrice60 > 0) text += $"【M60:{stock.AvgPrice60}{(stock.Price > stock.AvgPrice60 ? "↗" : stock.Price < stock.AvgPrice60 ? "↘" : "→")}】";
+            }
+            title.Text = text;
+            title.ForeColor = Color.Blue;
 
             var series = this.chartPrice.Series.FirstOrDefault(c => c.Name == "FOUCS");
             if (series == null) series = this.chartPrice.Series.Add("FOUCS");

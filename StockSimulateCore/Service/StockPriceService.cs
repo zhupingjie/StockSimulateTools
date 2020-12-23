@@ -127,6 +127,11 @@ namespace StockSimulateCore.Service
                 if (stockPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(stockPrices.Take(20).Average(c => c.Price), decNum);
                 if (stockPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(stockPrices.Take(10).Average(c => c.Price), decNum);
                 if (stockPrices.Length < 10) stockAverage.AvgPrice5 = Math.Round(stockPrices.Take(5).Average(c => c.Price), decNum);
+
+                stock.AvgPrice5 = stockAverage.AvgPrice5;
+                stock.AvgPrice10 = stockAverage.AvgPrice10;
+                stock.AvgPrice20 = stockAverage.AvgPrice20;
+                stock.AvgPrice60 = stockAverage.AvgPrice60;
                 stock.Trend = GetTrend(stock, stockAverage);
             }
             SQLiteDBUtil.Instance.Update<StockEntity>(stocks);
@@ -173,16 +178,23 @@ namespace StockSimulateCore.Service
                 {
                     if(stock.Price < stockAverage.AvgPrice5)
                     {
-                        mid = "S.调整";
+                        mid = "S.下探";
+                    }
+                    else
+                    {
+                        mid = "S.上攻";
+                    }
+                }
+                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice10)
+                {
+                    if (stock.Price < stockAverage.AvgPrice5)
+                    {
+                        mid = "S.杀跌";
                     }
                     else
                     {
                         mid = "S.反弹";
                     }
-                }
-                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice10)
-                {
-                    mid = "S.杀跌";
                 }
             }
             var tdy = "";

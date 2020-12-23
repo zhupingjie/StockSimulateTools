@@ -83,6 +83,21 @@ namespace StockSimulateCore.Entity
         [Description("均线趋势5/10/20/60")]
         public string Trend { get; set; }
 
+        [Description("5日均价")]
+        [GridColumnIgnore]
+        public decimal AvgPrice5 { get; set; }
+
+        [Description("10日均价")]
+        [GridColumnIgnore]
+        public decimal AvgPrice10 { get; set; }
+
+        [Description("20日均价")]
+        [GridColumnIgnore]
+        public decimal AvgPrice20 { get; set; }
+
+        [Description("60日均价")]
+        [GridColumnIgnore]
+        public decimal AvgPrice60 { get; set; }
 
         [Description("总股本(亿股)")]
         [GatherColumn]
