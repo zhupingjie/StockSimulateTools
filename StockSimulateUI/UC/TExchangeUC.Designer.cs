@@ -236,7 +236,7 @@
             this.txtLockQty.Name = "txtLockQty";
             this.txtLockQty.Size = new System.Drawing.Size(103, 29);
             this.txtLockQty.TabIndex = 10;
-            this.txtLockQty.Text = "200";
+            this.txtLockQty.Text = "0";
             // 
             // txtUpPer
             // 

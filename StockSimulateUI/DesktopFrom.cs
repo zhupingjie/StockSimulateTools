@@ -89,11 +89,16 @@ namespace StockPriceTools
                 {
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
+                        Action act = delegate ()
+                        {
+                            this.ActionLog("准备采集今日股价数据...");
+                        };
+                        this.Invoke(act);
                         StockGatherService.GatherPriceData((message) =>
                         {
                             this.ActionLog(message);
                         });
-                        Action act = delegate ()
+                        act = delegate ()
                         {
                             this.LoadStockList();
                         };
@@ -109,13 +114,17 @@ namespace StockPriceTools
                 Thread.Sleep(5000);
                 while (true)
                 {
+                    Action act = delegate ()
+                    {
+                        this.ActionLog("准备计算持有股价盈亏数据...");
+                    };
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
                         StockPriceService.CalculateProfit((message) =>
                         {
                             this.ActionLog(message);
                         });
-                        Action act = delegate ()
+                        act = delegate ()
                         {
                             this.LoadAccountStockList();
                         };
@@ -131,6 +140,10 @@ namespace StockPriceTools
                 Thread.Sleep(10000);
                 while (true)
                 {
+                    Action act = delegate ()
+                    {
+                        this.ActionLog("准备采集财务指标数据...");
+                    };
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
                         StockGatherService.GatherFinanceData((message) =>
@@ -148,6 +161,10 @@ namespace StockPriceTools
                 Thread.Sleep(10000);
                 while (true)
                 {
+                    Action act = delegate ()
+                    {
+                        this.ActionLog("准备采集机构研报数据...");
+                    };
                     StockGatherService.GatherReportData((message) =>
                     {
                         this.ActionLog(message);

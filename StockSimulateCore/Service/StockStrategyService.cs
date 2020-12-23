@@ -19,26 +19,26 @@ namespace StockSimulateCore.Service
         /// </summary>
         /// <param name="strategy"></param>
         /// <returns></returns>
-        public static StockStrategyEntity[] MakeStockStrategys(StrategyInfo strategy)
+        public static StockStrategyEntity[] MakeStockStrategys(StrategyInfo strategy, bool saveStrategy)
         {
             var stockStrategys = new List<StockStrategyEntity>();
             if (strategy.GetType().Equals(typeof(LeftExchangeStrategyInfo)))
             {
-                stockStrategys = MakeLeftExchangeStrategys(strategy as LeftExchangeStrategyInfo);
+                stockStrategys = MakeLeftExchangeStrategys(strategy as LeftExchangeStrategyInfo, saveStrategy);
             }
             else if(strategy.GetType().Equals(typeof(TExchangeStrategyInfo)))
             {
-                stockStrategys = MakeTExchangeStrategys(strategy as TExchangeStrategyInfo);
+                stockStrategys = MakeTExchangeStrategys(strategy as TExchangeStrategyInfo, saveStrategy);
             }
-
-            SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
-            SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
-            SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
-
+            if (saveStrategy)
+            {
+                SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
+                SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
+            }
             return stockStrategys.ToArray();
         }
 
-        public static List<StockStrategyEntity> MakeLeftExchangeStrategys(LeftExchangeStrategyInfo strategy)
+        public static List<StockStrategyEntity> MakeLeftExchangeStrategys(LeftExchangeStrategyInfo strategy, bool makeRemind)
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
@@ -175,26 +175,53 @@ namespace StockSimulateCore.Service
                 });
             }
 
-            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && c.BuyQty > 0).ToArray();
-            foreach (var detail in stockReminds)
+            if (makeRemind)
             {
-                var remind = new RemindEntity()
+                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+
+                //创建买点提醒
+                var remindStrategy = stockStrategys.Where(c => c.ExecuteMode == 0 && c.BuyQty > 0 && c.Price <= stock.Price).OrderByDescending(c=>c.Price).FirstOrDefault();
+                if (remindStrategy != null)
                 {
-                    StockCode = strategy.StockCode,
-                    Target = detail.Price,
-                    RType = detail.BuyQty > 0 ? 8 : 9,
-                    Email = account.Email,
-                    QQ = account.QQ,
-                    StrategyName = detail.StrategyName,
-                    StrategyTarget = detail.Target
-                };
-                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                    var remind = new RemindEntity()
+                    {
+                        StockCode = strategy.StockCode,
+                        Target = remindStrategy.Price,
+                        RType = remindStrategy.BuyQty > 0 ? 8 : 9,
+                        Email = account.Email,
+                        QQ = account.QQ,
+                        StrategyName = remindStrategy.StrategyName,
+                        StrategyTarget = remindStrategy.Target
+                    };
+                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                    SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                }
+                else
+                {
+                    //创建卖点提醒
+                    remindStrategy = stockStrategys.Where(c => c.ExecuteMode == 0 && c.SaleQty > 0 && c.Price >= stock.Price).OrderBy(c => c.Price).FirstOrDefault();
+                    if (remindStrategy != null)
+                    {
+                        var remind = new RemindEntity()
+                        {
+                            StockCode = strategy.StockCode,
+                            Target = remindStrategy.Price,
+                            RType = remindStrategy.BuyQty > 0 ? 8 : 9,
+                            Email = account.Email,
+                            QQ = account.QQ,
+                            StrategyName = remindStrategy.StrategyName,
+                            StrategyTarget = remindStrategy.Target
+                        };
+                        remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                        remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                        SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                    }
+                }
             }
             return stockStrategys;
         }
-        public static List<StockStrategyEntity> MakeTExchangeStrategys(TExchangeStrategyInfo strategy)
+        public static List<StockStrategyEntity> MakeTExchangeStrategys(TExchangeStrategyInfo strategy, bool makeRemind)
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
@@ -250,24 +277,29 @@ namespace StockSimulateCore.Service
                     StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
                 });
             }
-            var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
-            foreach (var detail in stockReminds)
-            {
-                var remind = new RemindEntity()
-                {
-                    StockCode = strategy.StockCode,
-                    Target = detail.Price,
-                    RType = detail.BuyQty > 0 ? 8 : 9,
-                    Email = account.Email,
-                    QQ = account.QQ,
-                    StrategyName = detail.StrategyName,
-                    StrategyTarget = detail.Target
-                };
-                remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
-            }
 
+            if (makeRemind)
+            {
+                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+
+                var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
+                foreach (var detail in stockReminds)
+                {
+                    var remind = new RemindEntity()
+                    {
+                        StockCode = strategy.StockCode,
+                        Target = detail.Price,
+                        RType = detail.BuyQty > 0 ? 8 : 9,
+                        Email = account.Email,
+                        QQ = account.QQ,
+                        StrategyName = detail.StrategyName,
+                        StrategyTarget = detail.Target
+                    };
+                    remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                    remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
+                    SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                }
+            }
             return stockStrategys;
         }
         static int GetExchangeCount(decimal amount)
@@ -328,7 +360,7 @@ namespace StockSimulateCore.Service
                 };
 
                 //差价交易
-                ExchangeRun(item, exchangeInfo);
+                var strategyInfo = ExchangeRun(item, exchangeInfo);
 
                 ExchangeResultInfo result = null;
                 if (item.BuyQty > 0)
@@ -350,47 +382,48 @@ namespace StockSimulateCore.Service
             SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
         }
 
-        public static void ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
+        public static StrategyInfo ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
         {
-            if (stockStrategy.StrategyInfoType == typeof(TExchangeStrategyInfo).FullName && !string.IsNullOrEmpty(stockStrategy.StrategySource))
+            if (stockStrategy.StrategyInfoType != typeof(TExchangeStrategyInfo).FullName || string.IsNullOrEmpty(stockStrategy.StrategySource)) return null;
+            
+            var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
+            if (strategyInfo == null) return null;
+
+            if (stockStrategy.BuyQty > 0)
             {
-                var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
-                if (strategyInfo == null) return;
-                if (stockStrategy.BuyQty > 0)
+                strategyInfo.ActualSingleBuy += 1;
+                strategyInfo.ActualSingleSale = 0;
+                strategyInfo.ActualPrice = exchangeInfo.Price;
+
+                if (strategyInfo.ActualSingleBuy > strategyInfo.MaxSingleBS) return strategyInfo;
+
+                if (StockExchangeService.CouldBuy(exchangeInfo))
                 {
-                    strategyInfo.ActualSingleBuy += 1;
-                    strategyInfo.ActualSingleSale = 0;
-                    strategyInfo.ActualPrice = exchangeInfo.Price;
+                    var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
+                    SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
 
-                    if (strategyInfo.ActualSingleBuy > strategyInfo.MaxSingleBS) return;
-
-                    if (StockExchangeService.CouldBuy(exchangeInfo))
-                    {
-                        var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                        SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-
-                        //删除批策略号的对立数据
-                        SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
-                    }
-                }
-                if (stockStrategy.SaleQty > 0)
-                {
-                    strategyInfo.ActualSingleSale += 1;
-                    strategyInfo.ActualSingleBuy = 0;
-                    strategyInfo.ActualPrice = exchangeInfo.Price;
-
-                    if (strategyInfo.ActualSingleSale > strategyInfo.MaxSingleBS) return;
-
-                    if (StockExchangeService.CouldSale(exchangeInfo))
-                    {
-                        var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo);
-                        SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
-
-                        //删除批策略号的对立数据
-                        SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
-                    }
+                    //删除批策略号的对立数据
+                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
                 }
             }
+            if (stockStrategy.SaleQty > 0)
+            {
+                strategyInfo.ActualSingleSale += 1;
+                strategyInfo.ActualSingleBuy = 0;
+                strategyInfo.ActualPrice = exchangeInfo.Price;
+
+                if (strategyInfo.ActualSingleSale > strategyInfo.MaxSingleBS) return strategyInfo;
+
+                if (StockExchangeService.CouldSale(exchangeInfo))
+                {
+                    var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
+                    SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+
+                    //删除批策略号的对立数据
+                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                }
+            }
+            return strategyInfo;
         }
     }
 }

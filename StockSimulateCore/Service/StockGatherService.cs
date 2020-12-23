@@ -89,9 +89,10 @@ namespace StockSimulateCore.Service
                     if (newMts.Length > 0)
                     {
                         SQLiteDBUtil.Instance.Insert<MainTargetEntity>(newMts);
+
+                        actionLog($"已采集[{stock.Name}]主要指标数据...[{newMts}份]");
                     }
                 }
-                actionLog($"已采集[{stock.Name}]主要指标数据...");
                 #endregion
 
                 #region 资产负债表
@@ -117,9 +118,10 @@ namespace StockSimulateCore.Service
                     if (newMts.Length > 0)
                     {
                         SQLiteDBUtil.Instance.Insert<BalanceTargetEntity>(newMts);
+
+                        actionLog($"已采集[{stock.Name}]资产负债表数据...[{newMts}份]");
                     }
                 }
-                actionLog($"已采集[{stock.Name}]资产负债表数据...");
                 #endregion
 
                 #region 利润表
@@ -157,9 +159,10 @@ namespace StockSimulateCore.Service
                     if (newMts.Length > 0)
                     {
                         SQLiteDBUtil.Instance.Insert<ProfitTargetEntity>(newMts);
+
+                        actionLog($"已采集[{stock.Name}]利润表数据...[{newMts}份]");
                     }
                 }
-                actionLog($"已采集[{stock.Name}]利润表数据...");
                 #endregion
 
                 #region 现金流量表
@@ -197,9 +200,10 @@ namespace StockSimulateCore.Service
                     if (newMts.Length > 0)
                     {
                         SQLiteDBUtil.Instance.Insert<CashTargetEntity>(newMts);
+
+                        actionLog($"已采集[{stock.Name}]现金流量表数据...[{newMts}份]");
                     }
                 }
-                actionLog($"已采集[{stock.Name}]现金流量表数据...");
                 #endregion
 
                 //同步更新报告期
@@ -225,6 +229,8 @@ namespace StockSimulateCore.Service
                 if (newReports.Length > 0)
                 {
                     SQLiteDBUtil.Instance.Insert<ReportEntity>(newReports);
+
+                    actionLog($"已采集[{stock.Name}]机构研报数据...[{newReports}份]");
                 }
             }
         }

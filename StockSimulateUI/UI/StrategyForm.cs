@@ -111,7 +111,7 @@ namespace StockSimulateUI.UI
             strategy.Name = strategyName;
             strategy.ExecuteMode = executeMode;
 
-            StockStrategyService.MakeStockStrategys(strategy);
+            StockStrategyService.MakeStockStrategys(strategy, true);
             
             this.DialogResult = DialogResult.OK;
             this.Close();

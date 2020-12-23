@@ -29,7 +29,7 @@ namespace StockSimulateUI.UC
             strategy.StockCode = stockCode;
             strategy.Name = strategyName;
 
-            var stockStrategys = StockStrategyService.MakeStockStrategys(strategy);
+            var stockStrategys = StockStrategyService.MakeStockStrategys(strategy, false);
             var dt = ObjectUtil.ConvertTable<StockStrategyEntity>(stockStrategys);
             this.dataGridView1.DataSource = null;
             this.dataGridView1.DataSource = dt.DefaultView;
