@@ -32,7 +32,7 @@ namespace StockSimulateCore.Entity
         [NotMapped]
         public string FoucsText {
             get {
-                return Foucs == 1 ? "✔" : Foucs == 0 ? "×" : "";
+                return Foucs == 1 ? "✔" : Foucs == 2 ? "◉" : "×";
             }
         }
 
@@ -79,6 +79,10 @@ namespace StockSimulateCore.Entity
         [Description("交易锁定(天)")]
         [GridColumnIgnore]
         public int LockDay { get; set; }
+
+        [Description("均线趋势5/10/20/60")]
+        public string Trend { get; set; }
+
 
         [Description("总股本(亿股)")]
         [GatherColumn]

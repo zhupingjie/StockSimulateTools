@@ -91,7 +91,7 @@ namespace StockPriceTools
                     {
                         Action act = delegate ()
                         {
-                            this.ActionLog("准备采集今日股价数据...");
+                            this.ActionLog("采集今日股价数据...");
                         };
                         this.Invoke(act);
                         StockGatherService.GatherPriceData((message) =>
@@ -116,20 +116,36 @@ namespace StockPriceTools
                 {
                     Action act = delegate ()
                     {
-                        this.ActionLog("准备计算持有股价盈亏数据...");
+                        this.ActionLog("计算持有股价盈亏数据...");
                     };
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    StockPriceService.CalculateProfit((message) =>
                     {
-                        StockPriceService.CalculateProfit((message) =>
-                        {
-                            this.ActionLog(message);
-                        });
-                        act = delegate ()
-                        {
-                            this.LoadAccountStockList();
-                        };
-                        this.Invoke(act);
-                    }
+                        this.ActionLog(message);
+                    });
+                    act = delegate ()
+                    {
+                        this.LoadAccountStockList();
+                    };
+                    this.Invoke(act);
+                    Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
+            //计算均线数据
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5000);
+                while (true)
+                {
+                    Action act = delegate ()
+                    {
+                        this.ActionLog("计算股票均线价格数据...");
+                    };
+                    StockPriceService.CalculateAvgrage((message) =>
+                    {
+                        //this.ActionLog(message);
+                    });
+                    this.Invoke(act);
                     Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -142,15 +158,12 @@ namespace StockPriceTools
                 {
                     Action act = delegate ()
                     {
-                        this.ActionLog("准备采集财务指标数据...");
+                        this.ActionLog("采集财务指标数据...");
                     };
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    StockGatherService.GatherFinanceData((message) =>
                     {
-                        StockGatherService.GatherFinanceData((message) =>
-                        {
-                            this.ActionLog(message);
-                        });
-                    }
+                        this.ActionLog(message);
+                    });
                     Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -163,7 +176,7 @@ namespace StockPriceTools
                 {
                     Action act = delegate ()
                     {
-                        this.ActionLog("准备采集机构研报数据...");
+                        this.ActionLog("采集机构研报数据...");
                     };
                     StockGatherService.GatherReportData((message) =>
                     {
@@ -557,16 +570,48 @@ namespace StockPriceTools
         /// </summary>
         /// <param name="stockCode"></param>
         /// <param name="dateType">0:日,1:分钟</param>
-        void LoadPriceChart(string stockCode, string stockName, int dateType = 0)
+        void LoadPriceChart(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)
         {
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
             title.Text = $"【{stockName}】分时图";
-            var series = this.chartPrice.Series.FirstOrDefault();
-            if (series == null) series = this.chartPrice.Series.Add("");
-            series.ChartType = dateType == 1? SeriesChartType.Line : SeriesChartType.Candlestick;
+
+            var series = this.chartPrice.Series.FirstOrDefault(c => c.Name == "FOUCS");
+            if (series == null) series = this.chartPrice.Series.Add("FOUCS");
+
+            if(dateType == 0)
+            {
+                this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
+
+                var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
+                if (zsSeries != null) this.chartPrice.Series.Remove(zsSeries);
+            }
+            else
+            {
+                this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
+
+                if (chartWithZS)
+                {
+                    var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
+                    if (zsSeries == null) zsSeries = this.chartPrice.Series.Add("ZS");
+
+                    this.BindStockPriceChart(zsSeries, "SH000001", dateType, Color.Blue);
+                }
+            }
+
+            var chartArea = this.chartPrice.ChartAreas[0];
+            chartArea.AxisY.IsStartedFromZero = false;
+            chartArea.AxisY.MajorGrid.Enabled = true;
+            chartArea.AxisY.MajorGrid.LineColor = Color.Gray;
+            chartArea.AxisX.MajorGrid.Enabled = false;
+            chartArea.AxisX.TextOrientation = TextOrientation.Stacked;
+        }
+
+        void BindStockPriceChart(Series series, string stockCode, int dateType, Color lineColor)
+        {
+            series.ChartType = dateType == 1 ? SeriesChartType.Line : SeriesChartType.Candlestick;
             series.BackSecondaryColor = Color.Green;
-            series.Color = Color.Red;
+            series.Color = lineColor;
             series.BorderWidth = 2;
             series.IsVisibleInLegend = false;
             series.YValueType = ChartValueType.Double;
@@ -579,7 +624,7 @@ namespace StockPriceTools
             else
             {
                 var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc", 1).FirstOrDefault();
-                if(lastDate != null)
+                if (lastDate != null)
                 {
                     startDate = DateTime.Parse(lastDate.DealDate);
                 }
@@ -588,20 +633,11 @@ namespace StockPriceTools
             stockPrices = stockPrices.OrderBy(c => c.ID).ToArray();
 
             this.BindChartSeriesPoints(series, stockPrices, dateType, startDate);
+        }
 
-            var chartArea = this.chartPrice.ChartAreas[0];
-            //chartArea.AxisY.Maximum = max;
-            //chartArea.AxisY.Minimum = min;
-            chartArea.AxisY.IsStartedFromZero = false;
-            chartArea.AxisY.MajorGrid.Enabled = true;
-            chartArea.AxisY.MajorGrid.LineColor = Color.Gray;
-            chartArea.AxisX.MajorGrid.Enabled = false;
-            //chartArea.AxisX.IsReversed = true;
-            chartArea.AxisX.TextOrientation = TextOrientation.Stacked;
-            //chartArea.AxisX.IntervalAutoMode = IntervalAutoMode.FixedCount;
-            //chartArea.AxisX.IntervalOffsetType = DateTimeIntervalType.Minutes;
-            //chartArea.AxisX.IntervalOffset = 1;
-            //chartArea.AxisX.IntervalType = DateTimeIntervalType.Minutes;
+        private void txtChartWithZS_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         #region 加载走势图
@@ -897,7 +933,6 @@ namespace StockPriceTools
             }
         }
 
-        #endregion
 
         private void btnDayChart_Click(object sender, EventArgs e)
         {
@@ -924,8 +959,8 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
-
-            this.LoadPriceChart(stockCode, stockName, 1);
+            var chartWithZS = this.txtChartWithZS.Checked;
+            this.LoadPriceChart(stockCode, stockName, 1, chartWithZS);
         }
 
         private void btnHandleRemind_Click(object sender, EventArgs e)
@@ -1073,6 +1108,8 @@ namespace StockPriceTools
             ObjectUtil.OpenBrowserUrl(report.PdfUrl);
         }
 
+        #endregion
+
         #region 操作日志事件
 
         public void ActionLog(string message)
@@ -1095,6 +1132,5 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
-
     }
 }

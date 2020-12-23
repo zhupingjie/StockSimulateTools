@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -63,6 +63,8 @@
             this.tabHoldStockList = new System.Windows.Forms.TabPage();
             this.gridAccountStockList = new System.Windows.Forms.DataGridView();
             this.panel12 = new System.Windows.Forms.Panel();
+            this.txtRealType = new System.Windows.Forms.CheckBox();
+            this.txtHoldQty = new System.Windows.Forms.CheckBox();
             this.lblAccountStockInfo = new System.Windows.Forms.Label();
             this.txtAccountSearch = new System.Windows.Forms.TextBox();
             this.lblAccountStockTotal = new System.Windows.Forms.Label();
@@ -72,6 +74,7 @@
             this.tabPriceChart = new System.Windows.Forms.TabPage();
             this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.txtChartWithZS = new System.Windows.Forms.CheckBox();
             this.btnWebChart = new System.Windows.Forms.Button();
             this.btnMinuteChart = new System.Windows.Forms.Button();
             this.btnDayChart = new System.Windows.Forms.Button();
@@ -92,6 +95,10 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.btnSaleExchange = new System.Windows.Forms.Button();
             this.btnBuyExchange = new System.Windows.Forms.Button();
+            this.tabReport = new System.Windows.Forms.TabPage();
+            this.gridReportList = new System.Windows.Forms.DataGridView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnOpenBrower = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControlLeft = new System.Windows.Forms.TabControl();
             this.tabBaseData = new System.Windows.Forms.TabPage();
@@ -110,12 +117,6 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabReport = new System.Windows.Forms.TabPage();
-            this.gridReportList = new System.Windows.Forms.DataGridView();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnOpenBrower = new System.Windows.Forms.Button();
-            this.txtHoldQty = new System.Windows.Forms.CheckBox();
-            this.txtRealType = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -149,15 +150,15 @@
             this.tabExchangeList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).BeginInit();
             this.panel7.SuspendLayout();
+            this.tabReport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
+            this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControlLeft.SuspendLayout();
             this.tabBaseData.SuspendLayout();
             this.tabPriceData.SuspendLayout();
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
-            this.tabReport.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
-            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -514,6 +515,28 @@
             this.panel12.Size = new System.Drawing.Size(842, 29);
             this.panel12.TabIndex = 48;
             // 
+            // txtRealType
+            // 
+            this.txtRealType.AutoSize = true;
+            this.txtRealType.Location = new System.Drawing.Point(574, 8);
+            this.txtRealType.Name = "txtRealType";
+            this.txtRealType.Size = new System.Drawing.Size(48, 16);
+            this.txtRealType.TabIndex = 49;
+            this.txtRealType.Text = "实盘";
+            this.txtRealType.UseVisualStyleBackColor = true;
+            this.txtRealType.CheckedChanged += new System.EventHandler(this.txtRealType_CheckedChanged);
+            // 
+            // txtHoldQty
+            // 
+            this.txtHoldQty.AutoSize = true;
+            this.txtHoldQty.Location = new System.Drawing.Point(628, 8);
+            this.txtHoldQty.Name = "txtHoldQty";
+            this.txtHoldQty.Size = new System.Drawing.Size(48, 16);
+            this.txtHoldQty.TabIndex = 9;
+            this.txtHoldQty.Text = "持有";
+            this.txtHoldQty.UseVisualStyleBackColor = true;
+            this.txtHoldQty.CheckedChanged += new System.EventHandler(this.txtHoldQty_CheckedChanged);
+            // 
             // lblAccountStockInfo
             // 
             this.lblAccountStockInfo.AutoSize = true;
@@ -593,11 +616,11 @@
             // 
             // chartPrice
             // 
-            chartArea5.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea5);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend5.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend5);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -607,6 +630,7 @@
             // 
             // panel9
             // 
+            this.panel9.Controls.Add(this.txtChartWithZS);
             this.panel9.Controls.Add(this.btnWebChart);
             this.panel9.Controls.Add(this.btnMinuteChart);
             this.panel9.Controls.Add(this.btnDayChart);
@@ -615,6 +639,18 @@
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(842, 29);
             this.panel9.TabIndex = 48;
+            // 
+            // txtChartWithZS
+            // 
+            this.txtChartWithZS.AutoSize = true;
+            this.txtChartWithZS.Checked = true;
+            this.txtChartWithZS.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtChartWithZS.Location = new System.Drawing.Point(767, 7);
+            this.txtChartWithZS.Name = "txtChartWithZS";
+            this.txtChartWithZS.Size = new System.Drawing.Size(72, 16);
+            this.txtChartWithZS.TabIndex = 50;
+            this.txtChartWithZS.Text = "对比指数";
+            this.txtChartWithZS.UseVisualStyleBackColor = true;
             // 
             // btnWebChart
             // 
@@ -852,6 +888,52 @@
             this.btnBuyExchange.UseVisualStyleBackColor = false;
             this.btnBuyExchange.Click += new System.EventHandler(this.btnBuyExchange_Click);
             // 
+            // tabReport
+            // 
+            this.tabReport.Controls.Add(this.gridReportList);
+            this.tabReport.Controls.Add(this.panel3);
+            this.tabReport.Location = new System.Drawing.Point(4, 22);
+            this.tabReport.Name = "tabReport";
+            this.tabReport.Size = new System.Drawing.Size(842, 221);
+            this.tabReport.TabIndex = 10;
+            this.tabReport.Text = "机构研报";
+            this.tabReport.UseVisualStyleBackColor = true;
+            // 
+            // gridReportList
+            // 
+            this.gridReportList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridReportList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridReportList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridReportList.Location = new System.Drawing.Point(0, 29);
+            this.gridReportList.MultiSelect = false;
+            this.gridReportList.Name = "gridReportList";
+            this.gridReportList.ReadOnly = true;
+            this.gridReportList.RowHeadersWidth = 10;
+            this.gridReportList.RowTemplate.Height = 23;
+            this.gridReportList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridReportList.Size = new System.Drawing.Size(842, 192);
+            this.gridReportList.TabIndex = 50;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnOpenBrower);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(842, 29);
+            this.panel3.TabIndex = 49;
+            // 
+            // btnOpenBrower
+            // 
+            this.btnOpenBrower.BackColor = System.Drawing.Color.White;
+            this.btnOpenBrower.Location = new System.Drawing.Point(5, 3);
+            this.btnOpenBrower.Name = "btnOpenBrower";
+            this.btnOpenBrower.Size = new System.Drawing.Size(64, 23);
+            this.btnOpenBrower.TabIndex = 0;
+            this.btnOpenBrower.Text = "浏览";
+            this.btnOpenBrower.UseVisualStyleBackColor = false;
+            this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
@@ -1025,74 +1107,6 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 120;
             // 
-            // tabReport
-            // 
-            this.tabReport.Controls.Add(this.gridReportList);
-            this.tabReport.Controls.Add(this.panel3);
-            this.tabReport.Location = new System.Drawing.Point(4, 22);
-            this.tabReport.Name = "tabReport";
-            this.tabReport.Size = new System.Drawing.Size(842, 221);
-            this.tabReport.TabIndex = 10;
-            this.tabReport.Text = "机构研报";
-            this.tabReport.UseVisualStyleBackColor = true;
-            // 
-            // gridReportList
-            // 
-            this.gridReportList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridReportList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridReportList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridReportList.Location = new System.Drawing.Point(0, 29);
-            this.gridReportList.MultiSelect = false;
-            this.gridReportList.Name = "gridReportList";
-            this.gridReportList.ReadOnly = true;
-            this.gridReportList.RowHeadersWidth = 10;
-            this.gridReportList.RowTemplate.Height = 23;
-            this.gridReportList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridReportList.Size = new System.Drawing.Size(842, 192);
-            this.gridReportList.TabIndex = 50;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.btnOpenBrower);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(842, 29);
-            this.panel3.TabIndex = 49;
-            // 
-            // btnOpenBrower
-            // 
-            this.btnOpenBrower.BackColor = System.Drawing.Color.White;
-            this.btnOpenBrower.Location = new System.Drawing.Point(5, 3);
-            this.btnOpenBrower.Name = "btnOpenBrower";
-            this.btnOpenBrower.Size = new System.Drawing.Size(64, 23);
-            this.btnOpenBrower.TabIndex = 0;
-            this.btnOpenBrower.Text = "浏览";
-            this.btnOpenBrower.UseVisualStyleBackColor = false;
-            this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
-            // 
-            // txtHoldQty
-            // 
-            this.txtHoldQty.AutoSize = true;
-            this.txtHoldQty.Location = new System.Drawing.Point(628, 8);
-            this.txtHoldQty.Name = "txtHoldQty";
-            this.txtHoldQty.Size = new System.Drawing.Size(48, 16);
-            this.txtHoldQty.TabIndex = 9;
-            this.txtHoldQty.Text = "持有";
-            this.txtHoldQty.UseVisualStyleBackColor = true;
-            this.txtHoldQty.CheckedChanged += new System.EventHandler(this.txtHoldQty_CheckedChanged);
-            // 
-            // txtRealType
-            // 
-            this.txtRealType.AutoSize = true;
-            this.txtRealType.Location = new System.Drawing.Point(574, 8);
-            this.txtRealType.Name = "txtRealType";
-            this.txtRealType.Size = new System.Drawing.Size(48, 16);
-            this.txtRealType.TabIndex = 49;
-            this.txtRealType.Text = "实盘";
-            this.txtRealType.UseVisualStyleBackColor = true;
-            this.txtRealType.CheckedChanged += new System.EventHandler(this.txtRealType_CheckedChanged);
-            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1132,6 +1146,7 @@
             this.tabPriceChart.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).EndInit();
             this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
             this.tabPriceList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
             this.tabStockStrategyDetail.ResumeLayout(false);
@@ -1143,15 +1158,15 @@
             this.tabExchangeList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).EndInit();
             this.panel7.ResumeLayout(false);
+            this.tabReport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
+            this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
             this.tabPriceData.ResumeLayout(false);
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
-            this.tabReport.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
-            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1214,10 +1229,6 @@
         private System.Windows.Forms.TabPage tabHoldStockList;
         private System.Windows.Forms.DataGridView gridAccountStockList;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPrice;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Button btnMinuteChart;
-        private System.Windows.Forms.Button btnDayChart;
-        private System.Windows.Forms.Button btnWebChart;
         private System.Windows.Forms.DataGridView gridStockList;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.RadioButton txtETF;
@@ -1243,5 +1254,10 @@
         private System.Windows.Forms.Button btnOpenBrower;
         private System.Windows.Forms.CheckBox txtHoldQty;
         private System.Windows.Forms.CheckBox txtRealType;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.CheckBox txtChartWithZS;
+        private System.Windows.Forms.Button btnWebChart;
+        private System.Windows.Forms.Button btnMinuteChart;
+        private System.Windows.Forms.Button btnDayChart;
     }
 }

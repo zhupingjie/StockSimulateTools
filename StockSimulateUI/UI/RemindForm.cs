@@ -41,8 +41,10 @@ namespace StockSimulateUI.UI
             var uDPer = this.txtUDPer.Text;
             var upPrice = this.txtUpPrice.Text;
             var downPrice = this.txtDownPrice.Text;
+            var upAveragePrice = this.txtUpAverage.Text;
+            var downAveragePrice = this.txtDownAverage.Text;
 
-            StockRemindService.Create(accountName, StockCode, uDPer, upPrice, downPrice);
+            StockRemindService.Create(accountName, StockCode, uDPer, upPrice, downPrice, upAveragePrice, downAveragePrice);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -66,6 +68,8 @@ namespace StockSimulateUI.UI
 
             var uDPer = this.txtUDPer.Text;
             if (string.IsNullOrEmpty(uDPer)) return;
+
+            var averagePrice = this.txtUpAverage.Text;
 
             StockRemindService.Create(accountName, uDPer);
 

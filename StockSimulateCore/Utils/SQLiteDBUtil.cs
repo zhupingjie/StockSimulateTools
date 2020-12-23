@@ -160,11 +160,11 @@ namespace StockSimulateCore.Utils
 
         #region CRUD
 
-        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "ID desc", int takeSize = 0) where TEntity : BaseEntity, new()
+        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "ID desc", int takeSize = 0, string[] columns = null) where TEntity : BaseEntity, new()
         {
             var tableName = GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize);
+            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize, columns);
         }
 
 
@@ -359,12 +359,13 @@ namespace StockSimulateCore.Utils
             }
         }
 
-        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0) where TEntity : BaseEntity, new()
+        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null) where TEntity : BaseEntity, new()
         {
             using (SQLiteConnection con = new SQLiteConnection(strConn))
             {
                 var lst = new List<TEntity>();
                 var sql = $"select * from {table}";
+                if (columns != null && columns.Length > 0) sql = $"select {string.Join(",", columns)} from {table}";
                 if (!string.IsNullOrWhiteSpace(where)) sql = $"{sql} where {where}";
                 if (!string.IsNullOrEmpty(orderBy)) sql = $"{sql} order by {orderBy}";
                 if(takeSize > 0) sql = $"{sql} limit {takeSize}";

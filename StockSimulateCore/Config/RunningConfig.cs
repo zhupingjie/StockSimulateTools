@@ -51,5 +51,11 @@ namespace StockSimulateCore.Config
         /// 股票持仓盈更新时间频率(秒)
         /// </summary>
         public int UpdateAccountStockProfitInterval { get; set; } = 5 * 60;
+
+
+        /// <summary>
+        /// 股票均线价格计算时间频率(秒)
+        /// </summary>
+        public int UpdateStockAveragePriceInterval { get; set; } = 30 * 60;
     }
 }

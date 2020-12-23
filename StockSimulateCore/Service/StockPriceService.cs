@@ -90,5 +90,117 @@ namespace StockSimulateCore.Service
 
             SQLiteDBUtil.Instance.Update<AccountStockEntity>(account);
         }
+
+        public static void CalculateAvgrage(Action<string> actionLog)
+        {
+            var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            var lastPrice = SQLiteDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
+            if (lastPrice != null && lastPrice.DealDate != DateTime.Now.Date.ToString("yyyy-MM-dd")) dealDate = lastPrice.DealDate;
+
+            var newStockAverages = new List<StockAverageEntity>();
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
+            var stockAverages = SQLiteDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
+            foreach (var stock in stocks)
+            {
+                var decNum = stock.Type == 0 ? 2 : 3;
+
+                var stockPrices = SQLiteDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 60, new string[] { "StockCode", "DealDate", "Price"});
+                if (stockPrices.Length == 0) continue;
+
+                var lastStockPrice = stockPrices.FirstOrDefault();
+
+                var stockAverage = stockAverages.FirstOrDefault(c => c.StockCode == stock.Code);
+                if (stockAverage == null)
+                {
+                    stockAverage = new StockAverageEntity()
+                    {
+                        StockCode = stock.Code,
+                        Price = lastStockPrice.Price,
+                        DealDate = dealDate,
+                    };
+                    newStockAverages.Add(stockAverage);
+                }
+                //if (stockPrices.Length >= 360) stockAverage.AvgPrice360 = Math.Round(stockPrices.Average(c => c.Price), decNum);
+                //if (stockPrices.Length >= 180) stockAverage.AvgPrice180 = Math.Round(stockPrices.Take(180).Average(c => c.Price), decNum);
+                //if (stockPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(stockPrices.Take(120).Average(c => c.Price), decNum);
+                if (stockPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(stockPrices.Take(60).Average(c => c.Price), decNum);
+                if (stockPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(stockPrices.Take(20).Average(c => c.Price), decNum);
+                if (stockPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(stockPrices.Take(10).Average(c => c.Price), decNum);
+                if (stockPrices.Length < 10) stockAverage.AvgPrice5 = Math.Round(stockPrices.Take(5).Average(c => c.Price), decNum);
+                stock.Trend = GetTrend(stock, stockAverage);
+            }
+            SQLiteDBUtil.Instance.Update<StockEntity>(stocks);
+            SQLiteDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
+            SQLiteDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+        }
+
+        /// <summary>
+        /// ↘↗
+        /// </summary>
+        /// <param name="stock"></param>
+        /// <param name="stockAverage"></param>
+        /// <returns></returns>
+        static string GetTrend(StockEntity stock, StockAverageEntity stockAverage)
+        {
+            var lng = "";
+            if (stockAverage.AvgPrice60 > 0)
+            {
+                if (stock.Price > stockAverage.AvgPrice60)
+                {
+                    lng = "";
+                }
+                else if (stock.Price < stockAverage.AvgPrice60)
+                {
+                    lng = "L.离场";
+                }
+            }
+            var mid = "";
+            if (stockAverage.AvgPrice20 > 0)
+            {
+                if (stockAverage.AvgPrice5 > stockAverage.AvgPrice20)
+                {
+                    mid = "M.突破";
+                }
+                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice20)
+                {
+                    mid = "M.破位";
+                }
+            }
+            var sht = "";
+            if(stockAverage.AvgPrice10 > 0)
+            {
+                if (stockAverage.AvgPrice5 > stockAverage.AvgPrice10)
+                {
+                    if(stock.Price < stockAverage.AvgPrice5)
+                    {
+                        mid = "S.调整";
+                    }
+                    else
+                    {
+                        mid = "S.反弹";
+                    }
+                }
+                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice10)
+                {
+                    mid = "S.杀跌";
+                }
+            }
+            var tdy = "";
+            if (stock.Price < stockAverage.AvgPrice5)
+            {
+                tdy = "N.↘";
+            }
+            else if (stock.Price > stockAverage.AvgPrice5)
+            {
+                tdy = "N.↗";
+            }
+            else
+            {
+                tdy = "N.→";
+            }
+            if (!string.IsNullOrEmpty(lng))
+                return lng;
+            return $"{tdy} {sht} {mid}";
+        }
     }
 }

@@ -15,9 +15,8 @@ namespace StockSimulateCore.Service
         {
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
-
-            if (stock.Foucs == 0) stock.Foucs = 1;
-            else stock.Foucs = 0;
+            stock.Foucs += 1;
+            if (stock.Foucs > 2) stock.Foucs = 0;
             SQLiteDBUtil.Instance.Update<StockEntity>(stock);
         }
 
@@ -42,11 +41,6 @@ namespace StockSimulateCore.Service
             {
                 SQLiteDBUtil.Instance.Delete<StockEntity>(stock);
             }
-            //var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"StockCode='{stockCode}'");
-            //if (stockStrategy != null)
-            //{
-            //    SQLiteDBUtil.Instance.Delete<AccountStockEntity>(stockStrategy);
-            //}
             var stockStrategyDetails = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
             if (stockStrategyDetails.Length > 0)
             {

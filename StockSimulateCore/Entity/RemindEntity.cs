@@ -25,7 +25,7 @@ namespace StockSimulateCore.Entity
         {
             get
             {
-                return RType == 0 ? "涨跌幅" : RType == 1 ? "上涨" : RType == 2 ? "下跌" : RType == 8 ? "买点" : RType == 9 ? "卖点" : "";
+                return RType == 0 ? "涨跌幅" : RType == 1 ? "上涨" : RType == 2 ? "下跌" : RType == 3 ? "突破" : RType == 4 ? "跌破" : RType == 8 ? "买点" : RType == 9 ? "卖点" : "";
             }
         }
 

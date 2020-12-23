@@ -33,8 +33,8 @@ namespace StockPriceTools.UI
             if (stock == null)
             {
                 //类型
-                stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
-                stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
+                stockInfo.Stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
+                stockInfo.Stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
 
                 Repository.Insert<StockEntity>(stockInfo.Stock);
 

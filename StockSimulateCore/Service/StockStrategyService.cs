@@ -342,7 +342,7 @@ namespace StockSimulateCore.Service
             var stockStrategys = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
 
             var runStrategys = stockStrategys.Where(c => (c.AccountName == accountName || string.IsNullOrEmpty(accountName)) 
-                    && c.ExecuteOK == 0
+                    && c.ExecuteOK != 1
                     && c.StockCode == stockCode
                     && (c.Condition == 0 && c.Price >= stockPrice || c.Condition == 1 && c.Price <= stockPrice)
                     && (c.BuyQty > 0 || c.SaleQty > 0))
@@ -361,6 +361,12 @@ namespace StockSimulateCore.Service
 
                 //差价交易
                 var strategyInfo = ExchangeRun(item, exchangeInfo);
+                if(strategyInfo == null)
+                {
+                    item.ExecuteOK = 2;
+                    item.Message = "策略已失效";
+                    continue;
+                }
 
                 ExchangeResultInfo result = null;
                 if (item.BuyQty > 0)
@@ -373,11 +379,14 @@ namespace StockSimulateCore.Service
                     exchangeInfo.Qty = item.SaleQty;
                     result = StockExchangeService.Sale(exchangeInfo);
                 }
-                if (result != null)
+                if (result == null)
                 {
-                    item.ExecuteOK = result.Success ? 1 : 2;
-                    item.Message = result.Message;
+                    item.ExecuteOK = 2;
+                    item.Message = "策略交易执行失败";
+                    continue;
                 }
+                item.ExecuteOK = result.Success ? 1 : 2;
+                item.Message = result.Message;
             }
             SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
         }

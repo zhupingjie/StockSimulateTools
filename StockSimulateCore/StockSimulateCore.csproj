@@ -135,6 +135,7 @@
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\ExchangeOrderEntity.cs" />
     <Compile Include="Entity\ReportEntity.cs" />
+    <Compile Include="Entity\StockAverageEntity.cs" />
     <Compile Include="Entity\StockStrategyEntity.cs" />
     <Compile Include="Entity\IBaseEntity.cs" />
     <Compile Include="Entity\MainTargetEntity.cs" />

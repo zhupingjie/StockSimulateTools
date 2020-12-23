@@ -21,11 +21,11 @@ namespace StockSimulateCore.Service
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
             {
-                Create(account, stock, strUPPer, null, null, true);
+                Create(account, stock, strUPPer, null, null, null, null, true);
             }
         }
 
-        public static void Create(string accountName, string stockCode, string strUPPer, string strUPPrice, string strDOWNPrice, bool batchCreate = false)
+        public static void Create(string accountName, string stockCode, string strUPPer, string strUPPrice, string strDOWNPrice, string strUPAveragePrice, string strDOWNAveragePrice, bool batchCreate = false)
         {
             var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
@@ -33,10 +33,10 @@ namespace StockSimulateCore.Service
             var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
-            Create(account, stock, strUPPer, strUPPrice, strDOWNPrice, batchCreate);
+            Create(account, stock, strUPPer, strUPPrice, strDOWNPrice, strUPAveragePrice, strDOWNAveragePrice, batchCreate);
         }
 
-        public static void Create(AccountEntity account, StockEntity stock, string strUPPer, string strUPPrice, string strDOWNPrice, bool batchCreate = false)
+        public static void Create(AccountEntity account, StockEntity stock, string strUPPer, string strUPPrice, string strDOWNPrice, string strUPAveragePrice, string strDOWNAveragePrice, bool batchCreate = false)
         {
             var decNum = stock.Type == 0 ? 2 : 3;
 
@@ -117,7 +117,48 @@ namespace StockSimulateCore.Service
                     reminds.Add(remind);
                 }
             }
+            if (!string.IsNullOrEmpty(strUPAveragePrice))
+            {
+                var averagePrices = ObjectUtil.GetSplitArray(strUPAveragePrice, ",");
+                foreach (var avg in averagePrices)
+                {
+                    var target = ObjectUtil.ToValue<decimal>(avg, 0);
+                    if (target == 0) continue;
 
+                    var remind = new RemindEntity()
+                    {
+                        StockCode = stock.Code,
+                        Target = target,
+                        Email = account.Email,
+                        QQ = account.QQ,
+                        RType = 3,
+                        StrategyName = "主动设置",
+                        StrategyTarget = $"突破{target}日均线"
+                    };
+                    reminds.Add(remind);
+                }
+            }
+            if (!string.IsNullOrEmpty(strDOWNAveragePrice))
+            {
+                var averagePrices = ObjectUtil.GetSplitArray(strDOWNAveragePrice, ",");
+                foreach (var avg in averagePrices)
+                {
+                    var target = ObjectUtil.ToValue<decimal>(avg, 0);
+                    if (target == 0) continue;
+
+                    var remind = new RemindEntity()
+                    {
+                        StockCode = stock.Code,
+                        Target = target,
+                        Email = account.Email,
+                        QQ = account.QQ,
+                        RType = 4,
+                        StrategyName = "主动设置",
+                        StrategyTarget = $"跌破{target}日均线"
+                    };
+                    reminds.Add(remind);
+                }
+            }
             SQLiteDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
         public static void AutoCreate(string accountName)

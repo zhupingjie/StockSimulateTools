@@ -40,12 +40,16 @@
             this.txtAccount = new System.Windows.Forms.ComboBox();
             this.btnRemindAll = new System.Windows.Forms.Button();
             this.btnOKAll = new System.Windows.Forms.Button();
+            this.txtUpAverage = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtDownAverage = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(517, 298);
+            this.btnOK.Location = new System.Drawing.Point(517, 437);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(82, 53);
             this.btnOK.TabIndex = 3;
@@ -130,7 +134,7 @@
             // btnRemindAll
             // 
             this.btnRemindAll.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRemindAll.Location = new System.Drawing.Point(50, 298);
+            this.btnRemindAll.Location = new System.Drawing.Point(50, 437);
             this.btnRemindAll.Name = "btnRemindAll";
             this.btnRemindAll.Size = new System.Drawing.Size(296, 53);
             this.btnRemindAll.TabIndex = 59;
@@ -141,7 +145,7 @@
             // btnOKAll
             // 
             this.btnOKAll.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOKAll.Location = new System.Drawing.Point(382, 298);
+            this.btnOKAll.Location = new System.Drawing.Point(382, 437);
             this.btnOKAll.Name = "btnOKAll";
             this.btnOKAll.Size = new System.Drawing.Size(129, 53);
             this.btnOKAll.TabIndex = 60;
@@ -149,11 +153,51 @@
             this.btnOKAll.UseVisualStyleBackColor = true;
             this.btnOKAll.Click += new System.EventHandler(this.btnOKAll_Click);
             // 
+            // txtUpAverage
+            // 
+            this.txtUpAverage.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtUpAverage.Location = new System.Drawing.Point(382, 296);
+            this.txtUpAverage.Name = "txtUpAverage";
+            this.txtUpAverage.Size = new System.Drawing.Size(217, 54);
+            this.txtUpAverage.TabIndex = 62;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Location = new System.Drawing.Point(132, 296);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(230, 46);
+            this.label4.TabIndex = 61;
+            this.label4.Text = "股价突破均线";
+            // 
+            // txtDownAverage
+            // 
+            this.txtDownAverage.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtDownAverage.Location = new System.Drawing.Point(382, 367);
+            this.txtDownAverage.Name = "txtDownAverage";
+            this.txtDownAverage.Size = new System.Drawing.Size(217, 54);
+            this.txtDownAverage.TabIndex = 64;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微软雅黑", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(132, 367);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(230, 46);
+            this.label6.TabIndex = 63;
+            this.label6.Text = "股价跌破均线";
+            // 
             // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 369);
+            this.ClientSize = new System.Drawing.Size(631, 523);
+            this.Controls.Add(this.txtDownAverage);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtUpAverage);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnOKAll);
             this.Controls.Add(this.btnRemindAll);
             this.Controls.Add(this.label5);
@@ -187,5 +231,9 @@
         private System.Windows.Forms.ComboBox txtAccount;
         private System.Windows.Forms.Button btnRemindAll;
         private System.Windows.Forms.Button btnOKAll;
+        private System.Windows.Forms.TextBox txtUpAverage;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtDownAverage;
+        private System.Windows.Forms.Label label6;
     }
 }
