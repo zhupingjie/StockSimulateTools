@@ -80,6 +80,42 @@ namespace StockSimulateCore.Utils
             }
         }
 
+        public static StockPriceEntity[] GetStockHisPrice(string code)
+        {
+            try
+            {
+                var secid = GetStockSecid(code);
+                var api = $"http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&secid={secid}&fields1=f1,f2,f3,f7&fields2=f51,f62,f63";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyHisPriceAPIModel>(retStr);
+                if (apiModel == null || apiModel.data == null || apiModel.data.klines == null) return null;
+
+                var stockPrices = new List<StockPriceEntity>();
+                foreach (var line in apiModel.data.klines)
+                {
+                    var arr = ObjectUtil.GetSplitArray(line, ",");
+                    if (arr.Length != 3) continue;
+
+                    var stockPrice = new StockPriceEntity();
+                    stockPrice.StockCode = code;
+                    stockPrice.DealDate = arr[0];
+                    stockPrice.DealTime = "";
+                    stockPrice.DateType = 0;
+                    stockPrice.Price = ObjectUtil.ToValue<decimal>(arr[1], 0);
+                    stockPrice.UDPer = ObjectUtil.ToValue<decimal>(arr[2], 1);
+                    if (stockPrice.Price == 0) continue;
+                    stockPrices.Add(stockPrice);
+                }
+                return stockPrices.ToArray();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         #endregion
 
         #region 财务主要指标
@@ -488,6 +524,16 @@ namespace StockSimulateCore.Utils
     public class EastMoneyReportModel
     {
         public ReportModel[] data { get; set; }
+    }
+
+    public class EastMoneyHisPriceAPIModel
+    {
+        public EastMoneyHisPriceModel data { get; set; }
+    }
+    public class EastMoneyHisPriceModel
+    {
+        public string code { get; set; }
+        public string[] klines { get; set; }
     }
 
     public class ReportModel

@@ -62,5 +62,10 @@ namespace StockSimulateUI.UI
 
             StockDebugService.ClearDeugData(accountName, stockCode);
         }
+
+        private void btnGatherHisPrice_Click(object sender, EventArgs e)
+        {
+            StockGatherService.GatherHisPriceData();
+        }
     }
 }

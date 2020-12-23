@@ -22,7 +22,7 @@ namespace StockSimulateCore.Service
             foreach (var stock in stocks)
             {
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                if (stockInfo == null) continue;;
+                if (stockInfo == null) continue; ;
                 if (stockInfo.DayPrice.Price == 0) continue;
 
                 //更新当前股票信息
@@ -39,9 +39,31 @@ namespace StockSimulateCore.Service
 
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
             }
-            if(stocks.Length > 0) actionLog($">------------------------------------------------>");
+            if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
+        public static void GatherHisPriceData()
+        {
+            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
+            foreach (var stock in stocks)
+            {
+                var stockPrices = EastMoneyUtil.GetStockHisPrice(stock.Code);
+                if (stockPrices == null) continue;
+
+                var lastPrice = SQLiteDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}'", "DealDate asc", 1).FirstOrDefault();
+                if (lastPrice == null)
+                {
+                    var newPrices = stockPrices.OrderByDescending(c => c.DealDate).ToArray();
+                    SQLiteDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
+                }
+                else
+                {
+                    var lastDate = lastPrice.DealDate;
+                    var newPrices = stockPrices.Where(c => c.DealDate.CompareTo(lastDate) < 0).OrderByDescending(c => c.DealDate).ToArray();
+                    SQLiteDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
+                }
+            }
+        }
 
         /// <summary>
         /// 采集自选股财务数据
@@ -167,7 +189,7 @@ namespace StockSimulateCore.Service
 
                 #region 现金流量表
                 var cashTargetInfos = EastMoneyUtil.GetCashTargets(stock.Code, 0, 1);
-                if(cashTargetInfos.Length > 0)
+                if (cashTargetInfos.Length > 0)
                 {
                     var dates = cashTargetInfos.Select(c => c.REPORTDATE).Distinct().ToArray();
                     var mts = SQLiteDBUtil.Instance.QueryAll<CashTargetEntity>($"SECURITYCODE='{stock.Code}' and REPORTDATETYPE=0  and REPORTTYPE=1 and REPORTDATE in ('{string.Join("','", dates)}')");
@@ -214,6 +236,10 @@ namespace StockSimulateCore.Service
             //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
+        /// <summary>
+        /// 采集机构延保数据
+        /// </summary>
+        /// <param name="actionLog"></param>
         public static void GatherReportData(Action<string> actionLog)
         {
             var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");

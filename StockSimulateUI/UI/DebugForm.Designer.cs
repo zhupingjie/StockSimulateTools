@@ -39,6 +39,7 @@
             this.txtStockCode = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnClearDebug = new System.Windows.Forms.Button();
+            this.btnGatherHisPrice = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtStockPrice
@@ -138,11 +139,23 @@
             this.btnClearDebug.UseVisualStyleBackColor = true;
             this.btnClearDebug.Click += new System.EventHandler(this.btnClearDebug_Click);
             // 
+            // btnGatherHisPrice
+            // 
+            this.btnGatherHisPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnGatherHisPrice.Location = new System.Drawing.Point(440, 317);
+            this.btnGatherHisPrice.Name = "btnGatherHisPrice";
+            this.btnGatherHisPrice.Size = new System.Drawing.Size(127, 41);
+            this.btnGatherHisPrice.TabIndex = 26;
+            this.btnGatherHisPrice.Text = "采集历史股价";
+            this.btnGatherHisPrice.UseVisualStyleBackColor = true;
+            this.btnGatherHisPrice.Click += new System.EventHandler(this.btnGatherHisPrice_Click);
+            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 382);
+            this.Controls.Add(this.btnGatherHisPrice);
             this.Controls.Add(this.btnClearDebug);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtStockCode);
@@ -174,5 +187,6 @@
         private System.Windows.Forms.TextBox txtStockCode;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnClearDebug;
+        private System.Windows.Forms.Button btnGatherHisPrice;
     }
 }
