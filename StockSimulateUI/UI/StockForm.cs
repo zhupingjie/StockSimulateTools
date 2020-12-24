@@ -15,7 +15,7 @@ namespace StockPriceTools.UI
 {
     public partial class NewStockForm : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public NewStockForm()
         {
             InitializeComponent();

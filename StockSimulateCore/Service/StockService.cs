@@ -13,11 +13,11 @@ namespace StockSimulateCore.Service
     {
         public static void Foucs(string stockCode)
         {
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
             stock.Foucs += 1;
             if (stock.Foucs > 2) stock.Foucs = 0;
-            SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+            MySQLDBUtil.Instance.Update<StockEntity>(stock);
         }
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
@@ -31,26 +31,26 @@ namespace StockSimulateCore.Service
 
                 ObjectUtil.SetPropertyValue(stock, prep.Name, prepValue);
             }
-            SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+            MySQLDBUtil.Instance.Update<StockEntity>(stock);
         }
 
         public static void Delete(string stockCode)
         {
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock != null)
             {
-                SQLiteDBUtil.Instance.Delete<StockEntity>(stock);
+                MySQLDBUtil.Instance.Delete<StockEntity>(stock);
             }
-            var stockStrategyDetails = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
+            var stockStrategyDetails = MySQLDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'");
             if (stockStrategyDetails.Length > 0)
             {
-                SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
+                MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}'");
             }
         }
 
         public static void SaveValuateResult(string stockCode, decimal target, decimal safety, decimal growth, decimal pe, string advise)
         {
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
             stock.EPE = pe;
@@ -58,13 +58,13 @@ namespace StockSimulateCore.Service
             stock.Target = target;
             stock.Safety = safety;
             stock.Advise = advise;
-            SQLiteDBUtil.Instance.Update<StockEntity>(stock);
+            MySQLDBUtil.Instance.Update<StockEntity>(stock);
         }
 
         public static void SaveValuateResult(ValuateResultInfo[] results)
         {
             var codes = results.Select(c => c.StockCode).ToArray();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", codes)}')");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", codes)}')");
             if (stocks.Length == 0) return;
 
             foreach (var stock in stocks)
@@ -78,7 +78,7 @@ namespace StockSimulateCore.Service
                 stock.Safety = result.SafePrice;
                 stock.Advise = result.Advise;
             }
-            SQLiteDBUtil.Instance.Update<StockEntity>(stocks);
+            MySQLDBUtil.Instance.Update<StockEntity>(stocks);
         }
     }
 }

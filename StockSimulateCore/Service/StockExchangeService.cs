@@ -13,10 +13,10 @@ namespace StockSimulateCore.Service
     {
         public static bool CouldBuy(ExchangeInfo exchangeInfo)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null) return false;
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null) return false;
 
             var buyAmount = exchangeInfo.Qty * exchangeInfo.Price;
@@ -29,7 +29,7 @@ namespace StockSimulateCore.Service
         {
             var result = new ExchangeResultInfo();
 
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if(account == null)
             {
                 result.Success = false;
@@ -37,7 +37,7 @@ namespace StockSimulateCore.Service
                 return result;
             }
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null)
             {
                 result.Success = false;
@@ -53,7 +53,7 @@ namespace StockSimulateCore.Service
                 return result;
             }
 
-            var accountStock = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             var holdQty = exchangeInfo.Qty;
             var totalAmount = buyAmount;
             if (accountStock != null)
@@ -84,18 +84,18 @@ namespace StockSimulateCore.Service
             }
             else
             {
-                var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<StockStrategyEntity>($"AccountName='{exchange.AccountName}' and StockCode='{exchange.StockCode}' and StrategyName='{exchange.Strategy}' and Target='{exchange.Target}'");
+                var stockStrategy = MySQLDBUtil.Instance.QueryFirst<StockStrategyEntity>($"AccountName='{exchange.AccountName}' and StockCode='{exchange.StockCode}' and StrategyName='{exchange.Strategy}' and Target='{exchange.Target}'");
                 if (stockStrategy != null)
                 {
                     StockStrategyService.ExchangeRun(stockStrategy, exchangeInfo);
                 }
             }
 
-            SQLiteDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
+            MySQLDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
 
             account.BuyAmount += exchange.Amount;
             account.Cash -= exchange.Amount;
-            SQLiteDBUtil.Instance.Update<AccountEntity>(account);
+            MySQLDBUtil.Instance.Update<AccountEntity>(account);
 
             if (accountStock == null)
             {
@@ -113,7 +113,7 @@ namespace StockSimulateCore.Service
                     accountStock.LockQty = exchangeInfo.Qty;
                     accountStock.LockDate = exchangeInfo.ExchangeTime.Date;
                 }
-                SQLiteDBUtil.Instance.Insert<AccountStockEntity>(accountStock);
+                MySQLDBUtil.Instance.Insert<AccountStockEntity>(accountStock);
             }
             else
             {
@@ -135,7 +135,7 @@ namespace StockSimulateCore.Service
                         }
                     }
                 }
-                SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStock);
+                MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
             }
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]买入[{stock.Name}]{exchange.Qty}股({exchange.Price})合计{exchange.Amount}元,请注意!";
             MailUtil.SendMailAsync(new Config.SenderMailConfig(), message, message, account.Email);
@@ -144,13 +144,13 @@ namespace StockSimulateCore.Service
 
         public static bool CouldSale(ExchangeInfo exchangeInfo)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null) return false;
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null) return false;
 
-            var accountStock = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             if (accountStock == null) return false;
 
             var couldQty = accountStock.HoldQty;
@@ -164,7 +164,7 @@ namespace StockSimulateCore.Service
         {
             var result = new ExchangeResultInfo();
 
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null)
             {
                 result.Success = false;
@@ -172,7 +172,7 @@ namespace StockSimulateCore.Service
                 return result;
             }
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null)
             {
                 result.Success = false;
@@ -181,7 +181,7 @@ namespace StockSimulateCore.Service
             }
 
             var decNum = stock.Type == 0 ? 2 : 3;
-            var accountStock = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             if (accountStock == null)
             {
                 result.Success = false;
@@ -221,11 +221,11 @@ namespace StockSimulateCore.Service
             if (string.IsNullOrEmpty(exchange.Strategy)) exchange.Strategy = "临时";
             if (string.IsNullOrEmpty(exchange.Target)) exchange.Target = $"{(stock.UDPer > 0 ? "上涨" : "下跌")}{stock.UDPer}%";
 
-            SQLiteDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
+            MySQLDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
 
             account.BuyAmount -= exchange.Amount;
             account.Cash += exchange.Amount;
-            SQLiteDBUtil.Instance.Update<AccountEntity>(account);
+            MySQLDBUtil.Instance.Update<AccountEntity>(account);
 
             accountStock.HoldQty  = holdQty;
             accountStock.TotalAmount = totalAmount;
@@ -237,7 +237,7 @@ namespace StockSimulateCore.Service
             {
                 accountStock.Cost = Math.Round(accountStock.TotalAmount / accountStock.HoldQty, 2);
             }
-            SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStock);
+            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
 
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]卖出[{stock.Name}][{exchange.Qty}]股({exchange.Price})合计{exchange.Amount}元,请注意!";
             MailUtil.SendMailAsync(new Config.SenderMailConfig(), message, message, account.Email);

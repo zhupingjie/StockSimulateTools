@@ -86,6 +86,9 @@
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MySqlConnector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySqlConnector.1.2.1\lib\net45\MySqlConnector.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Text.5.10.2\lib\net45\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -111,6 +114,10 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -148,6 +155,7 @@
     <Compile Include="Model\TExchangeStrategyInfo.cs" />
     <Compile Include="Model\ValuateResultInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\StockConfigService.cs" />
     <Compile Include="Service\StockDebugService.cs" />
     <Compile Include="Service\StockPriceService.cs" />
     <Compile Include="Service\StockRemindService.cs" />
@@ -156,13 +164,15 @@
     <Compile Include="Service\StockService.cs" />
     <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Service\StockValuateService.cs" />
+    <Compile Include="StockMarketService.cs" />
     <Compile Include="Utils\AssemblyUtil.cs" />
+    <Compile Include="Utils\DBColumn.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />
     <Compile Include="Utils\MailUtil.cs" />
+    <Compile Include="Utils\MySQLDBUtil.cs" />
     <Compile Include="Utils\ObjectUtil.cs" />
     <Compile Include="Utils\SQLiteColumn.cs" />
-    <Compile Include="Utils\SQLiteDBUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

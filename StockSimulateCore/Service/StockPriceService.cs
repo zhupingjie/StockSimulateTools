@@ -14,17 +14,17 @@ namespace StockSimulateCore.Service
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
             var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
-            var price = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
+            var price = MySQLDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
             if (price == null)
             {
                 stockInfo.DayPrice.DealTime = "";
-                SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                MySQLDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
             }
             else
             {
                 stockInfo.DayPrice.ID = price.ID;
                 stockInfo.DayPrice.DealTime = "";
-                SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                MySQLDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
             }
             if (stock.Foucs > 0)
             {
@@ -32,19 +32,19 @@ namespace StockSimulateCore.Service
                 if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
                 if (dealTime.CompareTo("09:25") <= 0) dealTime = "09:25";
 
-                var price2 = SQLiteDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
+                var price2 = MySQLDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
                 if (price2 == null)
                 {
                     stockInfo.DayPrice.DateType = 1;//分钟
                     stockInfo.DayPrice.DealTime = dealTime;
-                    SQLiteDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                    MySQLDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
                 }
                 else
                 {
                     stockInfo.DayPrice.ID = price2.ID;
                     stockInfo.DayPrice.DateType = 1;//分钟
                     stockInfo.DayPrice.DealTime = dealTime;
-                    SQLiteDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                    MySQLDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
                 }
             }
         }
@@ -55,8 +55,8 @@ namespace StockSimulateCore.Service
         /// <param name="actionLog"></param>
         public static void CalculateProfit(Action<string> actionLog)
         {
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
-            var accountStocks = SQLiteDBUtil.Instance.QueryAll<AccountStockEntity>();
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
+            var accountStocks = MySQLDBUtil.Instance.QueryAll<AccountStockEntity>();
             foreach (var stock in stocks)
             {
                 var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
@@ -72,14 +72,14 @@ namespace StockSimulateCore.Service
                     actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
                 }
             }
-            SQLiteDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
+            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
 
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
         public static void CalculateProfit(string accountName, string stockCode, decimal stockPrice)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
             if (account == null) return;
 
             account.Price = stockPrice;
@@ -88,23 +88,23 @@ namespace StockSimulateCore.Service
             if (account.TotalAmount == 0) account.UDPer = 0;
             else account.UDPer = Math.Round(account.Profit / account.HoldAmount * 100, 2);
 
-            SQLiteDBUtil.Instance.Update<AccountStockEntity>(account);
+            MySQLDBUtil.Instance.Update<AccountStockEntity>(account);
         }
 
         public static void CalculateAvgrage(Action<string> actionLog)
         {
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-            var lastPrice = SQLiteDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
+            var lastPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
             if (lastPrice != null && lastPrice.DealDate != DateTime.Now.Date.ToString("yyyy-MM-dd")) dealDate = lastPrice.DealDate;
 
             var newStockAverages = new List<StockAverageEntity>();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>();
-            var stockAverages = SQLiteDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
+            var stockAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
 
-                var stockPrices = SQLiteDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 60, new string[] { "StockCode", "DealDate", "Price"});
+                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 60, new string[] { "StockCode", "DealDate", "Price"});
                 if (stockPrices.Length == 0) continue;
 
                 var lastStockPrice = stockPrices.FirstOrDefault();
@@ -134,9 +134,9 @@ namespace StockSimulateCore.Service
                 stock.AvgPrice60 = stockAverage.AvgPrice60;
                 stock.Trend = GetTrend(stock, stockAverage);
             }
-            SQLiteDBUtil.Instance.Update<StockEntity>(stocks);
-            SQLiteDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
-            SQLiteDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+            MySQLDBUtil.Instance.Update<StockEntity>(stocks);
+            MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
+            MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
 
         /// <summary>

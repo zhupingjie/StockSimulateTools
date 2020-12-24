@@ -22,7 +22,7 @@ namespace StockPriceTools
 {
     public partial class DesktopFrom : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         private CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private RunningConfig RC = RunningConfig.Instance;
         public DesktopFrom()
@@ -37,30 +37,16 @@ namespace StockPriceTools
 
             this.LoadStockData();
 
-            this.GatherData();
+            //this.GatherData();
 
-            this.RemindData();
+            //this.RemindData();
         }
 
         void LoadConfigData()
         {
             Task.Factory.StartNew(() =>
             {   
-                //同步数据库
-                Repository.InitSQLiteDB();
-
-                var configs = Repository.QueryAll<GlobalConfigEntity>();
-                foreach(var config in configs)
-                {
-                    var prepInfo = ObjectUtil.GetPropertyInfo(RC, config.Name);
-                    if (prepInfo == null) continue;
-
-                    var value = ObjectUtil.ToValue(config.Value, prepInfo.PropertyType);
-                    if (value != null)
-                    {
-                        ObjectUtil.SetPropertyValue(RC, config.Name, value);
-                    }
-                }
+                StockConfigService.LoadGlobalConfig(RC);
             });
         }
 
@@ -70,13 +56,18 @@ namespace StockPriceTools
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2 * 1000);
-
-                Action act = delegate ()
+                while (true)
                 {
-                    this.LoadStockList();
-                };
-                this.Invoke(act);
+                    Action act = delegate ()
+                    {
+                        this.LoadStockList();
+                    };
+                    this.Invoke(act);
+
+                    Thread.Sleep(20 * 1000);
+                }
             });
+
         }
 
         void GatherData()
@@ -619,7 +610,7 @@ namespace StockPriceTools
 
         void BindStockPriceChart(Series series, string stockCode, int dateType, Color lineColor)
         {
-            series.ChartType = dateType == 1 ? SeriesChartType.Line : SeriesChartType.Candlestick;
+            series.ChartType = SeriesChartType.Line;
             series.BackSecondaryColor = Color.Green;
             series.Color = lineColor;
             series.BorderWidth = 2;
@@ -633,14 +624,14 @@ namespace StockPriceTools
             if (dateType == 0) startDate = startDate.AddMonths(-1);
             else
             {
-                var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc", 1).FirstOrDefault();
+                var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "DealDate Desc", 1).FirstOrDefault();
                 if (lastDate != null)
                 {
                     startDate = DateTime.Parse(lastDate.DealDate);
                 }
             }
             var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
-            stockPrices = stockPrices.OrderBy(c => c.ID).ToArray();
+            stockPrices = stockPrices.OrderBy(c => c.DealDate).ToArray();
 
             this.BindChartSeriesPoints(series, stockPrices, dateType, startDate);
         }
@@ -670,8 +661,8 @@ namespace StockPriceTools
             foreach (var item in stockPrices)
             {
                 var xvalue = ObjectUtil.ToValue<DateTime>(item.DealDate, DateTime.Now).ToString("MM-dd");
-                series.Points.AddXY(xvalue, item.TodayMaxPrice, item.TodayMinPrice, item.TodayStartPrice, item.TodayEndPrice);
-                //series.Points.AddXY(xvalue, item.TodayEndPrice);
+                //series.Points.AddXY(xvalue, item.TodayMaxPrice, item.TodayMinPrice, item.TodayStartPrice, item.TodayEndPrice);
+                series.Points.AddXY(xvalue, item.Price);
             }
         }
         

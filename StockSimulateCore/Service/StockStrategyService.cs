@@ -32,8 +32,8 @@ namespace StockSimulateCore.Service
             }
             if (saveStrategy)
             {
-                SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
-                SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
+                MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
+                MySQLDBUtil.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
             }
             return stockStrategys.ToArray();
         }
@@ -42,10 +42,10 @@ namespace StockSimulateCore.Service
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
             if (account == null) return stockStrategys;
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
             if (stock == null) return stockStrategys;
 
             var decNum = stock.Type == 0 ? 2 : 3;
@@ -177,7 +177,7 @@ namespace StockSimulateCore.Service
 
             if (makeRemind)
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
 
                 //创建买点提醒
                 var remindStrategy = stockStrategys.Where(c => c.ExecuteMode == 0 && c.BuyQty > 0 && c.Price <= stock.Price).OrderByDescending(c=>c.Price).FirstOrDefault();
@@ -195,7 +195,7 @@ namespace StockSimulateCore.Service
                     };
                     remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                     remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                    SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
                 }
                 else
                 {
@@ -215,7 +215,7 @@ namespace StockSimulateCore.Service
                         };
                         remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                         remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                        SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                        MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
                     }
                 }
             }
@@ -225,10 +225,10 @@ namespace StockSimulateCore.Service
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
             if (account == null) return stockStrategys;
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
             if (stock == null) return stockStrategys;
 
             var batchNo = DateTime.Now.Ticks.ToString();
@@ -280,7 +280,7 @@ namespace StockSimulateCore.Service
 
             if (makeRemind)
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
 
                 var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
                 foreach (var detail in stockReminds)
@@ -297,7 +297,7 @@ namespace StockSimulateCore.Service
                     };
                     remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                     remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                    SQLiteDBUtil.Instance.Insert<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
                 }
             }
             return stockStrategys;
@@ -317,17 +317,17 @@ namespace StockSimulateCore.Service
 
         public static void Mark(string strategyName, string stockCode, string target, decimal price)
         {
-            var stockStrategy = SQLiteDBUtil.Instance.QueryFirst<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price} and ExecuteOK !=1");
+            var stockStrategy = MySQLDBUtil.Instance.QueryFirst<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price} and ExecuteOK !=1");
             if (stockStrategy == null) return;
 
             stockStrategy.ExecuteOK = 1;
-            SQLiteDBUtil.Instance.Update<StockStrategyEntity>(stockStrategy);
+            MySQLDBUtil.Instance.Update<StockStrategyEntity>(stockStrategy);
         }
 
         public static void Cancel(string strategyName, string stockCode, string target, decimal price)
         {
-            SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price}");
-            SQLiteDBUtil.Instance.Delete<RemindEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and StrategyTarget='{target}' and Target={price}");
+            MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price}");
+            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and StrategyTarget='{target}' and Target={price}");
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace StockSimulateCore.Service
         /// <param name="accountName"></param>
         public static void CheckRun(string stockCode, decimal stockPrice, DateTime dealTime, string accountName = "")
         {
-            var stockStrategys = SQLiteDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
+            var stockStrategys = MySQLDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
 
             var runStrategys = stockStrategys.Where(c => (c.AccountName == accountName || string.IsNullOrEmpty(accountName)) 
                     && c.ExecuteOK != 1
@@ -388,7 +388,7 @@ namespace StockSimulateCore.Service
                 item.ExecuteOK = result.Success ? 1 : 2;
                 item.Message = result.Message;
             }
-            SQLiteDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
+            MySQLDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
         }
 
         public static StrategyInfo ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
@@ -409,10 +409,10 @@ namespace StockSimulateCore.Service
                 if (StockExchangeService.CouldBuy(exchangeInfo))
                 {
                     var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
-                    SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                    MySQLDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
 
                     //删除批策略号的对立数据
-                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
                 }
             }
             if (stockStrategy.SaleQty > 0)
@@ -426,10 +426,10 @@ namespace StockSimulateCore.Service
                 if (StockExchangeService.CouldSale(exchangeInfo))
                 {
                     var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
-                    SQLiteDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                    MySQLDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
 
                     //删除批策略号的对立数据
-                    SQLiteDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
                 }
             }
             return strategyInfo;

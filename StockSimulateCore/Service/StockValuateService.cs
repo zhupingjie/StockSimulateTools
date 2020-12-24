@@ -14,7 +14,7 @@ namespace StockSimulateCore.Service
         public static ValuateResultInfo[] Valuate(decimal safeRate)
         {
             var result = new List<ValuateResultInfo>();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Type=0");
             foreach(var stock in stocks)
             {
                 var info = Valuate(stock.Code, safeRate: safeRate);
@@ -28,10 +28,10 @@ namespace StockSimulateCore.Service
 
         public static ValuateResultInfo Valuate(string stockCode, decimal growth = 0, decimal pe = 0, decimal safeRate = 80, decimal netProfit = 0)
         {
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Type=0 and Code='{stockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Type=0 and Code='{stockCode}'");
             if (stock == null) return null;
 
-            var newMainTargets = SQLiteDBUtil.Instance.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype=2", "Date desc", 8);
+            var newMainTargets = MySQLDBUtil.Instance.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype=2", "Date desc", 8);
             if (newMainTargets.Length == 0) return null;
 
             var lastMainTarget = newMainTargets.FirstOrDefault();
@@ -39,7 +39,7 @@ namespace StockSimulateCore.Service
             var yetYear = (int.Parse(nowYear) - 1).ToString();
             var yetDates = newMainTargets.Where(c => c.Date.StartsWith(nowYear)).Select(c => c.Date.Replace(nowYear, yetYear)).ToArray();
             var yetDate = $"{yetYear}-12-31";
-            var mainTarget = SQLiteDBUtil.Instance.QueryFirst<MainTargetEntity>($"StockCode='{stockCode}' and Date='{yetDate}' and Rtype=1");
+            var mainTarget = MySQLDBUtil.Instance.QueryFirst<MainTargetEntity>($"StockCode='{stockCode}' and Date='{yetDate}' and Rtype=1");
             if (mainTarget == null) return null;
 
             var hasJlrs = newMainTargets.Where(c => c.Date.StartsWith(yetYear) && !yetDates.Contains(c.Date)).ToArray();

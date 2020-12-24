@@ -13,12 +13,12 @@ namespace StockSimulateCore.Service
     {
         public static void Create(string accountName, string strUPPer)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
-            SQLiteDBUtil.Instance.Delete<RemindEntity>($"StrategyName='批量设置' and RType=0");
+            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='批量设置' and RType=0");
 
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
             {
                 Create(account, stock, strUPPer, null, null, null, null, true);
@@ -27,10 +27,10 @@ namespace StockSimulateCore.Service
 
         public static void Create(string accountName, string stockCode, string strUPPer, string strUPPrice, string strDOWNPrice, string strUPAveragePrice, string strDOWNAveragePrice, bool batchCreate = false)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
-            var stock = SQLiteDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
             Create(account, stock, strUPPer, strUPPrice, strDOWNPrice, strUPAveragePrice, strDOWNAveragePrice, batchCreate);
@@ -45,7 +45,7 @@ namespace StockSimulateCore.Service
             {
                 if (!batchCreate)
                 {
-                    SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
+                    MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
                 }
                 var udPers = ObjectUtil.GetSplitArray(strUPPer, ",");
                 foreach (var udPer in udPers)
@@ -68,7 +68,7 @@ namespace StockSimulateCore.Service
             }
             if (!string.IsNullOrEmpty(strUPPrice))
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=1");
+                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=1");
 
                 var upPrices = ObjectUtil.GetSplitArray(strUPPrice, ",");
                 foreach (var upPrice in upPrices)
@@ -94,7 +94,7 @@ namespace StockSimulateCore.Service
             }
             if (!string.IsNullOrEmpty(strDOWNPrice))
             {
-                SQLiteDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=2");
+                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=2");
 
                 var downPrices = ObjectUtil.GetSplitArray(strDOWNPrice, ",");
                 foreach (var downPrice in downPrices)
@@ -159,15 +159,15 @@ namespace StockSimulateCore.Service
                     reminds.Add(remind);
                 }
             }
-            SQLiteDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
+            MySQLDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
         public static void AutoCreate(string accountName)
         {
-            var account = SQLiteDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
             var reminds = new List<RemindEntity>();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
@@ -186,45 +186,45 @@ namespace StockSimulateCore.Service
                 remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
                 reminds.Add(remind);
             }
-            SQLiteDBUtil.Instance.Delete<RemindEntity>($"StrategyName='自动设置' and RType=2");
-            SQLiteDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
+            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='自动设置' and RType=2");
+            MySQLDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
 
         public static void Mark(string stockCode, int rType, decimal target)
         {
-            var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target} and Handled='False'");
+            var remind = MySQLDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target} and Handled='False'");
             if (remind != null)
             {
                 remind.Handled = 1;
-                SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                MySQLDBUtil.Instance.Update<RemindEntity>(remind);
             }
         }
 
         public static void Cancel(string stockCode, int rType, decimal target)
         {
-            var remind = SQLiteDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target}");
+            var remind = MySQLDBUtil.Instance.QueryFirst<RemindEntity>($"StockCode='{stockCode}' and RType={rType} and Target={target}");
             if (remind != null)
             {
                 remind.Handled = 1;
-                SQLiteDBUtil.Instance.Delete<RemindEntity>(remind);
+                MySQLDBUtil.Instance.Delete<RemindEntity>(remind);
             }
         }
 
         public static void CheckAutoRun(Action<string> action)
         {
-            var reminds = SQLiteDBUtil.Instance.QueryAll<RemindEntity>($"Handled=0");
+            var reminds = MySQLDBUtil.Instance.QueryAll<RemindEntity>($"Handled=0");
             var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
-            var stocks = SQLiteDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0");
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0 and LastDate>='{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
 
             foreach (var stock in stocks)
             {
-                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && c.Handled == 0 && (!c.PlanRemind.HasValue || c.PlanRemind < DateTime.Now && c.PlanRemind >= stock.LastDate.Date));
+                var remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 0 && Math.Abs(stock.UDPer) > c.Target && c.Handled == 0 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
                 if (remind != null)
                 {
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
 
                     var nextRemind = new RemindEntity()
                     {
@@ -237,7 +237,7 @@ namespace StockSimulateCore.Service
                         StrategyTarget = remind.StrategyTarget,
                         PlanRemind = DateTime.Now.Date.AddDays(1)
                     };
-                    SQLiteDBUtil.Instance.Insert<RemindEntity>(nextRemind);
+                    MySQLDBUtil.Instance.Insert<RemindEntity>(nextRemind);
 
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.UDPer > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
@@ -256,7 +256,7 @@ namespace StockSimulateCore.Service
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price && c.Handled == 0);
@@ -270,7 +270,7 @@ namespace StockSimulateCore.Service
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 8 && c.MaxPrice >= stock.Price && c.Handled == 0 && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
@@ -283,7 +283,7 @@ namespace StockSimulateCore.Service
 
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
                 }
 
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && c.Handled == 0 && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
@@ -296,7 +296,7 @@ namespace StockSimulateCore.Service
 
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    SQLiteDBUtil.Instance.Update<RemindEntity>(remind);
+                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
                 }
             }
         }

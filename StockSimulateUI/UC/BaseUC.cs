@@ -15,7 +15,7 @@ namespace StockSimulateUI.UC
 {
     public partial class BaseUC : UserControl
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public string StockName { get; set; }
         public string StrategyName { get; set; }

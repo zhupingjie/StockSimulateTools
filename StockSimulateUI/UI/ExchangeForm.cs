@@ -16,7 +16,7 @@ namespace StockSimulateUI.UI
 {
     public partial class ExchangeForm : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public int DealQty { get; set; }
         public decimal DealPrice { get; set; }
 

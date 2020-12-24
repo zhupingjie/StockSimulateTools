@@ -19,7 +19,7 @@ namespace StockSimulateUI.UI
 {
     public partial class StrategyForm : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public string StockName { get; set; }
         public StrategyForm()

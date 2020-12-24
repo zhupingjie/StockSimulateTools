@@ -15,7 +15,7 @@ namespace StockSimulateUI.UI
 {
     public partial class DebugForm : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public DebugForm()
         {

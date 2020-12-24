@@ -15,7 +15,7 @@ namespace StockSimulateUI.UI
 {
     public partial class AccountForm : Form
     {
-        private SQLiteDBUtil Repository = SQLiteDBUtil.Instance;
+        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public AccountForm()
         {
             InitializeComponent();
