@@ -60,6 +60,8 @@ namespace StockSimulateNetCore
         public void Stop()
         {
             this.CancellationTokenSource.Cancel();
+
+            LogUtil.Debug($"程序停止运行...");
         }
         #endregion
 
@@ -179,7 +181,9 @@ namespace StockSimulateNetCore
 
         public void ActionLog(string message)
         {
-            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}\n");
+            //Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}\n");
+
+            LogUtil.Debug(message);
         }
 
         #endregion

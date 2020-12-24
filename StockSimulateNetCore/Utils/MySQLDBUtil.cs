@@ -61,22 +61,30 @@ namespace StockSimulateNetCore.Utils
 
         Type[] FindEntityTypes()
         {
-            var path = "~/".MapAbsolutePath();
+            var entityTypes = new List<Type>();
+            LogUtil.Debug("FindEntityTypes");
+            try
+            {
+                var path = AppDomain.CurrentDomain.BaseDirectory;
+                LogUtil.Debug(path);
 #if DEBUG
             path = "~/".MapHostAbsolutePath().CombineWith("bin", "Debug", "netcoreapp3.1");
 #endif
-
-            var entityTypes = new List<Type>();
-            var assmblies = AssemblyUtil.LoadAssemblies(path, x => x.Name.Contains("StockSimulate"));
-            foreach (var assbm in assmblies)
-            {
-                foreach (var type in assbm.GetTypes())
+                var assmblies = AssemblyUtil.LoadAssemblies(path, x => x.Name.Contains("StockSimulate"));
+                foreach (var assbm in assmblies)
                 {
-                    if (typeof(BaseEntity).IsAssignableFrom(type) && !type.Equals(typeof(BaseEntity)))
+                    foreach (var type in assbm.GetTypes())
                     {
-                        entityTypes.Add(type);
+                        if (typeof(BaseEntity).IsAssignableFrom(type) && !type.Equals(typeof(BaseEntity)))
+                        {
+                            entityTypes.Add(type);
+                        }
                     }
                 }
+            }
+            catch(Exception ex)
+            {
+                LogUtil.Error(ex);
             }
             return entityTypes.ToArray();
         }
@@ -128,6 +136,7 @@ namespace StockSimulateNetCore.Utils
         {
             using (MySqlConnection con = new MySqlConnection(strConn))
             {
+                LogUtil.Debug($"检测并创建表[{tableName}]...");
                 con.Open();
                 var cmd = con.CreateCommand();
                 StringBuilder sb = new StringBuilder();
@@ -288,7 +297,7 @@ namespace StockSimulateNetCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally
@@ -352,7 +361,7 @@ namespace StockSimulateNetCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally
@@ -435,7 +444,7 @@ namespace StockSimulateNetCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return lst.ToArray();
                 }
                 finally
@@ -453,12 +462,13 @@ namespace StockSimulateNetCore.Utils
                 con.Open();
                 var cmd = con.CreateCommand();
 
+                var sql = "";
                 StringBuilder sb = new StringBuilder();
                 foreach (var entity in entitys)
                 {
                     sb.Append($"delete from {table} where ID='{entity.ID}';");
                 }
-                cmd.CommandText = sb.ToString();
+                cmd.CommandText = sql =  sb.ToString();
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -466,7 +476,7 @@ namespace StockSimulateNetCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sb.ToString()}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally
@@ -483,8 +493,8 @@ namespace StockSimulateNetCore.Utils
                 con.Open();
                 var cmd = con.CreateCommand();
 
-                StringBuilder sb = new StringBuilder();
-                cmd.CommandText = $"delete from {table} where {where}";
+                var sql = $"delete from {table} where {where}";
+                cmd.CommandText = sql; 
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -492,7 +502,7 @@ namespace StockSimulateNetCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error(ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally

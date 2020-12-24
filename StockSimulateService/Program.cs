@@ -1,4 +1,5 @@
 ﻿using StockSimulateNetCore;
+using StockSimulateNetCore.Utils;
 using StockSimulateService.Service;
 using System;
 using System.ServiceProcess;
@@ -9,13 +10,23 @@ namespace StockSimulateService
     {
         static void Main(string[] args)
         {
-#if DEBUG
+            LogUtil.Debug($"程序开始启动...");
+#if !DEBUG
         StockMarketService.Instance.Start();
-         Console.ReadKey();
+        while (true)
+        {
+            var input = Console.ReadLine();
+            if (input.Equals("exit"))
+            {
+                LogUtil.Debug($"程序准备结束运行...");
+                break;
+            }
+        }
 #else
-            ServiceBase[] services = new ServiceBase[] { new StockSimulateService() };
+            ServiceBase[] services = new ServiceBase[] { new Service.StockSimulateService() };
             ServiceBase.Run(services);
 #endif
+            LogUtil.Debug($"程序结束运行...");
         }
     }
 }

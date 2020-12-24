@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -285,6 +286,40 @@ namespace StockSimulateNetCore.Utils
                 if (DateTime.Now.Date.Month > 4) return false;
             }
             return true;
+        }
+
+
+        public static void CheckOrCreateDirectory(string path)
+        {
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        }
+
+        public static void DeleteDirectoryFiles(string path, Action<string> action)
+        {
+            var files = Directory.GetFiles(path);
+            foreach (var file in files)
+            {
+                File.Delete(file);
+                if (action != null)
+                {
+                    action(file);
+                }
+            }
+        }
+
+        public static void MoveDirectoryFiles(string sourcePath, string destPath, Action<FileInfo, string> action)
+        {
+            var files = Directory.GetFiles(sourcePath).Select(c => new FileInfo(c)).ToArray();
+            foreach (var file in files)
+            {
+                var destFile = Path.Combine(destPath, file.Name);
+                file.CopyTo(destFile, true);
+                file.Delete();
+                if (action != null)
+                {
+                    action(file, destFile);
+                }
+            }
         }
     }
 }

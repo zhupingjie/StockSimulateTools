@@ -19,8 +19,10 @@ namespace StockSimulateNetCore.Service
 
         public static void LoadGlobalConfig(RunningConfig rc)
         {
+            LogUtil.Debug($"初始化数据库...");
             MySQLDBUtil.Instance.InitDataBase();
-            
+
+            LogUtil.Debug($"初始化系统配置...");
             var configs = MySQLDBUtil.Instance.QueryAll<GlobalConfigEntity>();
             foreach (var config in configs)
             {
@@ -33,6 +35,7 @@ namespace StockSimulateNetCore.Service
                     ObjectUtil.SetPropertyValue(rc, config.Name, value);
                 }
             }
+            LogUtil.Debug($"初始化系统配置完成...");
         }
     }
 }
