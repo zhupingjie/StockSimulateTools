@@ -21,6 +21,9 @@ namespace StockSimulateCore.Entity
         [Description("持有现金(元)")]
         public decimal Cash { get; set; }
 
+        [Description("总市值(元)")]
+        public decimal TotalAmount { get; set; }
+
         [Description("投入市值(元)")]
         public decimal BuyAmount { get; set; }
 
