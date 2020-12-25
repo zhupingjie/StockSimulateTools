@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateNetCore.Model
+namespace StockSimulateDomain.Model
 {
     public class LeftExchangeStrategyInfo : StrategyInfo
     {

@@ -112,12 +112,6 @@
   <ItemGroup>
     <Compile Include="Config\RunningConfig.cs" />
     <Compile Include="Config\SenderMailConfig.cs" />
-    <Compile Include="Model\ExchangeInfo.cs" />
-    <Compile Include="Model\ExchangeResultInfo.cs" />
-    <Compile Include="Model\LeftExchangeStrategyInfo.cs" />
-    <Compile Include="Model\StrategyInfo.cs" />
-    <Compile Include="Model\TExchangeStrategyInfo.cs" />
-    <Compile Include="Model\ValuateResultInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\StockConfigService.cs" />
     <Compile Include="Service\StockDebugService.cs" />
@@ -130,7 +124,6 @@
     <Compile Include="Service\StockValuateService.cs" />
     <Compile Include="StockMarketService.cs" />
     <Compile Include="Utils\AssemblyUtil.cs" />
-    <Compile Include="Utils\DBColumn.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />
     <Compile Include="Utils\MailUtil.cs" />

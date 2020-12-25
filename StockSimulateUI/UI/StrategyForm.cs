@@ -1,7 +1,7 @@
 ﻿using StockPriceTools;
 using StockSimulateCore.Config;
 using StockSimulateDomain.Entity;
-using StockSimulateCore.Model;
+using StockSimulateDomain.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using StockSimulateUI.UC;

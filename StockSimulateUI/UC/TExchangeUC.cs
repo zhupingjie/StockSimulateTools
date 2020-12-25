@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateCore.Model;
+using StockSimulateDomain.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using StockSimulateDomain.Entity;

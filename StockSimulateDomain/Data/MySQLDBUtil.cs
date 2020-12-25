@@ -1,13 +1,13 @@
 ﻿using MySqlConnector;
-using ServiceStack;
 using StockSimulateDomain.Data;
-using StockSimulateNetCore.Data;
-using StockSimulateDomain.Entity;
+using StockSimulateDomain.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace StockSimulateNetCore.Utils
@@ -47,10 +47,12 @@ namespace StockSimulateNetCore.Utils
             foreach (var type in types)
             {
                 var sqlCols = new List<DBColumn>();
-                var preps = ObjectUtil.GetPropertyInfos(type);
+                var preps = type.GetProperties();
 
                 foreach (var prep in preps)
                 {
+                    if (prep.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+
                     var col = GetDBColumnType(prep.Name, prep.PropertyType);
                     if (col.ColumnName.Equals("ID", StringComparison.CurrentCultureIgnoreCase)) continue;
 
@@ -63,15 +65,11 @@ namespace StockSimulateNetCore.Utils
         Type[] FindEntityTypes()
         {
             var entityTypes = new List<Type>();
-            LogUtil.Debug("FindEntityTypes");
             try
             {
                 var path = AppDomain.CurrentDomain.BaseDirectory;
-                LogUtil.Debug(path);
-#if DEBUG
-            path = "~/".MapHostAbsolutePath().CombineWith("bin", "Debug", "netcoreapp3.1");
-#endif
-                var assmblies = AssemblyUtil.LoadAssemblies(path, x => x.Name.Contains("StockSimulate"));
+
+                var assmblies = LoadAssemblies(path, x => x.Name.Contains("StockSimulate"));
                 foreach (var assbm in assmblies)
                 {
                     foreach (var type in assbm.GetTypes())
@@ -110,7 +108,7 @@ namespace StockSimulateNetCore.Utils
             {
                 colType = "datetime";
             }
-            else if (ObjectUtil.IsNullableType(type) && ObjectUtil.GetNullableType(type) == typeof(DateTime))
+            else if (TypeUtil.IsNullableType(type) && TypeUtil.GetNullableType(type) == typeof(DateTime))
             {
                 colType = "datetime";
             }
@@ -248,7 +246,7 @@ namespace StockSimulateNetCore.Utils
 
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
-                var fields = ObjectUtil.GetPropertyInfos(type);
+                var fields = type.GetProperties();
                 foreach (var entity in entitys)
                 {
                     StringBuilder sbCol = new StringBuilder();
@@ -257,6 +255,7 @@ namespace StockSimulateNetCore.Utils
                     foreach (var field in fields)
                     {
                         if (field.Name == "ID") continue;
+                        if (field.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
 
                         sbCol.Append($",{field.Name}");
 
@@ -268,7 +267,7 @@ namespace StockSimulateNetCore.Utils
                             {
                                 val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
                             }
-                            else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                            else if (TypeUtil.IsNullableType(field.PropertyType) && TypeUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
                             {
                                 val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
                             }
@@ -317,8 +316,7 @@ namespace StockSimulateNetCore.Utils
 
                 var sql = string.Empty;
                 var type = entitys.FirstOrDefault().GetType();
-                var fields = ObjectUtil.GetPropertyInfos(type);
-
+                var fields = type.GetProperties();
                 foreach (var entity in entitys)
                 {
                     StringBuilder sb = new StringBuilder();
@@ -327,6 +325,7 @@ namespace StockSimulateNetCore.Utils
                     {
                         if (field.Name == "ID" || field.Name == "LastDate") continue;
                         if (columns != null && !columns.Contains(field.Name)) continue;
+                        if (field.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
 
                         var value = field.GetValue(entity);
                         if (value != null)
@@ -336,7 +335,7 @@ namespace StockSimulateNetCore.Utils
                             {
                                 val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
                             }
-                            else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                            else if (TypeUtil.IsNullableType(field.PropertyType) && TypeUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
                             {
                                 val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
                             }
@@ -416,7 +415,7 @@ namespace StockSimulateNetCore.Utils
                                 {
                                     obj = Boolean.Parse(dr[field.Name].ToString());
                                 }
-                                else if (ObjectUtil.IsNullableType(field.PropertyType) && ObjectUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                                else if (TypeUtil.IsNullableType(field.PropertyType) && TypeUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
                                 {
                                     if (dr[field.Name] == DBNull.Value)
                                     {
@@ -513,5 +512,16 @@ namespace StockSimulateNetCore.Utils
             }
         }
         #endregion
+
+        public static IList<Assembly> LoadAssemblies(string folderName, Func<FileInfo, bool> filter = null)
+        {
+            if (filter == null) filter = f => f.Length > 0;
+
+            var pathInfo = new DirectoryInfo(folderName);
+            return pathInfo.GetFiles("*.dll", SearchOption.AllDirectories)
+                           .Where(filter)
+                           .Select(f => Assembly.LoadFrom(f.FullName))
+                           .ToList();
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
-using StockSimulateCore.Model;
+using StockSimulateDomain.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Config;
 using StockSimulateDomain.Entity;

@@ -1,6 +1,6 @@
 ﻿using StockPriceTools.UI;
 using StockSimulateDomain.Entity;
-using StockSimulateCore.Model;
+using StockSimulateDomain.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using StockSimulateUI.UI;
