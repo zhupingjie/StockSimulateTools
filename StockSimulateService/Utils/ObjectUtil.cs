@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateDomain.Utils
+namespace StockSimulateService.Utils
 {
     public class ObjectUtil
     {
@@ -203,7 +203,7 @@ namespace StockSimulateDomain.Utils
             }
             catch (Exception ex)
             {
-                throw new Exception($"数据[{value}]转换为类型[{type.Name}]错误:{ex.Message}");
+                return null;
             }
         }
 

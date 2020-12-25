@@ -1,11 +1,11 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateCoreService.Utils;
+using StockSimulateService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateDomain.Utils;
+using StockSimulateService.Utils;
 using StockSimulateService.Helper;
 using StockSimulateService.Service;
 

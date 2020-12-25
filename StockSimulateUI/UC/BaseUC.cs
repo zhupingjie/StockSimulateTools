@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateDomain.Model;
 using StockSimulateService.Service;
-using StockSimulateCoreService.Utils;
+using StockSimulateService.Utils;
 
 namespace StockSimulateUI.UC
 {

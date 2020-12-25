@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace StockSimulateDomain.Utils
+namespace StockSimulateService.Utils
 {
     public class LogUtil
     {

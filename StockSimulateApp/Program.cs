@@ -1,4 +1,4 @@
-﻿using StockSimulateDomain.Utils;
+﻿using StockSimulateService.Utils;
 using StockSimulateService.Service;
 using System;
 using System.ServiceProcess;

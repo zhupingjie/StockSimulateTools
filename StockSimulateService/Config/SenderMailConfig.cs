@@ -1,5 +1,5 @@
 ﻿using System;
-namespace StockSimulateDomain.Config
+namespace StockSimulateService.Config
 {
     public class SenderMailConfig
     {

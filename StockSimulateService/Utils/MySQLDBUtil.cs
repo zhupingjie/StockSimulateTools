@@ -1,6 +1,5 @@
 ﻿using MySqlConnector;
 using StockSimulateDomain.Data;
-using StockSimulateDomain.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace StockSimulateCoreService.Utils
+namespace StockSimulateService.Utils
 {
     public class MySQLDBUtil
     {

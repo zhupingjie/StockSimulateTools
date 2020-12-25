@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateDomain.Config;
-using StockSimulateDomain.Utils;
-using StockSimulateCoreService.Utils;
+using StockSimulateService.Utils;
+using StockSimulateService.Config;
 
 namespace StockSimulateService.Service
 {

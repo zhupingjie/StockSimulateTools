@@ -10,8 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateCoreService.Utils;
-using StockSimulateDomain.Utils;
+using StockSimulateService.Utils;
+using StockSimulateService.Utils;
 
 namespace StockSimulateUI.UI
 {

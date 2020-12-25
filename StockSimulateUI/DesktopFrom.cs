@@ -14,8 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using StockSimulateCoreService.Utils;
-using StockSimulateDomain.Utils;
+using StockSimulateService.Utils;
+using StockSimulateService.Utils;
 using StockSimulateService.Config;
 
 namespace StockPriceTools
@@ -239,7 +239,7 @@ namespace StockPriceTools
             for (var i = 0; i < this.gridAccountStockList.Rows.Count; i++)
             {
                 var row = this.gridAccountStockList.Rows[i];
-                var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
+                var value = ObjectUtil.ToValue<decimal>(row.Cells["盈亏(元)"].Value, 0);
                 if (value > 0)
                 {
                     this.gridAccountStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;

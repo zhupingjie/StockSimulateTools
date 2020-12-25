@@ -9,8 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateCoreService.Utils;
-using StockSimulateDomain.Utils;
+using StockSimulateService.Utils;
+using StockSimulateService.Utils;
 using StockSimulateService.Helper;
 
 namespace StockSimulateUI.UI
@@ -260,7 +260,7 @@ namespace StockSimulateUI.UI
             {
                 Action act = delegate ()
                 {
-                    this.LoadCashTargetInfo(StockCode, 2);
+                    this.LoadMainTargetInfo(StockCode, 2);
                 };
                 this.Invoke(act);
             }
@@ -272,7 +272,7 @@ namespace StockSimulateUI.UI
             {
                 Action act = delegate ()
                 {
-                    this.LoadBalanceTargetInfo(StockCode, 1, 1);
+                    this.LoadBalanceTargetInfo(StockCode, 0, 1);
                 };
                 this.Invoke(act);
             }
@@ -296,7 +296,7 @@ namespace StockSimulateUI.UI
             {
                 Action act = delegate ()
                 {
-                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                    this.LoadProfitTargetInfo(StockCode, 0, 1);
                 };
                 this.Invoke(act);
             }
@@ -320,7 +320,7 @@ namespace StockSimulateUI.UI
             {
                 Action act = delegate ()
                 {
-                    this.LoadProfitTargetInfo(StockCode, 1, 1);
+                    this.LoadProfitTargetInfo(StockCode, 0, 2);
                 };
                 this.Invoke(act);
             }
