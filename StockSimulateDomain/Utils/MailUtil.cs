@@ -1,15 +1,4 @@
-﻿//
-//
-//  Copyright (c) SEUNGEE Co.,Ltd. All Rights Reserved.
-//
-// 	@Author: jeffpan 
-// 	@Last Modified by:   jeffpan 
-//
-//
-//
-//
-using StockSimulateCore.Config;
-using StockSimulateDomain.Config;
+﻿using StockSimulateDomain.Config;
 using System;
 using System.IO;
 using System.Linq;
@@ -19,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Utils
+namespace StockSimulateDomain.Utils
 {
     public class MailUtil
     {

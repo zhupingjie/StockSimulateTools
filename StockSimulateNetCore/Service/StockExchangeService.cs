@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StockSimulateDomain.Config;
+using StockSimulateDomain.Utils;
 
 namespace StockSimulateNetCore.Service
 {

@@ -121,12 +121,7 @@
     <Compile Include="Service\StockService.cs" />
     <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Service\StockValuateService.cs" />
-    <Compile Include="StockMarketService.cs" />
-    <Compile Include="Utils\AssemblyUtil.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
-    <Compile Include="Utils\LogUtil.cs" />
-    <Compile Include="Utils\MailUtil.cs" />
-    <Compile Include="Utils\MySQLDBUtil.cs" />
     <Compile Include="Utils\ObjectUtil.cs" />
   </ItemGroup>
   <ItemGroup>

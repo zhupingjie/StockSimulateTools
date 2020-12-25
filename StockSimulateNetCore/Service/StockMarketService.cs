@@ -1,4 +1,5 @@
-﻿using StockSimulateNetCore.Config;
+﻿using StockSimulateDomain.Utils;
+using StockSimulateNetCore.Config;
 using StockSimulateNetCore.Service;
 using StockSimulateNetCore.Utils;
 using System;

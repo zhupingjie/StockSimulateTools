@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StockSimulateNetCore.Utils;
 
 namespace StockSimulateUI.UI
 {
