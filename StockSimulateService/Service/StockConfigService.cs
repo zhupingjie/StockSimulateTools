@@ -1,24 +1,21 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateDomain.Interface;
 using StockSimulateDomain.Utils;
-using StockSimulateCoreService.Config;
 using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StockSimulateService.Config;
 
-namespace StockSimulateCoreService.Serivce
+namespace StockSimulateService.Service
 {
-    public class StockConfigService: ServiceBase
+    public class StockConfigService
     {
         public static void LoadGlobalConfig(RunningConfig rc)
         {
-            LogUtil.Debug($"初始化数据库...");
             MySQLDBUtil.Instance.InitDataBase();
 
-            LogUtil.Debug($"初始化系统配置...");
             var configs = MySQLDBUtil.Instance.QueryAll<GlobalConfigEntity>();
             foreach (var config in configs)
             {
@@ -31,7 +28,6 @@ namespace StockSimulateCoreService.Serivce
                     ObjectUtil.SetPropertyValue(rc, config.Name, value);
                 }
             }
-            LogUtil.Debug($"初始化系统配置完成...");
         }
     }
 }

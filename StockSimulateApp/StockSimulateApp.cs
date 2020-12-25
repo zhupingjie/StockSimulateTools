@@ -1,5 +1,4 @@
-﻿using StockSimulateCoreService.Serivce;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
 
 namespace StockSimulateService.Service
 {

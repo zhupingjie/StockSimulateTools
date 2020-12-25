@@ -1,14 +1,14 @@
-﻿using StockSimulateDomain.Entity;
-using StockSimulateCoreService.Config;
-using StockSimulateCoreService.Utils;
+﻿using StockSimulateService.Service;
+using StockSimulateDomain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StockSimulateCoreService.Utils;
 using StockSimulateService.Helper;
 
-namespace StockSimulateCoreService.Serivce
+namespace StockSimulateService.Service
 {
     public class StockPriceService 
     {

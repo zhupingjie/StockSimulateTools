@@ -1,7 +1,7 @@
 ﻿using StockSimulateDomain.Utils;
-using StockSimulateCoreService.Config;
-using StockSimulateCoreService.Serivce;
-using StockSimulateCoreService.Utils;
+using StockSimulateNetService.Serivce;
+using StockSimulateService.Service;
+using StockSimulateService.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StockSimulateCoreService.Serivce
+namespace StockSimulateService.Service
 {
     public class StockMarketService
     {

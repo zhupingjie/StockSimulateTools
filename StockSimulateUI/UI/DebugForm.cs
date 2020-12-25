@@ -1,5 +1,5 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateNetService.Service;
+using StockSimulateService.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCoreService.Utils;
 using StockSimulateDomain.Utils;
+using StockSimulateNetService.Serivce;
 
 namespace StockSimulateUI.UI
 {

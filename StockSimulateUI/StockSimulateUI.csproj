@@ -266,10 +266,6 @@
       <Project>{159c855b-ba11-414a-a274-4203b422c75c}</Project>
       <Name>StockSimulateDomain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StockSimulateNetService\StockSimulateNetService.csproj">
-      <Project>{3b5b2596-212a-4046-b70a-66bd82edd5ed}</Project>
-      <Name>StockSimulateNetService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj">
       <Project>{3048d004-5b95-4492-a7e7-ba7a17427e06}</Project>
       <Name>StockSimulateService</Name>

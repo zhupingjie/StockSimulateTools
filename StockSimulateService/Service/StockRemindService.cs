@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using StockSimulateDomain.Config;
 using StockSimulateDomain.Utils;
 using StockSimulateCoreService.Utils;
+using StockSimulateService.Config;
 
-namespace StockSimulateNetService.Service
+namespace StockSimulateService.Service
 {
     public class StockRemindService
     {

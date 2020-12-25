@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateDomain.Model;
-using StockSimulateNetService.Service;
+using StockSimulateService.Service;
 using StockSimulateCoreService.Utils;
 
 namespace StockSimulateUI.UC

@@ -1,8 +1,8 @@
 ﻿using StockPriceTools;
-using StockSimulateNetService.Service;
+using StockSimulateService.Service;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateNetService.Service;
+using StockSimulateService.Service;
 using StockSimulateUI.UC;
 using System;
 using System.Collections.Generic;

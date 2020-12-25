@@ -7,8 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using StockSimulateDomain.Utils;
 using StockSimulateService.Helper;
+using StockSimulateService.Service;
 
-namespace StockSimulateCoreService.Serivce
+namespace StockSimulateNetService.Serivce
 {
     public class StockGatherService
     {

@@ -9,7 +9,7 @@ using StockSimulateDomain.Config;
 using StockSimulateDomain.Utils;
 using StockSimulateCoreService.Utils;
 
-namespace StockSimulateNetService.Service
+namespace StockSimulateService.Service
 {
     public class StockExchangeService
     {

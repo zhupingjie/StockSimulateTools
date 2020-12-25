@@ -1,6 +1,6 @@
 ﻿using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateNetService.Service;
+using StockSimulateService.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

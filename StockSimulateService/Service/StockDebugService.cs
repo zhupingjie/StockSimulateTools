@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StockSimulateCoreService.Utils;
 
-namespace StockSimulateNetService.Service
+namespace StockSimulateService.Service
 {
     public class StockDebugService
     {
