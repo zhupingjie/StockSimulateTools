@@ -2,7 +2,6 @@
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
 using StockSimulateNetService.Service;
-using StockSimulateNetService.Utils;
 using StockSimulateUI.UI;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using StockSimulateNetService.Service;
 using StockSimulateCoreService.Utils;
 using StockSimulateDomain.Utils;
 

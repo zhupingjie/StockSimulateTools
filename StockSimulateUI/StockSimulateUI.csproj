@@ -270,6 +270,10 @@
       <Project>{3b5b2596-212a-4046-b70a-66bd82edd5ed}</Project>
       <Name>StockSimulateNetService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj">
+      <Project>{3048d004-5b95-4492-a7e7-ba7a17427e06}</Project>
+      <Name>StockSimulateService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,5 @@
 ﻿using StockSimulateDomain.Entity;
 using StockSimulateNetService.Service;
-using StockSimulateNetService.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCoreService.Utils;
 using StockSimulateDomain.Utils;
+using StockSimulateService.Helper;
 
 namespace StockPriceTools.UI
 {

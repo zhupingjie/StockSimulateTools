@@ -1,5 +1,4 @@
 ﻿using ServiceStack;
-using ServiceStack.Text;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Utils;
 using System;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCoreService.Utils
+namespace StockSimulateService.Helper
 {
     public class EastMoneyUtil
     {

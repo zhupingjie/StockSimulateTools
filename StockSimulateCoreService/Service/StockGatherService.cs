@@ -1,6 +1,4 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateCoreService.Config;
-using StockSimulateDomain.Model;
 using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StockSimulateDomain.Utils;
+using StockSimulateService.Helper;
 
 namespace StockSimulateCoreService.Serivce
 {

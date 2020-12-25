@@ -1,22 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.29" />
-    <PackageReference Include="MySqlConnector" Version="1.2.1" />
     <PackageReference Include="ServiceStack.Text" Version="5.10.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StockSimulateDomain\StockSimulateDomain.csproj" />
-    <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

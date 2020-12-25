@@ -1,6 +1,4 @@
-﻿using StockSimulateNetService.Service;
-using StockSimulateNetService.Utils;
-using StockSimulateDomain.Entity;
+﻿using StockSimulateDomain.Entity;
 using StockSimulateDomain.Utils;
 using StockSimulateCoreService.Utils;
 using System;

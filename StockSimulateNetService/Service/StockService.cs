@@ -1,6 +1,5 @@
 ﻿using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateNetService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using StockSimulateDomain.Attributes;
 using StockSimulateCoreService.Utils;
 using StockSimulateDomain.Utils;
+using StockSimulateService.Helper;
 
 namespace StockSimulateNetService.Service
 {

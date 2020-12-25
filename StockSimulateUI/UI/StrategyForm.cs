@@ -3,7 +3,6 @@ using StockSimulateNetService.Service;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
 using StockSimulateNetService.Service;
-using StockSimulateNetService.Utils;
 using StockSimulateUI.UC;
 using System;
 using System.Collections.Generic;

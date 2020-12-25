@@ -1,12 +1,12 @@
 ﻿using StockSimulateNetService.Service;
 using StockSimulateDomain.Entity;
-using StockSimulateNetService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StockSimulateCoreService.Utils;
+using StockSimulateService.Helper;
 
 namespace StockSimulateNetService.Service
 {

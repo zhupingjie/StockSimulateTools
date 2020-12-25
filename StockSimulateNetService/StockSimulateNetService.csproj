@@ -121,7 +121,6 @@
     <Compile Include="Service\StockService.cs" />
     <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Service\StockValuateService.cs" />
-    <Compile Include="Utils\EastMoneyUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -132,6 +131,13 @@
       <Project>{159c855b-ba11-414a-a274-4203b422c75c}</Project>
       <Name>StockSimulateDomain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj">
+      <Project>{3048d004-5b95-4492-a7e7-ba7a17427e06}</Project>
+      <Name>StockSimulateService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
