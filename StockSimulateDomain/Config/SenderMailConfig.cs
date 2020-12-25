@@ -1,15 +1,5 @@
-﻿//
-//
-//  Copyright (c) SEUNGEE Co.,Ltd. All Rights Reserved.
-//
-// 	@Author: jeffpan 
-// 	@Last Modified by:   jeffpan 
-//
-//
-//
-//
-using System;
-namespace StockSimulateCore.Config
+﻿using System;
+namespace StockSimulateDomain.Config
 {
     public class SenderMailConfig
     {

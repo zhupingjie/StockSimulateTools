@@ -9,6 +9,7 @@
 //
 //
 using StockSimulateCore.Config;
+using StockSimulateDomain.Config;
 using System;
 using System.IO;
 using System.Linq;

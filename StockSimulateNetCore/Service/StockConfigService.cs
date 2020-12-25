@@ -1,6 +1,6 @@
 ﻿using StockSimulateDomain.Entity;
+using StockSimulateDomain.Interface;
 using StockSimulateNetCore.Config;
-using StockSimulateNetCore.Data;
 using StockSimulateNetCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,6 @@ namespace StockSimulateNetCore.Service
 {
     public class StockConfigService: ServiceBase
     {
-        public StockConfigService(RunningConfig _rc) : base(_rc)
-        {
-
-        }
-
         public static void LoadGlobalConfig(RunningConfig rc)
         {
             LogUtil.Debug($"初始化数据库...");

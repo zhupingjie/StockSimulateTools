@@ -1,23 +1,14 @@
 ﻿using MySqlConnector;
-using StockSimulateNetCore.Config;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace StockSimulateNetCore.Data
+namespace StockSimulateDomain.Data
 {
     public class Repository
     {
-
-        public Repository(RunningConfig rc)
-        {
-            this._rc = rc;
-        }
-
-        RunningConfig _rc;
-
         DbConnection _conn;
 
         /// <summary>
@@ -36,7 +27,7 @@ namespace StockSimulateNetCore.Data
                 {
                     if (this._conn == null)
                     {
-                        this._conn = new MySqlConnection(_rc.DBConnectionString);
+                        this._conn = new MySqlConnection("");
                     }
                     if (this._conn.State == ConnectionState.Closed)
                     {

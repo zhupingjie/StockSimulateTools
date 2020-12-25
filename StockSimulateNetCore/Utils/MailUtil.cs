@@ -8,6 +8,7 @@
 //
 //
 //
+using StockSimulateDomain.Config;
 using StockSimulateNetCore.Config;
 using System;
 using System.IO;
