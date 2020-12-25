@@ -11,6 +11,7 @@ using StockSimulateDomain.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using StockSimulateDomain.Entity;
+using StockSimulateDomain.Utils;
 
 namespace StockSimulateUI.UC
 {

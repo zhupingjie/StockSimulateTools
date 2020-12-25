@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using ServiceStack.Text;
 using StockSimulateDomain.Attributes;
 using StockSimulateDomain.Data;
 using StockSimulateDomain.Entity;
@@ -15,7 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Utils
+namespace StockSimulateDomain.Utils
 {
     public class ObjectUtil
     {
@@ -77,7 +76,7 @@ namespace StockSimulateCore.Utils
                 {
                     var val = propertyInfo.GetValue(obj);
                     if (val == null) return default(T);
-                    return TypeSerializer.DeserializeFromString<T>($"{val}");
+                    return ToValue<T>(val);
                 }
             }
             return default(T);
@@ -166,20 +165,12 @@ namespace StockSimulateCore.Utils
             return Nullable.GetUnderlyingType(theType);
         }
 
-        public static T ToValue<T>(object value, T defaultValue)
+        public static T ToValue<T>(object value, T defaultValue = default(T))
         {
-            try
-            {
-                if (value == null) return defaultValue;
-                var val = $"{value}".Trim();
-                if (String.IsNullOrEmpty(val)) return defaultValue;
+            var obj = ToValue(value, typeof(T));
+            if (obj == null) return defaultValue;
 
-                return TypeSerializer.DeserializeFromString<T>(val);
-            }
-            catch (Exception ex)
-            {
-                return defaultValue;
-            }
+            return (T)obj;
         }
 
         public static object ToValue(object value, Type type)
@@ -189,7 +180,26 @@ namespace StockSimulateCore.Utils
                 if (value == null) return null;
                 var val = $"{value}".Trim();
 
-                return TypeSerializer.DeserializeFromString(val, type);
+                if (value == null && type.IsGenericType) return Activator.CreateInstance(type);
+                if (value == null) return null;
+                if (type == value.GetType()) return value;
+                if (type.IsEnum)
+                {
+                    if (value is string)
+                        return Enum.Parse(type, value as string);
+                    else
+                        return Enum.ToObject(type, value);
+                }
+                if (!type.IsInterface && type.IsGenericType)
+                {
+                    Type innerType = type.GetGenericArguments()[0];
+                    object innerValue = ToValue(value, innerType);
+                    return Activator.CreateInstance(type, new object[] { innerValue });
+                }
+                if (value is string && type == typeof(Guid)) return new Guid(value as string);
+                if (value is string && type == typeof(Version)) return new Version(value as string);
+                if (!(value is IConvertible)) return value;
+                return Convert.ChangeType(value, type);
             }
             catch (Exception ex)
             {
@@ -238,31 +248,10 @@ namespace StockSimulateCore.Utils
         {
             try
             {
-                // 64位注册表路径
-                var openKey = @"SOFTWARE\Wow6432Node\Google\Chrome";
-                if (IntPtr.Size == 4)
+                var result = Process.Start("chrome.exe", url);
+                if (result == null)
                 {
-                    // 32位注册表路径
-                    openKey = @"SOFTWARE\Google\Chrome";
-                }
-                RegistryKey appPath = Registry.LocalMachine.OpenSubKey(openKey);
-                // 谷歌浏览器就用谷歌打开，没找到就用系统默认的浏览器
-                // 谷歌卸载了，注册表还没有清空，程序会返回一个"系统找不到指定的文件。"的bug
-                if (appPath != null)
-                {
-                    var result = Process.Start("chrome.exe", url);
-                    if (result == null)
-                    {
-                        OpenIe(url);
-                    }
-                }
-                else
-                {
-                    var result = Process.Start("chrome.exe", url);
-                    if (result == null)
-                    {
-                        OpenIe(url);
-                    }
+                    OpenIe(url);
                 }
             }
             catch

@@ -1,6 +1,7 @@
 ﻿using StockSimulateDomain.Attributes;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
+using StockSimulateDomain.Utils;
 using StockSimulateNetCore.Utils;
 using System;
 using System.Collections.Generic;

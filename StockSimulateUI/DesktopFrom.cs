@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using StockSimulateCore.Config;
 using StockSimulateNetCore.Utils;
+using StockSimulateDomain.Utils;
 
 namespace StockPriceTools
 {
@@ -36,10 +37,6 @@ namespace StockPriceTools
             this.LoadConfigData();
 
             this.LoadStockData();
-
-            //this.GatherData();
-
-            //this.RemindData();
         }
 
         void LoadConfigData()
@@ -69,134 +66,6 @@ namespace StockPriceTools
             });
 
         }
-
-        void GatherData()
-        {
-            //采集价格数据
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(2000);
-                while (true)
-                {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
-                    {
-                        Action act = delegate ()
-                        {
-                            this.ActionLog("采集今日股价数据...");
-                        };
-                        this.Invoke(act);
-                        StockGatherService.GatherPriceData((message) =>
-                        {
-                            this.ActionLog(message);
-                        });
-                        act = delegate ()
-                        {
-                            this.LoadStockList();
-                        };
-                        this.Invoke(act);
-                    }
-                    Thread.Sleep(RC.GatherStockPriceInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-
-            //计算盈亏数据
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(5000);
-                while (true)
-                {
-                    Action act = delegate ()
-                    {
-                        this.ActionLog("计算持有股价盈亏数据...");
-                    };
-                    StockPriceService.CalculateProfit((message) =>
-                    {
-                        this.ActionLog(message);
-                    });
-                    act = delegate ()
-                    {
-                        this.LoadAccountStockList();
-                    };
-                    this.Invoke(act);
-                    Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-
-            //计算均线数据
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(5000);
-                while (true)
-                {
-                    Action act = delegate ()
-                    {
-                        this.ActionLog("计算股票均线价格数据...");
-                    };
-                    StockPriceService.CalculateAvgrage((message) =>
-                    {
-                        //this.ActionLog(message);
-                    });
-                    this.Invoke(act);
-                    Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-
-            //采集财务数据
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(10000);
-                while (true)
-                {
-                    Action act = delegate ()
-                    {
-                        this.ActionLog("采集财务指标数据...");
-                    };
-                    StockGatherService.GatherFinanceData((message) =>
-                    {
-                        this.ActionLog(message);
-                    });
-                    Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-
-            //采集研报数据
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(10000);
-                while (true)
-                {
-                    Action act = delegate ()
-                    {
-                        this.ActionLog("采集机构研报数据...");
-                    };
-                    StockGatherService.GatherReportData((message) =>
-                    {
-                        this.ActionLog(message);
-                    });
-                    Thread.Sleep(RC.GatherStockReportInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-        }
-
-        void RemindData()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    if (ObjectUtil.EffectStockDealTime())
-                    {
-                        StockRemindService.CheckAutoRun((message) =>
-                        {
-                            this.ShowMessage(message);
-                            this.ActionLog(message);
-                        });
-                    }
-                    Thread.Sleep(RC.RemindStockStrategyInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
-        }
-
         #endregion
 
         #region 顶部工具栏按钮事件

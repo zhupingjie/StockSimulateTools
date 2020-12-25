@@ -122,7 +122,6 @@
     <Compile Include="Service\StockStrategyService.cs" />
     <Compile Include="Service\StockValuateService.cs" />
     <Compile Include="Utils\EastMoneyUtil.cs" />
-    <Compile Include="Utils\ObjectUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
