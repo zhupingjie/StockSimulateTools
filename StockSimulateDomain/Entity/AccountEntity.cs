@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Data;
 
-namespace StockSimulateCore.Entity
+namespace StockSimulateDomain.Entity
 {
     public class AccountEntity: BaseEntity
     {
@@ -20,9 +22,6 @@ namespace StockSimulateCore.Entity
 
         [Description("持有现金(元)")]
         public decimal Cash { get; set; }
-
-        [Description("总市值(元)")]
-        public decimal TotalAmount { get; set; }
 
         [Description("投入市值(元)")]
         public decimal BuyAmount { get; set; }

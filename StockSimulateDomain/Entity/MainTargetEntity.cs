@@ -5,8 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Data;
 
-namespace StockSimulateCore.Entity
+namespace StockSimulateDomain.Entity
 {
     public class MainTargetEntity : BaseEntity
     {

@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Data;
 
-namespace StockSimulateCore.Entity
+namespace StockSimulateDomain.Entity
 {
     public class CashTargetEntity : BaseEntity
     {

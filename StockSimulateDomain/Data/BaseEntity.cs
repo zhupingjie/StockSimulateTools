@@ -1,11 +1,12 @@
-﻿using System;
+﻿using StockSimulateDomain.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateNetCore.Entity
+namespace StockSimulateDomain.Data
 {
     public class BaseEntity : IBaseEntity
     {

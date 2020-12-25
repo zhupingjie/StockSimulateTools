@@ -1,4 +1,4 @@
-﻿using StockSimulateCore.Entity;
+﻿using StockSimulateDomain.Entity;
 using StockSimulateCore.Model;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;

@@ -9,11 +9,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>StockSimulateUI</RootNamespace>
     <AssemblyName>StockSimulateUI</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -272,6 +273,10 @@
     <ProjectReference Include="..\StockSimulateCore\StockSimulateCore.csproj">
       <Project>{3b5b2596-212a-4046-b70a-66bd82edd5ed}</Project>
       <Name>StockSimulateCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StockSimulateDomain\StockSimulateDomain.csproj">
+      <Project>{159c855b-ba11-414a-a274-4203b422c75c}</Project>
+      <Name>StockSimulateDomain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

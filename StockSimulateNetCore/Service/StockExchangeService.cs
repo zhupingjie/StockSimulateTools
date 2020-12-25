@@ -1,4 +1,4 @@
-﻿using StockSimulateNetCore.Entity;
+﻿using StockSimulateDomain.Entity;
 using StockSimulateNetCore.Model;
 using StockSimulateNetCore.Utils;
 using System;

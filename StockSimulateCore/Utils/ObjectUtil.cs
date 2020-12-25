@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using ServiceStack.Text;
-using StockSimulateCore.Entity;
+using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Data;
+using StockSimulateDomain.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

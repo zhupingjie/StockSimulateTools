@@ -1,6 +1,6 @@
-﻿using StockSimulateNetCore.Config;
+﻿using StockSimulateDomain.Entity;
+using StockSimulateNetCore.Config;
 using StockSimulateNetCore.Data;
-using StockSimulateNetCore.Entity;
 using StockSimulateNetCore.Utils;
 using System;
 using System.Collections.Generic;

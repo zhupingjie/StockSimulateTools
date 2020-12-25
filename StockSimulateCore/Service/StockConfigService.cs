@@ -1,6 +1,6 @@
 ﻿using StockSimulateCore.Config;
-using StockSimulateCore.Entity;
 using StockSimulateCore.Utils;
+using StockSimulateDomain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

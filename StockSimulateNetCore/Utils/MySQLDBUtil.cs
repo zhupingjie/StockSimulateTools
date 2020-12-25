@@ -1,7 +1,8 @@
 ﻿using MySqlConnector;
 using ServiceStack;
+using StockSimulateDomain.Data;
 using StockSimulateNetCore.Data;
-using StockSimulateNetCore.Entity;
+using StockSimulateDomain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data;

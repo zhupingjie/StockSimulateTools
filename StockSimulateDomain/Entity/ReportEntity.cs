@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateNetCore.Entity
+namespace StockSimulateDomain.Entity
 {
     public class ReportEntity : BaseEntity
     {

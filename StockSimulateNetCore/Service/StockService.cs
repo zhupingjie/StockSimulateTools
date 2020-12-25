@@ -1,4 +1,5 @@
-﻿using StockSimulateNetCore.Entity;
+﻿using StockSimulateDomain.Attributes;
+using StockSimulateDomain.Entity;
 using StockSimulateNetCore.Model;
 using StockSimulateNetCore.Utils;
 using System;

@@ -1,5 +1,5 @@
 ﻿using StockSimulateCore.Config;
-using StockSimulateCore.Entity;
+using StockSimulateDomain.Entity;
 using StockSimulateCore.Service;
 using StockSimulateCore.Utils;
 using System;
