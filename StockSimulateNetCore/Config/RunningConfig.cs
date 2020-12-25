@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,7 +64,6 @@ namespace StockSimulateNetCore.Config
         public string DBPwd { get; set; }
         public int DBPort { get; set; } = 3306;
 
-        [NotMapped]
         public string DBConnectionString
         {
             get

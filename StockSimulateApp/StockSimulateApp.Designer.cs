@@ -1,6 +1,6 @@
 ﻿namespace StockSimulateService.Service
 {
-    partial class StockSimulateService
+    partial class StockSimulateApp
     {
         /// <summary> 
         /// 必需的设计器变量。

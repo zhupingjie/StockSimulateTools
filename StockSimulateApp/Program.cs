@@ -1,6 +1,5 @@
-﻿using StockSimulateNetCore;
+﻿using StockSimulateNetCore.Service;
 using StockSimulateNetCore.Utils;
-using StockSimulateService.Service;
 using System;
 using System.ServiceProcess;
 

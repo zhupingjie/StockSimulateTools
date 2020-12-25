@@ -1,4 +1,5 @@
-﻿using StockSimulateDomain.Entity;
+﻿using StockSimulateNetCore.Config;
+using StockSimulateDomain.Entity;
 using StockSimulateNetCore.Model;
 using StockSimulateNetCore.Utils;
 using System;
@@ -138,7 +139,7 @@ namespace StockSimulateNetCore.Service
                 MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
             }
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]买入[{stock.Name}]{exchange.Qty}股({exchange.Price})合计{exchange.Amount}元,请注意!";
-            MailUtil.SendMailAsync(new Config.SenderMailConfig(), message, message, account.Email);
+            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, account.Email);
             return result;
         }
 
@@ -240,7 +241,7 @@ namespace StockSimulateNetCore.Service
             MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
 
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]卖出[{stock.Name}][{exchange.Qty}]股({exchange.Price})合计{exchange.Amount}元,请注意!";
-            MailUtil.SendMailAsync(new Config.SenderMailConfig(), message, message, account.Email);
+            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, account.Email);
             return result;
         }
     }

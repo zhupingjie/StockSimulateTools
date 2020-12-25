@@ -6,13 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.29" />
-    <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="MySqlConnector" Version="1.2.1" />
     <PackageReference Include="ServiceStack.Text" Version="5.10.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Attribute\" />
   </ItemGroup>
 
   <ItemGroup>

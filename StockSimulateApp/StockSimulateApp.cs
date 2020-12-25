@@ -1,17 +1,11 @@
-﻿using StockSimulateNetCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
+﻿using StockSimulateNetCore.Service;
 using System.ServiceProcess;
-using System.Text;
 
 namespace StockSimulateService.Service
 {
-    partial class StockSimulateService : ServiceBase
+    partial class StockSimulateApp : ServiceBase
     {
-        public StockSimulateService()
+        public StockSimulateApp()
         {
             InitializeComponent();
         }

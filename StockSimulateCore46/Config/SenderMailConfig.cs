@@ -1,5 +1,15 @@
-﻿using System;
-namespace StockSimulateNetCore.Config
+﻿//
+//
+//  Copyright (c) SEUNGEE Co.,Ltd. All Rights Reserved.
+//
+// 	@Author: jeffpan 
+// 	@Last Modified by:   jeffpan 
+//
+//
+//
+//
+using System;
+namespace StockSimulateCore.Config
 {
     public class SenderMailConfig
     {

@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using ServiceStack;
 using StockSimulateCore.Data;
+using StockSimulateCore46.Utils;
 using StockSimulateDomain.Data;
 using System;
 using System.Collections.Generic;
@@ -288,7 +289,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally
@@ -352,7 +353,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return false;
                 }
                 finally
@@ -435,7 +436,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sql}", ex);
+                    LogUtil.Error(ex, $"SQL:{sql}");
                     return lst.ToArray();
                 }
                 finally
@@ -466,7 +467,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error($"SQL:{sb.ToString()}", ex);
+                    LogUtil.Error(ex);
                     return false;
                 }
                 finally
@@ -492,7 +493,7 @@ namespace StockSimulateCore.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Logger.Error(ex);
+                    LogUtil.Error(ex);
                     return false;
                 }
                 finally
