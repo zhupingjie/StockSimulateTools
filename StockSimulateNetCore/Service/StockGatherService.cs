@@ -1,7 +1,7 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateNetCore.Config;
+using StockSimulateCoreService.Config;
 using StockSimulateDomain.Model;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StockSimulateDomain.Utils;
 
-namespace StockSimulateNetCore.Service
+namespace StockSimulateCoreService.Serivce
 {
     public class StockGatherService
     {

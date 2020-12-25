@@ -1,7 +1,7 @@
-﻿using StockSimulateNetCore.Config;
+﻿using StockSimulateCoreService.Config;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateNetCore.Service
+namespace StockSimulateCoreService.Serivce
 {
     public class StockStrategyService
     {

@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateCore.Utils;
+using StockSimulateNetService.Utils;
 using StockSimulateDomain.Model;
-using StockSimulateCore.Service;
-using StockSimulateNetCore.Utils;
+using StockSimulateNetService.Service;
+using StockSimulateCoreService.Utils;
 
 namespace StockSimulateUI.UC
 {

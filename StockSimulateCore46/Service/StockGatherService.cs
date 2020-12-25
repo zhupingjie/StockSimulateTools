@@ -1,16 +1,16 @@
-﻿using StockSimulateCore.Config;
+﻿using StockSimulateNetService.Service;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateCore.Utils;
+using StockSimulateNetService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 using StockSimulateDomain.Utils;
 
-namespace StockSimulateCore.Service
+namespace StockSimulateNetService.Service
 {
     public class StockGatherService
     {

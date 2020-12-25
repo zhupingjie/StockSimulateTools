@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Utils
+namespace StockSimulateNetService.Utils
 {
     public class EastMoneyUtil
     {

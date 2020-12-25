@@ -262,9 +262,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StockSimulateCore46\StockSimulateCore46.csproj">
+    <ProjectReference Include="..\StockSimulateCore46\StockSimulateNetService.csproj">
       <Project>{3b5b2596-212a-4046-b70a-66bd82edd5ed}</Project>
-      <Name>StockSimulateCore46</Name>
+      <Name>StockSimulateNetService</Name>
     </ProjectReference>
     <ProjectReference Include="..\StockSimulateDomain\StockSimulateDomain.csproj">
       <Project>{159c855b-ba11-414a-a274-4203b422c75c}</Project>

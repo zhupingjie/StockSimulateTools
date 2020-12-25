@@ -1,6 +1,6 @@
-﻿using StockSimulateNetCore.Config;
+﻿using StockSimulateCoreService.Config;
 using StockSimulateDomain.Entity;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using StockSimulateDomain.Config;
 using StockSimulateDomain.Utils;
 
-namespace StockSimulateNetCore.Service
+namespace StockSimulateCoreService.Serivce
 {
     public class StockRemindService
     {

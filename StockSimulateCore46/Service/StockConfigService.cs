@@ -1,15 +1,15 @@
-﻿using StockSimulateCore.Config;
-using StockSimulateCore.Utils;
+﻿using StockSimulateNetService.Service;
+using StockSimulateNetService.Utils;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Utils;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateCore.Service
+namespace StockSimulateNetService.Service
 {
     public class StockConfigService
     {

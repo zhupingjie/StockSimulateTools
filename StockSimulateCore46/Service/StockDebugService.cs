@@ -1,13 +1,13 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateCore.Utils;
+using StockSimulateNetService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateNetCore.Utils;
+using StockSimulateCoreService.Utils;
 
-namespace StockSimulateCore.Service
+namespace StockSimulateNetService.Service
 {
     public class StockDebugService
     {

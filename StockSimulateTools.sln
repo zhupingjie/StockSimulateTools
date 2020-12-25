@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSimulateUI", "StockSimulateUI\StockSimulateUI.csproj", "{A3D60B81-5AD9-42CF-8A53-92A5377817B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockSimulateNetCore", "StockSimulateNetCore\StockSimulateNetCore.csproj", "{D31D1244-E8A3-4731-A91B-7FD1C4CED4BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockSimulateCoreService", "StockSimulateNetCore\StockSimulateCoreService.csproj", "{D31D1244-E8A3-4731-A91B-7FD1C4CED4BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSimulateDomain", "StockSimulateDomain\StockSimulateDomain.csproj", "{159C855B-BA11-414A-A274-4203B422C75C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockSimulateDomain", "StockSimulateDomain\StockSimulateDomain.csproj", "{159C855B-BA11-414A-A274-4203B422C75C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSimulateCore46", "StockSimulateCore46\StockSimulateCore46.csproj", "{3B5B2596-212A-4046-B70A-66BD82EDD5ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSimulateNetService", "StockSimulateCore46\StockSimulateNetService.csproj", "{3B5B2596-212A-4046-B70A-66BD82EDD5ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockSimulateApp", "StockSimulateApp\StockSimulateApp.csproj", "{36ABDDDF-F6A0-424D-9FEF-BDA687E85139}"
 EndProject
