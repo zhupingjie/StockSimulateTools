@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StockSimulateNetCore\StockSimulateCoreService.csproj" />
+    <ProjectReference Include="..\StockSimulateCoreService\StockSimulateCoreService.csproj" />
   </ItemGroup>
 
 </Project>
