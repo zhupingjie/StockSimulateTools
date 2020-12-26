@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
+using StockSimulateDomain.Model;
 
 namespace StockSimulateUI.UI
 {
@@ -37,13 +38,21 @@ namespace StockSimulateUI.UI
             var accountName = this.txtAccount.Text;
             if (string.IsNullOrEmpty(accountName)) return;
 
-            var uDPer = this.txtUDPer.Text;
-            var upPrice = this.txtUpPrice.Text;
-            var downPrice = this.txtDownPrice.Text;
-            var upAveragePrice = this.txtUpAverage.Text;
-            var downAveragePrice = this.txtDownAverage.Text;
+            var remindInfo = new RemindInfo()
+            {
+                AccountName = accountName,
+                StockCode = StockCode,
+                UDPer = this.txtUDPer.Text,
+                UpPrice = this.txtUpPrice.Text,
+                DownPrice = this.txtDownPrice.Text,
+                UpAveragePrice = this.txtUpAverage.Text,
+                DownAveragePrice = this.txtDownAverage.Text,
+                UpAveragePriceReverse = this.txtDownAverageReverse.Text,
+                DownAveragePriceReverse = this.txtDownAverageReverse.Text
+            };
+            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpAveragePriceReverse}{remindInfo.DownAveragePriceReverse}")) return;
 
-            StockRemindService.Create(accountName, StockCode, uDPer, upPrice, downPrice, upAveragePrice, downAveragePrice);
+            StockRemindService.Create(remindInfo);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -74,6 +83,31 @@ namespace StockSimulateUI.UI
 
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void btnUDPer_Click(object sender, EventArgs e)
+        {
+            this.txtUDPer.Text = "1.5,3,5,9";
+        }
+
+        private void btnUpAverage_Click(object sender, EventArgs e)
+        {
+            this.txtUpAverage.Text = "10,20,60";
+        }
+
+        private void btnDownAverage_Click(object sender, EventArgs e)
+        {
+            this.txtDownAverage.Text = "10,20,60";
+        }
+
+        private void btnUpAverageReverse_Click(object sender, EventArgs e)
+        {
+            this.txtUpAverageReverse.Text = "5,10";
+        }
+
+        private void btnDownAverageReverse_Click(object sender, EventArgs e)
+        {
+            this.txtDownAverageReverse.Text = "5,10";
         }
     }
 }

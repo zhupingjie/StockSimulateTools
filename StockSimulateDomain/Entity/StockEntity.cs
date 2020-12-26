@@ -103,6 +103,28 @@ namespace StockSimulateDomain.Entity
         [Description("250日均价")]
         public decimal AvgPrice250 { get; set; }
 
+        [Description("昨日5日均价")]
+        [GridColumnIgnore]
+        public decimal LastAvgPrice5 { get; set; }
+
+        [Description("昨日10日均价")]
+        [GridColumnIgnore]
+        public decimal LastAvgPrice10 { get; set; }
+
+        [Description("昨日20日均价")]
+        [GridColumnIgnore]
+        public decimal LastAvgPrice20 { get; set; }
+
+        [Description("昨日60日均价")]
+        [GridColumnIgnore]
+        public decimal LastAvgPrice60 { get; set; }
+
+        [Description("昨日120日均价")]
+        public decimal LastAvgPrice120 { get; set; }
+
+        [Description("昨日250日均价")]
+        public decimal LastAvgPrice250 { get; set; }
+
         [Description("交易锁定(天)")]
         [GridColumnIgnore]
         public int LockDay { get; set; }

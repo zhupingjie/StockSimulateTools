@@ -25,12 +25,17 @@ namespace StockSimulateUI.UI
         private void btnOK_Click(object sender, EventArgs e)
         {
             RunningConfig.Instance.DebugMode = this.txtDebugMode.Checked;
+            RunningConfig.Instance.RemindNoticeByEmail = this.txtRemindNoticeByEmail.Checked;
+            RunningConfig.Instance.RemindNoticeByMessage = this.txtRemindNoticeByMessage.Checked;
             RunningConfig.Instance.GatherStockPriceInterval = ObjectUtil.ToValue<int>(this.txtGatherStockPriceInterval.Text, 0);
             RunningConfig.Instance.GatherStockFinanceTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
             RunningConfig.Instance.GatherStockReportInterval = ObjectUtil.ToValue<int>(this.txtGatherStockReportInterval.Text, 0);
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<decimal>(this.txtRemindStockPriceFloatPer.Text, 0);
             RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
+            RunningConfig.Instance.LoadMessageInterval = ObjectUtil.ToValue<int>(this.txtLoadMessageInterval.Text, 0);
+            RunningConfig.Instance.RemindMessageShowTime = ObjectUtil.ToValue<int>(this.txtRemindMessageShowTime.Text, 0);
+            RunningConfig.Instance.LoadGlobalConfigInterval = ObjectUtil.ToValue<int>(this.txtLoadGlobalConfigInterval.Text, 0);
             RunningConfig.Instance.CurrentAccountName = this.txtAccount.Text;
 
             var configs = Repository.QueryAll<GlobalConfigEntity>();
@@ -71,7 +76,12 @@ namespace StockSimulateUI.UI
             this.txtRemindStockStrategyInterval.Text = $"{RunningConfig.Instance.RemindStockStrategyInterval}";
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
             this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";
+            this.txtRemindMessageShowTime.Text = $"{RunningConfig.Instance.RemindMessageShowTime}";
+            this.txtLoadMessageInterval.Text = $"{RunningConfig.Instance.LoadMessageInterval}";
+            this.txtLoadGlobalConfigInterval.Text = $"{RunningConfig.Instance.LoadGlobalConfigInterval}";
             this.txtDebugMode.Checked = RunningConfig.Instance.DebugMode;
+            this.txtRemindNoticeByMessage.Checked = RunningConfig.Instance.RemindNoticeByMessage;
+            this.txtRemindNoticeByEmail.Checked = RunningConfig.Instance.RemindNoticeByEmail;
             this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
         }
     }

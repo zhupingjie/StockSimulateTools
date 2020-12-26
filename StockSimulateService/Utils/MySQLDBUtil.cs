@@ -120,7 +120,6 @@ namespace StockSimulateService.Utils
             if (type.Name.Contains("Bool"))
             {
                 colType = "bool";
-                length = 1;
             }
 
             return new DBColumn(name, colType, length, decLength);
@@ -198,18 +197,18 @@ namespace StockSimulateService.Utils
 
             return CreateEntity(entitys, tableName); ;
         }
-        public bool Update<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public bool Update<TEntity>(TEntity entity, string[] columns = null) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
             return UpdateEntity(new TEntity[] { entity }, tableName);
         }
 
-        public bool Update<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
+        public bool Update<TEntity>(TEntity[] entitys, string[] columns = null) where TEntity : BaseEntity
         {
             var tableName = GetEntityTypeName<TEntity>();
             if (entitys.Length == 0) return false;
 
-            return UpdateEntity(entitys, tableName);
+            return UpdateEntity(entitys, tableName, columns);
         }
 
         public bool Delete<TEntity>(TEntity entity) where TEntity : BaseEntity
@@ -342,6 +341,10 @@ namespace StockSimulateService.Utils
                             else if (field.PropertyType == typeof(string))
                             {
                                 val = value.ToString().Replace("'", "''");
+                            }
+                            else if(field.PropertyType == typeof(bool))
+                            {
+                                val = $"{(value.ToString().ToUpper() == "TRUE" ? 1 : 0)}";
                             }
                             else
                             {

@@ -102,12 +102,14 @@
             this.txtSType.FormattingEnabled = true;
             this.txtSType.Items.AddRange(new object[] {
             "沪深股",
-            "基金(ETF)"});
+            "基金(ETF)",
+            "指数"});
             this.txtSType.Location = new System.Drawing.Point(12, 12);
             this.txtSType.Name = "txtSType";
             this.txtSType.Size = new System.Drawing.Size(173, 54);
             this.txtSType.TabIndex = 5;
             this.txtSType.Text = "沪深股";
+            this.txtSType.SelectedIndexChanged += new System.EventHandler(this.txtSType_SelectedIndexChanged);
             // 
             // txtSTypeValue
             // 

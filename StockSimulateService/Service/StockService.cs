@@ -20,7 +20,7 @@ namespace StockSimulateService.Service
             if (stock == null) return;
             stock.Foucs += 1;
             if (stock.Foucs > 2) stock.Foucs = 0;
-            MySQLDBUtil.Instance.Update<StockEntity>(stock);
+            MySQLDBUtil.Instance.Update<StockEntity>(stock, new string[] { "Foucs" });
         }
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
@@ -61,7 +61,7 @@ namespace StockSimulateService.Service
             stock.Target = target;
             stock.Safety = safety;
             stock.Advise = advise;
-            MySQLDBUtil.Instance.Update<StockEntity>(stock);
+            MySQLDBUtil.Instance.Update<StockEntity>(stock, new string[] { "EPE", "Growth", "Target", "Safety", "Advise" });
         }
 
         public static void SaveValuateResult(ValuateResultInfo[] results)
@@ -81,7 +81,7 @@ namespace StockSimulateService.Service
                 stock.Safety = result.SafePrice;
                 stock.Advise = result.Advise;
             }
-            MySQLDBUtil.Instance.Update<StockEntity>(stocks);
+            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "EPE", "Growth", "Target", "Safety", "Advise" });
         }
     }
 }

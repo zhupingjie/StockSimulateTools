@@ -28,17 +28,18 @@ namespace StockPriceTools.UI
             var stockCode = $"{this.txtType.Text}{this.txtCode.Text.Trim()}";
             if (string.IsNullOrEmpty(stockCode)) return;
 
-            var stockInfo = EastMoneyUtil.GetStockPrice(stockCode);
-            if (stockInfo == null) return;
+            //var stockInfo = EastMoneyUtil.GetStockPrice(stockCode);
+            //if (stockInfo == null) return;
 
             var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null)
             {
-                //类型
-                stockInfo.Stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
-                stockInfo.Stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
+                stock = new StockEntity();
+                stock.Code = stockCode;
+                stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
+                stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
 
-                Repository.Insert<StockEntity>(stockInfo.Stock);
+                Repository.Insert<StockEntity>(stock);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -51,26 +52,26 @@ namespace StockPriceTools.UI
             if (this.txtCode.Text.StartsWith("6"))
             {
                 this.txtType.Text = "SH";
-                this.txtSType.Text = "沪深";
+                this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
             if (this.txtCode.Text.StartsWith("0"))
             {
                 this.txtType.Text = "SZ";
-                this.txtSType.Text = "沪深";
+                this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
             if (this.txtCode.Text.StartsWith("5"))
             {
                 this.txtType.Text = "SH";
-                this.txtSType.Text = "ETF";
+                this.txtSType.Text = "基金(ETF)";
                 this.txtSTypeValue.Text = "1";
             }
             if (this.txtCode.Text.StartsWith("1"))
             {
                 this.txtType.Text = "SZ";
-                this.txtSType.Text = "指数";
-                this.txtSTypeValue.Text = "2";
+                this.txtSType.Text = "基金(ETF)";
+                this.txtSTypeValue.Text = "1";
             }
         }
 
@@ -85,6 +86,22 @@ namespace StockPriceTools.UI
         private void NewStockForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void txtSType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(this.txtSType.Text == "沪深股")
+            {
+                this.txtSTypeValue.Text = "0";
+            }
+            else if(this.txtSType.Text == "基金(ETF)")
+            {
+                this.txtSTypeValue.Text = "1";
+            }
+            else if (this.txtSType.Text == "指数")
+            {
+                this.txtSTypeValue.Text = "2";
+            }
         }
     }
 }

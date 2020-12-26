@@ -23,6 +23,16 @@ namespace StockSimulateService.Config
         public bool DebugMode { get; set; }
 
         /// <summary>
+        /// 通知消息邮件提醒
+        /// </summary>
+        public bool RemindNoticeByEmail { get; set; }
+
+        /// <summary>
+        /// 通知消息系统消息提醒
+        /// </summary>
+        public bool RemindNoticeByMessage { get; set; }
+
+        /// <summary>
         /// 当前交易账号
         /// </summary>
         public string CurrentAccountName { get; set; }
@@ -61,7 +71,23 @@ namespace StockSimulateService.Config
         /// <summary>
         /// 股票均线价格计算时间频率(秒)
         /// </summary>
-        public int UpdateStockAveragePriceInterval { get; set; } = 30 * 60;
+        public int UpdateStockAveragePriceInterval { get; set; } = 5 * 60;
+
+        /// <summary>
+        /// 提醒消息显示时间(秒)
+        /// </summary>
+        public int RemindMessageShowTime { get; set; } = 3;
+
+
+        /// <summary>
+        /// 提醒消息读取时间(秒)
+        /// </summary>
+        public int LoadMessageInterval { get; set; } = 30;
+
+        /// <summary>
+        /// 全局配置读取时间(秒)
+        /// </summary>
+        public int LoadGlobalConfigInterval { get; set; } = 20;
 
         public string DBServiceIP { get; set; }
         public string DBName { get; set; }

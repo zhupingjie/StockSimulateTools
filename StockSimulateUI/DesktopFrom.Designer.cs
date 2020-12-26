@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -116,6 +117,14 @@
             this.lstExchangeInfo = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmpDesktop = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmpConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -158,6 +167,7 @@
             this.tabPriceData.SuspendLayout();
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -576,7 +586,7 @@
             this.tabActionLog.Name = "tabActionLog";
             this.tabActionLog.Size = new System.Drawing.Size(842, 221);
             this.tabActionLog.TabIndex = 7;
-            this.tabActionLog.Text = "操作记录";
+            this.tabActionLog.Text = "通知消息";
             this.tabActionLog.UseVisualStyleBackColor = true;
             // 
             // txtActionLog
@@ -603,11 +613,11 @@
             // 
             // chartPrice
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1094,6 +1104,64 @@
             this.columnHeader8.Text = "数据";
             this.columnHeader8.Width = 120;
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "实时信息";
+            this.notifyIcon1.Visible = true;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmpDesktop,
+            this.tmpConfig,
+            this.toolStripSeparator5,
+            this.tmpActionLog,
+            this.toolStripSeparator4,
+            this.tmpExit});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 126);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            // 
+            // tmpDesktop
+            // 
+            this.tmpDesktop.Name = "tmpDesktop";
+            this.tmpDesktop.Size = new System.Drawing.Size(180, 22);
+            this.tmpDesktop.Text = "我的桌面";
+            this.tmpDesktop.Click += new System.EventHandler(this.tmpDesktop_Click);
+            // 
+            // tmpExit
+            // 
+            this.tmpExit.Name = "tmpExit";
+            this.tmpExit.Size = new System.Drawing.Size(180, 22);
+            this.tmpExit.Text = "退出(Exit)";
+            this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
+            // 
+            // tmpActionLog
+            // 
+            this.tmpActionLog.Name = "tmpActionLog";
+            this.tmpActionLog.Size = new System.Drawing.Size(180, 22);
+            this.tmpActionLog.Text = "今日消息...";
+            this.tmpActionLog.Click += new System.EventHandler(this.tmpActionLog_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            // 
+            // tmpConfig
+            // 
+            this.tmpConfig.Name = "tmpConfig";
+            this.tmpConfig.Size = new System.Drawing.Size(180, 22);
+            this.tmpConfig.Text = "全局设置...";
+            this.tmpConfig.Click += new System.EventHandler(this.tmpConfig_Click);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1104,9 +1172,13 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "DesktopFrom";
+            this.ShowInTaskbar = false;
             this.Text = "Stock Simulate App";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DesktopFrom_FormClosing);
             this.Load += new System.EventHandler(this.DesktopFrom_Load);
+            this.SizeChanged += new System.EventHandler(this.DesktopFrom_SizeChanged);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -1154,6 +1226,7 @@
             this.tabPriceData.ResumeLayout(false);
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1245,5 +1318,13 @@
         private System.Windows.Forms.Button btnWebChart;
         private System.Windows.Forms.Button btnMinuteChart;
         private System.Windows.Forms.Button btnDayChart;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem tmpDesktop;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem tmpExit;
+        private System.Windows.Forms.ToolStripMenuItem tmpActionLog;
+        private System.Windows.Forms.ToolStripMenuItem tmpConfig;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }

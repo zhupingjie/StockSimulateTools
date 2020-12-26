@@ -153,11 +153,20 @@ namespace StockSimulateService.Service
                 stock.AvgPrice120 = stockAverage.AvgPrice120;
                 stock.AvgPrice250 = stockAverage.AvgPrice250;
 
-                var yestAvgPrices = nextAverages.FirstOrDefault(c => c.StockCode == stock.Code);
+                var yestAvgPrice = nextAverages.FirstOrDefault(c => c.StockCode == stock.Code);
+                if(yestAvgPrice != null)
+                {
+                    stock.LastAvgPrice5 = yestAvgPrice.AvgPrice5;
+                    stock.LastAvgPrice10 = yestAvgPrice.AvgPrice10;
+                    stock.LastAvgPrice20 = yestAvgPrice.AvgPrice20;
+                    stock.LastAvgPrice60 = yestAvgPrice.AvgPrice60;
+                    stock.LastAvgPrice120 = yestAvgPrice.AvgPrice120;
+                    stock.LastAvgPrice250 = yestAvgPrice.AvgPrice250;
+                }
                 //计算当前趋势
-                stock.Trend = GetTrend(stock, stockAverage, yestAvgPrices);
+                stock.Trend = GetTrend(stock, stockAverage, yestAvgPrice);
             }
-            MySQLDBUtil.Instance.Update<StockEntity>(stocks);
+            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
             MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
             MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }

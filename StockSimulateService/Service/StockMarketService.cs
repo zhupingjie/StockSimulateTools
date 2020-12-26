@@ -71,8 +71,15 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
-                StockConfigService.LoadGlobalConfig(RC);
-            });
+                MySQLDBUtil.Instance.InitDataBase();
+
+                while (true)
+                {
+                    StockConfigService.LoadGlobalConfig(RC);
+
+                    Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
         }
 
         void GatherData()
@@ -127,7 +134,7 @@ namespace StockSimulateService.Service
                             this.ActionLog(message);
                         });
                     }
-                    Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
+                    Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
 

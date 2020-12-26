@@ -18,10 +18,14 @@ namespace StockSimulateService.Utils
 {
     public class ObjectUtil
     {
-        public static DataTable ConvertTable<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
+        public static DataTable ConvertTable<TEntity>(TEntity[] entitys, bool withId = false) where TEntity : BaseEntity
         {
             var dt = new DataTable();
             var preps = typeof(TEntity).GetProperties();
+            if (withId)
+            {
+                dt.Columns.Add("序");
+            }
             foreach(var prep in preps)
             {
                 if (prep.Name == "ID") continue;
@@ -36,6 +40,10 @@ namespace StockSimulateService.Utils
             foreach(var entity in entitys)
             {
                 var dr = dt.NewRow();
+                if (withId)
+                {
+                    dr["序"] = GetPropertyValue(entity, "ID");
+                }
                 foreach (var prep in preps)
                 {
                     if (prep.Name == "ID") continue;
@@ -230,7 +238,7 @@ namespace StockSimulateService.Utils
             else if (name.Contains("(PE)")) length = length - 2;
             else if (name.Contains("(TTM)")) length = length - 3;
             else if (name.Contains("(")) length = length - 1;
-            return length <= 2 ? 50 : length <= 3 ? 55 : length <= 4 ? 70 : length <= 6 ? 90 : length <= 8 ? 100 : 120;
+            return length <= 1 ? 30 : length <= 2 ? 50 : length <= 3 ? 55 : length <= 4 ? 70 : length <= 6 ? 90 : length <= 8 ? 100 : 120;
         }
 
         public static string FormatMoney(decimal value)

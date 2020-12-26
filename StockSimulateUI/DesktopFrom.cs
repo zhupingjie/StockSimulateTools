@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using StockSimulateService.Utils;
-using StockSimulateService.Utils;
 using StockSimulateService.Config;
 
 namespace StockPriceTools
@@ -41,14 +40,20 @@ namespace StockPriceTools
         void LoadConfigData()
         {
             Task.Factory.StartNew(() =>
-            {   
-                StockConfigService.LoadGlobalConfig(RC);
-            });
+            {
+                MySQLDBUtil.Instance.InitDataBase();
+
+                while (true)
+                {
+                    StockConfigService.LoadGlobalConfig(RC);
+
+                    Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
         }
 
         void LoadStockData()
         {
-            //页面加载后加载一次数据，其余通过采集价格数据后刷新列表
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2 * 1000);
@@ -60,11 +65,26 @@ namespace StockPriceTools
                     };
                     this.Invoke(act);
 
-                    Thread.Sleep(20 * 1000);
+                    Thread.Sleep(RC.GatherStockPriceInterval * 1000);
                 }
-            });
+            }, CancellationTokenSource.Token);
 
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5 * 1000);
+                while (true)
+                {
+                    Action act = delegate ()
+                    {
+                        this.LoadMessageInfo();
+                    };
+                    this.Invoke(act);
+
+                    Thread.Sleep(RC.LoadMessageInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
         }
+
         #endregion
 
         #region 顶部工具栏按钮事件
@@ -168,12 +188,12 @@ namespace StockPriceTools
         int CurrentStockListSelectedIndex = -1;
         void LoadStockList()
         {
-            var where = "Price>0";
+            var where = "1>0";//"Price>0";
             if (!string.IsNullOrEmpty(this.txtSearch.Text.Trim())) where += $" and (Code like '%{this.txtSearch.Text.Trim()}%' or Name like '%{this.txtSearch.Text.Trim()}%')";
             if (this.txtFoucST.Checked) where += $" and (Foucs=1)";
             else if (this.txtSHSZ.Checked) where += $" and (Type=0)";
             else if (this.txtETF.Checked) where += $" and (Type=1)";
-            else where = "";
+            else if (this.txtAllStock.Checked) where += "";
 
             var stocks = Repository.QueryAll<StockEntity>(where);
             var dt = ObjectUtil.ConvertTable(stocks);
@@ -340,7 +360,7 @@ namespace StockPriceTools
         private void gridStockList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             this.gridStockList.ClearSelection();
-            if (CurrentStockListSelectedIndex >= 0) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
+            if (CurrentStockListSelectedIndex >= 0 && this.gridStockList.Rows.Count> CurrentStockListSelectedIndex) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
@@ -414,6 +434,18 @@ namespace StockPriceTools
 
         #region 底部TabControl区域事件
 
+        void LoadMessageInfo()
+        {
+            var messages = Repository.QueryAll<MessageEntity>($"Handled=0 and NoticeTime<='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' and ReadTime is null", "ID asc");
+            foreach(var message in messages)
+            {
+                message.ReadTime = DateTime.Now;
+
+                this.ActionLog(message.Title);
+            }
+            Repository.Update<MessageEntity>(messages);
+        }
+
         /// <summary>
         ///  加载走势图
         /// </summary>
@@ -427,10 +459,14 @@ namespace StockPriceTools
             var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock != null)
             {
-                text += $"【M5:{stock.AvgPrice5}{(stock.Price > stock.AvgPrice5 ? "↗" : stock.Price < stock.AvgPrice5 ? "↘" : "→")}】";
-                if (stock.AvgPrice10 > 0) text += $"【M10:{stock.AvgPrice10}{(stock.Price > stock.AvgPrice10 ? "↗" : stock.Price < stock.AvgPrice10 ? "↘" : "→")}】";
-                if (stock.AvgPrice20 > 0) text += $"【M20:{stock.AvgPrice20}{(stock.Price > stock.AvgPrice20 ? "↗" : stock.Price < stock.AvgPrice20 ? "↘" : "→")}】";
-                if (stock.AvgPrice60 > 0) text += $"【M60:{stock.AvgPrice60}{(stock.Price > stock.AvgPrice60 ? "↗" : stock.Price < stock.AvgPrice60 ? "↘" : "→")}】";
+                text += "【";
+                text += $"M5:{stock.AvgPrice5}{(stock.Price > stock.AvgPrice5 ? "↗" : stock.Price < stock.AvgPrice5 ? "↘" : "→")}";
+                if (stock.AvgPrice10 > 0) text += $",M10:{stock.AvgPrice10}{(stock.Price > stock.AvgPrice10 ? "↗" : stock.Price < stock.AvgPrice10 ? "↘" : "→")}";
+                if (stock.AvgPrice20 > 0) text += $",M20:{stock.AvgPrice20}{(stock.Price > stock.AvgPrice20 ? "↗" : stock.Price < stock.AvgPrice20 ? "↘" : "→")}";
+                if (stock.AvgPrice60 > 0) text += $",M60:{stock.AvgPrice60}{(stock.Price > stock.AvgPrice60 ? "↗" : stock.Price < stock.AvgPrice60 ? "↘" : "→")}";
+                if (stock.AvgPrice120 > 0) text += $",M120:{stock.AvgPrice120}{(stock.Price > stock.AvgPrice120 ? "↗" : stock.Price < stock.AvgPrice120 ? "↘" : "→")}";
+                if (stock.AvgPrice250 > 0) text += $",M250:{stock.AvgPrice250}{(stock.Price > stock.AvgPrice250 ? "↗" : stock.Price < stock.AvgPrice250 ? "↘" : "→")}";
+                text += "】";
             }
             title.Text = text;
             title.ForeColor = Color.Blue;
@@ -496,11 +532,6 @@ namespace StockPriceTools
             stockPrices = stockPrices.OrderBy(c => c.DealDate).ToArray();
 
             this.BindChartSeriesPoints(series, stockPrices, dateType, startDate);
-        }
-
-        private void txtChartWithZS_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         #region 加载走势图
@@ -596,7 +627,7 @@ namespace StockPriceTools
         void LoadStockStrategyList(string stockCode)
         {
             var strategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'", "ID asc");
-            var dt = ObjectUtil.ConvertTable(strategyDetails);
+            var dt = ObjectUtil.ConvertTable(strategyDetails, true);
             this.gridStockStrategyList.DataSource = null;
             this.gridStockStrategyList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridStockStrategyList.ColumnCount; i++)
@@ -632,7 +663,7 @@ namespace StockPriceTools
         void LoadRemindList(string stockCode)
         {
             var reminds = Repository.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "ID desc", 60);
-            var dt = ObjectUtil.ConvertTable(reminds);
+            var dt = ObjectUtil.ConvertTable(reminds, true);
             this.gridRemindList.DataSource = null;
             this.gridRemindList.DataSource = dt.DefaultView;
             for (var i = 0; i < this.gridRemindList.ColumnCount; i++)
@@ -836,15 +867,16 @@ namespace StockPriceTools
             
             if (MessageBox.Show($"确认要标记执行选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
+            var ids = new List<int>();
             for (var i = 0; i < this.gridRemindList.SelectedRows.Count; i++)
             {
                 var row = this.gridRemindList.SelectedRows[i];
-
-                var type = $"{row.Cells["类型"].Value}";
-                var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
-                var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
-
-                StockRemindService.Mark(stockCode, rtype, target);
+                var id = ObjectUtil.ToValue<int>(row.Cells["序"].Value, 0);
+                if (id > 0) ids.Add(id);
+            }
+            if (ids.Count > 0)
+            {
+                StockRemindService.Mark(stockCode, ids.ToArray());
             }
             this.LoadRemindList(stockCode);
         }
@@ -859,15 +891,16 @@ namespace StockPriceTools
 
             if (MessageBox.Show($"确认要取消选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
+            var ids = new List<int>();
             for (var i = 0; i < this.gridRemindList.SelectedRows.Count; i++)
             {
                 var row = this.gridRemindList.SelectedRows[i];
-
-                var type = $"{row.Cells["类型"].Value}";
-                var rtype = (type == "涨跌幅" ? 0 : type == "上涨" ? 1 : type == "下跌" ? 2 : type == "买点" ? 8 : type == "卖点" ? 9 : -1);
-                var target = ObjectUtil.ToValue<decimal>(row.Cells["目标"].Value, 0);
-
-                StockRemindService.Cancel(stockCode, rtype, target);
+                var id = ObjectUtil.ToValue<int>(row.Cells["序"].Value, 0);
+                if (id > 0) ids.Add(id);
+            }
+            if (ids.Count > 0)
+            {
+                StockRemindService.Cancel(stockCode, ids.ToArray());
             }
             this.LoadRemindList(stockCode);
         }
@@ -882,15 +915,17 @@ namespace StockPriceTools
 
             if (MessageBox.Show($"确认要标记选中的策略数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
+            var ids = new List<int>();
             for (var i = 0; i < this.gridStockStrategyList.SelectedRows.Count; i++)
             {
                 var row = this.gridStockStrategyList.SelectedRows[i];
+                var id = ObjectUtil.ToValue<int>(row.Cells["序"].Value, 0);
+                if (id > 0) ids.Add(id);
 
-                var strategyName = $"{row.Cells["策略名称"].Value}";
-                var target = $"{row.Cells["策略买卖点"].Value}";
-                var price = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
-
-                StockStrategyService.Mark(strategyName, stockCode, target, price);
+            }
+            if (ids.Count > 0)
+            {
+                StockStrategyService.Mark(stockCode, ids.ToArray());
             }
             this.LoadStockStrategyList(stockCode);
         }
@@ -905,15 +940,17 @@ namespace StockPriceTools
 
             if (MessageBox.Show($"确认要取消选中的策略数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
+            var ids = new List<int>();
             for (var i = 0; i < this.gridStockStrategyList.SelectedRows.Count; i++)
             {
                 var row = this.gridStockStrategyList.SelectedRows[i];
+                var id = ObjectUtil.ToValue<int>(row.Cells["序"].Value, 0);
+                if (id > 0) ids.Add(id);
 
-                var strategyName = $"{row.Cells["策略名称"].Value}";
-                var target = $"{row.Cells["策略买卖点"].Value}";
-                var price = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
-
-                StockStrategyService.Cancel(strategyName, stockCode, target, price);
+            }
+            if (ids.Count > 0)
+            {
+                StockStrategyService.Cancel(stockCode, ids.ToArray());
             }
             this.LoadStockStrategyList(stockCode);
         }
@@ -973,15 +1010,57 @@ namespace StockPriceTools
 
         #endregion
 
+        #region 任务栏托盘事件
+        private void DesktopFrom_SizeChanged(object sender, EventArgs e)
+        {
+            if(this.WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+                this.notifyIcon1.Visible = true;
+            }
+        }
+
+        private void tmpExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void tmpDesktop_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
+        }
+
+        private void tmpActionLog_Click(object sender, EventArgs e)
+        {
+            var frm = new MessageForm();
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.ShowDialog();
+        }
+
+        private void tmpConfig_Click(object sender, EventArgs e)
+        {
+            var frm = new ConfigForm();
+            frm.StartPosition = FormStartPosition.CenterScreen;
+            frm.ShowDialog();
+        }
+
+        #endregion
+
         #region 操作日志事件
 
         public void ActionLog(string message)
         {
             Action act = delegate ()
             {
+                this.ShowMessage(message);
+
                 this.txtActionLog.AppendText($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}\n");
                 this.txtActionLog.SelectionStart = this.txtActionLog.Text.Length;
                 this.txtActionLog.ScrollToCaret();
+
+                this.notifyIcon1.ShowBalloonTip(RC.RemindMessageShowTime, "消息通知", message, ToolTipIcon.Info);
             };
             this.Invoke(act);
         }
@@ -995,5 +1074,13 @@ namespace StockPriceTools
             this.Invoke(act);
         }
         #endregion
+
+        private void DesktopFrom_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Hide();
+            this.WindowState = FormWindowState.Minimized;
+            e.Cancel = true;
+        }
+
     }
 }

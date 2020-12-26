@@ -1,6 +1,5 @@
 ﻿using StockSimulateDomain.Entity;
 using StockSimulateService.Utils;
-using StockSimulateService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +13,6 @@ namespace StockSimulateService.Service
     {
         public static void LoadGlobalConfig(RunningConfig rc)
         {
-            MySQLDBUtil.Instance.InitDataBase();
-
             var configs = MySQLDBUtil.Instance.QueryAll<GlobalConfigEntity>();
             foreach (var config in configs)
             {

@@ -315,19 +315,19 @@ namespace StockSimulateService.Service
             }
         }
 
-        public static void Mark(string strategyName, string stockCode, string target, decimal price)
+        public static void Mark(string stockCode, int[] ids)
         {
-            var stockStrategy = MySQLDBUtil.Instance.QueryFirst<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price} and ExecuteOK !=1");
-            if (stockStrategy == null) return;
-
-            stockStrategy.ExecuteOK = 1;
-            MySQLDBUtil.Instance.Update<StockStrategyEntity>(stockStrategy);
+            var stockStrategys = MySQLDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}' and ExecuteOK !=1 and ID in ({string.Join(",", ids)})");
+            foreach (var item in stockStrategys)
+            {
+                item.ExecuteOK = 1;
+            }
+            MySQLDBUtil.Instance.Update<StockStrategyEntity>(stockStrategys);
         }
 
-        public static void Cancel(string strategyName, string stockCode, string target, decimal price)
+        public static void Cancel(string stockCode, int[] ids)
         {
-            MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and Target='{target}' and Price={price}");
-            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='{strategyName}' and StockCode='{stockCode}' and StrategyTarget='{target}' and Target={price}");
+            MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}' and ID in ({string.Join(",", ids)})");
         }
 
         /// <summary>

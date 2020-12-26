@@ -231,7 +231,7 @@ namespace StockSimulateNetService.Serivce
 
                 //同步更新报告期
                 stock.ReportDate = mainTargetInfos.Max(c => c.Date);
-                MySQLDBUtil.Instance.Update<StockEntity>(stock);
+                MySQLDBUtil.Instance.Update<StockEntity>(stock, new string[] { "ReportDate" });
             }
 
             //if (stocks.Length > 0) actionLog($">------------------------------------------------>");
