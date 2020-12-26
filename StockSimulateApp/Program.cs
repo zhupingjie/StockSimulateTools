@@ -10,6 +10,7 @@ namespace StockSimulateService
         static void Main(string[] args)
         {
             LogUtil.Debug($"程序开始启动...");
+#if DEBUG
             StockMarketService.Instance.Start();
             while (true)
             {
@@ -20,9 +21,11 @@ namespace StockSimulateService
                     break;
                 }
             }
+#else
+            ServiceBase[] services = new ServiceBase[] { new StockSimulateApp() };
+            ServiceBase.Run(services);
+#endif
             LogUtil.Debug($"程序结束运行...");
-            //ServiceBase[] services = new ServiceBase[] { new Service.StockSimulateService() };
-            //ServiceBase.Run(services);
         }
     }
 }

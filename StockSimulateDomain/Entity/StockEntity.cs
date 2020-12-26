@@ -52,6 +52,9 @@ namespace StockSimulateDomain.Entity
         [GatherColumn]
         public decimal UDPer { get; set; }
 
+        [Description("均线趋势(NSML)")]
+        public string Trend { get; set; }
+
         [Description("安全股价")]
         public decimal Safety { get; set; }
 
@@ -78,13 +81,6 @@ namespace StockSimulateDomain.Entity
         [Description("预测结果")]
         public string Advise { get; set; }
 
-        [Description("交易锁定(天)")]
-        [GridColumnIgnore]
-        public int LockDay { get; set; }
-
-        [Description("均线趋势5/10/20/60")]
-        public string Trend { get; set; }
-
         [Description("5日均价")]
         [GridColumnIgnore]
         public decimal AvgPrice5 { get; set; }
@@ -100,6 +96,16 @@ namespace StockSimulateDomain.Entity
         [Description("60日均价")]
         [GridColumnIgnore]
         public decimal AvgPrice60 { get; set; }
+
+        [Description("120日均价")]
+        public decimal AvgPrice120 { get; set; }
+
+        [Description("250日均价")]
+        public decimal AvgPrice250 { get; set; }
+
+        [Description("交易锁定(天)")]
+        [GridColumnIgnore]
+        public int LockDay { get; set; }
 
         [Description("总股本(亿股)")]
         [GatherColumn]

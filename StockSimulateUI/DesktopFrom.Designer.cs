@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -63,7 +63,6 @@
             this.tabHoldStockList = new System.Windows.Forms.TabPage();
             this.gridAccountStockList = new System.Windows.Forms.DataGridView();
             this.panel12 = new System.Windows.Forms.Panel();
-            this.txtRealType = new System.Windows.Forms.CheckBox();
             this.txtHoldQty = new System.Windows.Forms.CheckBox();
             this.lblAccountStockInfo = new System.Windows.Forms.Label();
             this.txtAccountSearch = new System.Windows.Forms.TextBox();
@@ -504,7 +503,6 @@
             // 
             // panel12
             // 
-            this.panel12.Controls.Add(this.txtRealType);
             this.panel12.Controls.Add(this.txtHoldQty);
             this.panel12.Controls.Add(this.lblAccountStockInfo);
             this.panel12.Controls.Add(this.txtAccountSearch);
@@ -514,17 +512,6 @@
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(842, 29);
             this.panel12.TabIndex = 48;
-            // 
-            // txtRealType
-            // 
-            this.txtRealType.AutoSize = true;
-            this.txtRealType.Location = new System.Drawing.Point(574, 8);
-            this.txtRealType.Name = "txtRealType";
-            this.txtRealType.Size = new System.Drawing.Size(48, 16);
-            this.txtRealType.TabIndex = 49;
-            this.txtRealType.Text = "实盘";
-            this.txtRealType.UseVisualStyleBackColor = true;
-            this.txtRealType.CheckedChanged += new System.EventHandler(this.txtRealType_CheckedChanged);
             // 
             // txtHoldQty
             // 
@@ -616,11 +603,11 @@
             // 
             // chartPrice
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea1);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend1);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1253,7 +1240,6 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnOpenBrower;
         private System.Windows.Forms.CheckBox txtHoldQty;
-        private System.Windows.Forms.CheckBox txtRealType;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.CheckBox txtChartWithZS;
         private System.Windows.Forms.Button btnWebChart;

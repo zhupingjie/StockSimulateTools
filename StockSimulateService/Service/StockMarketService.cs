@@ -83,9 +83,9 @@ namespace StockSimulateService.Service
                 Thread.Sleep(2000);
                 while (true)
                 {
-                    this.ActionLog("采集今日股价数据...");
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
+                        this.ActionLog("采集今日股价数据...");
                         StockGatherService.GatherPriceData((message) =>
                         {
                             this.ActionLog(message);
@@ -101,11 +101,14 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    this.ActionLog("计算持有股价盈亏数据...");
-                    StockPriceService.CalculateProfit((message) =>
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        this.ActionLog(message);
-                    });
+                        this.ActionLog("计算持有股价盈亏数据...");
+                        StockPriceService.CalculateProfit((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
                     Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -116,11 +119,14 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    this.ActionLog("计算股票均线价格数据...");
-                    StockPriceService.CalculateAvgrage((message) =>
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        this.ActionLog(message);
-                    });
+                        this.ActionLog("计算股票均线价格数据...");
+                        StockPriceService.CalculateNowAvgrage((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
                     Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -131,11 +137,14 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    this.ActionLog("采集财务指标数据...");
-                    StockGatherService.GatherFinanceData((message) =>
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        this.ActionLog(message);
-                    });
+                        this.ActionLog("采集财务指标数据...");
+                        StockGatherService.GatherFinanceData((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
                     Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -146,11 +155,14 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    this.ActionLog("采集机构研报数据...");
-                    StockGatherService.GatherReportData((message) =>
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        this.ActionLog(message);
-                    });
+                        this.ActionLog("采集机构研报数据...");
+                        StockGatherService.GatherReportData((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
                     Thread.Sleep(RC.GatherStockReportInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
@@ -162,9 +174,9 @@ namespace StockSimulateService.Service
             {
                 while (true)
                 {
-                    this.ActionLog("检测股价策略提醒数据...");
-                    if (ObjectUtil.EffectStockDealTime())
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
+                        this.ActionLog("检测股价策略提醒数据...");
                         StockRemindService.CheckAutoRun((message) =>
                         {
                             this.ActionLog(message);

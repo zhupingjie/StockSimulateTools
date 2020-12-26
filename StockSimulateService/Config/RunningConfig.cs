@@ -23,6 +23,11 @@ namespace StockSimulateService.Config
         public bool DebugMode { get; set; }
 
         /// <summary>
+        /// 当前交易账号
+        /// </summary>
+        public string CurrentAccountName { get; set; }
+
+        /// <summary>
         /// 股票价格采集时间频率(秒)
         /// </summary>
         public int GatherStockPriceInterval { get; set; } = 30;

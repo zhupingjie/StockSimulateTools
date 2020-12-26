@@ -69,5 +69,10 @@ namespace StockSimulateUI.UI
         {
             StockGatherService.GatherHisPriceData();
         }
+
+        private void btnCalcAvgPrice_Click(object sender, EventArgs e)
+        {
+            StockPriceService.CalculateAllAvgrage();
+        }
     }
 }

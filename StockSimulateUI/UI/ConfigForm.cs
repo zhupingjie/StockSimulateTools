@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
-using StockSimulateService.Utils;
 using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
@@ -32,6 +31,7 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<decimal>(this.txtRemindStockPriceFloatPer.Text, 0);
             RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
+            RunningConfig.Instance.CurrentAccountName = this.txtAccount.Text;
 
             var configs = Repository.QueryAll<GlobalConfigEntity>();
             var dic = ObjectUtil.GetPropertyValues(RunningConfig.Instance, true);
@@ -59,6 +59,12 @@ namespace StockSimulateUI.UI
 
         private void ConfigForm_Load(object sender, EventArgs e)
         {
+            var accounts = Repository.QueryAll<AccountEntity>();
+            if (accounts.Length == 0) return;
+
+            this.txtAccount.Items.Clear();
+            this.txtAccount.Items.AddRange(accounts.Select(c => c.Name).ToArray());
+
             this.txtGatherStockPriceInterval.Text = $"{RunningConfig.Instance.GatherStockPriceInterval}";
             this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockFinanceTargetInterval}";
             this.txtGatherStockReportInterval.Text = $"{RunningConfig.Instance.GatherStockReportInterval}";
@@ -66,6 +72,7 @@ namespace StockSimulateUI.UI
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
             this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";
             this.txtDebugMode.Checked = RunningConfig.Instance.DebugMode;
+            this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
         }
     }
 }

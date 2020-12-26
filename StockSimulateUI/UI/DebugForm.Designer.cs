@@ -40,6 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnClearDebug = new System.Windows.Forms.Button();
             this.btnGatherHisPrice = new System.Windows.Forms.Button();
+            this.btnCalcAvgPrice = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtStockPrice
@@ -142,7 +143,7 @@
             // btnGatherHisPrice
             // 
             this.btnGatherHisPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnGatherHisPrice.Location = new System.Drawing.Point(440, 317);
+            this.btnGatherHisPrice.Location = new System.Drawing.Point(30, 317);
             this.btnGatherHisPrice.Name = "btnGatherHisPrice";
             this.btnGatherHisPrice.Size = new System.Drawing.Size(127, 41);
             this.btnGatherHisPrice.TabIndex = 26;
@@ -150,11 +151,23 @@
             this.btnGatherHisPrice.UseVisualStyleBackColor = true;
             this.btnGatherHisPrice.Click += new System.EventHandler(this.btnGatherHisPrice_Click);
             // 
+            // btnCalcAvgPrice
+            // 
+            this.btnCalcAvgPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCalcAvgPrice.Location = new System.Drawing.Point(163, 317);
+            this.btnCalcAvgPrice.Name = "btnCalcAvgPrice";
+            this.btnCalcAvgPrice.Size = new System.Drawing.Size(127, 41);
+            this.btnCalcAvgPrice.TabIndex = 27;
+            this.btnCalcAvgPrice.Text = "计算历史均价";
+            this.btnCalcAvgPrice.UseVisualStyleBackColor = true;
+            this.btnCalcAvgPrice.Click += new System.EventHandler(this.btnCalcAvgPrice_Click);
+            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 382);
+            this.Controls.Add(this.btnCalcAvgPrice);
             this.Controls.Add(this.btnGatherHisPrice);
             this.Controls.Add(this.btnClearDebug);
             this.Controls.Add(this.label3);
@@ -188,5 +201,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnClearDebug;
         private System.Windows.Forms.Button btnGatherHisPrice;
+        private System.Windows.Forms.Button btnCalcAvgPrice;
     }
 }

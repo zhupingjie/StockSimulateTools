@@ -23,7 +23,8 @@ namespace StockSimulateService.Utils
         }
 
         private static readonly MySQLDBUtil instance = new MySQLDBUtil();
-        private static readonly string strConn = $"Server=47.99.184.6;Database=stock;User Id=stock;Password=sa!123456;Pooling=true;Max Pool Size={100};Connect Timeout=20;";
+        //private static readonly string strConn = $"Server=47.99.184.6;Database=stock;User Id=stock;Password=sa!123456;Pooling=true;Max Pool Size={100};Connect Timeout=20;";
+        private static readonly string strConn = $"Server=121.4.29.105;Database=stock;User Id=root;Password=sa!123456;Pooling=true;Max Pool Size={100};Connect Timeout=20;";
 
         public static MySQLDBUtil Instance
         {

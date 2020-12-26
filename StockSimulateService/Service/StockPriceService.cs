@@ -58,6 +58,8 @@ namespace StockSimulateService.Service
         {
             var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
             var accountStocks = MySQLDBUtil.Instance.QueryAll<AccountStockEntity>();
+            var accounts = MySQLDBUtil.Instance.QueryAll<AccountEntity>();
+
             foreach (var stock in stocks)
             {
                 var accStocks = accountStocks.Where(c => c.StockCode == stock.Code).ToArray();
@@ -75,24 +77,33 @@ namespace StockSimulateService.Service
             }
             MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
 
+            foreach(var account in accounts)
+            {
+                var accStocks = accountStocks.Where(c => c.AccountName == account.Name).ToArray();
+                account.HoldAmount = accStocks.Sum(c => c.HoldAmount);
+                account.Profit = accStocks.Sum(c => c.Profit);
+                account.TotalAmount = account.Amount + account.Profit;
+            }
+            MySQLDBUtil.Instance.Update<AccountEntity>(accounts);
+
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
         public static void CalculateProfit(string accountName, string stockCode, decimal stockPrice)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
-            if (account == null) return;
+            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
+            if (accountStock == null) return;
 
-            account.Price = stockPrice;
-            account.HoldAmount = account.Price * account.HoldQty;
-            account.Profit = account.HoldAmount - account.TotalAmount;
-            if (account.TotalAmount == 0) account.UDPer = 0;
-            else account.UDPer = Math.Round(account.Profit / account.HoldAmount * 100, 2);
+            accountStock.Price = stockPrice;
+            accountStock.HoldAmount = accountStock.Price * accountStock.HoldQty;
+            accountStock.Profit = accountStock.HoldAmount - accountStock.TotalAmount;
+            if (accountStock.TotalAmount == 0) accountStock.UDPer = 0;
+            else accountStock.UDPer = Math.Round(accountStock.Profit / accountStock.HoldAmount * 100, 2);
 
-            MySQLDBUtil.Instance.Update<AccountStockEntity>(account);
+            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
         }
 
-        public static void CalculateAvgrage(Action<string> actionLog)
+        public static void CalculateNowAvgrage(Action<string> actionLog)
         {
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
             var lastPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
@@ -101,11 +112,17 @@ namespace StockSimulateService.Service
             var newStockAverages = new List<StockAverageEntity>();
             var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
             var stockAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
+
+            var yestDate = DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
+            var yestPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0 and DealDate<'{dealDate}'", "DealDate desc", 1).FirstOrDefault();
+            if (yestPrice != null) yestDate = yestPrice.DealDate;
+
+            var nextAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{yestDate}'");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
 
-                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 60, new string[] { "StockCode", "DealDate", "Price"});
+                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 250, new string[] { "StockCode", "DealDate", "Price"});
                 if (stockPrices.Length == 0) continue;
 
                 var lastStockPrice = stockPrices.FirstOrDefault();
@@ -121,9 +138,9 @@ namespace StockSimulateService.Service
                     };
                     newStockAverages.Add(stockAverage);
                 }
-                //if (stockPrices.Length >= 360) stockAverage.AvgPrice360 = Math.Round(stockPrices.Average(c => c.Price), decNum);
-                //if (stockPrices.Length >= 180) stockAverage.AvgPrice180 = Math.Round(stockPrices.Take(180).Average(c => c.Price), decNum);
-                //if (stockPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(stockPrices.Take(120).Average(c => c.Price), decNum);
+                stockAverage.Price = lastStockPrice.Price;
+                if (stockPrices.Length >= 250) stockAverage.AvgPrice250 = Math.Round(stockPrices.Take(250).Average(c => c.Price), decNum);
+                if (stockPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(stockPrices.Take(120).Average(c => c.Price), decNum);
                 if (stockPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(stockPrices.Take(60).Average(c => c.Price), decNum);
                 if (stockPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(stockPrices.Take(20).Average(c => c.Price), decNum);
                 if (stockPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(stockPrices.Take(10).Average(c => c.Price), decNum);
@@ -133,7 +150,12 @@ namespace StockSimulateService.Service
                 stock.AvgPrice10 = stockAverage.AvgPrice10;
                 stock.AvgPrice20 = stockAverage.AvgPrice20;
                 stock.AvgPrice60 = stockAverage.AvgPrice60;
-                stock.Trend = GetTrend(stock, stockAverage);
+                stock.AvgPrice120 = stockAverage.AvgPrice120;
+                stock.AvgPrice250 = stockAverage.AvgPrice250;
+
+                var yestAvgPrices = nextAverages.FirstOrDefault(c => c.StockCode == stock.Code);
+                //计算当前趋势
+                stock.Trend = GetTrend(stock, stockAverage, yestAvgPrices);
             }
             MySQLDBUtil.Instance.Update<StockEntity>(stocks);
             MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
@@ -144,66 +166,62 @@ namespace StockSimulateService.Service
         /// ↘↗
         /// </summary>
         /// <param name="stock"></param>
-        /// <param name="stockAverage"></param>
+        /// <param name="nowAverage"></param>
         /// <returns></returns>
-        static string GetTrend(StockEntity stock, StockAverageEntity stockAverage)
+        static string GetTrend(StockEntity stock, StockAverageEntity nowAverage, StockAverageEntity yestAvgPrices)
         {
+            if (yestAvgPrices == null) return "";
+
             var lng = "";
-            if (stockAverage.AvgPrice60 > 0)
+            if (nowAverage.AvgPrice250 > 0)
             {
-                if (stock.Price > stockAverage.AvgPrice60)
+                if (nowAverage.AvgPrice250 > yestAvgPrices.AvgPrice250)
                 {
-                    lng = "";
+                    lng = "L.上行";
                 }
-                else if (stock.Price < stockAverage.AvgPrice60)
+                else if (nowAverage.AvgPrice250 < yestAvgPrices.AvgPrice250)
                 {
-                    lng = "L.离场";
+                    lng = "L.下行";
                 }
             }
             var mid = "";
-            if (stockAverage.AvgPrice20 > 0)
+            if (nowAverage.AvgPrice120 > 0 && nowAverage.AvgPrice60 > 0)
             {
-                if (stockAverage.AvgPrice5 > stockAverage.AvgPrice20)
+                if (nowAverage.AvgPrice120 > yestAvgPrices.AvgPrice120 && nowAverage.AvgPrice60 > yestAvgPrices.AvgPrice60)
                 {
-                    mid = "M.突破";
+                    mid = "M.上行";
                 }
-                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice20)
+                else if (nowAverage.AvgPrice120 < yestAvgPrices.AvgPrice120 && nowAverage.AvgPrice60 < yestAvgPrices.AvgPrice60)
                 {
-                    mid = "M.破位";
+                    mid = "M.下行";
+                }
+                else
+                {
+                    mid = "M.震荡";
                 }
             }
             var sht = "";
-            if(stockAverage.AvgPrice10 > 0)
+            if (nowAverage.AvgPrice20 > 0 && nowAverage.AvgPrice10 > 0 && nowAverage.AvgPrice5 > 0)
             {
-                if (stockAverage.AvgPrice5 > stockAverage.AvgPrice10)
+                if (nowAverage.AvgPrice20 > yestAvgPrices.AvgPrice20 && nowAverage.AvgPrice10 > yestAvgPrices.AvgPrice10 && nowAverage.AvgPrice5 > yestAvgPrices.AvgPrice5)
                 {
-                    if(stock.Price < stockAverage.AvgPrice5)
-                    {
-                        mid = "S.下探";
-                    }
-                    else
-                    {
-                        mid = "S.上攻";
-                    }
+                    sht = "S.上行";
                 }
-                else if (stockAverage.AvgPrice5 < stockAverage.AvgPrice10)
+                else if (nowAverage.AvgPrice20 < yestAvgPrices.AvgPrice20 && nowAverage.AvgPrice10 < yestAvgPrices.AvgPrice10 && nowAverage.AvgPrice5 < yestAvgPrices.AvgPrice5)
                 {
-                    if (stock.Price < stockAverage.AvgPrice5)
-                    {
-                        mid = "S.杀跌";
-                    }
-                    else
-                    {
-                        mid = "S.反弹";
-                    }
+                    sht = "S.下行";
+                }
+                else
+                {
+                    sht = "S.震荡";
                 }
             }
             var tdy = "";
-            if (stock.Price < stockAverage.AvgPrice5)
+            if (stock.Price < nowAverage.AvgPrice5)
             {
                 tdy = "N.↘";
             }
-            else if (stock.Price > stockAverage.AvgPrice5)
+            else if (stock.Price > nowAverage.AvgPrice5)
             {
                 tdy = "N.↗";
             }
@@ -214,6 +232,49 @@ namespace StockSimulateService.Service
             if (!string.IsNullOrEmpty(lng))
                 return lng;
             return $"{tdy} {sht} {mid}";
+        }
+
+        /// <summary>
+        /// 计算所有可计算的平均价格
+        /// </summary>
+        public static void CalculateAllAvgrage()
+        {
+            var newStockAverages = new List<StockAverageEntity>();
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
+            var stockAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>();
+            foreach (var stock in stocks)
+            {
+                var decNum = stock.Type == 0 ? 2 : 3;
+
+                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 0, new string[] { "StockCode", "DealDate", "Price" });
+                if (stockPrices.Length == 0) continue;
+
+                foreach(var stockPrice in stockPrices)
+                {
+                    var calcPrices = stockPrices.Where(c => c.DealDate.CompareTo(stockPrice.DealDate) <= 0).OrderByDescending(c => c.DealDate).ToArray();
+
+                    var stockAverage = stockAverages.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == stockPrice.DealDate);
+                    if (stockAverage == null)
+                    {
+                        stockAverage = new StockAverageEntity()
+                        {
+                            StockCode = stock.Code,
+                            Price = stockPrice.Price,
+                            DealDate = stockPrice.DealDate,
+                        };
+                        newStockAverages.Add(stockAverage);
+                    }
+                    stockAverage.Price = stockPrice.Price;
+                    if (calcPrices.Length >= 250) stockAverage.AvgPrice250 = Math.Round(calcPrices.Take(250).Average(c => c.Price), decNum);
+                    if (calcPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(calcPrices.Take(120).Average(c => c.Price), decNum);
+                    if (calcPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(calcPrices.Take(60).Average(c => c.Price), decNum);
+                    if (calcPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(calcPrices.Take(20).Average(c => c.Price), decNum);
+                    if (calcPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(calcPrices.Take(10).Average(c => c.Price), decNum);
+                    if (calcPrices.Length > 0) stockAverage.AvgPrice5 = Math.Round(calcPrices.Take(5).Average(c => c.Price), decNum);
+                }
+            }
+            MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
+            MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
 using StockSimulateService.Utils;
+using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
 {
@@ -35,23 +36,29 @@ namespace StockSimulateUI.UI
             this.txtName.Items.Clear();
             this.txtName.Items.AddRange(accounts.Select(c => c.Name).ToArray());
 
-            var realAccount = accounts.FirstOrDefault(c => c.RealType == 1);
+            var realAccount = accounts.FirstOrDefault(c => c.Name == RunningConfig.Instance.CurrentAccountName);
             if (realAccount != null)
             {
                 this.txtName.Text = realAccount.Name;
                 this.txtAmount.Text = $"{realAccount.Amount}";
                 this.txtHoldAmount.Text = $"{realAccount.HoldAmount}";
                 this.txtBuyAmount.Text = $"{realAccount.BuyAmount}";
+                this.txtTotalAmount.Text = $"{realAccount.TotalAmount}";
                 this.txtCash.Text = $"{realAccount.Cash}";
                 this.txtProfit.Text = $"{realAccount.Profit}";
                 this.txtEmail.Text = realAccount.Email;
                 this.txtQQ.Text = realAccount.QQ;
-                this.txtRealType.Checked = realAccount.RealType == 1 ? true : false;
+                this.txtRealType.Text = realAccount.RealType == 1 ? "实盘" : "模拟盘";
             }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            var accountName = this.txtName.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
+
+            if (MessageBox.Show($"确认要保存选中的账户数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
             var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
             if (account == null)
             {
@@ -61,7 +68,7 @@ namespace StockSimulateUI.UI
                 account.Cash = account.Amount;
                 account.Email = this.txtEmail.Text;
                 account.QQ = this.txtQQ.Text;
-                account.RealType = this.txtRealType.Checked ? 1 : 0;
+                account.RealType = this.txtRealType.Text == "实盘" ? 1 : 0;
                 Repository.Insert<AccountEntity>(account);
             }
             else
@@ -71,7 +78,7 @@ namespace StockSimulateUI.UI
                 account.Email = this.txtEmail.Text;
                 account.Cash = account.Amount - account.BuyAmount;
                 account.QQ = this.txtQQ.Text;
-                account.RealType = this.txtRealType.Checked ? 1 : 0;
+                account.RealType = this.txtRealType.Text == "实盘" ? 1 : 0;
                 Repository.Update<AccountEntity>(account);
             }
             this.DialogResult = DialogResult.OK;
@@ -92,17 +99,31 @@ namespace StockSimulateUI.UI
                 this.txtAmount.Text = $"{account.Amount}";
                 this.txtHoldAmount.Text = $"{account.HoldAmount}";
                 this.txtBuyAmount.Text = $"{account.BuyAmount}";
+                this.txtTotalAmount.Text = $"{account.TotalAmount}";
                 this.txtCash.Text = $"{account.Cash}";
                 this.txtProfit.Text = $"{account.Profit}";
                 this.txtEmail.Text = account.Email;
                 this.txtQQ.Text = account.QQ;
-                this.txtRealType.Checked = account.RealType == 1 ? true : false;
+                this.txtRealType.Text = account.RealType == 1 ? "实盘" : "模拟盘";
             }
         }
 
-        private void txtAmount_TextChanged(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
+            var accountName =  this.txtName.Text;
+            if (string.IsNullOrEmpty(accountName)) return;
 
+            if (MessageBox.Show($"确认要删除选中的账户数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+
+            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
+            if (account == null) return;
+
+            Repository.Delete<AccountEntity>(account);
+            Repository.Delete<AccountStockEntity>($"AccountName='{accountName}'");
+            Repository.Delete<ExchangeOrderEntity>($"AccountName='{accountName}'");
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

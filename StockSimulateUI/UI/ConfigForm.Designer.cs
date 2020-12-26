@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtGatherStockReportInterval = new System.Windows.Forms.TextBox();
             this.txtDebugMode = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,14 +45,16 @@
             this.txtGatherStockMainTargetInterval = new System.Windows.Forms.TextBox();
             this.txtGatherStockPriceInterval = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtGatherStockReportInterval = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtAccount = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.txtAccount);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.txtGatherStockReportInterval);
             this.panel1.Controls.Add(this.txtDebugMode);
@@ -72,10 +76,28 @@
             this.panel1.Size = new System.Drawing.Size(680, 485);
             this.panel1.TabIndex = 4;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(43, 249);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(246, 31);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "机构研报采集时间(秒)";
+            // 
+            // txtGatherStockReportInterval
+            // 
+            this.txtGatherStockReportInterval.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtGatherStockReportInterval.Location = new System.Drawing.Point(318, 246);
+            this.txtGatherStockReportInterval.Name = "txtGatherStockReportInterval";
+            this.txtGatherStockReportInterval.Size = new System.Drawing.Size(331, 39);
+            this.txtGatherStockReportInterval.TabIndex = 14;
+            // 
             // txtDebugMode
             // 
             this.txtDebugMode.AutoSize = true;
-            this.txtDebugMode.Location = new System.Drawing.Point(318, 38);
+            this.txtDebugMode.Location = new System.Drawing.Point(318, 420);
             this.txtDebugMode.Name = "txtDebugMode";
             this.txtDebugMode.Size = new System.Drawing.Size(15, 14);
             this.txtDebugMode.TabIndex = 13;
@@ -85,7 +107,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(179, 23);
+            this.label6.Location = new System.Drawing.Point(179, 405);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(110, 31);
             this.label6.TabIndex = 12;
@@ -192,23 +214,24 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "股票价格采集时间(秒)";
             // 
-            // label7
+            // label8
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(43, 249);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(246, 31);
-            this.label7.TabIndex = 15;
-            this.label7.Text = "机构研报采集时间(秒)";
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label8.Location = new System.Drawing.Point(131, 27);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(158, 31);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "当前交易账户";
             // 
-            // txtGatherStockReportInterval
+            // txtAccount
             // 
-            this.txtGatherStockReportInterval.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtGatherStockReportInterval.Location = new System.Drawing.Point(318, 246);
-            this.txtGatherStockReportInterval.Name = "txtGatherStockReportInterval";
-            this.txtGatherStockReportInterval.Size = new System.Drawing.Size(331, 39);
-            this.txtGatherStockReportInterval.TabIndex = 14;
+            this.txtAccount.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtAccount.FormattingEnabled = true;
+            this.txtAccount.Location = new System.Drawing.Point(318, 19);
+            this.txtAccount.Name = "txtAccount";
+            this.txtAccount.Size = new System.Drawing.Size(331, 39);
+            this.txtAccount.TabIndex = 23;
             // 
             // ConfigForm
             // 
@@ -244,5 +267,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtGatherStockReportInterval;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox txtAccount;
     }
 }

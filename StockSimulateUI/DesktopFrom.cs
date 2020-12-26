@@ -212,18 +212,17 @@ namespace StockPriceTools
 
         void LoadAccountStockList()
         {
-            var where = "1>0";
+            var account = Repository.QueryFirst<AccountEntity>($"Name='{RC.CurrentAccountName}'");
+            if (account == null)
+            {
+                this.lblAccountStockInfo.Text = $"当前交易账户未设置";
+                return;
+            }
+
+            var where = $"AccountName='{account.Name}'";
             var search = this.txtAccountSearch.Text.Trim();
             if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
             if (this.txtHoldQty.Checked) where += " and HoldQty>0";
-            if (this.txtRealType.Checked)
-            {
-                var accounts = Repository.QueryAll<AccountEntity>($"RealType=1");
-                if(accounts.Length > 0)
-                {
-                    where += $" and AccountName in ('{string.Join("','", accounts.Select(c => c.Name))}')";
-                }
-            }
 
             var accountStocks = Repository.QueryAll<AccountStockEntity>(where);
             var dt = ObjectUtil.ConvertTable(accountStocks);
@@ -250,17 +249,8 @@ namespace StockPriceTools
                 }
             }
 
-            string totalAmount = "", holdAmount = "", profit = "";
-            var account = Repository.QueryFirst<AccountEntity>($"RealType=1");
-            if (account != null)
-            {
-                totalAmount = ObjectUtil.FormatMoney(accountStocks.Where(c=>c.AccountName == account.Name).Sum(c => c.TotalAmount));
-                holdAmount = ObjectUtil.FormatMoney(accountStocks.Where(c => c.AccountName == account.Name).Sum(c => c.HoldAmount));
-                profit = ObjectUtil.FormatMoney(accountStocks.Where(c => c.AccountName == account.Name).Sum(c => c.Profit));
-            }
-            
             this.lblAccountStockTotal.Text = $"总股票数:[{accountStocks.Length}]";
-            this.lblAccountStockInfo.Text = $"总投入市值【{totalAmount}】，持有总市值【{holdAmount}】，盈亏【{profit}】";
+            this.lblAccountStockInfo.Text = $"账户市值【{account.TotalAmount}】,持有市值【{account.HoldAmount}】,盈亏【{account.Profit}】";
         }
 
         private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
@@ -448,8 +438,10 @@ namespace StockPriceTools
             var series = this.chartPrice.Series.FirstOrDefault(c => c.Name == "FOUCS");
             if (series == null) series = this.chartPrice.Series.Add("FOUCS");
 
-            if(dateType == 0)
+            if (dateType == 0)
             {
+                series.IsValueShownAsLabel = true;
+
                 this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
 
                 var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
@@ -457,6 +449,8 @@ namespace StockPriceTools
             }
             else
             {
+                series.IsValueShownAsLabel = false;
+
                 this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
 
                 if (chartWithZS)
