@@ -731,6 +731,55 @@ namespace StockPriceTools
             }
         }
 
+        void LoadFundStockList(string stockCode)
+        {
+            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            var fundStocks = Repository.QueryAll<FundStockEntity>($"StockCode='{stockCode}' and ReportDate='{stock.ReportDate}'", "Seq asc");
+            if (fundStocks.Length == 0) return;
+
+            var stockCodes = fundStocks.GroupBy(c => c.HoldStockCode).Select(c => c.Key).ToArray();
+            var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
+
+            var dt = ObjectUtil.ConvertTable(fundStocks);
+            this.gridFundStockList.DataSource = null;
+            this.gridFundStockList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridFundStockList.ColumnCount; i++)
+            {
+                this.gridFundStockList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                var columnName = this.gridFundStockList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridFundStockList.Columns[i].Visible = false;
+                else
+                {
+                    this.gridFundStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
+                }
+            }
+            for (var i = 0; i < this.gridFundStockList.Rows.Count; i++)
+            {
+                var row = this.gridFundStockList.Rows[i];
+                var holdStockCode = $"{row.Cells["持仓股票代码"].Value}";
+                if (string.IsNullOrEmpty(holdStockCode)) continue;
+
+                var holdStock = stocks.FirstOrDefault(c => c.Code == holdStockCode);
+                if(holdStock != null)
+                {
+                    row.Cells["当前股价"].Value = $"{holdStock.Price}";
+                    row.Cells["浮动(%)"].Value = $"{holdStock.UDPer}";
+
+                    if(holdStock.UDPer> 0)
+                    {
+                        this.gridFundStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        this.gridFundStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 历史股价列表点击
         /// </summary>
@@ -823,6 +872,9 @@ namespace StockPriceTools
                     break;
                 case 6:
                     this.LoadReportList(stockCode);
+                    break;
+                case 7:
+                    this.LoadFundStockList(stockCode);
                     break;
             }
         }
@@ -1008,6 +1060,21 @@ namespace StockPriceTools
             ObjectUtil.OpenBrowserUrl(report.PdfUrl);
         }
 
+        private void btnFouncStock_Click(object sender, EventArgs e)
+        {
+            if (this.gridFundStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridFundStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["持仓股票代码"].Value}";
+            if (string.IsNullOrEmpty(stockCode)) return;
+
+            var frm = new NewStockForm();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.StockCode = stockCode;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                this.LoadStockList();
+            }
+        }
         #endregion
 
         #region 任务栏托盘事件

@@ -119,12 +119,16 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpDesktop = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabFundStock = new System.Windows.Forms.TabPage();
+            this.gridFundStockList = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.btnFouncStock = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -168,6 +172,9 @@
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.tabFundStock.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).BeginInit();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -571,6 +578,7 @@
             this.tabControlBottom.Controls.Add(this.tabRemind);
             this.tabControlBottom.Controls.Add(this.tabExchangeList);
             this.tabControlBottom.Controls.Add(this.tabReport);
+            this.tabControlBottom.Controls.Add(this.tabFundStock);
             this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlBottom.Location = new System.Drawing.Point(0, 0);
             this.tabControlBottom.Name = "tabControlBottom";
@@ -1122,45 +1130,91 @@
             this.toolStripSeparator4,
             this.tmpExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 126);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(134, 104);
             // 
             // tmpDesktop
             // 
             this.tmpDesktop.Name = "tmpDesktop";
-            this.tmpDesktop.Size = new System.Drawing.Size(180, 22);
+            this.tmpDesktop.Size = new System.Drawing.Size(133, 22);
             this.tmpDesktop.Text = "我的桌面";
             this.tmpDesktop.Click += new System.EventHandler(this.tmpDesktop_Click);
-            // 
-            // tmpExit
-            // 
-            this.tmpExit.Name = "tmpExit";
-            this.tmpExit.Size = new System.Drawing.Size(180, 22);
-            this.tmpExit.Text = "退出(Exit)";
-            this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
-            // 
-            // tmpActionLog
-            // 
-            this.tmpActionLog.Name = "tmpActionLog";
-            this.tmpActionLog.Size = new System.Drawing.Size(180, 22);
-            this.tmpActionLog.Text = "今日消息...";
-            this.tmpActionLog.Click += new System.EventHandler(this.tmpActionLog_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // tmpConfig
             // 
             this.tmpConfig.Name = "tmpConfig";
-            this.tmpConfig.Size = new System.Drawing.Size(180, 22);
+            this.tmpConfig.Size = new System.Drawing.Size(133, 22);
             this.tmpConfig.Text = "全局设置...";
             this.tmpConfig.Click += new System.EventHandler(this.tmpConfig_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(130, 6);
+            // 
+            // tmpActionLog
+            // 
+            this.tmpActionLog.Name = "tmpActionLog";
+            this.tmpActionLog.Size = new System.Drawing.Size(133, 22);
+            this.tmpActionLog.Text = "今日消息...";
+            this.tmpActionLog.Click += new System.EventHandler(this.tmpActionLog_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(130, 6);
+            // 
+            // tmpExit
+            // 
+            this.tmpExit.Name = "tmpExit";
+            this.tmpExit.Size = new System.Drawing.Size(133, 22);
+            this.tmpExit.Text = "退出(Exit)";
+            this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
+            // 
+            // tabFundStock
+            // 
+            this.tabFundStock.Controls.Add(this.gridFundStockList);
+            this.tabFundStock.Controls.Add(this.panel4);
+            this.tabFundStock.Location = new System.Drawing.Point(4, 22);
+            this.tabFundStock.Name = "tabFundStock";
+            this.tabFundStock.Size = new System.Drawing.Size(842, 221);
+            this.tabFundStock.TabIndex = 11;
+            this.tabFundStock.Text = "基金持仓";
+            this.tabFundStock.UseVisualStyleBackColor = true;
+            // 
+            // gridFundStockList
+            // 
+            this.gridFundStockList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridFundStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridFundStockList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridFundStockList.Location = new System.Drawing.Point(0, 29);
+            this.gridFundStockList.MultiSelect = false;
+            this.gridFundStockList.Name = "gridFundStockList";
+            this.gridFundStockList.ReadOnly = true;
+            this.gridFundStockList.RowHeadersWidth = 10;
+            this.gridFundStockList.RowTemplate.Height = 23;
+            this.gridFundStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridFundStockList.Size = new System.Drawing.Size(842, 192);
+            this.gridFundStockList.TabIndex = 51;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.btnFouncStock);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(842, 29);
+            this.panel4.TabIndex = 52;
+            // 
+            // btnFouncStock
+            // 
+            this.btnFouncStock.BackColor = System.Drawing.Color.White;
+            this.btnFouncStock.Location = new System.Drawing.Point(5, 3);
+            this.btnFouncStock.Name = "btnFouncStock";
+            this.btnFouncStock.Size = new System.Drawing.Size(64, 23);
+            this.btnFouncStock.TabIndex = 0;
+            this.btnFouncStock.Text = "关注股票";
+            this.btnFouncStock.UseVisualStyleBackColor = false;
+            this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
             // 
             // DesktopFrom
             // 
@@ -1227,6 +1281,9 @@
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.tabFundStock.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1326,5 +1383,9 @@
         private System.Windows.Forms.ToolStripMenuItem tmpActionLog;
         private System.Windows.Forms.ToolStripMenuItem tmpConfig;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.TabPage tabFundStock;
+        private System.Windows.Forms.DataGridView gridFundStockList;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button btnFouncStock;
     }
 }

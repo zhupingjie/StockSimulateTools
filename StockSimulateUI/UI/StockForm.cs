@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
-using StockSimulateService.Utils;
 using StockSimulateService.Helper;
 
 namespace StockPriceTools.UI
@@ -18,6 +17,7 @@ namespace StockPriceTools.UI
     public partial class NewStockForm : Form
     {
         private MySQLDBUtil Repository = MySQLDBUtil.Instance;
+        public string StockCode { get; set; }
         public NewStockForm()
         {
             InitializeComponent();
@@ -49,27 +49,30 @@ namespace StockPriceTools.UI
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.txtCode.Text.Length > 6) this.txtCode.Text = this.txtCode.Text.Substring(0, 6);
+            this.txtType.Text = ObjectUtil.GetStockMarket(this.txtCode.Text);
+
             if (this.txtCode.Text.StartsWith("6"))
             {
-                this.txtType.Text = "SH";
                 this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
             if (this.txtCode.Text.StartsWith("0"))
             {
-                this.txtType.Text = "SZ";
                 this.txtSType.Text = "沪深股";
                 this.txtSTypeValue.Text = "0";
             }
+            if (this.txtCode.Text.StartsWith("3"))
+            {
+                this.txtSType.Text = "创业板";
+                this.txtSTypeValue.Text = "3";
+            }
             if (this.txtCode.Text.StartsWith("5"))
             {
-                this.txtType.Text = "SH";
                 this.txtSType.Text = "基金(ETF)";
                 this.txtSTypeValue.Text = "1";
             }
             if (this.txtCode.Text.StartsWith("1"))
             {
-                this.txtType.Text = "SZ";
                 this.txtSType.Text = "基金(ETF)";
                 this.txtSTypeValue.Text = "1";
             }
@@ -85,7 +88,10 @@ namespace StockPriceTools.UI
 
         private void NewStockForm_Load(object sender, EventArgs e)
         {
-
+            if (!string.IsNullOrEmpty(StockCode) && StockCode.Length >= 8)
+            {
+                this.txtCode.Text = StockCode.Substring(2, 6);
+            }
         }
 
         private void txtSType_SelectedIndexChanged(object sender, EventArgs e)

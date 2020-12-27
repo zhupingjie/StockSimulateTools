@@ -99,9 +99,11 @@ namespace StockSimulateDomain.Entity
         public decimal AvgPrice60 { get; set; }
 
         [Description("120日均价")]
+        [GridColumnIgnore]
         public decimal AvgPrice120 { get; set; }
 
         [Description("250日均价")]
+        [GridColumnIgnore]
         public decimal AvgPrice250 { get; set; }
 
         [Description("5日趋势")]
@@ -121,9 +123,11 @@ namespace StockSimulateDomain.Entity
         public string Trend60 { get; set; }
 
         [Description("120日趋势")]
+        [GridColumnIgnore]
         public string Trend120 { get; set; }
 
         [Description("250日趋势")]
+        [GridColumnIgnore]
         public string Trend250 { get; set; }
 
         [Description("交易锁定(天)")]

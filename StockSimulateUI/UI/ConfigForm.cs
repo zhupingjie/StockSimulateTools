@@ -30,6 +30,7 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.GatherStockPriceInterval = ObjectUtil.ToValue<int>(this.txtGatherStockPriceInterval.Text, 0);
             RunningConfig.Instance.GatherStockFinanceTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
             RunningConfig.Instance.GatherStockReportInterval = ObjectUtil.ToValue<int>(this.txtGatherStockReportInterval.Text, 0);
+            RunningConfig.Instance.GatherFundStockPositionInterval = ObjectUtil.ToValue<int>(this.txtGatherFundStockPositionInterval.Text, 0);
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<decimal>(this.txtRemindStockPriceFloatPer.Text, 0);
             RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
@@ -73,6 +74,7 @@ namespace StockSimulateUI.UI
             this.txtGatherStockPriceInterval.Text = $"{RunningConfig.Instance.GatherStockPriceInterval}";
             this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockFinanceTargetInterval}";
             this.txtGatherStockReportInterval.Text = $"{RunningConfig.Instance.GatherStockReportInterval}";
+            this.txtGatherFundStockPositionInterval.Text = $"{RunningConfig.Instance.GatherFundStockPositionInterval}";
             this.txtRemindStockStrategyInterval.Text = $"{RunningConfig.Instance.RemindStockStrategyInterval}";
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
             this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";

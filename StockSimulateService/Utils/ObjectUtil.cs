@@ -308,7 +308,57 @@ namespace StockSimulateService.Utils
             return true;
         }
 
+        public static bool ColudGatherFundStock(string reportDate)
+        {
+            if (string.IsNullOrEmpty(reportDate)) return true;
 
+            var date = DateTime.Now.Date;
+            if (!DateTime.TryParse(reportDate, out date)) return false;
+
+            if (date.Month == 12)
+            {
+                if (DateTime.Now.Date.Month < 3) return false;
+            }
+            else if (date.Month == 9)
+            {
+                if (DateTime.Now.Date.Month >= 9) return false;
+            }
+            else if (date.Month == 6)
+            {
+                if (DateTime.Now.Date.Month < 9) return false;
+            }
+            else if (date.Month == 3)
+            {
+                if (DateTime.Now.Date.Month < 6) return false;
+            }
+            return true;
+        }
+
+        public static string GetStockMarket(string code)
+        {
+            if (code.EndsWith("HK")) return "";
+            if (code.StartsWith("5") || code.StartsWith("6")) return "SH";
+            if (code.StartsWith("0") || code.StartsWith("1") || code.StartsWith("3")) return "SZ";
+            return "";
+        }
+
+        public static int GetGatherQuarterNum(DateTime date)
+        {
+            if (date.Month >= 10 && date.Month <= 12) return 3;
+            else if (date.Month >= 1 && date.Month <= 3) return 4;
+            else if (date.Month >= 4 && date.Month <= 6) return 1;
+            else return 2;
+        }
+
+        public static string GetGatherQuarterStr(DateTime date, int quarter)
+        {
+            var month = 0;
+            if (quarter == 1) month = 3;
+            if (quarter == 2) month = 6;
+            if (quarter == 3) month = 9;
+            if (quarter == 4) month = 12;
+            return $"{DateTime.Now.Year}-{month.ToString().PadLeft(2, '0')}-30";
+        }
 
         public static void CheckOrCreateDirectory(string path)
         {

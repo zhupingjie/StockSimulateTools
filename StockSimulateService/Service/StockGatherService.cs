@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
 using StockSimulateService.Helper;
 using StockSimulateService.Service;
 using StockSimulateService.Config;
@@ -53,6 +52,11 @@ namespace StockSimulateNetService.Serivce
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
+        /// <summary>
+        /// 采集股票历史股价数据
+        /// </summary>
+        /// <param name="stockCode"></param>
+        /// <returns></returns>
         public static int GatherHisPriceData(string stockCode)
         {
             var priceIds = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "ID desc", 20, new string[] { "ID" });
@@ -74,6 +78,32 @@ namespace StockSimulateNetService.Serivce
                 var newPrices = stockPrices.Where(c => c.DealDate.CompareTo(lastDate) < 0).OrderByDescending(c => c.DealDate).ToArray();
                 MySQLDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
                 return newPrices.Length;
+            }
+        }
+
+        /// <summary>
+        /// 采集基金持仓比例数据
+        /// </summary>
+        /// <param name="stockCode"></param>
+        /// <returns></returns>
+        public static void GatherFundStockData(Action<string> actionLog)
+        {
+            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Type=1");
+            foreach (var stock in stocks)
+            {
+                if (!ObjectUtil.ColudGatherFundStock(stock.ReportDate)) continue;
+
+                var fundStocks = EastMoneyUtil.GetFundStock(stock.Code);
+                if (fundStocks.Length > 0)
+                {
+                    var date = fundStocks.Max(c => c.ReportDate);
+                    MySQLDBUtil.Instance.Delete<FundStockEntity>($"StockCode='{stock.Code}' and ReportDate='{date}'");
+                    MySQLDBUtil.Instance.Insert<FundStockEntity>(fundStocks);
+
+                    //同步更新报告期
+                    stock.ReportDate = fundStocks.Max(c => c.ReportDate);
+                    MySQLDBUtil.Instance.Update<StockEntity>(stock, new string[] { "ReportDate" });
+                }
             }
         }
 

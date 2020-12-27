@@ -138,6 +138,24 @@ namespace StockSimulateService.Service
                 }
             }, CancellationTokenSource.Token);
 
+            //采集基金持仓比例
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5000);
+                while (true)
+                {
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    {
+                        this.ActionLog("采集基金持仓比例数据...");
+                        StockGatherService.GatherFundStockData((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
+                    Thread.Sleep(RC.GatherFundStockPositionInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
             //采集财务数据
             Task.Factory.StartNew(() =>
             {

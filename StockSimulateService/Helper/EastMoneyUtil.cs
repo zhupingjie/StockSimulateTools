@@ -160,8 +160,6 @@ namespace StockSimulateService.Helper
             {
                 dt.Columns.Add(date);
             }
-            //dt.Columns.Add("平均增长");
-            //dt.Columns.Add("近期增长");
 
             var preps = typeof(MainTargetEntity).GetProperties();
             foreach (var prep in preps)
@@ -178,37 +176,13 @@ namespace StockSimulateService.Helper
             var dr = dt.NewRow();
             dr["指标"] = ObjectUtil.GetPropertyDesc(typeof(MainTargetEntity), field);//"基本每股收益(元)";
 
-            //var vals = new List<decimal>();
-            //var percent = new List<decimal>();
             foreach (var date in dates)
             {
                 var item = data.FirstOrDefault(c => c.Date == date);
 
                 var value = ObjectUtil.GetPropertyValue<decimal>(item, field);
                 dr[date] = value;
-                //if (vals.Count == 0)
-                //{
-                //    vals.Add(value);
-                //}
-                //else if (vals.Count == 1)
-                //{
-                //    if (value != 0)
-                //    {
-                //        var p = Math.Round((vals.FirstOrDefault() - value) / value, 2) * 100;
-                //        percent.Add(p);
-                //    }
-                //    else
-                //    {
-                //        percent.Add(0);
-                //    }
-                //    vals.Clear();
-                //}
             }
-            //if (percent.Count > 0)
-            //{
-            //    dr["平均增长"] = $"{percent.Sum() / percent.Count}%";
-            //    dr["近期增长"] = $"{percent.FirstOrDefault()}%";
-            //}
             dt.Rows.Add(dr);
         }
 
@@ -481,6 +455,71 @@ namespace StockSimulateService.Helper
 
         #endregion
 
+        #region 基金持仓
+
+        public static FundStockEntity[] GetFundStock(string stockCode)
+        {
+            try
+            {
+                var api = $"https://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code={stockCode.Substring(2,6)}&topline=10&year=&month=9";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                retStr = retStr.Replace("var apidata={ content:\"", "");
+                if(retStr.Contains("</div>")) retStr = retStr.Substring(0, retStr.LastIndexOf("</div>") + 6);
+
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(retStr);
+
+                var fundStocks = new List<FundStockEntity>();
+
+                var gahterQuarter = ObjectUtil.GetGatherQuarterNum(DateTime.Now);
+                var gahterQuarterStr = $"{DateTime.Now.Year}年{gahterQuarter}季度";
+                var reportDate = ObjectUtil.GetGatherQuarterStr(DateTime.Now, gahterQuarter);
+                var divContent = doc.DocumentNode.ChildNodes.FirstOrDefault(c => c.InnerText.Contains(gahterQuarterStr));
+                if (divContent != null)
+                {
+                    var trs = divContent.SelectNodes("div/table/tbody/tr");
+                    foreach (var tr in trs)
+                    {
+                        var tds = tr.SelectNodes("td");
+                        if (tds.Count < 9) continue;
+
+                        var seq = ObjectUtil.ToValue<int>(tds[0].InnerText, 0);
+                        if (seq == 0) continue;
+
+                        var code= tds[1].InnerText;
+                        var holdCode = ObjectUtil.GetStockMarket(code) + code;
+                        var holdName = tds[2].InnerText;
+                        var holdPer = ObjectUtil.ToValue<decimal>(tds[6].InnerText.Replace("%", ""), 0);
+                        var holdQty = ObjectUtil.ToValue<decimal>(tds[7].InnerText, 0);
+                        var holdAmount = ObjectUtil.ToValue<decimal>(tds[8].InnerText, 0);
+
+                        var fund = new FundStockEntity()
+                        {
+                            StockCode = stockCode,
+                            ReportDate = reportDate,
+                            Seq = seq,
+                            HoldStockCode = holdCode,
+                            HoldStockName = holdName,
+                            PositionPer= holdPer,
+                            HoldQty = holdQty,
+                            HoldAmount= holdAmount,
+                        };
+                        fundStocks.Add(fund);
+                    }
+                }
+                return fundStocks.ToArray();
+            }
+            catch (Exception ex)
+            {
+                return new FundStockEntity[] { };
+            }
+        }
+
+        #endregion
+
         #region 辅助方法
 
         static string GetStockSecid(string code)
@@ -534,6 +573,12 @@ namespace StockSimulateService.Helper
     {
         public string code { get; set; }
         public string[] klines { get; set; }
+    }
+    public class EastMoneyFundStockAPIModel
+    {
+        public string content { get; set; }
+
+        public string curyear { get; set; }
     }
 
     public class ReportModel
