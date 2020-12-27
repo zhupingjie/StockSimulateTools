@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using StockSimulateService.Utils;
 using StockSimulateService.Utils;
 using StockSimulateNetService.Serivce;
+using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
 {
@@ -33,6 +34,8 @@ namespace StockSimulateUI.UI
 
             this.txtAccount.Items.Clear();
             this.txtAccount.Items.AddRange(accounts.Select(c => c.Name).ToArray());
+
+            this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
         }
         private void btnOK_Click(object sender, EventArgs e)
         {
