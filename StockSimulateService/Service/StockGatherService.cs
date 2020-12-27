@@ -36,8 +36,11 @@ namespace StockSimulateNetService.Serivce
 
                     //检测自动交易策略 
                     StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
+
+                    //减少日志输出,每5分钟输出一次
+                    if(DateTime.Now.Minute % 5 == 0)
+                        actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
                 }
-                actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
 
                 //采集历史价格数据
                 if (RunningConfig.Instance.DebugMode)

@@ -53,7 +53,7 @@ namespace StockSimulateService.Helper
                 stock.EPS = GetNumberValue(model, "f55");
                 stock.BVPS = GetNumberValue(model, "f92");
                 stock.PE = GetNumberValue(model, "f162");
-                stock.TTM = GetNumberValue(model, "f163");
+                stock.TTM = GetNumberValue(model, "f164");
                 stock.PB = GetNumberValue(model, "f167");
                 stock.PEG = 0;
                 stock.ROE = 0;
@@ -461,6 +461,7 @@ namespace StockSimulateService.Helper
         {
             try
             {
+                //https://fundwebapi.eastmoney.com/FundMEApi/FundPositionList?deviceid=123&version=4.3.0&product=Eastmoney&plat=Web&FCODE=510050
                 var api = $"https://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code={stockCode.Substring(2,6)}&topline=10&year=&month=9";
                 var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
                 {
