@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
 using StockSimulateService.Utils;
+using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
 {
@@ -40,6 +41,8 @@ namespace StockSimulateUI.UI
 
             this.txtAccount.Items.Clear();
             this.txtAccount.Items.AddRange(accounts.Select(c => c.Name).ToArray());
+
+            this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
 
             this.txtDealPrice.Text = $"{this.DealPrice}";
 

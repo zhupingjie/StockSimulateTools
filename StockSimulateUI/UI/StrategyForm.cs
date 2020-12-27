@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
+using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
 {
@@ -37,6 +38,8 @@ namespace StockSimulateUI.UI
 
             this.txtAccountName.Items.Clear();
             this.txtAccountName.Items.AddRange(accounts.Select(c => c.Name).ToArray());
+
+            this.txtAccountName.Text = RunningConfig.Instance.CurrentAccountName;
         }
 
         private void txtName_SelectedIndexChanged(object sender, EventArgs e)

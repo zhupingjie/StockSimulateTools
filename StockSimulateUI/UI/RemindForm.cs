@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateService.Utils;
 using StockSimulateDomain.Model;
+using StockSimulateService.Config;
 
 namespace StockSimulateUI.UI
 {
@@ -31,6 +32,8 @@ namespace StockSimulateUI.UI
 
             this.txtAccount.Items.Clear();
             this.txtAccount.Items.AddRange(accounts.Select(c => c.Name).ToArray());
+
+            this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -47,7 +50,7 @@ namespace StockSimulateUI.UI
                 DownPrice = this.txtDownPrice.Text,
                 UpAveragePrice = this.txtUpAverage.Text,
                 DownAveragePrice = this.txtDownAverage.Text,
-                UpAveragePriceReverse = this.txtDownAverageReverse.Text,
+                UpAveragePriceReverse = this.txtUpAverageReverse.Text,
                 DownAveragePriceReverse = this.txtDownAverageReverse.Text
             };
             if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpAveragePriceReverse}{remindInfo.DownAveragePriceReverse}")) return;
