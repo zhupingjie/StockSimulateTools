@@ -47,6 +47,9 @@ namespace StockSimulateService.Service
 
             account.BuyAmount = 0;
             account.Cash = account.Amount;
+            account.TotalAmount = account.Amount;
+            account.HoldAmount = 0;
+            account.Profit = 0;
             MySQLDBUtil.Instance.Update<AccountEntity>(account);
         }
     }
