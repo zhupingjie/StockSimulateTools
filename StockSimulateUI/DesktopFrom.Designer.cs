@@ -129,6 +129,7 @@
             this.gridFundStockList = new System.Windows.Forms.DataGridView();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnFouncStock = new System.Windows.Forms.Button();
+            this.btnWebFund = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -1199,6 +1200,7 @@
             // panel4
             // 
             this.panel4.Controls.Add(this.btnFouncStock);
+            this.panel4.Controls.Add(this.btnWebFund);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
@@ -1215,6 +1217,17 @@
             this.btnFouncStock.Text = "关注股票";
             this.btnFouncStock.UseVisualStyleBackColor = false;
             this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
+            // 
+            // btnWebFund
+            // 
+            this.btnWebFund.BackColor = System.Drawing.Color.White;
+            this.btnWebFund.Location = new System.Drawing.Point(71, 3);
+            this.btnWebFund.Name = "btnWebFund";
+            this.btnWebFund.Size = new System.Drawing.Size(64, 23);
+            this.btnWebFund.TabIndex = 1;
+            this.btnWebFund.Text = "在线持仓";
+            this.btnWebFund.UseVisualStyleBackColor = false;
+            this.btnWebFund.Click += new System.EventHandler(this.btnWebFund_Click);
             // 
             // DesktopFrom
             // 
@@ -1387,5 +1400,6 @@
         private System.Windows.Forms.DataGridView gridFundStockList;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnFouncStock;
+        private System.Windows.Forms.Button btnWebFund;
     }
 }

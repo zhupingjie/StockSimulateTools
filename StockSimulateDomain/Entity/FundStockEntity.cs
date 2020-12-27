@@ -21,14 +21,6 @@ namespace StockSimulateDomain.Entity
         [Description("持仓股票名称")]
         public string HoldStockName { get; set; }
 
-        [Description("当前股价")]
-        [NotMapped]
-        public decimal Price { get; set; }
-
-        [Description("浮动(%)")]
-        [NotMapped]
-        public decimal UDPer { get; set; }
-
         [Description("占净值比例(%)")]
         public decimal PositionPer { get; set; }
 

@@ -737,10 +737,6 @@ namespace StockPriceTools
             if (stock == null) return;
 
             var fundStocks = Repository.QueryAll<FundStockEntity>($"StockCode='{stockCode}' and ReportDate='{stock.ReportDate}'", "Seq asc");
-            if (fundStocks.Length == 0) return;
-
-            var stockCodes = fundStocks.GroupBy(c => c.HoldStockCode).Select(c => c.Key).ToArray();
-            var stocks = Repository.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')");
 
             var dt = ObjectUtil.ConvertTable(fundStocks);
             this.gridFundStockList.DataSource = null;
@@ -754,28 +750,6 @@ namespace StockPriceTools
                 else
                 {
                     this.gridFundStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
-                }
-            }
-            for (var i = 0; i < this.gridFundStockList.Rows.Count; i++)
-            {
-                var row = this.gridFundStockList.Rows[i];
-                var holdStockCode = $"{row.Cells["持仓股票代码"].Value}";
-                if (string.IsNullOrEmpty(holdStockCode)) continue;
-
-                var holdStock = stocks.FirstOrDefault(c => c.Code == holdStockCode);
-                if(holdStock != null)
-                {
-                    row.Cells["当前股价"].Value = $"{holdStock.Price}";
-                    row.Cells["浮动(%)"].Value = $"{holdStock.UDPer}";
-
-                    if(holdStock.UDPer> 0)
-                    {
-                        this.gridFundStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
-                    }
-                    else
-                    {
-                        this.gridFundStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
-                    }
                 }
             }
         }
@@ -1075,6 +1049,15 @@ namespace StockPriceTools
                 this.LoadStockList();
             }
         }
+        private void btnWebFund_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            ObjectUtil.OpenBrowserUrl($"https://fundf10.eastmoney.com/ccmx_{stockCode.Substring(2, 6)}.html");
+        }
+
         #endregion
 
         #region 任务栏托盘事件
