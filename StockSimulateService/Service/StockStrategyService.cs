@@ -253,7 +253,8 @@ namespace StockSimulateService.Service
                     SaleAmount = 0,
                     BatchNo = batchNo,
                     StrategyInfoType = typeof(TExchangeStrategyInfo).FullName,
-                    StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
+                    //StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
+                    StrategySource = Newtonsoft.Json.JsonConvert.SerializeObject(strategy)
                 });
             }
             if (strategy.ActualSingleSale < strategy.MaxSingleBS)
@@ -274,7 +275,8 @@ namespace StockSimulateService.Service
                     SaleAmount = salePrice * strategy.BSQty,
                     BatchNo = batchNo,
                     StrategyInfoType = typeof(TExchangeStrategyInfo).FullName,
-                    StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
+                    //StrategySource = ServiceStack.Text.JsonSerializer.SerializeToString(strategy)
+                    StrategySource = Newtonsoft.Json.JsonConvert.SerializeObject(strategy)
                 });
             }
 
@@ -394,8 +396,9 @@ namespace StockSimulateService.Service
         public static StrategyInfo ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
         {
             if (stockStrategy.StrategyInfoType != typeof(TExchangeStrategyInfo).FullName || string.IsNullOrEmpty(stockStrategy.StrategySource)) return null;
-            
-            var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
+
+            //var strategyInfo = ServiceStack.Text.JsonSerializer.DeserializeFromString<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
+            var strategyInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<TExchangeStrategyInfo>(stockStrategy.StrategySource) as TExchangeStrategyInfo;
             if (strategyInfo == null) return null;
 
             if (stockStrategy.BuyQty > 0)

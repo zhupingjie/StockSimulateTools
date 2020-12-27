@@ -258,7 +258,7 @@ namespace StockSimulateService.Utils
                         if (field.Name == "ID") continue;
                         if (field.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
 
-                        sbCol.Append($",{field.Name}");
+                        sbCol.Append($",`{field.Name}`");
 
                         var value = field.GetValue(entity);
                         if (value != null)
@@ -288,7 +288,7 @@ namespace StockSimulateService.Utils
                         }
                     }
 
-                    sql += $"insert into {tableName} (ID {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
+                    sql += $"insert into {tableName} (`ID` {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
                 }
                 cmd.CommandText = sql;
                 try
@@ -352,10 +352,10 @@ namespace StockSimulateService.Utils
                             {
                                 val = value.ToString();
                             }
-                            sb.Append($",{field.Name}='{val}'");
+                            sb.Append($",`{field.Name}`='{val}'");
                         }
                     }
-                    sql += $"update {table} set lastdate='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where ID={entity.ID};";
+                    sql += $"update {table} set `lastdate`='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where `ID`={entity.ID};";
                 }
 
                 cmd.CommandText = sql;
@@ -471,7 +471,7 @@ namespace StockSimulateService.Utils
                 StringBuilder sb = new StringBuilder();
                 foreach (var entity in entitys)
                 {
-                    sb.Append($"delete from {table} where ID='{entity.ID}';");
+                    sb.Append($"delete from {table} where `ID`='{entity.ID}';");
                 }
                 cmd.CommandText = sql =  sb.ToString();
                 try
