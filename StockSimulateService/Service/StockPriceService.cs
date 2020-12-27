@@ -156,12 +156,12 @@ namespace StockSimulateService.Service
                 var yestAvgPrice = nextAverages.FirstOrDefault(c => c.StockCode == stock.Code);
                 if(yestAvgPrice != null)
                 {
-                    stock.LastAvgPrice5 = yestAvgPrice.AvgPrice5;
-                    stock.LastAvgPrice10 = yestAvgPrice.AvgPrice10;
-                    stock.LastAvgPrice20 = yestAvgPrice.AvgPrice20;
-                    stock.LastAvgPrice60 = yestAvgPrice.AvgPrice60;
-                    stock.LastAvgPrice120 = yestAvgPrice.AvgPrice120;
-                    stock.LastAvgPrice250 = yestAvgPrice.AvgPrice250;
+                    stock.Trend5 = GetSingleTrend(stock.Trend5, stockAverage.AvgPrice5, yestAvgPrice.AvgPrice5);
+                    stock.Trend10 = GetSingleTrend(stock.Trend10, stockAverage.AvgPrice10, yestAvgPrice.AvgPrice10);
+                    stock.Trend20 = GetSingleTrend(stock.Trend20, stockAverage.AvgPrice20, yestAvgPrice.AvgPrice20);
+                    stock.Trend60 = GetSingleTrend(stock.Trend60, stockAverage.AvgPrice60, yestAvgPrice.AvgPrice60);
+                    stock.Trend120 = GetSingleTrend(stock.Trend120, stockAverage.AvgPrice120, yestAvgPrice.AvgPrice120);
+                    stock.Trend250 = GetSingleTrend(stock.Trend250, stockAverage.AvgPrice250, yestAvgPrice.AvgPrice250);
                 }
                 //计算当前趋势
                 stock.Trend = GetTrend(stock, stockAverage, yestAvgPrice);
@@ -169,6 +169,18 @@ namespace StockSimulateService.Service
             MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
             MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
             MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+        }
+
+        static string GetSingleTrend(string trend, decimal nowAverage, decimal yestAverage)
+        {
+            if (nowAverage == 0 || yestAverage == 0) return trend;
+
+            if (nowAverage > yestAverage) trend = $"上{trend}";
+            else if (nowAverage < yestAverage) trend = $"下{trend}";
+            else trend = $"平{trend}";
+
+            if (trend.Length > 5) trend = trend.Substring(0, 5);
+            return trend;
         }
 
         /// <summary>
@@ -292,22 +304,37 @@ namespace StockSimulateService.Service
                     stock.AvgPrice120 = nowStockAverage.AvgPrice120;
                     stock.AvgPrice250 = nowStockAverage.AvgPrice250;
                 }
-                var yestStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).OrderByDescending(c => c.DealDate).Skip(1).FirstOrDefault();
-                if (yestStockAverage != null)
+                var allStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).Concat(newStockAverages.Where(c => c.StockCode == stock.Code)).OrderByDescending(c => c.DealDate).Take(6).ToArray();
+                if (allStockAverage.Length > 0)
                 {
-                    stock.LastAvgPrice5 = yestStockAverage.AvgPrice5;
-                    stock.LastAvgPrice10 = yestStockAverage.AvgPrice10;
-                    stock.LastAvgPrice20 = yestStockAverage.AvgPrice20;
-                    stock.LastAvgPrice60 = yestStockAverage.AvgPrice60;
-                    stock.LastAvgPrice120 = yestStockAverage.AvgPrice120;
-                    stock.LastAvgPrice250 = yestStockAverage.AvgPrice250;
+                    stock.Trend5 = GetSingleHidTrend(stock.Trend5, allStockAverage.Select(c => c.AvgPrice5).ToArray());
+                    stock.Trend10 = GetSingleHidTrend(stock.Trend10, allStockAverage.Select(c => c.AvgPrice10).ToArray());
+                    stock.Trend20 = GetSingleHidTrend(stock.Trend20, allStockAverage.Select(c => c.AvgPrice20).ToArray());
+                    stock.Trend60 = GetSingleHidTrend(stock.Trend60, allStockAverage.Select(c => c.AvgPrice60).ToArray());
+                    stock.Trend120 = GetSingleHidTrend(stock.Trend120, allStockAverage.Select(c => c.AvgPrice120).ToArray());
+                    stock.Trend250 = GetSingleHidTrend(stock.Trend250, allStockAverage.Select(c => c.AvgPrice250).ToArray());
                 }
+
                 //计算当前趋势
+                var yestStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).OrderByDescending(c => c.DealDate).Skip(1).FirstOrDefault();
                 stock.Trend = GetTrend(stock, nowStockAverage, yestStockAverage);
             }
-            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
+            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "Trend5", "Trend10", "Trend20", "Trend60", "Trend120", "Trend250" });
             MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
             MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+        }
+
+        static string GetSingleHidTrend(string trend, decimal[] averages)
+        {
+            var arr = averages.Reverse().ToArray();
+            for (var i = 0; i < arr.Length; i++)
+            {
+                if (i + 1 < arr.Length)
+                {
+                    trend = GetSingleTrend(trend, arr[i + 1], arr[i]);
+                }
+            }
+            return trend;
         }
     }
 }

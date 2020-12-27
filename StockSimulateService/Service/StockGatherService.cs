@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using StockSimulateService.Utils;
 using StockSimulateService.Helper;
 using StockSimulateService.Service;
+using StockSimulateService.Config;
 
 namespace StockSimulateNetService.Serivce
 {
@@ -37,32 +38,42 @@ namespace StockSimulateNetService.Serivce
                     //检测自动交易策略 
                     StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
                 }
-
                 actionLog($"已采集[{stock.Name}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
+
+                //采集历史价格数据
+                if (RunningConfig.Instance.DebugMode)
+                {
+                    var gatherCount = GatherHisPriceData(stock.Code);
+                    if (gatherCount > 0)
+                    {
+                        actionLog($"已采集[{stock.Name}]历史股价数据...[{gatherCount}天]");
+                    }
+                }
             }
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
-        public static void GatherHisPriceData()
+        public static int GatherHisPriceData(string stockCode)
         {
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
-            foreach (var stock in stocks)
-            {
-                var stockPrices = EastMoneyUtil.GetStockHisPrice(stock.Code);
-                if (stockPrices == null) continue;
+            var priceIds = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "ID desc", 20, new string[] { "ID" });
+            if (priceIds.Length >= 20) return 0;
 
-                var lastPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}'", "DealDate asc", 1).FirstOrDefault();
-                if (lastPrice == null)
-                {
-                    var newPrices = stockPrices.OrderByDescending(c => c.DealDate).ToArray();
-                    MySQLDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
-                }
-                else
-                {
-                    var lastDate = lastPrice.DealDate;
-                    var newPrices = stockPrices.Where(c => c.DealDate.CompareTo(lastDate) < 0).OrderByDescending(c => c.DealDate).ToArray();
-                    MySQLDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
-                }
+            var stockPrices = EastMoneyUtil.GetStockHisPrice(stockCode);
+            if (stockPrices == null) return 0;
+
+            var lastPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate asc", 1).FirstOrDefault();
+            if (lastPrice == null)
+            {
+                var newPrices = stockPrices.OrderByDescending(c => c.DealDate).ToArray();
+                MySQLDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
+                return newPrices.Length;
+            }
+            else
+            {
+                var lastDate = lastPrice.DealDate;
+                var newPrices = stockPrices.Where(c => c.DealDate.CompareTo(lastDate) < 0).OrderByDescending(c => c.DealDate).ToArray();
+                MySQLDBUtil.Instance.Insert<StockPriceEntity>(newPrices);
+                return newPrices.Length;
             }
         }
 

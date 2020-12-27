@@ -42,6 +42,7 @@ namespace StockSimulateDomain.Entity
         public string Code { get; set; }
 
         [Description("股票名称")]
+        [GatherColumn]
         public string Name { get; set; }
 
         [Description("股价")]
@@ -103,27 +104,27 @@ namespace StockSimulateDomain.Entity
         [Description("250日均价")]
         public decimal AvgPrice250 { get; set; }
 
-        [Description("昨日5日均价")]
+        [Description("5日趋势")]
         [GridColumnIgnore]
-        public decimal LastAvgPrice5 { get; set; }
+        public string Trend5 { get; set; }
 
-        [Description("昨日10日均价")]
+        [Description("10日趋势")]
         [GridColumnIgnore]
-        public decimal LastAvgPrice10 { get; set; }
+        public string Trend10 { get; set; }
 
-        [Description("昨日20日均价")]
+        [Description("20日趋势")]
         [GridColumnIgnore]
-        public decimal LastAvgPrice20 { get; set; }
+        public string Trend20 { get; set; }
 
-        [Description("昨日60日均价")]
+        [Description("60日趋势")]
         [GridColumnIgnore]
-        public decimal LastAvgPrice60 { get; set; }
+        public string Trend60 { get; set; }
 
-        [Description("昨日120日均价")]
-        public decimal LastAvgPrice120 { get; set; }
+        [Description("120日趋势")]
+        public string Trend120 { get; set; }
 
-        [Description("昨日250日均价")]
-        public decimal LastAvgPrice250 { get; set; }
+        [Description("250日趋势")]
+        public string Trend250 { get; set; }
 
         [Description("交易锁定(天)")]
         [GridColumnIgnore]

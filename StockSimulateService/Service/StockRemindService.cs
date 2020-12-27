@@ -397,12 +397,12 @@ namespace StockSimulateService.Service
                 rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 5 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    if ((rd.Target == 5 && stock.AvgPrice5 > stock.LastAvgPrice5 && stock.AvgPrice5 > 0 && stock.LastAvgPrice5 > 0)
-                        || (rd.Target == 10 && stock.AvgPrice10 > stock.LastAvgPrice10 && stock.AvgPrice10 > 0 && stock.LastAvgPrice10 > 0)
-                        || (rd.Target == 20 && stock.AvgPrice20 > stock.LastAvgPrice20 && stock.AvgPrice20 > 0 && stock.LastAvgPrice20 > 0)
-                        || (rd.Target == 60 && stock.AvgPrice60 > stock.LastAvgPrice60 && stock.AvgPrice60 > 0 && stock.LastAvgPrice60 > 0)
-                        || (rd.Target == 120 && stock.AvgPrice120 > stock.LastAvgPrice120 && stock.AvgPrice120 > 0 && stock.LastAvgPrice120 > 0)
-                        || (rd.Target == 250 && stock.AvgPrice250 > stock.LastAvgPrice250 && stock.AvgPrice250 > 0 && stock.LastAvgPrice250 > 0))
+                    if ((rd.Target == 5 && ObjectUtil.CheckTrendReverse(stock.Trend5, true))
+                        || (rd.Target == 10 && ObjectUtil.CheckTrendReverse(stock.Trend10, true))
+                        || (rd.Target == 20 && ObjectUtil.CheckTrendReverse(stock.Trend20, true))
+                        || (rd.Target == 60 && ObjectUtil.CheckTrendReverse(stock.Trend60, true))
+                        || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, true))
+                        || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, true)))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已反转[{remind.Target}]日均线,请注意!";
 
@@ -426,12 +426,12 @@ namespace StockSimulateService.Service
                 rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 6 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    if ((rd.Target == 5 && stock.AvgPrice5 < stock.LastAvgPrice5 && stock.AvgPrice5 > 0 && stock.LastAvgPrice5 > 0)
-                        || (rd.Target == 10 && stock.AvgPrice10 < stock.LastAvgPrice10 && stock.AvgPrice10 > 0 && stock.LastAvgPrice10 > 0)
-                        || (rd.Target == 20 && stock.AvgPrice20 < stock.LastAvgPrice20 && stock.AvgPrice20 > 0 && stock.LastAvgPrice20 > 0)
-                        || (rd.Target == 60 && stock.AvgPrice60 < stock.LastAvgPrice60 && stock.AvgPrice60 > 0 && stock.LastAvgPrice60 > 0)
-                        || (rd.Target == 120 && stock.AvgPrice120 < stock.LastAvgPrice120 && stock.AvgPrice120 > 0 && stock.LastAvgPrice120 > 0)
-                        || (rd.Target == 250 && stock.AvgPrice250 < stock.LastAvgPrice250 && stock.AvgPrice250 > 0 && stock.LastAvgPrice250 > 0))
+                    if ((rd.Target == 5 && ObjectUtil.CheckTrendReverse(stock.Trend5, false))
+                        || (rd.Target == 10 && ObjectUtil.CheckTrendReverse(stock.Trend10, false))
+                        || (rd.Target == 20 && ObjectUtil.CheckTrendReverse(stock.Trend20, false))
+                        || (rd.Target == 60 && ObjectUtil.CheckTrendReverse(stock.Trend60, false))
+                        || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, false))
+                        || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, false)))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已逆转[{remind.Target}]日均线,请注意!";
 

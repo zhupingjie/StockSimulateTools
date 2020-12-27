@@ -1077,9 +1077,12 @@ namespace StockPriceTools
 
         private void DesktopFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.Hide();
-            this.WindowState = FormWindowState.Minimized;
-            e.Cancel = true;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Hide();
+                this.WindowState = FormWindowState.Minimized;
+                e.Cancel = true;
+            }
         }
 
     }

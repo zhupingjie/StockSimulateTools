@@ -342,5 +342,30 @@ namespace StockSimulateService.Utils
                 }
             }
         }
+
+        public static bool CheckTrendReverse(string trend , bool up)
+        {
+            if (string.IsNullOrEmpty(trend)) return false;
+            if (trend.Length < 2) return false;
+
+            var first = "";
+            var next = (up ? "上" : "下");
+            for (int i = 0; i < trend.Length; i++)
+            {
+                var t = trend.Substring(i, 1);
+                if (string.IsNullOrEmpty(first))
+                {
+                    first = t;
+                    if (first != next) return false;
+                }
+                else
+                {
+                    if (t == "平") continue;
+                    else if (t == next) return false;
+                    else return true;
+                }
+            }
+            return false;
+        }
     }
 }
