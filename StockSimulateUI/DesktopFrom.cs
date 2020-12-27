@@ -41,7 +41,7 @@ namespace StockPriceTools
         {
             Task.Factory.StartNew(() =>
             {
-                MySQLDBUtil.Instance.InitDataBase();
+                MySQLDBUtil.Instance.InitDataBase(RC.DBConnectionString);
 
                 while (true)
                 {

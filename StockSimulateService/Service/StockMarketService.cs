@@ -71,7 +71,7 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
-                MySQLDBUtil.Instance.InitDataBase();
+                MySQLDBUtil.Instance.InitDataBase(RC.DBConnectionString);
 
                 while (true)
                 {

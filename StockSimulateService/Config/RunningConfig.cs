@@ -94,17 +94,18 @@ namespace StockSimulateService.Config
         /// </summary>
         public int LoadGlobalConfigInterval { get; set; } = 20;
 
-        public string DBServiceIP { get; set; }
-        public string DBName { get; set; }
-        public string DBUserID { get; set; }
-        public string DBPwd { get; set; }
+        public string DBServiceIP { get; set; } = "121.4.29.105";
+        public string DBName { get; set; } = "stock";
+        public string DBUserID { get; set; } = "root";
+        public string DBPwd { get; set; } = "sa!123456";
         public int DBPort { get; set; } = 3306;
 
+        //Server=121.4.29.105;Database=stock;User Id=root;Password=sa!123456;Pooling=true;Max Pool Size={100};Connect Timeout=20;
         public string DBConnectionString
         {
             get
             {
-                return $"Server={DBServiceIP}:{DBPort};Database={DBName};User Id={DBUserID};Password={DBPwd};Pooling=true;Max Pool Size={100};Connect Timeout=20;MultipleActiveResultSets=True;";
+                return $"Server={DBServiceIP};Database={DBName};User Id={DBUserID};Password={DBPwd};Pooling=true;Max Pool Size={100};Connect Timeout=20;";
             }
         }
     }
