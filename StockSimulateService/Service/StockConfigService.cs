@@ -26,5 +26,24 @@ namespace StockSimulateService.Service
                 }
             }
         }
+
+        public static void LastUpdateTime()
+        {
+            var config = MySQLDBUtil.Instance.QueryFirst<GlobalConfigEntity>($"Name='LastServiceUpdateTime'");
+            if(config == null)
+            {
+                config = new GlobalConfigEntity()
+                {
+                    Name = "LastServiceUpdateTime",
+                    Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+                MySQLDBUtil.Instance.Insert<GlobalConfigEntity>(config);
+            }
+            else
+            {
+                config.Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                MySQLDBUtil.Instance.Update<GlobalConfigEntity>(config);
+            }
+        }
     }
 }

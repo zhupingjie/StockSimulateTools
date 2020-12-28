@@ -47,6 +47,12 @@ namespace StockPriceTools
                 {
                     StockConfigService.LoadGlobalConfig(RC);
 
+                    Action act = delegate ()
+                    {
+                        this.lblCurrentTime.Text = RC.LastServiceUpdateTime;
+                    };
+                    this.Invoke(act);
+
                     Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
                 }
             }, CancellationTokenSource.Token);

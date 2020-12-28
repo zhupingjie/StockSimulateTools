@@ -276,6 +276,10 @@ namespace StockSimulateService.Utils
                             {
                                 val = value.ToString().Replace("'", "''");
                             }
+                            else if(field.PropertyType == typeof(bool))
+                            {
+                                val = ($"{value}" == "True" ? "1" : "0");
+                            }
                             else
                             {
                                 val = value.ToString();

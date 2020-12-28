@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -99,6 +99,11 @@
             this.gridReportList = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnOpenBrower = new System.Windows.Forms.Button();
+            this.tabFundStock = new System.Windows.Forms.TabPage();
+            this.gridFundStockList = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.btnFouncStock = new System.Windows.Forms.Button();
+            this.btnWebFund = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControlLeft = new System.Windows.Forms.TabControl();
             this.tabBaseData = new System.Windows.Forms.TabPage();
@@ -125,11 +130,8 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabFundStock = new System.Windows.Forms.TabPage();
-            this.gridFundStockList = new System.Windows.Forms.DataGridView();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.btnFouncStock = new System.Windows.Forms.Button();
-            this.btnWebFund = new System.Windows.Forms.Button();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.lblCurrentTime = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -166,6 +168,9 @@
             this.tabReport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
             this.panel3.SuspendLayout();
+            this.tabFundStock.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).BeginInit();
+            this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControlLeft.SuspendLayout();
             this.tabBaseData.SuspendLayout();
@@ -173,9 +178,6 @@
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            this.tabFundStock.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).BeginInit();
-            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -310,6 +312,8 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.panel2.Controls.Add(this.lblCurrentTime);
+            this.panel2.Controls.Add(this.panel5);
             this.panel2.Controls.Add(this.lblMessage);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 25);
@@ -622,11 +626,11 @@
             // 
             // chartPrice
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea1);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend1);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -940,6 +944,64 @@
             this.btnOpenBrower.UseVisualStyleBackColor = false;
             this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
             // 
+            // tabFundStock
+            // 
+            this.tabFundStock.Controls.Add(this.gridFundStockList);
+            this.tabFundStock.Controls.Add(this.panel4);
+            this.tabFundStock.Location = new System.Drawing.Point(4, 22);
+            this.tabFundStock.Name = "tabFundStock";
+            this.tabFundStock.Size = new System.Drawing.Size(842, 221);
+            this.tabFundStock.TabIndex = 11;
+            this.tabFundStock.Text = "基金持仓";
+            this.tabFundStock.UseVisualStyleBackColor = true;
+            // 
+            // gridFundStockList
+            // 
+            this.gridFundStockList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridFundStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridFundStockList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridFundStockList.Location = new System.Drawing.Point(0, 29);
+            this.gridFundStockList.MultiSelect = false;
+            this.gridFundStockList.Name = "gridFundStockList";
+            this.gridFundStockList.ReadOnly = true;
+            this.gridFundStockList.RowHeadersWidth = 10;
+            this.gridFundStockList.RowTemplate.Height = 23;
+            this.gridFundStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridFundStockList.Size = new System.Drawing.Size(842, 192);
+            this.gridFundStockList.TabIndex = 51;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.btnFouncStock);
+            this.panel4.Controls.Add(this.btnWebFund);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(842, 29);
+            this.panel4.TabIndex = 52;
+            // 
+            // btnFouncStock
+            // 
+            this.btnFouncStock.BackColor = System.Drawing.Color.White;
+            this.btnFouncStock.Location = new System.Drawing.Point(5, 3);
+            this.btnFouncStock.Name = "btnFouncStock";
+            this.btnFouncStock.Size = new System.Drawing.Size(64, 23);
+            this.btnFouncStock.TabIndex = 0;
+            this.btnFouncStock.Text = "关注股票";
+            this.btnFouncStock.UseVisualStyleBackColor = false;
+            this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
+            // 
+            // btnWebFund
+            // 
+            this.btnWebFund.BackColor = System.Drawing.Color.White;
+            this.btnWebFund.Location = new System.Drawing.Point(71, 3);
+            this.btnWebFund.Name = "btnWebFund";
+            this.btnWebFund.Size = new System.Drawing.Size(64, 23);
+            this.btnWebFund.TabIndex = 1;
+            this.btnWebFund.Text = "在线持仓";
+            this.btnWebFund.UseVisualStyleBackColor = false;
+            this.btnWebFund.Click += new System.EventHandler(this.btnWebFund_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
@@ -1171,63 +1233,24 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // tabFundStock
+            // panel5
             // 
-            this.tabFundStock.Controls.Add(this.gridFundStockList);
-            this.tabFundStock.Controls.Add(this.panel4);
-            this.tabFundStock.Location = new System.Drawing.Point(4, 22);
-            this.tabFundStock.Name = "tabFundStock";
-            this.tabFundStock.Size = new System.Drawing.Size(842, 221);
-            this.tabFundStock.TabIndex = 11;
-            this.tabFundStock.Text = "基金持仓";
-            this.tabFundStock.UseVisualStyleBackColor = true;
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel5.Location = new System.Drawing.Point(1081, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(127, 30);
+            this.panel5.TabIndex = 1;
             // 
-            // gridFundStockList
+            // lblCurrentTime
             // 
-            this.gridFundStockList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridFundStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridFundStockList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridFundStockList.Location = new System.Drawing.Point(0, 29);
-            this.gridFundStockList.MultiSelect = false;
-            this.gridFundStockList.Name = "gridFundStockList";
-            this.gridFundStockList.ReadOnly = true;
-            this.gridFundStockList.RowHeadersWidth = 10;
-            this.gridFundStockList.RowTemplate.Height = 23;
-            this.gridFundStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFundStockList.Size = new System.Drawing.Size(842, 192);
-            this.gridFundStockList.TabIndex = 51;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.btnFouncStock);
-            this.panel4.Controls.Add(this.btnWebFund);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(842, 29);
-            this.panel4.TabIndex = 52;
-            // 
-            // btnFouncStock
-            // 
-            this.btnFouncStock.BackColor = System.Drawing.Color.White;
-            this.btnFouncStock.Location = new System.Drawing.Point(5, 3);
-            this.btnFouncStock.Name = "btnFouncStock";
-            this.btnFouncStock.Size = new System.Drawing.Size(64, 23);
-            this.btnFouncStock.TabIndex = 0;
-            this.btnFouncStock.Text = "关注股票";
-            this.btnFouncStock.UseVisualStyleBackColor = false;
-            this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
-            // 
-            // btnWebFund
-            // 
-            this.btnWebFund.BackColor = System.Drawing.Color.White;
-            this.btnWebFund.Location = new System.Drawing.Point(71, 3);
-            this.btnWebFund.Name = "btnWebFund";
-            this.btnWebFund.Size = new System.Drawing.Size(64, 23);
-            this.btnWebFund.TabIndex = 1;
-            this.btnWebFund.Text = "在线持仓";
-            this.btnWebFund.UseVisualStyleBackColor = false;
-            this.btnWebFund.Click += new System.EventHandler(this.btnWebFund_Click);
+            this.lblCurrentTime.AutoSize = true;
+            this.lblCurrentTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCurrentTime.ForeColor = System.Drawing.Color.Blue;
+            this.lblCurrentTime.Location = new System.Drawing.Point(1040, 4);
+            this.lblCurrentTime.Name = "lblCurrentTime";
+            this.lblCurrentTime.Size = new System.Drawing.Size(163, 21);
+            this.lblCurrentTime.TabIndex = 0;
+            this.lblCurrentTime.Text = "2020-12-28 09:00:00";
             // 
             // DesktopFrom
             // 
@@ -1287,6 +1310,9 @@
             this.tabReport.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.tabFundStock.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
@@ -1294,9 +1320,6 @@
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
-            this.tabFundStock.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).EndInit();
-            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1401,5 +1424,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnFouncStock;
         private System.Windows.Forms.Button btnWebFund;
+        private System.Windows.Forms.Label lblCurrentTime;
+        private System.Windows.Forms.Panel panel5;
     }
 }

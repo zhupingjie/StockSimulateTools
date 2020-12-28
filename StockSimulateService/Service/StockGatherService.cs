@@ -52,6 +52,9 @@ namespace StockSimulateNetService.Serivce
                     }
                 }
             }
+
+            StockConfigService.LastUpdateTime();
+
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
