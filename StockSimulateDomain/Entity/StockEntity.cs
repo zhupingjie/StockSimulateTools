@@ -53,14 +53,15 @@ namespace StockSimulateDomain.Entity
         [GatherColumn]
         public decimal UDPer { get; set; }
 
-        [Description("均线趋势(NSML)")]
-        public string Trend { get; set; }
-
         [Description("安全股价")]
         public decimal Safety { get; set; }
 
         [Description("预测股价")]
         public decimal Target { get; set; }
+
+        [Description("均线趋势(NSML)")]
+        public string Trend { get; set; }
+
 
         [Description("预测增长率(%)")]
         public decimal Growth { get; set; }

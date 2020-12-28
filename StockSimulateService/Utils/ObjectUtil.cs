@@ -2,6 +2,7 @@
 using StockSimulateDomain.Attributes;
 using StockSimulateDomain.Data;
 using StockSimulateDomain.Entity;
+using StockSimulateDomain.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,36 @@ namespace StockSimulateService.Utils
 {
     public class ObjectUtil
     {
+        public static EntityPropertyInfo[] GetGridDataColumns<TEntity>(bool withId = true) where TEntity : BaseEntity
+        {
+            var columns = new List<EntityPropertyInfo>();
+            var preps = typeof(TEntity).GetProperties();
+            if (withId)
+            {
+                columns.Add(new EntityPropertyInfo()
+                {
+                    Name = "ID",
+                    Description = "序"
+                });
+            }
+            foreach (var prep in preps)
+            {
+                if (prep.Name == "ID") continue;
+                if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
+
+                var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
+                if (attr != null)
+                {
+                    columns.Add(new EntityPropertyInfo()
+                    {
+                        Name = prep.Name,
+                        Description = attr.Description,
+                        Type = prep.PropertyType
+                    });
+                }
+            }
+            return columns.ToArray();
+        }
         public static DataTable ConvertTable<TEntity>(TEntity[] entitys, bool withId = false) where TEntity : BaseEntity
         {
             var dt = new DataTable();
