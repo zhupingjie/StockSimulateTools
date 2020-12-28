@@ -302,7 +302,7 @@ namespace StockSimulateService.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error(ex, $"SQL:{sql}");
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
                     return false;
                 }
                 finally
@@ -370,7 +370,7 @@ namespace StockSimulateService.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error(ex, $"SQL:{sql}");
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
                     return false;
                 }
                 finally
@@ -453,7 +453,7 @@ namespace StockSimulateService.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error(ex, $"SQL:{sql}");
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
                     return lst.ToArray();
                 }
                 finally
@@ -485,7 +485,7 @@ namespace StockSimulateService.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error(ex, $"SQL:{sql}");
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
                     return false;
                 }
                 finally
@@ -511,7 +511,7 @@ namespace StockSimulateService.Utils
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error(ex, $"SQL:{sql}");
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
                     return false;
                 }
                 finally
