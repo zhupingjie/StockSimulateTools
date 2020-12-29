@@ -7,8 +7,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -32,8 +33,8 @@ namespace StockSimulateService.Service
             }
             if (saveStrategy)
             {
-                MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
-                MySQLDBUtil.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
+                Repository.Instance.Delete<StockStrategyEntity>($"StockCode='{strategy.StockCode}'");
+                Repository.Instance.Insert<StockStrategyEntity>(stockStrategys.ToArray());
             }
             return stockStrategys.ToArray();
         }
@@ -42,10 +43,10 @@ namespace StockSimulateService.Service
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
             if (account == null) return stockStrategys;
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
             if (stock == null) return stockStrategys;
 
             var decNum = stock.Type == 0 ? 2 : 3;
@@ -177,7 +178,7 @@ namespace StockSimulateService.Service
 
             if (makeRemind)
             {
-                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
 
                 //创建买点提醒
                 var remindStrategy = stockStrategys.Where(c => c.ExecuteMode == 0 && c.BuyQty > 0 && c.Price <= stock.Price).OrderByDescending(c=>c.Price).FirstOrDefault();
@@ -195,7 +196,7 @@ namespace StockSimulateService.Service
                     };
                     remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                     remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                    MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
+                    Repository.Instance.Insert<RemindEntity>(remind);
                 }
                 else
                 {
@@ -215,7 +216,7 @@ namespace StockSimulateService.Service
                         };
                         remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                         remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                        MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
+                        Repository.Instance.Insert<RemindEntity>(remind);
                     }
                 }
             }
@@ -225,10 +226,10 @@ namespace StockSimulateService.Service
         {
             var stockStrategys = new List<StockStrategyEntity>();
 
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{strategy.AccountName}'");
             if (account == null) return stockStrategys;
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{strategy.StockCode}'");
             if (stock == null) return stockStrategys;
 
             var batchNo = DateTime.Now.Ticks.ToString();
@@ -282,7 +283,7 @@ namespace StockSimulateService.Service
 
             if (makeRemind)
             {
-                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{strategy.StockCode}' and (RType={8} or RType={9})");
 
                 var stockReminds = stockStrategys.Where(c => c.ExecuteMode == 0 && (c.BuyQty > 0 || c.SaleQty > 0)).ToArray();
                 foreach (var detail in stockReminds)
@@ -299,7 +300,7 @@ namespace StockSimulateService.Service
                     };
                     remind.MaxPrice = Math.Round(remind.Target * (1 + RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
                     remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100), decNum);
-                    MySQLDBUtil.Instance.Insert<RemindEntity>(remind);
+                    Repository.Instance.Insert<RemindEntity>(remind);
                 }
             }
             return stockStrategys;
@@ -319,17 +320,17 @@ namespace StockSimulateService.Service
 
         public static void Mark(string stockCode, int[] ids)
         {
-            var stockStrategys = MySQLDBUtil.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}' and ExecuteOK !=1 and ID in ({string.Join(",", ids)})");
+            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}' and ExecuteOK !=1 and ID in ({string.Join(",", ids)})");
             foreach (var item in stockStrategys)
             {
                 item.ExecuteOK = 1;
             }
-            MySQLDBUtil.Instance.Update<StockStrategyEntity>(stockStrategys);
+            Repository.Instance.Update<StockStrategyEntity>(stockStrategys);
         }
 
         public static void Cancel(string stockCode, int[] ids)
         {
-            MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}' and ID in ({string.Join(",", ids)})");
+            Repository.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}' and ID in ({string.Join(",", ids)})");
         }
 
         /// <summary>
@@ -341,7 +342,7 @@ namespace StockSimulateService.Service
         /// <param name="accountName"></param>
         public static void CheckRun(string stockCode, decimal stockPrice, DateTime dealTime, string accountName = "")
         {
-            var stockStrategys = MySQLDBUtil.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
+            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
 
             var runStrategys = stockStrategys.Where(c => (c.AccountName == accountName || string.IsNullOrEmpty(accountName)) 
                     && c.ExecuteOK != 1
@@ -390,7 +391,7 @@ namespace StockSimulateService.Service
                 item.ExecuteOK = result.Success ? 1 : 2;
                 item.Message = result.Message;
             }
-            MySQLDBUtil.Instance.Update<StockStrategyEntity>(runStrategys);
+            Repository.Instance.Update<StockStrategyEntity>(runStrategys);
         }
 
         public static StrategyInfo ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)
@@ -412,10 +413,10 @@ namespace StockSimulateService.Service
                 if (StockExchangeService.CouldBuy(exchangeInfo))
                 {
                     var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
-                    MySQLDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                    Repository.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
 
                     //删除批策略号的对立数据
-                    MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    Repository.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
                 }
             }
             if (stockStrategy.SaleQty > 0)
@@ -429,10 +430,10 @@ namespace StockSimulateService.Service
                 if (StockExchangeService.CouldSale(exchangeInfo))
                 {
                     var nextStrategys = StockStrategyService.MakeTExchangeStrategys(strategyInfo, true);
-                    MySQLDBUtil.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
+                    Repository.Instance.Insert<StockStrategyEntity>(nextStrategys.ToArray());
 
                     //删除批策略号的对立数据
-                    MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
+                    Repository.Instance.Delete<StockStrategyEntity>($"BatchNo='{stockStrategy.BatchNo}' and ID<>{stockStrategy.ID}");
                 }
             }
             return strategyInfo;

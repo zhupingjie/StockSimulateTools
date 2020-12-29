@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
 using StockSimulateDomain.Model;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -14,12 +15,12 @@ namespace StockSimulateService.Service
     {
         public static void Create(string accountName, string strUPPer)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
-            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='批量设置' and RType=0");
+            Repository.Instance.Delete<RemindEntity>($"StrategyName='批量设置' and RType=0");
 
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
             {
                 Create(account, stock, new RemindInfo()
@@ -31,10 +32,10 @@ namespace StockSimulateService.Service
 
         public static void Create(RemindInfo remindInfo, bool batchCreate = false)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{remindInfo.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{remindInfo.AccountName}'");
             if (account == null) return;
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
             if (stock == null) return;
 
             Create(account, stock, remindInfo, batchCreate);
@@ -49,7 +50,7 @@ namespace StockSimulateService.Service
             {
                 if (!batchCreate)
                 {
-                    MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
+                    Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
                 }
                 var udPers = ObjectUtil.GetSplitArray(remindInfo.UDPer, ",");
                 foreach (var udPer in udPers)
@@ -72,7 +73,7 @@ namespace StockSimulateService.Service
             }
             if (!string.IsNullOrEmpty(remindInfo.UpPrice))
             {
-                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=1");
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=1");
 
                 var upPrices = ObjectUtil.GetSplitArray(remindInfo.UpPrice, ",");
                 foreach (var upPrice in upPrices)
@@ -98,7 +99,7 @@ namespace StockSimulateService.Service
             }
             if (!string.IsNullOrEmpty(remindInfo.DownPrice))
             {
-                MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=2");
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=2");
 
                 var downPrices = ObjectUtil.GetSplitArray(remindInfo.DownPrice, ",");
                 foreach (var downPrice in downPrices)
@@ -206,15 +207,15 @@ namespace StockSimulateService.Service
                     reminds.Add(remind);
                 }
             }
-            MySQLDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
+            Repository.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
         public static void AutoCreate(string accountName)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
             var reminds = new List<RemindEntity>();
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
@@ -233,32 +234,32 @@ namespace StockSimulateService.Service
                 remind.MinPrice = Math.Round(remind.Target * (1 - RunningConfig.Instance.RemindStockPriceFloatPer / 100m), decNum);
                 reminds.Add(remind);
             }
-            MySQLDBUtil.Instance.Delete<RemindEntity>($"StrategyName='自动设置' and RType=2");
-            MySQLDBUtil.Instance.Insert<RemindEntity>(reminds.ToArray());
+            Repository.Instance.Delete<RemindEntity>($"StrategyName='自动设置' and RType=2");
+            Repository.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
 
         public static void Mark(string stockCode, int[] ids)
         {
-            var reminds = MySQLDBUtil.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}' and Handled=0 and ID in ({string.Join(",", ids)})");
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}' and Handled=0 and ID in ({string.Join(",", ids)})");
             foreach (var remind in reminds)
             {
                 remind.Handled = 1;
             }
-            MySQLDBUtil.Instance.Delete<RemindEntity>(reminds);
+            Repository.Instance.Delete<RemindEntity>(reminds);
         }
 
         public static void Cancel(string stockCode, int[] ids)
         {
-            MySQLDBUtil.Instance.Delete<RemindEntity>($"StockCode='{stockCode}'  and ID in ({string.Join(",", ids)})");
+            Repository.Instance.Delete<RemindEntity>($"StockCode='{stockCode}'  and ID in ({string.Join(",", ids)})");
         }
 
         public static void CheckAutoRun(Action<string> action)
         {
-            var reminds = MySQLDBUtil.Instance.QueryAll<RemindEntity>($"Handled=0");
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"Handled=0");
             var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
             if (stockCodes.Length == 0) return;
 
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0 and LastDate>='{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0 and LastDate>='{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
 
             foreach (var stock in stocks)
             {
@@ -268,7 +269,7 @@ namespace StockSimulateService.Service
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                    Repository.Instance.Update<RemindEntity>(remind);
 
                     var nextRemind = new RemindEntity()
                     {
@@ -281,7 +282,7 @@ namespace StockSimulateService.Service
                         StrategyTarget = remind.StrategyTarget,
                         PlanRemind = DateTime.Now.Date.AddDays(1)
                     };
-                    MySQLDBUtil.Instance.Insert<RemindEntity>(nextRemind);
+                    Repository.Instance.Insert<RemindEntity>(nextRemind);
 
                     var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已{(stock.UDPer > 0 ? "上涨" : "下跌")}超过幅度[{remind.Target}%],请注意!";
 
@@ -314,7 +315,7 @@ namespace StockSimulateService.Service
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                    Repository.Instance.Update<RemindEntity>(remind);
                 }
 
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 2 && c.Target >= stock.Price);
@@ -335,7 +336,7 @@ namespace StockSimulateService.Service
                     remind.Handled = 1;
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                    Repository.Instance.Update<RemindEntity>(remind);
                 }
 
                 var rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 3 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
@@ -363,7 +364,7 @@ namespace StockSimulateService.Service
                         rd.Handled = 1;
                         rd.LastRemind = DateTime.Now;
                         rd.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
+                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -392,7 +393,7 @@ namespace StockSimulateService.Service
                         rd.Handled = 1;
                         rd.LastRemind = DateTime.Now;
                         rd.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
+                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -421,7 +422,7 @@ namespace StockSimulateService.Service
                         rd.Handled = 1;
                         rd.LastRemind = DateTime.Now;
                         rd.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
+                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -450,7 +451,7 @@ namespace StockSimulateService.Service
                         rd.Handled = 1;
                         rd.LastRemind = DateTime.Now;
                         rd.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
+                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -471,7 +472,7 @@ namespace StockSimulateService.Service
 
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                    Repository.Instance.Update<RemindEntity>(remind);
                 }
 
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 9 && c.MinPrice <= stock.Price && c.Handled == 0 && (!c.LastRemind.HasValue || c.LastRemind < DateTime.Now.Date));
@@ -491,7 +492,7 @@ namespace StockSimulateService.Service
 
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
-                    MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                    Repository.Instance.Update<RemindEntity>(remind);
                 }
             }
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StockSimulateService.Utils
+namespace StockSimulateCore.Utils
 {
     public class TypeUtil
     {

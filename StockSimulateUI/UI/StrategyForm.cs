@@ -2,7 +2,6 @@
 using StockSimulateService.Service;
 using StockSimulateDomain.Entity;
 using StockSimulateDomain.Model;
-using StockSimulateService.Service;
 using StockSimulateUI.UC;
 using System;
 using System.Collections.Generic;
@@ -13,8 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
 
 namespace StockSimulateUI.UI
 {

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -12,7 +13,7 @@ namespace StockSimulateService.Service
     {
         public static void MakeCheckStrategyRun(string accountName, string stockCode, decimal stockPrice, DateTime dealTime)
         {
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
             var price = new StockPriceEntity()
@@ -29,7 +30,7 @@ namespace StockSimulateService.Service
                 Debug = 1
             };
             price.UDPer = Math.Round((stockPrice - stock.Price) / stock.Price * 100, stock.Type == 0 ? 2 : 3);
-            MySQLDBUtil.Instance.Insert<StockPriceEntity>(price);
+            Repository.Instance.Insert<StockPriceEntity>(price);
 
             StockStrategyService.CheckRun(stockCode, stockPrice, dealTime, accountName);
             StockPriceService.CalculateProfit(accountName, stockCode, stockPrice);
@@ -37,12 +38,12 @@ namespace StockSimulateService.Service
 
         public static void ClearDeugData(string accountName, string stockCode)
         {
-            MySQLDBUtil.Instance.Delete<StockPriceEntity>($"Debug=1");
-            MySQLDBUtil.Instance.Delete<ExchangeOrderEntity>($"AccountName='{accountName}'");
-            MySQLDBUtil.Instance.Delete<AccountStockEntity>($"AccountName='{accountName}'");
-            MySQLDBUtil.Instance.Delete<StockStrategyEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
+            Repository.Instance.Delete<StockPriceEntity>($"Debug=1");
+            Repository.Instance.Delete<ExchangeOrderEntity>($"AccountName='{accountName}'");
+            Repository.Instance.Delete<AccountStockEntity>($"AccountName='{accountName}'");
+            Repository.Instance.Delete<StockStrategyEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
 
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
             account.BuyAmount = 0;
@@ -50,7 +51,7 @@ namespace StockSimulateService.Service
             account.TotalAmount = account.Amount;
             account.HoldAmount = 0;
             account.Profit = 0;
-            MySQLDBUtil.Instance.Update<AccountEntity>(account);
+            Repository.Instance.Update<AccountEntity>(account);
         }
     }
 }

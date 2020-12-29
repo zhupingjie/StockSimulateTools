@@ -14,15 +14,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
 using StockSimulateDomain.Data;
+using StockSimulateCore.Data;
 
 namespace StockPriceTools
 {
     public partial class DesktopFrom : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         private CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private RunningConfig RC = RunningConfig.Instance;
         private Dictionary<Type, BaseEntity[]> DataSource = new Dictionary<Type, BaseEntity[]>();
@@ -45,7 +45,7 @@ namespace StockPriceTools
         {
             Task.Factory.StartNew(() =>
             {
-                MySQLDBUtil.Instance.InitDataBase(RC.DBConnectionString);
+                Repository.Instance.InitDataBase();
 
                 while (true)
                 {
@@ -238,7 +238,7 @@ namespace StockPriceTools
 
         void LoadAccountStockList()
         {
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{RC.CurrentAccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{RC.CurrentAccountName}'");
             if (account == null)
             {
                 this.lblAccountStockInfo.Text = $"当前交易账户未设置";
@@ -250,7 +250,7 @@ namespace StockPriceTools
             if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
             if (this.txtHoldQty.Checked) where += " and HoldQty>0";
 
-            var accountStocks = Repository.QueryAll<AccountStockEntity>(where);
+            var accountStocks = Repository.Instance.QueryAll<AccountStockEntity>(where);
             var dt = ObjectUtil.ConvertTable(accountStocks);
             this.gridAccountStockList.DataSource = null;
             this.gridAccountStockList.DataSource = dt.DefaultView;
@@ -388,7 +388,7 @@ namespace StockPriceTools
         {
             this.lstBaseInfo.Items.Clear();
 
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
             var preps = typeof(StockEntity).GetProperties();
@@ -414,14 +414,14 @@ namespace StockPriceTools
 
         void LoadMessageInfo()
         {
-            var messages = Repository.QueryAll<MessageEntity>($"Handled=0 and NoticeTime<='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' and ReadTime is null", "ID asc");
+            var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and NoticeTime<='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' and ReadTime is null", "ID asc");
             foreach(var message in messages)
             {
                 message.ReadTime = DateTime.Now;
 
                 this.ActionLog(message.Title);
             }
-            Repository.Update<MessageEntity>(messages);
+            Repository.Instance.Update<MessageEntity>(messages);
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace StockPriceTools
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
             var text = $"【{stockName}】分时图";
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock != null)
             {
                 text += "【";
@@ -500,13 +500,13 @@ namespace StockPriceTools
             if (dateType == 0) startDate = startDate.AddMonths(-1);
             else
             {
-                var lastDate = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "DealDate Desc", 1).FirstOrDefault();
+                var lastDate = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "DealDate Desc", 1).FirstOrDefault();
                 if (lastDate != null)
                 {
                     startDate = DateTime.Parse(lastDate.DealDate);
                 }
             }
-            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
+            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType} and DealDate>='{startDate.ToString("yyyy-MM-dd")}'", "ID desc");
             stockPrices = stockPrices.OrderBy(c => c.DealDate).ToArray();
 
             this.BindChartSeriesPoints(series, stockPrices, dateType, startDate);
@@ -572,7 +572,7 @@ namespace StockPriceTools
 
         void LoadPriceList(string stockCode)
         {
-            var stockPrices = Repository.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 60);
+            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 60);
             var dt = ObjectUtil.ConvertTable(stockPrices);
             this.gridPriceList.DataSource = null;
             this.gridPriceList.DataSource = dt.DefaultView;
@@ -604,7 +604,7 @@ namespace StockPriceTools
 
         void LoadStockStrategyList(string stockCode)
         {
-            var strategyDetails = Repository.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'", "ID asc");
+            var strategyDetails = Repository.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}'", "ID asc");
             var dt = ObjectUtil.ConvertTable(strategyDetails, true);
             this.gridStockStrategyList.DataSource = null;
             this.gridStockStrategyList.DataSource = dt.DefaultView;
@@ -640,7 +640,7 @@ namespace StockPriceTools
 
         void LoadRemindList(string stockCode)
         {
-            var reminds = Repository.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "ID desc", 60);
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "ID desc", 60);
             var dt = ObjectUtil.ConvertTable(reminds, true);
             this.gridRemindList.DataSource = null;
             this.gridRemindList.DataSource = dt.DefaultView;
@@ -672,7 +672,7 @@ namespace StockPriceTools
 
         void LoadExchangeList(string stockCode)
         {
-            var exchangeOrders = Repository.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ID desc", 60);
+            var exchangeOrders = Repository.Instance.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ID desc", 60);
             var dt = ObjectUtil.ConvertTable(exchangeOrders);
             this.gridExchangeList.DataSource = null;
             this.gridExchangeList.DataSource = dt.DefaultView;
@@ -691,7 +691,7 @@ namespace StockPriceTools
 
         void LoadReportList(string stockCode)
         {
-            var reports = Repository.QueryAll<ReportEntity>($"StockCode='{stockCode}'", "PublishDate desc", 60);
+            var reports = Repository.Instance.QueryAll<ReportEntity>($"StockCode='{stockCode}'", "PublishDate desc", 60);
             var dt = ObjectUtil.ConvertTable(reports);
             this.gridReportList.DataSource = null;
             this.gridReportList.DataSource = dt.DefaultView;
@@ -711,10 +711,10 @@ namespace StockPriceTools
 
         void LoadFundStockList(string stockCode)
         {
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
-            var fundStocks = Repository.QueryAll<FundStockEntity>($"StockCode='{stockCode}' and ReportDate='{stock.ReportDate}'", "Seq asc");
+            var fundStocks = Repository.Instance.QueryAll<FundStockEntity>($"StockCode='{stockCode}' and ReportDate='{stock.ReportDate}'", "Seq asc");
 
             var dt = ObjectUtil.ConvertTable(fundStocks);
             this.gridFundStockList.DataSource = null;
@@ -1006,7 +1006,7 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var pdfCode = $"{selectRow.Cells["编号"].Value}";
 
-            var report = Repository.QueryFirst<ReportEntity>($"StockCode='{stockCode}' and PdfCode='{pdfCode}'");
+            var report = Repository.Instance.QueryFirst<ReportEntity>($"StockCode='{stockCode}' and PdfCode='{pdfCode}'");
             if (report == null) return;
 
             ObjectUtil.OpenBrowserUrl(report.PdfUrl);
@@ -1140,7 +1140,7 @@ namespace StockPriceTools
 
         T[] GetDataSource<T>(string filter, string orderBy = "ID desc") where T : BaseEntity, new()
         {
-            var entitys = Repository.QueryAll<T>(filter, orderBy);
+            var entitys = Repository.Instance.QueryAll<T>(filter, orderBy);
             if (this.DataSource.ContainsKey(typeof(T)))
             {
                 this.DataSource[typeof(T)] = entitys;

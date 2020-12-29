@@ -1,13 +1,14 @@
-﻿using StockSimulateService.Utils;
+﻿using StockSimulateCore.Utils;
 using StockSimulateNetService.Serivce;
 using StockSimulateService.Service;
-using StockSimulateService.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -71,7 +72,7 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
-                MySQLDBUtil.Instance.InitDataBase(RC.DBConnectionString);
+                Repository.Instance.InitDataBase();
 
                 while (true)
                 {

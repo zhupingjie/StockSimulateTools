@@ -1,11 +1,12 @@
 ﻿using StockSimulateDomain.Entity;
-using StockSimulateService.Utils;
+using StockSimulateCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Config;
+using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -13,7 +14,7 @@ namespace StockSimulateService.Service
     {
         public static void LoadGlobalConfig(RunningConfig rc)
         {
-            var configs = MySQLDBUtil.Instance.QueryAll<GlobalConfigEntity>();
+            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>();
             foreach (var config in configs)
             {
                 var prepInfo = ObjectUtil.GetPropertyInfo(rc, config.Name);
@@ -29,7 +30,7 @@ namespace StockSimulateService.Service
 
         public static void LastUpdateTime()
         {
-            var config = MySQLDBUtil.Instance.QueryFirst<GlobalConfigEntity>($"Name='LastServiceUpdateTime'");
+            var config = Repository.Instance.QueryFirst<GlobalConfigEntity>($"Name='LastServiceUpdateTime'");
             if(config == null)
             {
                 config = new GlobalConfigEntity()
@@ -37,12 +38,12 @@ namespace StockSimulateService.Service
                     Name = "LastServiceUpdateTime",
                     Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                MySQLDBUtil.Instance.Insert<GlobalConfigEntity>(config);
+                Repository.Instance.Insert<GlobalConfigEntity>(config);
             }
             else
             {
                 config.Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                MySQLDBUtil.Instance.Update<GlobalConfigEntity>(config);
+                Repository.Instance.Update<GlobalConfigEntity>(config);
             }
         }
     }

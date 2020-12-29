@@ -1,4 +1,4 @@
-﻿using StockSimulateService.Config;
+﻿using StockSimulateCore.Config;
 using System;
 using System.IO;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StockSimulateService.Utils
+namespace StockSimulateCore.Utils
 {
     public class MailUtil
     {

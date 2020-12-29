@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateService.Config
+namespace StockSimulateCore.Config
 {
     public class RunningConfig
     {

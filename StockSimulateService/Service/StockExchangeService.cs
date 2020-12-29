@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -14,10 +15,10 @@ namespace StockSimulateService.Service
     {
         public static bool CouldBuy(ExchangeInfo exchangeInfo)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null) return false;
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null) return false;
 
             var buyAmount = exchangeInfo.Qty * exchangeInfo.Price;
@@ -30,7 +31,7 @@ namespace StockSimulateService.Service
         {
             var result = new ExchangeResultInfo();
 
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if(account == null)
             {
                 result.Success = false;
@@ -38,7 +39,7 @@ namespace StockSimulateService.Service
                 return result;
             }
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null)
             {
                 result.Success = false;
@@ -54,7 +55,7 @@ namespace StockSimulateService.Service
                 return result;
             }
 
-            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = Repository.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             var holdQty = exchangeInfo.Qty;
             var totalAmount = buyAmount;
             if (accountStock != null)
@@ -85,18 +86,18 @@ namespace StockSimulateService.Service
             }
             else
             {
-                var stockStrategy = MySQLDBUtil.Instance.QueryFirst<StockStrategyEntity>($"AccountName='{exchange.AccountName}' and StockCode='{exchange.StockCode}' and StrategyName='{exchange.Strategy}' and Target='{exchange.Target}'");
+                var stockStrategy = Repository.Instance.QueryFirst<StockStrategyEntity>($"AccountName='{exchange.AccountName}' and StockCode='{exchange.StockCode}' and StrategyName='{exchange.Strategy}' and Target='{exchange.Target}'");
                 if (stockStrategy != null)
                 {
                     StockStrategyService.ExchangeRun(stockStrategy, exchangeInfo);
                 }
             }
 
-            MySQLDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
+            Repository.Instance.Insert<ExchangeOrderEntity>(exchange);
 
             account.BuyAmount += exchange.Amount;
             account.Cash -= exchange.Amount;
-            MySQLDBUtil.Instance.Update<AccountEntity>(account);
+            Repository.Instance.Update<AccountEntity>(account);
 
             if (accountStock == null)
             {
@@ -114,7 +115,7 @@ namespace StockSimulateService.Service
                     accountStock.LockQty = exchangeInfo.Qty;
                     accountStock.LockDate = exchangeInfo.ExchangeTime.Date;
                 }
-                MySQLDBUtil.Instance.Insert<AccountStockEntity>(accountStock);
+                Repository.Instance.Insert<AccountStockEntity>(accountStock);
             }
             else
             {
@@ -136,7 +137,7 @@ namespace StockSimulateService.Service
                         }
                     }
                 }
-                MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
+                Repository.Instance.Update<AccountStockEntity>(accountStock);
             }
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]买入[{stock.Name}]{exchange.Qty}股({exchange.Price})合计{exchange.Amount}元,请注意!";
             MailUtil.SendMailAsync(new SenderMailConfig(), message, message, account.Email);
@@ -145,13 +146,13 @@ namespace StockSimulateService.Service
 
         public static bool CouldSale(ExchangeInfo exchangeInfo)
         {
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null) return false;
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null) return false;
 
-            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = Repository.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             if (accountStock == null) return false;
 
             var couldQty = accountStock.HoldQty;
@@ -165,7 +166,7 @@ namespace StockSimulateService.Service
         {
             var result = new ExchangeResultInfo();
 
-            var account = MySQLDBUtil.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{exchangeInfo.AccountName}'");
             if (account == null)
             {
                 result.Success = false;
@@ -173,7 +174,7 @@ namespace StockSimulateService.Service
                 return result;
             }
 
-            var stock = MySQLDBUtil.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{exchangeInfo.StockCode}'");
             if (stock == null)
             {
                 result.Success = false;
@@ -182,7 +183,7 @@ namespace StockSimulateService.Service
             }
 
             var decNum = stock.Type == 0 ? 2 : 3;
-            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
+            var accountStock = Repository.Instance.QueryFirst<AccountStockEntity>($"AccountName='{exchangeInfo.AccountName}' and StockCode='{exchangeInfo.StockCode}'");
             if (accountStock == null)
             {
                 result.Success = false;
@@ -222,11 +223,11 @@ namespace StockSimulateService.Service
             if (string.IsNullOrEmpty(exchange.Strategy)) exchange.Strategy = "临时";
             if (string.IsNullOrEmpty(exchange.Target)) exchange.Target = $"{(stock.UDPer > 0 ? "上涨" : "下跌")}{stock.UDPer}%";
 
-            MySQLDBUtil.Instance.Insert<ExchangeOrderEntity>(exchange);
+            Repository.Instance.Insert<ExchangeOrderEntity>(exchange);
 
             account.BuyAmount -= exchange.Amount;
             account.Cash += exchange.Amount;
-            MySQLDBUtil.Instance.Update<AccountEntity>(account);
+            Repository.Instance.Update<AccountEntity>(account);
 
             accountStock.HoldQty  = holdQty;
             accountStock.TotalAmount = totalAmount;
@@ -238,7 +239,7 @@ namespace StockSimulateService.Service
             {
                 accountStock.Cost = Math.Round(accountStock.TotalAmount / accountStock.HoldQty, 2);
             }
-            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
+            Repository.Instance.Update<AccountStockEntity>(accountStock);
 
             var message = $"交易账户[{account.Name}]按策略[{exchange.Strategy}-{exchange.Target}]卖出[{stock.Name}][{exchange.Qty}]股({exchange.Price})合计{exchange.Amount}元,请注意!";
             MailUtil.SendMailAsync(new SenderMailConfig(), message, message, account.Email);

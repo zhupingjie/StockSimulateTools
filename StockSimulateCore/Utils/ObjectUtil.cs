@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockSimulateService.Utils
+namespace StockSimulateCore.Utils
 {
     public class ObjectUtil
     {
@@ -89,6 +89,80 @@ namespace StockSimulateService.Utils
                 dt.Rows.Add(dr);
             }
             return dt;
+        }
+
+        public static string GetEntityTypeName<TEntity>() where TEntity : BaseEntity
+        {
+            return GetEntityTypeName(typeof(TEntity));
+        }
+        public static string GetEntityTypeName(Type type)
+        {
+            return type.Name.Replace("Entity", "");
+        }
+        public static Type[] FindEntityTypes()
+        {
+            var entityTypes = new List<Type>();
+
+            var assmblies = LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, x => x.Name.Contains("StockSimulate"));
+            foreach (var assbm in assmblies)
+            {
+                foreach (var type in assbm.GetTypes())
+                {
+                    if (typeof(BaseEntity).IsAssignableFrom(type) && !type.Equals(typeof(BaseEntity)))
+                    {
+                        entityTypes.Add(type);
+                    }
+                }
+            }
+            return entityTypes.ToArray();
+        }
+
+        public static IList<Assembly> LoadAssemblies(string folderName, Func<FileInfo, bool> filter = null)
+        {
+            if (filter == null) filter = f => f.Length > 0;
+
+            var pathInfo = new DirectoryInfo(folderName);
+            return pathInfo.GetFiles("*.dll", SearchOption.AllDirectories)
+                           .Where(filter)
+                           .Select(f => Assembly.LoadFrom(f.FullName))
+                           .ToList();
+        }
+
+        public static DBColumn GetDBColumnType(string name, Type type)
+        {
+            var colType = "nvarchar";
+            var length = 0;
+            var decLength = 0;
+            if (type.Name.Contains("String"))
+            {
+                colType = "nvarchar";
+                length = 200;
+            }
+            else if (type.Name.Contains("Decimal"))
+            {
+                colType = "decimal";
+                length = 18;
+                decLength = 2;
+            }
+            else if (type.Name.Contains("DateTime"))
+            {
+                colType = "datetime";
+            }
+            else if (TypeUtil.IsNullableType(type) && TypeUtil.GetNullableType(type) == typeof(DateTime))
+            {
+                colType = "datetime";
+            }
+            if (type.Name.Contains("Int"))
+            {
+                colType = "int";
+                length = 11;
+            }
+            if (type.Name.Contains("Bool"))
+            {
+                colType = "bool";
+            }
+
+            return new DBColumn(name, colType, length, decLength);
         }
 
         public static object GetPropertyValue(object obj, string propertyName)

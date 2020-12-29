@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateService.Utils;
-using StockSimulateService.Config;
+using StockSimulateCore.Utils;
+using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class ConfigForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public ConfigForm()
         {
             InitializeComponent();
@@ -39,7 +39,7 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.LoadGlobalConfigInterval = ObjectUtil.ToValue<int>(this.txtLoadGlobalConfigInterval.Text, 0);
             RunningConfig.Instance.CurrentAccountName = this.txtAccount.Text;
 
-            var configs = Repository.QueryAll<GlobalConfigEntity>();
+            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>();
             var dic = ObjectUtil.GetPropertyValues(RunningConfig.Instance, true);
             foreach(var item in dic)
             {
@@ -51,12 +51,12 @@ namespace StockSimulateUI.UI
                         Name = item.Key,
                         Value = $"{item.Value}"
                     };
-                    Repository.Insert<GlobalConfigEntity>(config);
+                    Repository.Instance.Insert<GlobalConfigEntity>(config);
                 }
                 else
                 {
                     config.Value = $"{item.Value}";
-                    Repository.Update<GlobalConfigEntity>(config);
+                    Repository.Instance.Update<GlobalConfigEntity>(config);
                 }
             }
             this.DialogResult = DialogResult.OK;
@@ -65,7 +65,7 @@ namespace StockSimulateUI.UI
 
         private void ConfigForm_Load(object sender, EventArgs e)
         {
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtAccount.Items.Clear();

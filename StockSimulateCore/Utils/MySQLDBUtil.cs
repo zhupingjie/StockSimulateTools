@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace StockSimulateService.Utils
+namespace StockSimulateCore.Utils
 {
     public class MySQLDBUtil
     {
@@ -33,142 +33,6 @@ namespace StockSimulateService.Utils
                 return instance;
             }
         }
-
-
-        public void InitDataBase(string _strConn)
-        {
-            strConn = _strConn;
-
-            var entityTypes = FindEntityTypes();
-            CreateTable(entityTypes);
-        }
-
-        #region 初始化数据库
-        void CreateTable(Type[] types)
-        {
-            foreach (var type in types)
-            {
-                var sqlCols = new List<DBColumn>();
-                var preps = type.GetProperties();
-
-                foreach (var prep in preps)
-                {
-                    if (prep.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
-
-                    var col = GetDBColumnType(prep.Name, prep.PropertyType);
-                    if (col.ColumnName.Equals("ID", StringComparison.CurrentCultureIgnoreCase)) continue;
-
-                    sqlCols.Add(col);
-                }
-                CreateTable(type.Name.Replace("Entity", ""), sqlCols.ToArray());
-            }
-        }
-
-        Type[] FindEntityTypes()
-        {
-            var entityTypes = new List<Type>();
-            try
-            {
-                var path = AppDomain.CurrentDomain.BaseDirectory;
-
-                var assmblies = LoadAssemblies(path, x => x.Name.Contains("StockSimulate"));
-                foreach (var assbm in assmblies)
-                {
-                    foreach (var type in assbm.GetTypes())
-                    {
-                        if (typeof(BaseEntity).IsAssignableFrom(type) && !type.Equals(typeof(BaseEntity)))
-                        {
-                            entityTypes.Add(type);
-                        }
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                LogUtil.Error(ex);
-            }
-            return entityTypes.ToArray();
-        }
-
-        DBColumn GetDBColumnType(string name, Type type)
-        {
-            var colType = "nvarchar";
-            var length = 0;
-            var decLength = 0;
-            if (type.Name.Contains("String"))
-            {
-                colType = "nvarchar";
-                length = 200;
-            }
-            else if (type.Name.Contains("Decimal"))
-            {
-                colType = "decimal";
-                length = 18;
-                decLength = 2;
-            }
-            else if (type.Name.Contains("DateTime"))
-            {
-                colType = "datetime";
-            }
-            else if (TypeUtil.IsNullableType(type) && TypeUtil.GetNullableType(type) == typeof(DateTime))
-            {
-                colType = "datetime";
-            }
-            if (type.Name.Contains("Int"))
-            {
-                colType = "int";
-                length = 11;
-            }
-            if (type.Name.Contains("Bool"))
-            {
-                colType = "bool";
-            }
-
-            return new DBColumn(name, colType, length, decLength);
-        }
-
-        /// <summary>
-        /// uid varchar(50), name varchar(50), avatar varchar(250), desc varchar(250),profile varchar(250),statuses int,followers int,verified varchar(50)
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="columns"></param>
-        void CreateTable(string tableName, DBColumn[] columns)
-        {
-            using (MySqlConnection con = new MySqlConnection(strConn))
-            {
-                LogUtil.Debug($"检测并创建表[{tableName}]...");
-                con.Open();
-                var cmd = con.CreateCommand();
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"create table IF NOT EXISTS {tableName} (`ID` int(11) NOT NULL AUTO_INCREMENT");
-                foreach (var column in columns)
-                {
-                    if (column.Length != 0)
-                    {
-                        if (column.DecLength > 0)
-                        {
-                            sb.Append($",`{column.ColumnName}` {column.DataType}({column.Length},{column.DecLength}) DEFAULT '0'");
-                        }
-                        else
-                        {
-                            sb.Append($",`{column.ColumnName}` {column.DataType}({column.Length}) DEFAULT NULL");
-                        }
-
-                    }
-                    else
-                    {
-                        sb.Append($",`{column.ColumnName}` {column.DataType} DEFAULT NULL");
-                    }
-                }
-                sb.Append(",PRIMARY KEY (`ID`)");
-                sb.Append(") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;");
-                cmd.CommandText = sb.ToString();
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-        }
-
-        #endregion
 
         #region CRUD
 
@@ -380,6 +244,64 @@ namespace StockSimulateService.Utils
             }
         }
 
+
+        bool DeleteEntity(BaseEntity[] entitys, string table)
+        {
+            using (MySqlConnection con = new MySqlConnection(strConn))
+            {
+                con.Open();
+                var cmd = con.CreateCommand();
+
+                var sql = "";
+                StringBuilder sb = new StringBuilder();
+                foreach (var entity in entitys)
+                {
+                    sb.Append($"delete from {table} where `ID`='{entity.ID}';");
+                }
+                cmd.CommandText = sql = sb.ToString();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                    return false;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        bool DeleteEntity(string table, string where)
+        {
+            using (MySqlConnection con = new MySqlConnection(strConn))
+            {
+                con.Open();
+                var cmd = con.CreateCommand();
+
+                var sql = $"delete from {table} where {where}";
+                cmd.CommandText = sql;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                    return false;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
+
         TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null) where TEntity : BaseEntity, new()
         {
             using (MySqlConnection con = new MySqlConnection(strConn))
@@ -463,74 +385,6 @@ namespace StockSimulateService.Utils
             }
         }
 
-
-        bool DeleteEntity(BaseEntity[] entitys, string table)
-        {
-            using (MySqlConnection con = new MySqlConnection(strConn))
-            {
-                con.Open();
-                var cmd = con.CreateCommand();
-
-                var sql = "";
-                StringBuilder sb = new StringBuilder();
-                foreach (var entity in entitys)
-                {
-                    sb.Append($"delete from {table} where `ID`='{entity.ID}';");
-                }
-                cmd.CommandText = sql =  sb.ToString();
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
-                    return false;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            }
-        }
-
-        bool DeleteEntity(string table, string where)
-        {
-            using (MySqlConnection con = new MySqlConnection(strConn))
-            {
-                con.Open();
-                var cmd = con.CreateCommand();
-
-                var sql = $"delete from {table} where {where}";
-                cmd.CommandText = sql; 
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
-                    return false;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            }
-        }
         #endregion
-
-        public static IList<Assembly> LoadAssemblies(string folderName, Func<FileInfo, bool> filter = null)
-        {
-            if (filter == null) filter = f => f.Length > 0;
-
-            var pathInfo = new DirectoryInfo(folderName);
-            return pathInfo.GetFiles("*.dll", SearchOption.AllDirectories)
-                           .Where(filter)
-                           .Select(f => Assembly.LoadFrom(f.FullName))
-                           .ToList();
-        }
     }
 }

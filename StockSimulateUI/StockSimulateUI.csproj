@@ -274,6 +274,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StockSimulateCore\StockSimulateCore.csproj">
+      <Project>{0a7ffbff-1675-4be4-a39f-61d53552f56c}</Project>
+      <Name>StockSimulateCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StockSimulateDomain\StockSimulateDomain.csproj">
       <Project>{159c855b-ba11-414a-a274-4203b422c75c}</Project>
       <Name>StockSimulateDomain</Name>

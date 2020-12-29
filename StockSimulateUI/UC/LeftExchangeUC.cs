@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using StockSimulateDomain.Model;
 using StockSimulateService.Service;
 using StockSimulateDomain.Entity;
-using StockSimulateService.Utils;
+using StockSimulateCore.Utils;
 
 namespace StockSimulateUI.UC
 {

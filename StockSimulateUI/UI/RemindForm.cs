@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockSimulateService.Utils;
+using StockSimulateCore.Utils;
 using StockSimulateDomain.Model;
-using StockSimulateService.Config;
+using StockSimulateCore.Config;
 
 namespace StockSimulateUI.UI
 {

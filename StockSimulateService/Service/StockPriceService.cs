@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StockSimulateService.Utils;
+using StockSimulateCore.Utils;
 using StockSimulateService.Helper;
+using StockSimulateCore.Data;
 
 namespace StockSimulateService.Service
 {
@@ -15,17 +16,17 @@ namespace StockSimulateService.Service
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
             var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
-            var price = MySQLDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
+            var price = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
             if (price == null)
             {
                 stockInfo.DayPrice.DealTime = "";
-                MySQLDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                Repository.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
             }
             else
             {
                 stockInfo.DayPrice.ID = price.ID;
                 stockInfo.DayPrice.DealTime = "";
-                MySQLDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
             }
             if (stock.Foucs > 0)
             {
@@ -33,19 +34,19 @@ namespace StockSimulateService.Service
                 if (dealTime.CompareTo("15:00") >= 0) dealTime = "15:00";
                 if (dealTime.CompareTo("09:25") <= 0) dealTime = "09:25";
 
-                var price2 = MySQLDBUtil.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
+                var price2 = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
                 if (price2 == null)
                 {
                     stockInfo.DayPrice.DateType = 1;//分钟
                     stockInfo.DayPrice.DealTime = dealTime;
-                    MySQLDBUtil.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
+                    Repository.Instance.Insert<StockPriceEntity>(stockInfo.DayPrice);
                 }
                 else
                 {
                     stockInfo.DayPrice.ID = price2.ID;
                     stockInfo.DayPrice.DateType = 1;//分钟
                     stockInfo.DayPrice.DealTime = dealTime;
-                    MySQLDBUtil.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                    Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
                 }
             }
         }
@@ -56,9 +57,9 @@ namespace StockSimulateService.Service
         /// <param name="actionLog"></param>
         public static void CalculateProfit(Action<string> actionLog)
         {
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
-            var accountStocks = MySQLDBUtil.Instance.QueryAll<AccountStockEntity>();
-            var accounts = MySQLDBUtil.Instance.QueryAll<AccountEntity>();
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            var accountStocks = Repository.Instance.QueryAll<AccountStockEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
 
             foreach (var stock in stocks)
             {
@@ -75,7 +76,7 @@ namespace StockSimulateService.Service
                     actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
                 }
             }
-            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStocks);
+            Repository.Instance.Update<AccountStockEntity>(accountStocks);
 
             foreach(var account in accounts)
             {
@@ -84,14 +85,14 @@ namespace StockSimulateService.Service
                 account.Profit = accStocks.Sum(c => c.Profit);
                 account.TotalAmount = account.Amount + account.Profit;
             }
-            MySQLDBUtil.Instance.Update<AccountEntity>(accounts);
+            Repository.Instance.Update<AccountEntity>(accounts);
 
             if (stocks.Length > 0) actionLog($">------------------------------------------------>");
         }
 
         public static void CalculateProfit(string accountName, string stockCode, decimal stockPrice)
         {
-            var accountStock = MySQLDBUtil.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
+            var accountStock = Repository.Instance.QueryFirst<AccountStockEntity>($"AccountName='{accountName}' and StockCode='{stockCode}'");
             if (accountStock == null) return;
 
             accountStock.Price = stockPrice;
@@ -100,29 +101,29 @@ namespace StockSimulateService.Service
             if (accountStock.TotalAmount == 0) accountStock.UDPer = 0;
             else accountStock.UDPer = Math.Round(accountStock.Profit / accountStock.HoldAmount * 100, 2);
 
-            MySQLDBUtil.Instance.Update<AccountStockEntity>(accountStock);
+            Repository.Instance.Update<AccountStockEntity>(accountStock);
         }
 
         public static void CalculateNowAvgrage(Action<string> actionLog)
         {
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-            var lastPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
+            var lastPrice = Repository.Instance.QueryAll<StockPriceEntity>($"DateType=0", "DealDate desc", 1).FirstOrDefault();
             if (lastPrice != null && lastPrice.DealDate != DateTime.Now.Date.ToString("yyyy-MM-dd")) dealDate = lastPrice.DealDate;
 
             var newStockAverages = new List<StockAverageEntity>();
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
-            var stockAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            var stockAverages = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
 
             var yestDate = DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
-            var yestPrice = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"DateType=0 and DealDate<'{dealDate}'", "DealDate desc", 1).FirstOrDefault();
+            var yestPrice = Repository.Instance.QueryAll<StockPriceEntity>($"DateType=0 and DealDate<'{dealDate}'", "DealDate desc", 1).FirstOrDefault();
             if (yestPrice != null) yestDate = yestPrice.DealDate;
 
-            var nextAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>($"DealDate='{yestDate}'");
+            var nextAverages = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{yestDate}'");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
 
-                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 250, new string[] { "StockCode", "DealDate", "Price"});
+                var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 250, new string[] { "StockCode", "DealDate", "Price"});
                 if (stockPrices.Length == 0) continue;
 
                 var lastStockPrice = stockPrices.FirstOrDefault();
@@ -166,9 +167,9 @@ namespace StockSimulateService.Service
                 //计算当前趋势
                 stock.Trend = GetTrend(stock, stockAverage, yestAvgPrice);
             }
-            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
-            MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
-            MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+            Repository.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
+            Repository.Instance.Update<StockAverageEntity>(stockAverages);
+            Repository.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
 
         static string GetSingleTrend(string trend, decimal nowAverage, decimal yestAverage)
@@ -261,13 +262,13 @@ namespace StockSimulateService.Service
         public static void CalculateAllAvgrage()
         {
             var newStockAverages = new List<StockAverageEntity>();
-            var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>();
-            var stockAverages = MySQLDBUtil.Instance.QueryAll<StockAverageEntity>();
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            var stockAverages = Repository.Instance.QueryAll<StockAverageEntity>();
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
 
-                var stockPrices = MySQLDBUtil.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 0, new string[] { "StockCode", "DealDate", "Price" });
+                var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 0, new string[] { "StockCode", "DealDate", "Price" });
                 if (stockPrices.Length == 0) continue;
 
                 foreach(var stockPrice in stockPrices)
@@ -319,9 +320,9 @@ namespace StockSimulateService.Service
                 var yestStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).OrderByDescending(c => c.DealDate).Skip(1).FirstOrDefault();
                 stock.Trend = GetTrend(stock, nowStockAverage, yestStockAverage);
             }
-            MySQLDBUtil.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "Trend5", "Trend10", "Trend20", "Trend60", "Trend120", "Trend250" });
-            MySQLDBUtil.Instance.Update<StockAverageEntity>(stockAverages);
-            MySQLDBUtil.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
+            Repository.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "Trend5", "Trend10", "Trend20", "Trend60", "Trend120", "Trend250" });
+            Repository.Instance.Update<StockAverageEntity>(stockAverages);
+            Repository.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
 
         static string GetSingleHidTrend(string trend, decimal[] averages)
