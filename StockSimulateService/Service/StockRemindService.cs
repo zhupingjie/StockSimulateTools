@@ -346,7 +346,7 @@ namespace StockSimulateService.Service
                         || (rd.Target == 120 && stock.Price > stock.AvgPrice120 && stock.AvgPrice120 > 0)
                         || (rd.Target == 250 && stock.Price > stock.AvgPrice250 && stock.AvgPrice250 > 0))
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已突破[{remind.Target}]日均线,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已突破[{rd.Target}]日均线,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
@@ -358,10 +358,10 @@ namespace StockSimulateService.Service
                         }
                         action(message);
 
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                        rd.Handled = 1;
+                        rd.LastRemind = DateTime.Now;
+                        rd.RemindPrice = stock.Price;
+                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -375,7 +375,7 @@ namespace StockSimulateService.Service
                         || (rd.Target == 120 && stock.Price < stock.AvgPrice120 && stock.AvgPrice120 > 0)
                         || (rd.Target == 250 && stock.Price < stock.AvgPrice250 && stock.AvgPrice250 > 0))
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已跌破[{remind.Target}]日均线,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已跌破[{rd.Target}]日均线,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
@@ -387,10 +387,10 @@ namespace StockSimulateService.Service
                         }
                         action(message);
 
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                        rd.Handled = 1;
+                        rd.LastRemind = DateTime.Now;
+                        rd.RemindPrice = stock.Price;
+                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -404,7 +404,7 @@ namespace StockSimulateService.Service
                         || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, true))
                         || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, true)))
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已反转[{remind.Target}]日均线,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已反转[{rd.Target}]日均线,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
@@ -416,10 +416,10 @@ namespace StockSimulateService.Service
                         }
                         action(message);
 
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                        rd.Handled = 1;
+                        rd.LastRemind = DateTime.Now;
+                        rd.RemindPrice = stock.Price;
+                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -433,7 +433,7 @@ namespace StockSimulateService.Service
                         || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, false))
                         || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, false)))
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已逆转[{remind.Target}]日均线,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已逆转[{rd.Target}]日均线,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
@@ -445,10 +445,10 @@ namespace StockSimulateService.Service
                         }
                         action(message);
 
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        MySQLDBUtil.Instance.Update<RemindEntity>(remind);
+                        rd.Handled = 1;
+                        rd.LastRemind = DateTime.Now;
+                        rd.RemindPrice = stock.Price;
+                        MySQLDBUtil.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
