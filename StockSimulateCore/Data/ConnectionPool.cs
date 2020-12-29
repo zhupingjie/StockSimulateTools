@@ -72,11 +72,11 @@ namespace StockSimulateCore.Data
                     //tmp = (MySqlConnection)pool[0];
                     //在可用连接中移除此链接
                     tmp = pool.Dequeue();
-                    LogUtil.Debug($"!!! Get Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
+                    //LogUtil.Debug($"!!! Get Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                     //不成功
                     if (!isUserful(tmp))
                     {
-                        LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
+                        //LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                         //可用的连接数据已去掉一个
                         useCount--;
                         tmp = GetConnection();
@@ -116,7 +116,7 @@ namespace StockSimulateCore.Data
             //可用的连接数加上一个
             useCount++;
             tmp = conn;
-            LogUtil.Debug($"!!! Create Connection, Pool={pool.Count},UseConn={useCount},Thread={tmp.ServerThread}");
+            //LogUtil.Debug($"!!! Create Connection, Pool={pool.Count},UseConn={useCount},Thread={tmp.ServerThread}");
             return tmp;
         }
         #endregion
