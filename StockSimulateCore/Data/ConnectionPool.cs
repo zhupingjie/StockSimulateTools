@@ -79,6 +79,7 @@ namespace StockSimulateCore.Data
                         //LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                         //可用的连接数据已去掉一个
                         useCount--;
+                        if (tmp.State == System.Data.ConnectionState.Open) tmp.Close();
                         tmp = GetConnection();
                     }
                 }
@@ -153,8 +154,6 @@ namespace StockSimulateCore.Data
                 catch
                 {
                     result = false;
-
-                    if (con.State == System.Data.ConnectionState.Open) con.Close();
                 }
 
             }
