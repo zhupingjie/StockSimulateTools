@@ -13,11 +13,10 @@ namespace StockSimulateCore.Data
     {
         private static ConnectionPool cpool = null;//池管理对象
         private static Object objlock = typeof(ConnectionPool);//池管理对象实例
-        private int poolSize = 30;//池中连接数
-        private int defaultPoolSize = 5;//默认链接数
         private int maxPoolSize = 200;//最大连接数
+        private int defaultPoolSize = 5;//默认链接数
         private int useCount = 0;//已经使用的连接数
-        private ArrayList pool = null;//连接保存的集合
+        private Queue<MySqlConnection> pool = null;//连接保存的集合
         private string ConnectionStr = "";//连接字符串
 
         public ConnectionPool(string connStr)
@@ -25,7 +24,7 @@ namespace StockSimulateCore.Data
             //数据库连接字符串
             ConnectionStr = connStr;
             //创建可用连接的集合
-            pool = new ArrayList();
+            pool = new Queue<MySqlConnection>();
         }
 
         #region 创建获取连接池对象
@@ -70,23 +69,23 @@ namespace StockSimulateCore.Data
                 if (pool.Count > 0)
                 {
                     //取第一个可用连接
-                    tmp = (MySqlConnection)pool[0];
+                    //tmp = (MySqlConnection)pool[0];
                     //在可用连接中移除此链接
-                    pool.RemoveAt(0);
+                    tmp = pool.Dequeue();
                     LogUtil.Debug($"!!! Get Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                     //不成功
                     if (!isUserful(tmp))
                     {
+                        LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                         //可用的连接数据已去掉一个
                         useCount--;
                         tmp = GetConnection();
-                        LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                     }
                 }
                 else
                 {
                     //可使用的连接小于连接数量
-                    if (useCount <= poolSize)
+                    if (useCount<= maxPoolSize)
                     {
                         try
                         {
@@ -98,19 +97,9 @@ namespace StockSimulateCore.Data
                             LogUtil.Error(e);
                         }
                     }
-                }
-                //连接为null
-                if (tmp == null)
-                {
-                    //达到最大连接数递归调用获取连接否则创建新连接
-                    if (useCount <= poolSize)
-                    {
-                        tmp = GetConnection();
-                    }
                     else
                     {
-                        if (useCount > maxPoolSize) throw new Exception($"当前连接数已达到最大连接池数量:{maxPoolSize}");
-                        tmp = CreateConnection(tmp);
+                        throw new Exception($"当前连接数已达到最大连接池数量:{maxPoolSize}");
                     }
                 }
                 return tmp;
@@ -127,7 +116,7 @@ namespace StockSimulateCore.Data
             //可用的连接数加上一个
             useCount++;
             tmp = conn;
-            LogUtil.Debug($"!!! Create Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
+            LogUtil.Debug($"!!! Create Connection, Pool={pool.Count},UseConn={useCount},Thread={tmp.ServerThread}");
             return tmp;
         }
         #endregion
@@ -140,10 +129,7 @@ namespace StockSimulateCore.Data
                 if (con != null)
                 {
                     //将连接添加在连接池中
-                    pool.Add(con);
-
-                    useCount--;
-                    if (useCount < 0) useCount = 0;
+                    pool.Enqueue(con);
 
                     LogUtil.Debug($"!!! Back Connection, Pool={pool.Count},UserConn={useCount},Thread={con.ServerThread}");
                 }

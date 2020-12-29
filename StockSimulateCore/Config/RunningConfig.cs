@@ -105,7 +105,7 @@ namespace StockSimulateCore.Config
         {
             get
             {
-                return $"Server={DBServiceIP};Database={DBName};User Id={DBUserID};Password={DBPwd};Pooling=true;Max Pool Size={100};Connect Timeout=20;";
+                return $"Server={DBServiceIP};Database={DBName};User Id={DBUserID};Password={DBPwd};Connect Timeout=20;";
             }
         }
     }

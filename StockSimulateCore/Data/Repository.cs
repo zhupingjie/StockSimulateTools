@@ -37,81 +37,6 @@ namespace StockSimulateCore.Data
         /// </summary>
         protected ConnectionPool Pool { get; private set; }
 
-        /// <summary>
-        /// 事务
-        /// </summary>
-        protected virtual MySqlTransaction Tran { get; private set; }
-
-        /// <summary>
-        /// 当前原生Db连接
-        /// </summary>
-        protected virtual MySqlConnection Conn
-        {
-            get
-            {
-                try
-                {
-                    return Pool.GetConnection();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"数据库链接错误:{ex.Message}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        public virtual void BeginTran()
-        {
-            if (Tran != null) return;
-            Tran = Conn.BeginTransaction();
-        }
-
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        /// <param name="isolationLevel">事务隔离级别</param>
-
-        public virtual void BeginTran(IsolationLevel isolationLevel)
-        {
-            if (Tran != null) return;
-            Tran = Conn.BeginTransaction(isolationLevel);
-        }
-
-        /// <summary>
-        /// 提交事务
-        /// </summary>
-        public virtual void Commit()
-        {
-            if (Tran != null && Tran.Connection != null)
-                Tran.Commit();
-        }
-
-        /// <summary>
-        /// 提交事务
-        /// </summary>
-        public virtual void Rollback()
-        {
-            if (Tran != null && Tran.Connection != null)
-                Tran.Rollback();
-
-            if (Conn != null)
-            {
-                if (Tran != null)
-                {
-                    Tran.Dispose();
-                    Tran = null;
-                }
-            }
-            if (Tran != null)
-            {
-                Tran.Dispose();
-                Tran = null;
-            }
-        }
-
         #endregion
 
         #region  CRUD
@@ -185,7 +110,8 @@ namespace StockSimulateCore.Data
             if (!string.IsNullOrEmpty(orderBy)) sql = $"{sql} order by {orderBy}";
             if (takeSize > 0) sql = $"{sql} limit {takeSize}";
 
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
             try
             {
@@ -196,7 +122,11 @@ namespace StockSimulateCore.Data
                     for (var i = 0; i < reader.FieldCount; i++)
                     {
                         var name = reader.GetName(i);
-                        ObjectUtil.SetPropertyValue(item, name, reader.GetValue(i));
+
+                        object value = null;
+                        var dbValue = reader.GetValue(i);
+                        if (dbValue != DBNull.Value) value = dbValue;
+                        ObjectUtil.SetPropertyValue(item, name, value);
                     }
                     if (item.ID > 0) lst.Add(item);
                 }
@@ -211,7 +141,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(this.Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
@@ -268,7 +198,8 @@ namespace StockSimulateCore.Data
                 sql += $"insert into {tableName} (`ID` {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
             }
 
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
             try
             {
@@ -282,7 +213,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
@@ -330,7 +261,8 @@ namespace StockSimulateCore.Data
                 sql += $"update {table} set `lastdate`='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where `ID`={entity.ID};";
             }
 
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
             try
             {
@@ -344,7 +276,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
@@ -357,7 +289,8 @@ namespace StockSimulateCore.Data
             {
                 sb.Append($"delete from {table} where `ID`='{entity.ID}';");
             }
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql = sb.ToString();
             try
             {
@@ -371,7 +304,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
@@ -379,7 +312,8 @@ namespace StockSimulateCore.Data
         {
             var sql = $"delete from {table} where {where}";
 
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
             try
             {
@@ -393,7 +327,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
@@ -426,7 +360,8 @@ namespace StockSimulateCore.Data
             sb.Append(",PRIMARY KEY (`ID`)");
             sb.Append(") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;");
 
-            var cmd = this.Conn.CreateCommand();
+            var conn = Pool.GetConnection();
+            var cmd = conn.CreateCommand();
             cmd.CommandText = sql = sb.ToString();
             try
             {
@@ -438,7 +373,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(Conn);
+                Pool.CloseConnection(conn);
             }
         }
 
