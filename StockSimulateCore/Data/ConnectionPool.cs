@@ -131,7 +131,7 @@ namespace StockSimulateCore.Data
                     //将连接添加在连接池中
                     pool.Enqueue(con);
 
-                    LogUtil.Debug($"!!! Back Connection, Pool={pool.Count},UserConn={useCount},Thread={con.ServerThread}");
+                    //LogUtil.Debug($"!!! Back Connection, Pool={pool.Count},UserConn={useCount},Thread={con.ServerThread}");
                 }
             }
         }
