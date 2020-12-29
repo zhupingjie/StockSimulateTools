@@ -94,8 +94,6 @@ namespace StockSimulateService.Config
         /// </summary>
         public int LoadGlobalConfigInterval { get; set; } = 20;
 
-        public string LastServiceUpdateTime { get; set; }
-
         public string DBServiceIP { get; set; } = "121.4.29.105";
         public string DBName { get; set; } = "stock";
         public string DBUserID { get; set; } = "root";

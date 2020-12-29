@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using StockSimulateService.Utils;
 using StockSimulateService.Config;
+using StockSimulateDomain.Data;
 
 namespace StockPriceTools
 {
@@ -24,6 +25,7 @@ namespace StockPriceTools
         private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         private CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private RunningConfig RC = RunningConfig.Instance;
+        private Dictionary<Type, BaseEntity[]> DataSource = new Dictionary<Type, BaseEntity[]>();
         public DesktopFrom()
         {
             InitializeComponent();
@@ -32,6 +34,8 @@ namespace StockPriceTools
         #region 页面加载事件
         private void DesktopFrom_Load(object sender, EventArgs e)
         {
+            //this.InitDataGrid();
+
             this.LoadConfigData();
 
             this.LoadStockData();
@@ -46,12 +50,6 @@ namespace StockPriceTools
                 while (true)
                 {
                     StockConfigService.LoadGlobalConfig(RC);
-
-                    Action act = delegate ()
-                    {
-                        this.lblCurrentTime.Text = RC.LastServiceUpdateTime;
-                    };
-                    this.Invoke(act);
 
                     Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
                 }
@@ -201,18 +199,17 @@ namespace StockPriceTools
             else if (this.txtETF.Checked) where += $" and (Type=1)";
             else if (this.txtAllStock.Checked) where += "";
 
-            var stocks = Repository.QueryAll<StockEntity>(where);
+            var stocks = GetDataSource<StockEntity>(where);
+            //this.gridStockList.DataSource = stocks;
             var dt = ObjectUtil.ConvertTable(stocks);
-            this.gridStockList.DataSource = null;
             this.gridStockList.DataSource = dt.DefaultView;
 
             var goodCellStyle = new DataGridViewCellStyle();
-            //goodCellStyle.Font = new Font("宋体", 8.5f, FontStyle.Bold);
             goodCellStyle.BackColor = Color.LightYellow;
-            for (var i=0; i<this.gridStockList.ColumnCount; i++)
+            for (var i = 0; i < this.gridStockList.ColumnCount; i++)
             {
                 this.gridStockList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-                
+
                 var columnName = this.gridStockList.Columns[i].Name;
                 this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
@@ -220,11 +217,11 @@ namespace StockPriceTools
                     this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
                 }
             }
-            for(var i=0; i<this.gridStockList.Rows.Count; i++)
+            for (var i = 0; i < this.gridStockList.Rows.Count; i++)
             {
                 var row = this.gridStockList.Rows[i];
                 var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
-                if(value > 0)
+                if (value > 0)
                 {
                     this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
                 }
@@ -234,6 +231,9 @@ namespace StockPriceTools
                 }
             }
             this.lblStockTotal.Text = $"股票总数:[{stocks.Length}]";
+            var time = "无更新数据";
+            if (stocks.Length > 0) time = stocks.Max(c => c.LastDate).ToString("yyyy-MM-dd HH:mm:ss");
+            this.lblCurrentTime.Text = $"{time}";
         }
 
         void LoadAccountStockList()
@@ -298,12 +298,8 @@ namespace StockPriceTools
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
             if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
-            Action act = delegate ()
-            {
-                this.LoadStockBaseInfo(stockCode);
-                this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
-            };
-            this.Invoke(act);
+            this.LoadStockBaseInfo(stockCode);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
         }
 
         private void btnFoucsStock_Click(object sender, EventArgs e)
@@ -314,54 +310,34 @@ namespace StockPriceTools
 
             StockService.Foucs(stockCode);
 
-            Action act = delegate ()
-            {
-                this.LoadStockList();
-            };
-            this.Invoke(act);
+            this.LoadStockList();
         }
 
         private void txtFoucST_CheckedChanged(object sender, EventArgs e)
         {
             this.CurrentStockListSelectedIndex = -1;
 
-            Action act = delegate ()
-            {
-                this.LoadStockList();
-            };
-            this.Invoke(act);
+            this.LoadStockList();
         }
         private void txtAllStock_CheckedChanged(object sender, EventArgs e)
         {
             this.CurrentStockListSelectedIndex = -1;
 
-            Action act = delegate ()
-            {
-                this.LoadStockList();
-            };
-            this.Invoke(act);
+            this.LoadStockList();
         }
 
         private void txtSHSZ_CheckedChanged(object sender, EventArgs e)
         {
             this.CurrentStockListSelectedIndex = -1;
 
-            Action act = delegate ()
-            {
-                this.LoadStockList();
-            };
-            this.Invoke(act);
+            this.LoadStockList();
         }
 
         private void txtETF_CheckedChanged(object sender, EventArgs e)
         {
             this.CurrentStockListSelectedIndex = -1;
 
-            Action act = delegate ()
-            {
-                this.LoadStockList();
-            };
-            this.Invoke(act);
+            this.LoadStockList();
         }
         private void gridStockList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -373,11 +349,7 @@ namespace StockPriceTools
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Action act = delegate ()
-                {
-                    this.LoadStockList();
-                };
-                this.Invoke(act);
+                this.LoadStockList();
             }
         }
         private void txtAccountStock_KeyDown(object sender, KeyEventArgs e)
@@ -1101,10 +1073,18 @@ namespace StockPriceTools
             frm.StartPosition = FormStartPosition.CenterScreen;
             frm.ShowDialog();
         }
-
+        private void DesktopFrom_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Hide();
+                this.WindowState = FormWindowState.Minimized;
+                e.Cancel = true;
+            }
+        }
         #endregion
 
-        #region 操作日志事件
+        #region 其他事件
 
         public void ActionLog(string message)
         {
@@ -1129,17 +1109,48 @@ namespace StockPriceTools
             };
             this.Invoke(act);
         }
-        #endregion
 
-        private void DesktopFrom_FormClosing(object sender, FormClosingEventArgs e)
+
+        void InitDataGrid()
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            var goodCellStyle = new DataGridViewCellStyle();
+            goodCellStyle.BackColor = Color.LightYellow;
+
+            var columns = ObjectUtil.GetGridDataColumns<StockEntity>();
+            foreach (var col in columns)
             {
-                this.Hide();
-                this.WindowState = FormWindowState.Minimized;
-                e.Cancel = true;
+                var column = new DataGridViewTextBoxColumn();
+                column.HeaderText = col.Description;
+                column.DataPropertyName = col.Name;
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                column.Width = ObjectUtil.GetGridColumnLength(col.Description);
+
+                if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(col.Description))
+                {
+                    column.DefaultCellStyle = goodCellStyle;
+                }
+                if (column.DataPropertyName == "ID")
+                {
+                    column.Visible = false;
+                }
+                this.gridStockList.Columns.Add(column);
             }
+            this.gridStockList.AutoGenerateColumns = false;
         }
 
+        T[] GetDataSource<T>(string filter, string orderBy = "ID desc") where T : BaseEntity, new()
+        {
+            var entitys = Repository.QueryAll<T>(filter, orderBy);
+            if (this.DataSource.ContainsKey(typeof(T)))
+            {
+                this.DataSource[typeof(T)] = entitys;
+            }
+            else
+            {
+                this.DataSource.Add(typeof(T), entitys);
+            }
+            return entitys;
+        }
+        #endregion
     }
 }
