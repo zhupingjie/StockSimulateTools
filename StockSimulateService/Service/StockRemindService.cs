@@ -256,6 +256,8 @@ namespace StockSimulateService.Service
         {
             var reminds = MySQLDBUtil.Instance.QueryAll<RemindEntity>($"Handled=0");
             var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
+            if (stockCodes.Length == 0) return;
+
             var stocks = MySQLDBUtil.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0 and LastDate>='{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
 
             foreach (var stock in stocks)
