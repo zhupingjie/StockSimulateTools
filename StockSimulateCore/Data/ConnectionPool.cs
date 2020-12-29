@@ -153,6 +153,8 @@ namespace StockSimulateCore.Data
                 catch
                 {
                     result = false;
+
+                    if (con.State == System.Data.ConnectionState.Open) con.Close();
                 }
 
             }
