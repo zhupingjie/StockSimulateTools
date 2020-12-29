@@ -35,18 +35,13 @@ namespace StockPriceTools
         private void DesktopFrom_Load(object sender, EventArgs e)
         {
             //this.InitDataGrid();
-
-            this.LoadConfigData();
-
-            this.LoadStockData();
+            this.LoadData();
         }
 
-        void LoadConfigData()
+        void LoadData()
         {
             Task.Factory.StartNew(() =>
             {
-                Repository.Instance.InitDataBase();
-
                 while (true)
                 {
                     StockConfigService.LoadGlobalConfig(RC);
@@ -54,10 +49,7 @@ namespace StockPriceTools
                     Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
-        }
 
-        void LoadStockData()
-        {
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2 * 1000);
@@ -87,8 +79,36 @@ namespace StockPriceTools
                     Thread.Sleep(RC.LoadMessageInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
+
         }
 
+        void LoadStockData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Action act = delegate ()
+                {
+                    this.gridStockList.Enabled = false;
+                    this.LoadStockList();
+                    this.gridStockList.Enabled = true;
+                };
+                this.Invoke(act);
+            }, CancellationTokenSource.Token);
+        }
+
+        void LoadAccountStockData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Action act = delegate ()
+                {
+                    this.gridAccountStockList.Enabled = false;
+                    this.LoadAccountStockList();
+                    this.gridAccountStockList.Enabled = true;
+                };
+                this.Invoke(act);
+            });
+        }
         #endregion
 
         #region 顶部工具栏按钮事件
@@ -190,8 +210,14 @@ namespace StockPriceTools
         #region 中间TabControl区域事件
 
         int CurrentStockListSelectedIndex = -1;
+        bool LoadStockGridListColumns = false;
+        bool LoadStockGridListData = false;
         void LoadStockList()
         {
+            if (LoadStockGridListData) return;
+
+            LoadStockGridListData = true;
+
             var where = "1>0";//"Price>0";
             if (!string.IsNullOrEmpty(this.txtSearch.Text.Trim())) where += $" and (Code like '%{this.txtSearch.Text.Trim()}%' or Name like '%{this.txtSearch.Text.Trim()}%')";
             if (this.txtFoucST.Checked) where += $" and (Foucs=1)";
@@ -199,22 +225,28 @@ namespace StockPriceTools
             else if (this.txtETF.Checked) where += $" and (Type=1)";
             else if (this.txtAllStock.Checked) where += "";
 
-            var stocks = GetDataSource<StockEntity>(where);
+            //var stocks = GetDataSource<StockEntity>(where);
             //this.gridStockList.DataSource = stocks;
+            var stocks = Repository.Instance.QueryAll<StockEntity>(where);
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = dt.DefaultView;
 
-            var goodCellStyle = new DataGridViewCellStyle();
-            goodCellStyle.BackColor = Color.LightYellow;
-            for (var i = 0; i < this.gridStockList.ColumnCount; i++)
+            if (!LoadStockGridListColumns)
             {
-                this.gridStockList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                LoadStockGridListColumns = true;
 
-                var columnName = this.gridStockList.Columns[i].Name;
-                this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
-                if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
+                var goodCellStyle = new DataGridViewCellStyle();
+                goodCellStyle.BackColor = Color.LightYellow;
+                for (var i = 0; i < this.gridStockList.ColumnCount; i++)
                 {
-                    this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
+                    this.gridStockList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                    var columnName = this.gridStockList.Columns[i].Name;
+                    this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
+                    if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
+                    {
+                        this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
+                    }
                 }
             }
             for (var i = 0; i < this.gridStockList.Rows.Count; i++)
@@ -230,6 +262,9 @@ namespace StockPriceTools
                     this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
             }
+
+            LoadStockGridListData = false;
+
             this.lblStockTotal.Text = $"股票总数:[{stocks.Length}]";
             var time = "无更新数据";
             if (stocks.Length > 0) time = stocks.Max(c => c.LastDate).ToString("yyyy-MM-dd HH:mm:ss");
@@ -246,6 +281,8 @@ namespace StockPriceTools
             }
 
             var where = $"AccountName='{account.Name}'";
+            if(this.txtNoRealAccount.Checked) where = $"AccountName!='{account.Name}'";
+
             var search = this.txtAccountSearch.Text.Trim();
             if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
             if (this.txtHoldQty.Checked) where += " and HoldQty>0";
@@ -281,13 +318,16 @@ namespace StockPriceTools
 
         private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(this.tabControlMain.SelectedIndex == 1)
+            switch(this.tabControlMain.SelectedIndex)
             {
-                this.LoadAccountStockList();
+                case 0:
+                    //this.LoadStockData();
+                    break;
+                case 1:
+                    this.LoadAccountStockData();
+                    break;
             }
         }
-
-
         private void gridStockList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
@@ -301,7 +341,6 @@ namespace StockPriceTools
             this.LoadStockBaseInfo(stockCode);
             this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
         }
-
         private void btnFoucsStock_Click(object sender, EventArgs e)
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
@@ -310,76 +349,70 @@ namespace StockPriceTools
 
             StockService.Foucs(stockCode);
 
-            this.LoadStockList();
+            this.LoadStockData();
         }
-
         private void txtFoucST_CheckedChanged(object sender, EventArgs e)
         {
-            this.CurrentStockListSelectedIndex = -1;
-
-            this.LoadStockList();
+            if (txtFoucST.Checked)
+            {
+                this.LoadStockData();
+            }
         }
         private void txtAllStock_CheckedChanged(object sender, EventArgs e)
         {
-            this.CurrentStockListSelectedIndex = -1;
+            if (this.txtAllStock.Checked)
+            {
+                this.CurrentStockListSelectedIndex = -1;
 
-            this.LoadStockList();
+                this.LoadStockData();
+            }
         }
-
         private void txtSHSZ_CheckedChanged(object sender, EventArgs e)
         {
-            this.CurrentStockListSelectedIndex = -1;
+            if (this.txtSHSZ.Checked)
+            {
+                this.CurrentStockListSelectedIndex = -1;
 
-            this.LoadStockList();
+                this.LoadStockData();
+            }
         }
-
         private void txtETF_CheckedChanged(object sender, EventArgs e)
         {
-            this.CurrentStockListSelectedIndex = -1;
+            if (this.txtETF.Checked)
+            {
+                this.CurrentStockListSelectedIndex = -1;
 
-            this.LoadStockList();
+                this.LoadStockData();
+            }
         }
         private void gridStockList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             this.gridStockList.ClearSelection();
             if (CurrentStockListSelectedIndex >= 0 && this.gridStockList.Rows.Count> CurrentStockListSelectedIndex) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
         }
-
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.LoadStockList();
+                this.CurrentStockListSelectedIndex = -1;
+
+                this.LoadStockData();
             }
         }
         private void txtAccountStock_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Action act = delegate ()
-                {
-                    this.LoadAccountStockList();
-                };
-                this.Invoke(act);
+                this.LoadAccountStockData();
             }
         }
-
         private void txtHoldQty_CheckedChanged(object sender, EventArgs e)
         {
-            Action act = delegate ()
-            {
-                this.LoadAccountStockList();
-            };
-            this.Invoke(act);
+            this.LoadAccountStockData();
         }
-
-        private void txtRealType_CheckedChanged(object sender, EventArgs e)
+        private void txtNoRealAccount_CheckedChanged(object sender, EventArgs e)
         {
-            Action act = delegate ()
-            {
-                this.LoadAccountStockList();
-            };
-            this.Invoke(act);
+            this.LoadAccountStockData();
         }
         #endregion
 
@@ -422,6 +455,19 @@ namespace StockPriceTools
                 this.ActionLog(message.Title);
             }
             Repository.Instance.Update<MessageEntity>(messages);
+        }
+
+        void LoadPriceChartData(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(100);
+                Action act = delegate ()
+                {
+                    LoadPriceChart(stockCode, stockName, dateType, chartWithZS);
+                };
+                this.Invoke(act);
+            });
         }
 
         /// <summary>
@@ -500,7 +546,7 @@ namespace StockPriceTools
             if (dateType == 0) startDate = startDate.AddMonths(-1);
             else
             {
-                var lastDate = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "DealDate Desc", 1).FirstOrDefault();
+                var lastDate = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc");
                 if (lastDate != null)
                 {
                     startDate = DateTime.Parse(lastDate.DealDate);
@@ -532,7 +578,6 @@ namespace StockPriceTools
             foreach (var item in stockPrices)
             {
                 var xvalue = ObjectUtil.ToValue<DateTime>(item.DealDate, DateTime.Now).ToString("MM-dd");
-                //series.Points.AddXY(xvalue, item.TodayMaxPrice, item.TodayMinPrice, item.TodayStartPrice, item.TodayEndPrice);
                 series.Points.AddXY(xvalue, item.Price);
             }
         }
@@ -572,7 +617,7 @@ namespace StockPriceTools
 
         void LoadPriceList(string stockCode)
         {
-            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 60);
+            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 30);
             var dt = ObjectUtil.ConvertTable(stockPrices);
             this.gridPriceList.DataSource = null;
             this.gridPriceList.DataSource = dt.DefaultView;
@@ -808,7 +853,7 @@ namespace StockPriceTools
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceChart(stockCode, stockName, 1);
+                    this.LoadPriceChartData(stockCode, stockName, 1);
                     break;
                 case 2:
                     this.LoadPriceList(stockCode);
@@ -839,7 +884,7 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
 
-            this.LoadPriceChart(stockCode, stockName, 0);
+            this.LoadPriceChartData(stockCode, stockName, 0);
         }
 
         private void btnWebChart_Click(object sender, EventArgs e)
@@ -858,7 +903,8 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
             var chartWithZS = this.txtChartWithZS.Checked;
-            this.LoadPriceChart(stockCode, stockName, 1, chartWithZS);
+
+            this.LoadPriceChartData(stockCode, stockName, 1, chartWithZS);
         }
 
         private void btnHandleRemind_Click(object sender, EventArgs e)
@@ -976,7 +1022,6 @@ namespace StockPriceTools
             if(frm.ShowDialog() == DialogResult.OK)
             {
                 this.LoadExchangeList(stockCode);
-                this.LoadAccountStockList();
             }
         }
 
@@ -995,7 +1040,6 @@ namespace StockPriceTools
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 this.LoadExchangeList(stockCode);
-                this.LoadAccountStockList();
             }
         }
 
@@ -1050,10 +1094,19 @@ namespace StockPriceTools
 
         private void tmpExit_Click(object sender, EventArgs e)
         {
+            CancellationTokenSource.Cancel();
+
             Application.Exit();
         }
 
         private void tmpDesktop_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
             this.WindowState = FormWindowState.Normal;

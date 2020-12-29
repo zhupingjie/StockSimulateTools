@@ -14,7 +14,6 @@ namespace StockSimulateCore.Data
         private static ConnectionPool cpool = null;//池管理对象
         private static Object objlock = typeof(ConnectionPool);//池管理对象实例
         private int maxPoolSize = 200;//最大连接数
-        private int defaultPoolSize = 5;//默认链接数
         private int useCount = 0;//已经使用的连接数
         private Queue<MySqlConnection> pool = null;//连接保存的集合
         private string ConnectionStr = "";//连接字符串
@@ -46,7 +45,7 @@ namespace StockSimulateCore.Data
 
         #region 初始化连接池
 
-        public void InitPool()
+        public void InitPool(int defaultPoolSize = 10)
         {
             for (var i = 0; i < defaultPoolSize; i++)
             {

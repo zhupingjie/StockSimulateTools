@@ -19,13 +19,23 @@ namespace StockSimulateCore.Data
             this.Pool = ConnectionPool.GetPool(RunningConfig.Instance.DBConnectionString);
             this.Pool.InitPool();
         }
+        private static Object objlock = typeof(Repository);
 
         private static Repository _instance = null;
         public static Repository Instance
         {
             get
             {
-                if (_instance == null) _instance = new Repository();
+                if (_instance == null)
+                {
+                    lock (objlock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new Repository();
+                        }
+                    }
+                }
                 return _instance;
             }
         }
@@ -48,11 +58,11 @@ namespace StockSimulateCore.Data
             return GetEntitys<TEntity>(tableName, where, orderBy, takeSize, columns);
         }
 
-        public TEntity QueryFirst<TEntity>(string where = "") where TEntity : BaseEntity, new()
+        public TEntity QueryFirst<TEntity>(string where = "", string orderBy = "ID desc") where TEntity : BaseEntity, new()
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where).FirstOrDefault();
+            return GetEntitys<TEntity>(tableName, where, orderBy).FirstOrDefault();
         }
 
         public bool Insert<TEntity>(TEntity entity) where TEntity : BaseEntity

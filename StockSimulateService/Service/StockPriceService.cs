@@ -52,6 +52,20 @@ namespace StockSimulateService.Service
         }
 
         /// <summary>
+        /// 每天执行一次,删除上一天的分时数据
+        /// </summary>
+        public static void Clear()
+        {
+            var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var lastDate = Repository.Instance.QueryFirst<StockPriceEntity>($"DateType=1", "ID Desc");
+            if (lastDate != null)
+            {
+                dealDate = lastDate.DealDate;
+            }
+            Repository.Instance.Delete<StockPriceEntity>($"DateType=1 and DealDate<'{dealDate}'");
+        }
+
+        /// <summary>
         /// 计算账户盈亏
         /// </summary>
         /// <param name="actionLog"></param>

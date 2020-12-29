@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class AccountForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public AccountForm()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace StockSimulateUI.UI
 
         void LoadAccountInfo()
         {
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtName.Items.Clear();
@@ -58,7 +58,7 @@ namespace StockSimulateUI.UI
 
             if (MessageBox.Show($"确认要保存选中的账户数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
             if (account == null)
             {
                 account = new AccountEntity();
@@ -68,7 +68,7 @@ namespace StockSimulateUI.UI
                 account.Email = this.txtEmail.Text;
                 account.QQ = this.txtQQ.Text;
                 account.RealType = this.txtRealType.Text == "实盘" ? 1 : 0;
-                Repository.Insert<AccountEntity>(account);
+                Repository.Instance.Insert<AccountEntity>(account);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace StockSimulateUI.UI
                 account.Cash = account.Amount - account.BuyAmount;
                 account.QQ = this.txtQQ.Text;
                 account.RealType = this.txtRealType.Text == "实盘" ? 1 : 0;
-                Repository.Update<AccountEntity>(account);
+                Repository.Instance.Update<AccountEntity>(account);
             }
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -91,7 +91,7 @@ namespace StockSimulateUI.UI
 
         private void txtName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
             if (account != null)
             {
                 this.txtName.Text = account.Name;
@@ -114,12 +114,12 @@ namespace StockSimulateUI.UI
 
             if (MessageBox.Show($"确认要删除选中的账户数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{this.txtName.Text}'");
             if (account == null) return;
 
-            Repository.Delete<AccountEntity>(account);
-            Repository.Delete<AccountStockEntity>($"AccountName='{accountName}'");
-            Repository.Delete<ExchangeOrderEntity>($"AccountName='{accountName}'");
+            Repository.Instance.Delete<AccountEntity>(account);
+            Repository.Instance.Delete<AccountStockEntity>($"AccountName='{accountName}'");
+            Repository.Instance.Delete<ExchangeOrderEntity>($"AccountName='{accountName}'");
 
             this.DialogResult = DialogResult.OK;
             this.Close();

@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class StrategyForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public string StockName { get; set; }
         public StrategyForm()
@@ -32,7 +32,7 @@ namespace StockSimulateUI.UI
             this.txtStockCode.Text = StockCode;
             this.txtStockName.Text = StockName;
 
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtAccountName.Items.Clear();

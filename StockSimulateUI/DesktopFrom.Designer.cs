@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -47,6 +47,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lblCurrentTime = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.lblMessage = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -130,8 +132,7 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.lblCurrentTime = new System.Windows.Forms.Label();
+            this.txtNoRealAccount = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -320,6 +321,25 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1208, 30);
             this.panel2.TabIndex = 42;
+            // 
+            // lblCurrentTime
+            // 
+            this.lblCurrentTime.AutoSize = true;
+            this.lblCurrentTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCurrentTime.ForeColor = System.Drawing.Color.Blue;
+            this.lblCurrentTime.Location = new System.Drawing.Point(1040, 4);
+            this.lblCurrentTime.Name = "lblCurrentTime";
+            this.lblCurrentTime.Size = new System.Drawing.Size(163, 21);
+            this.lblCurrentTime.TabIndex = 0;
+            this.lblCurrentTime.Text = "2020-12-28 09:00:00";
+            // 
+            // panel5
+            // 
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel5.Location = new System.Drawing.Point(1081, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(127, 30);
+            this.panel5.TabIndex = 1;
             // 
             // lblMessage
             // 
@@ -525,6 +545,7 @@
             // 
             // panel12
             // 
+            this.panel12.Controls.Add(this.txtNoRealAccount);
             this.panel12.Controls.Add(this.txtHoldQty);
             this.panel12.Controls.Add(this.lblAccountStockInfo);
             this.panel12.Controls.Add(this.txtAccountSearch);
@@ -626,11 +647,11 @@
             // 
             // chartPrice
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea3);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend1);
+            legend3.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend3);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1182,6 +1203,7 @@
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "实时信息";
             this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // contextMenuStrip1
             // 
@@ -1233,24 +1255,16 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // panel5
+            // txtNoRealAccount
             // 
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(1081, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(127, 30);
-            this.panel5.TabIndex = 1;
-            // 
-            // lblCurrentTime
-            // 
-            this.lblCurrentTime.AutoSize = true;
-            this.lblCurrentTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblCurrentTime.ForeColor = System.Drawing.Color.Blue;
-            this.lblCurrentTime.Location = new System.Drawing.Point(1040, 4);
-            this.lblCurrentTime.Name = "lblCurrentTime";
-            this.lblCurrentTime.Size = new System.Drawing.Size(163, 21);
-            this.lblCurrentTime.TabIndex = 0;
-            this.lblCurrentTime.Text = "2020-12-28 09:00:00";
+            this.txtNoRealAccount.AutoSize = true;
+            this.txtNoRealAccount.Location = new System.Drawing.Point(562, 8);
+            this.txtNoRealAccount.Name = "txtNoRealAccount";
+            this.txtNoRealAccount.Size = new System.Drawing.Size(60, 16);
+            this.txtNoRealAccount.TabIndex = 10;
+            this.txtNoRealAccount.Text = "模拟盘";
+            this.txtNoRealAccount.UseVisualStyleBackColor = true;
+            this.txtNoRealAccount.CheckedChanged += new System.EventHandler(this.txtNoRealAccount_CheckedChanged);
             // 
             // DesktopFrom
             // 
@@ -1426,5 +1440,6 @@
         private System.Windows.Forms.Button btnWebFund;
         private System.Windows.Forms.Label lblCurrentTime;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.CheckBox txtNoRealAccount;
     }
 }

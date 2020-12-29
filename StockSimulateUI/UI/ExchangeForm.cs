@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class ExchangeForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public int DealQty { get; set; }
         public decimal DealPrice { get; set; }
 
@@ -35,7 +35,7 @@ namespace StockSimulateUI.UI
 
         private void NewExchangeForm_Load(object sender, EventArgs e)
         {
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtAccount.Items.Clear();
@@ -130,14 +130,14 @@ namespace StockSimulateUI.UI
 
         private void txtAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var account = Repository.QueryFirst<AccountEntity>($"Name='{this.txtAccount.Text}'");
+            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{this.txtAccount.Text}'");
             if (account == null) return;
 
             if (this.DealType == 0)
             {
                 this.txtCouldExchange.Text = $"{account.Cash}";
 
-                var stockStrategys = Repository.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and ExecuteOK != 1");
+                var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and ExecuteOK != 1");
 
                 this.txtStrategyName.Items.Clear();
                 this.txtStrategyName.Items.AddRange(stockStrategys.Select(c => c.StrategyName).Distinct().ToArray());
@@ -145,7 +145,7 @@ namespace StockSimulateUI.UI
             }
             else
             {
-                var accountStock = Repository.QueryFirst<AccountStockEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}'");
+                var accountStock = Repository.Instance.QueryFirst<AccountStockEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}'");
                 if (accountStock == null)
                 {
                     this.txtDealQty.Text = "0";
@@ -169,7 +169,7 @@ namespace StockSimulateUI.UI
 
             if (string.IsNullOrEmpty(strategyName) || string.IsNullOrEmpty(accountName)) return;
 
-            var stockStrategys = Repository.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and StrategyName='{strategyName}' and Condition={this.DealType} and ExecuteOK != 1");
+            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"AccountName='{this.txtAccount.Text}' and StockCode='{StockCode}' and StrategyName='{strategyName}' and Condition={this.DealType} and ExecuteOK != 1");
 
             this.txtStrategyTarget.Items.Clear();
             this.txtStrategyTarget.Items.AddRange(stockStrategys.Select(c => c.Target).Distinct().ToArray());

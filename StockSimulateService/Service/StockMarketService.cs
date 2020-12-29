@@ -56,6 +56,8 @@ namespace StockSimulateService.Service
             this.GatherData();
 
             this.RemindData();
+
+            this.ClearData();
         }
 
         public void Stop()
@@ -72,8 +74,6 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
-                Repository.Instance.InitDataBase();
-
                 while (true)
                 {
                     StockConfigService.LoadGlobalConfig(RC);
@@ -213,6 +213,21 @@ namespace StockSimulateService.Service
             }, CancellationTokenSource.Token);
         }
 
+        void ClearData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    if (DateTime.Now.Hour == 8 || DateTime.Now.Hour == 17)
+                    {
+                        this.ActionLog("清除股价消息历史数据...");
+                        StockPriceService.Clear();
+                    }
+                    Thread.Sleep(30 * 60 * 1000);
+                }
+            }, CancellationTokenSource.Token);
+        }
         #endregion
 
         #region 通知消息日志

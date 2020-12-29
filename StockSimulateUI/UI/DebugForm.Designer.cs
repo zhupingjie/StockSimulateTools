@@ -40,6 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnClearDebug = new System.Windows.Forms.Button();
             this.btnCalcAvgPrice = new System.Windows.Forms.Button();
+            this.btnCheckDBTable = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtStockPrice
@@ -150,11 +151,23 @@
             this.btnCalcAvgPrice.UseVisualStyleBackColor = true;
             this.btnCalcAvgPrice.Click += new System.EventHandler(this.btnCalcAvgPrice_Click);
             // 
+            // btnCheckDBTable
+            // 
+            this.btnCheckDBTable.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCheckDBTable.Location = new System.Drawing.Point(174, 317);
+            this.btnCheckDBTable.Name = "btnCheckDBTable";
+            this.btnCheckDBTable.Size = new System.Drawing.Size(127, 41);
+            this.btnCheckDBTable.TabIndex = 28;
+            this.btnCheckDBTable.Text = "检查表结构";
+            this.btnCheckDBTable.UseVisualStyleBackColor = true;
+            this.btnCheckDBTable.Click += new System.EventHandler(this.btnCheckDBTable_Click);
+            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 382);
+            this.Controls.Add(this.btnCheckDBTable);
             this.Controls.Add(this.btnCalcAvgPrice);
             this.Controls.Add(this.btnClearDebug);
             this.Controls.Add(this.label3);
@@ -188,5 +201,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnClearDebug;
         private System.Windows.Forms.Button btnCalcAvgPrice;
+        private System.Windows.Forms.Button btnCheckDBTable;
     }
 }

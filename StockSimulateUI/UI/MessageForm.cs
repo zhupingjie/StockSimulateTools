@@ -10,12 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class MessageForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public MessageForm()
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace StockSimulateUI.UI
 
         void LoadMessageList()
         {
-            var messages = Repository.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}'", "ID asc");
+            var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}'", "ID asc");
             var dt = ObjectUtil.ConvertTable(messages, true);
             this.gridMessageList.DataSource = null;
             this.gridMessageList.DataSource = dt.DefaultView;

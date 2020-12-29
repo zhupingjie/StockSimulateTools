@@ -340,8 +340,8 @@ namespace StockSimulateCore.Utils
         {
             var length = name.Length;
             if (name.Contains("(%)")) length = length - 2;
-            else if (name.Contains("(PE)")) length = length - 2;
-            else if (name.Contains("(TTM)")) length = length - 3;
+            else if (name.Contains("(PE)")) length = length - 4;
+            else if (name.Contains("(TTM)")) length = length - 4;
             else if (name.Contains("(")) length = length - 1;
             return length <= 1 ? 30 : length <= 2 ? 50 : length <= 3 ? 55 : length <= 4 ? 70 : length <= 6 ? 90 : length <= 8 ? 100 : 120;
         }

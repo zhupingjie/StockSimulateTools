@@ -62,27 +62,6 @@ namespace StockSimulateDomain.Entity
         [Description("均线趋势(NSML)")]
         public string Trend { get; set; }
 
-
-        [Description("预测增长率(%)")]
-        public decimal Growth { get; set; }
-
-        [Description("预测PE")]
-        public decimal EPE { get; set; }
-
-        [Description("预测盈利(%)")]
-        [NotMapped]
-        public decimal UPPer
-        {
-            get
-            {
-                if (Safety == 0) return 0;
-                return Math.Round((Target - Safety) / Safety * 100m, 2);
-            }
-        }
-
-        [Description("预测结果")]
-        public string Advise { get; set; }
-
         [Description("5日均价")]
         [GridColumnIgnore]
         public decimal AvgPrice5 { get; set; }
@@ -142,7 +121,6 @@ namespace StockSimulateDomain.Entity
 
         [Description("总市值(亿元)")]
         [GatherColumn]
-        [GridColumnIgnore]
         public decimal Amount { get; set; }
 
         [Description("市盈率(动)")]
@@ -150,14 +128,12 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public decimal PE { get; set; }
 
-        [Description("市盈率(TTM)")]
+        [Description("市盈率")]
         [GatherColumn]
-        [GridColumnIgnore]
         public decimal TTM { get; set; }
 
         [Description("市净率")]
         [GatherColumn]
-        [GridColumnIgnore]
         public decimal PB { get; set; }
 
         [Description("市盈率增长率")]
@@ -219,6 +195,29 @@ namespace StockSimulateDomain.Entity
         [GatherColumn]
         [GridColumnIgnore]
         public decimal DebtRage { get; set; }
+
+
+        [Description("预测增长率(%)")]
+        [GridColumnIgnore]
+        public decimal Growth { get; set; }
+
+        [Description("预测PE")]
+        public decimal EPE { get; set; }
+
+        [Description("预测盈利(%)")]
+        [NotMapped]
+        [GridColumnIgnore]
+        public decimal UPPer
+        {
+            get
+            {
+                if (Safety == 0) return 0;
+                return Math.Round((Target - Safety) / Safety * 100m, 2);
+            }
+        }
+
+        [Description("预测结果")]
+        public string Advise { get; set; }
 
         [Description("报告日期")]
         public string ReportDate { get; set; }

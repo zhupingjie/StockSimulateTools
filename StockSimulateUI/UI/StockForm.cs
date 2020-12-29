@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateService.Helper;
+using StockSimulateCore.Data;
 
 namespace StockPriceTools.UI
 {
     public partial class NewStockForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public NewStockForm()
         {
@@ -31,7 +31,7 @@ namespace StockPriceTools.UI
             //var stockInfo = EastMoneyUtil.GetStockPrice(stockCode);
             //if (stockInfo == null) return;
 
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null)
             {
                 stock = new StockEntity();
@@ -39,7 +39,7 @@ namespace StockPriceTools.UI
                 stock.Type = ObjectUtil.ToValue<int>(this.txtSTypeValue.Text, 0);
                 stock.LockDay = ObjectUtil.ToValue<int>(this.txtDay.Text, 0);
 
-                Repository.Insert<StockEntity>(stock);
+                Repository.Instance.Insert<StockEntity>(stock);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();

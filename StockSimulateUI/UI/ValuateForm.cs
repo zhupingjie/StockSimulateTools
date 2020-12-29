@@ -10,14 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockSimulateCore.Utils;
-using StockSimulateCore.Utils;
 using StockSimulateService.Helper;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class ValuateForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public ValuateForm()
         {
@@ -26,10 +25,10 @@ namespace StockSimulateUI.UI
 
         private void ValuateForm_Load(object sender, EventArgs e)
         {
-            var stock = Repository.QueryFirst<StockEntity>($"Code='{StockCode}'");
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{StockCode}'");
             if (stock == null) return;
 
-            var newMainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{StockCode}' and Date<>'' and Rtype=2", "Date desc", 8);
+            var newMainTargets = Repository.Instance.QueryAll<MainTargetEntity>($"StockCode='{StockCode}' and Date<>'' and Rtype=2", "Date desc", 8);
             if (newMainTargets.Length == 0) return;
 
             var lastMainTarget = newMainTargets.FirstOrDefault();
@@ -37,7 +36,7 @@ namespace StockSimulateUI.UI
             var yetYear = (int.Parse(nowYear) - 1).ToString();
             var yetDates = newMainTargets.Where(c => c.Date.StartsWith(nowYear)).Select(c => c.Date.Replace(nowYear, yetYear)).ToArray();
             var date = $"{yetYear}-12-31";
-            var mainTarget = Repository.QueryFirst<MainTargetEntity>($"StockCode='{StockCode}' and Date='{date}' and Rtype=1");
+            var mainTarget = Repository.Instance.QueryFirst<MainTargetEntity>($"StockCode='{StockCode}' and Date='{date}' and Rtype=1");
             if(mainTarget != null)
             {
                 this.txtYetNetProfit.Text = $"{mainTarget.Gsjlr}";
@@ -160,7 +159,7 @@ namespace StockSimulateUI.UI
 
         void LoadMainTargetInfo(string stockCode, int rtype = 0)
         {
-            var mainTargets = Repository.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
+            var mainTargets = Repository.Instance.QueryAll<MainTargetEntity>($"StockCode='{stockCode}' and Rtype={rtype}", "Date desc", 60);
             var dt = EastMoneyUtil.ConvertMainTargetData(mainTargets);
             this.gridMaintargetList.DataSource = null;
             this.gridMaintargetList.DataSource = dt.DefaultView;
@@ -178,7 +177,7 @@ namespace StockSimulateUI.UI
 
         void LoadBalanceTargetInfo(string stockCode, int rtype = 0, int type = 1)
         {
-            var balanceTargets = Repository.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var balanceTargets = Repository.Instance.QueryAll<BalanceTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
             var dt = EastMoneyUtil.ConvertBalanceTargetData(balanceTargets);
             this.gridBalanceTargetList.DataSource = null;
             this.gridBalanceTargetList.DataSource = dt.DefaultView;
@@ -196,7 +195,7 @@ namespace StockSimulateUI.UI
 
         void LoadProfitTargetInfo(string stockCode, int rtype = 0, int type = 1)
         {
-            var profitTargets = Repository.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var profitTargets = Repository.Instance.QueryAll<ProfitTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
             var dt = EastMoneyUtil.ConvertProfitTargetData(profitTargets);
             this.gridProfitTargetList.DataSource = null;
             this.gridProfitTargetList.DataSource = dt.DefaultView;
@@ -214,7 +213,7 @@ namespace StockSimulateUI.UI
 
         void LoadCashTargetInfo(string stockCode, int rtype = 0, int type = 1)
         {
-            var cashTargets = Repository.QueryAll<CashTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
+            var cashTargets = Repository.Instance.QueryAll<CashTargetEntity>($"SECURITYCODE='{stockCode}' and REPORTDATETYPE={rtype} and REPORTTYPE={type}", "REPORTDATE desc", 60);
             var dt = EastMoneyUtil.ConvertCashTargetData(cashTargets);
             this.gridCashTargetList.DataSource = null;
             this.gridCashTargetList.DataSource = dt.DefaultView;

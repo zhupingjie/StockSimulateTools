@@ -12,12 +12,12 @@ using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateDomain.Model;
 using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class RemindForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
 
         public RemindForm()
@@ -27,7 +27,7 @@ namespace StockSimulateUI.UI
 
         private void SetRemindForm_Load(object sender, EventArgs e)
         {
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtAccount.Items.Clear();

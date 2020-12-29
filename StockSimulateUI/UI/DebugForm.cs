@@ -12,12 +12,12 @@ using System.Windows.Forms;
 using StockSimulateCore.Utils;
 using StockSimulateNetService.Serivce;
 using StockSimulateCore.Config;
+using StockSimulateCore.Data;
 
 namespace StockSimulateUI.UI
 {
     public partial class DebugForm : Form
     {
-        private MySQLDBUtil Repository = MySQLDBUtil.Instance;
         public string StockCode { get; set; }
         public DebugForm()
         {
@@ -28,7 +28,7 @@ namespace StockSimulateUI.UI
         {
             this.txtStockCode.Text = StockCode;
 
-            var accounts = Repository.QueryAll<AccountEntity>();
+            var accounts = Repository.Instance.QueryAll<AccountEntity>();
             if (accounts.Length == 0) return;
 
             this.txtAccount.Items.Clear();
@@ -70,6 +70,11 @@ namespace StockSimulateUI.UI
         private void btnCalcAvgPrice_Click(object sender, EventArgs e)
         {
             StockPriceService.CalculateAllAvgrage();
+        }
+
+        private void btnCheckDBTable_Click(object sender, EventArgs e)
+        {
+            Repository.Instance.InitDataBase();
         }
     }
 }
