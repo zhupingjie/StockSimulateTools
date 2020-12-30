@@ -261,6 +261,8 @@ namespace StockPriceTools
                 {
                     this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
+                value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
+                this.gridStockList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("#.###");
             }
 
             LoadStockGridListData = false;
