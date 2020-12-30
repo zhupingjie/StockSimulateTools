@@ -14,7 +14,7 @@ namespace StockSimulateService.Service
     {
         public static void LoadGlobalConfig(RunningConfig rc)
         {
-            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>();
+            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>(withNoLock: true);
             foreach (var config in configs)
             {
                 var prepInfo = ObjectUtil.GetPropertyInfo(rc, config.Name);

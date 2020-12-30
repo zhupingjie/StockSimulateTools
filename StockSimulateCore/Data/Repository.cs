@@ -51,18 +51,18 @@ namespace StockSimulateCore.Data
 
         #region  CRUD
 
-        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "ID desc", int takeSize = 0, string[] columns = null) where TEntity : BaseEntity, new()
+        public TEntity[] QueryAll<TEntity>(string where = "", string orderBy = "ID desc", int takeSize = 0, string[] columns = null, bool withNoLock = false) where TEntity : BaseEntity, new()
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize, columns);
+            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize, columns, withNoLock);
         }
 
-        public TEntity QueryFirst<TEntity>(string where = "", string orderBy = "ID desc") where TEntity : BaseEntity, new()
+        public TEntity QueryFirst<TEntity>(string where = "", string orderBy = "ID desc", bool withNoLock = false) where TEntity : BaseEntity, new()
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where, orderBy).FirstOrDefault();
+            return GetEntitys<TEntity>(tableName, where, orderBy, withNoLock:withNoLock).FirstOrDefault();
         }
 
         public bool Insert<TEntity>(TEntity entity) where TEntity : BaseEntity
@@ -75,7 +75,7 @@ namespace StockSimulateCore.Data
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
             if (entitys.Length == 0) return false;
 
-            return CreateEntity(entitys, tableName); ;
+            return CreateEntity(entitys, tableName);
         }
         public bool Update<TEntity>(TEntity entity, string[] columns = null) where TEntity : BaseEntity
         {
@@ -111,14 +111,17 @@ namespace StockSimulateCore.Data
             return DeleteEntity(tableName, where);
         }
 
-        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null) where TEntity : BaseEntity, new()
+        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null, bool withNoLock = false) where TEntity : BaseEntity, new()
         {
             var lst = new List<TEntity>();
-            var sql = $"select * from {table}";
-            if (columns != null && columns.Length > 0) sql = $"select {string.Join(",", columns)} from {table}";
+            var sql = "";
+            if (withNoLock) sql = $"{sql} SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;";
+            if (columns != null && columns.Length > 0) sql = $"{sql} select {string.Join(",", columns)} from {table}";
+            else sql = $"{sql} select * from {table}";
             if (!string.IsNullOrWhiteSpace(where)) sql = $"{sql} where {where}";
             if (!string.IsNullOrEmpty(orderBy)) sql = $"{sql} order by {orderBy}";
             if (takeSize > 0) sql = $"{sql} limit {takeSize}";
+            if (withNoLock) sql = $"{sql}; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;";
 
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
@@ -146,7 +149,7 @@ namespace StockSimulateCore.Data
             }
             catch (Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
                 return lst.ToArray();
             }
             finally
@@ -176,28 +179,28 @@ namespace StockSimulateCore.Data
                     var value = field.GetValue(entity);
                     if (value != null)
                     {
-                        string val = null;
-                        if (field.PropertyType == typeof(DateTime))
-                        {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-                        else if (TypeUtil.IsNullableType(field.PropertyType) && TypeUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
-                        {
-                            val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-                        else if (field.PropertyType == typeof(string))
-                        {
-                            val = value.ToString().Replace("'", "''");
-                        }
-                        else if (field.PropertyType == typeof(bool))
-                        {
-                            val = ($"{value}" == "True" ? "1" : "0");
-                        }
-                        else
-                        {
-                            val = value.ToString();
-                        }
-                        sbVal.Append($",'{val}'");
+                        //string val = null;
+                        //if (field.PropertyType == typeof(DateTime))
+                        //{
+                        //    val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                        //}
+                        //else if (TypeUtil.IsNullableType(field.PropertyType) && TypeUtil.GetNullableType(field.PropertyType) == typeof(DateTime))
+                        //{
+                        //    val = DateTime.Parse(value.ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                        //}
+                        //else if (field.PropertyType == typeof(string))
+                        //{
+                        //    val = value.ToString().Replace("'", "''");
+                        //}
+                        //else if (field.PropertyType == typeof(bool))
+                        //{
+                        //    val = ($"{value}" == "True" ? "1" : "0");
+                        //}
+                        //else
+                        //{
+                        //    val = value.ToString();
+                        //}
+                        sbVal.Append($",'{value}'");
                     }
                     else
                     {
@@ -205,7 +208,7 @@ namespace StockSimulateCore.Data
                     }
                 }
 
-                sql += $"insert into {tableName} (`ID` {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
+                sql += $"insert into `{tableName}` (`ID` {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
             }
 
             var conn = Pool.GetConnection();
@@ -218,7 +221,7 @@ namespace StockSimulateCore.Data
             }
             catch (Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
                 return false;
             }
             finally
@@ -281,7 +284,7 @@ namespace StockSimulateCore.Data
             }
             catch (Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
                 return false;
             }
             finally
@@ -309,7 +312,7 @@ namespace StockSimulateCore.Data
             }
             catch (Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
                 return false;
             }
             finally
@@ -332,7 +335,7 @@ namespace StockSimulateCore.Data
             }
             catch (Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
                 return false;
             }
             finally
@@ -379,7 +382,7 @@ namespace StockSimulateCore.Data
             }
             catch(Exception ex)
             {
-                LogUtil.Error(ex, $"{ex.Message},SQL:{sql}");
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
             }
             finally
             {

@@ -92,7 +92,7 @@ namespace StockSimulateCore.Config
         /// <summary>
         /// 全局配置读取时间(秒)
         /// </summary>
-        public int LoadGlobalConfigInterval { get; set; } = 20;
+        public int LoadGlobalConfigInterval { get; set; } = 30;
 
         /// <summary>
         /// 上证指数
