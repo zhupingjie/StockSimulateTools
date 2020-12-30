@@ -269,6 +269,16 @@ namespace StockPriceTools
             var time = "无更新数据";
             if (stocks.Length > 0) time = stocks.Max(c => c.LastDate).ToString("yyyy-MM-dd HH:mm:ss");
             this.lblCurrentTime.Text = $"{time}";
+
+            var shzs = Repository.Instance.QueryFirst<StockEntity>($"Code='{RC.SHZSOfStockCode}'");
+            if (shzs != null)
+            {
+                if (shzs.UDPer > 0) this.lblMessage.ForeColor = Color.Red;
+                else if (shzs.UDPer < 0) this.lblMessage.ForeColor = Color.Green;
+                else this.lblMessage.ForeColor = Color.Blue;
+
+                this.lblMessage.Text = $"上证指数 [{shzs.Price} {shzs.UDPer}%]";
+            }
         }
 
         void LoadAccountStockList()
@@ -454,7 +464,7 @@ namespace StockPriceTools
 
                 this.ActionLog(message.Title);
             }
-            Repository.Instance.Update<MessageEntity>(messages);
+            Repository.Instance.Update<MessageEntity>(messages, new string[] { "ReadTime" });
         }
 
         void LoadPriceChartData(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)
@@ -1143,7 +1153,7 @@ namespace StockPriceTools
         {
             Action act = delegate ()
             {
-                this.ShowMessage(message);
+                //this.ShowMessage(message);
 
                 this.txtActionLog.AppendText($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}\n");
                 this.txtActionLog.SelectionStart = this.txtActionLog.Text.Length;
@@ -1153,16 +1163,6 @@ namespace StockPriceTools
             };
             this.Invoke(act);
         }
-
-        public void ShowMessage(string message)
-        {
-            Action act = delegate ()
-            {
-                this.lblMessage.Text = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} {message}";
-            };
-            this.Invoke(act);
-        }
-
 
         void InitDataGrid()
         {

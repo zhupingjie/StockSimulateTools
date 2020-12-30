@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -66,6 +66,7 @@
             this.tabHoldStockList = new System.Windows.Forms.TabPage();
             this.gridAccountStockList = new System.Windows.Forms.DataGridView();
             this.panel12 = new System.Windows.Forms.Panel();
+            this.txtNoRealAccount = new System.Windows.Forms.CheckBox();
             this.txtHoldQty = new System.Windows.Forms.CheckBox();
             this.lblAccountStockInfo = new System.Windows.Forms.Label();
             this.txtAccountSearch = new System.Windows.Forms.TextBox();
@@ -132,9 +133,9 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtNoRealAccount = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -313,7 +314,6 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.panel2.Controls.Add(this.lblCurrentTime);
             this.panel2.Controls.Add(this.panel5);
             this.panel2.Controls.Add(this.lblMessage);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -327,7 +327,7 @@
             this.lblCurrentTime.AutoSize = true;
             this.lblCurrentTime.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblCurrentTime.ForeColor = System.Drawing.Color.Blue;
-            this.lblCurrentTime.Location = new System.Drawing.Point(1040, 4);
+            this.lblCurrentTime.Location = new System.Drawing.Point(15, 4);
             this.lblCurrentTime.Name = "lblCurrentTime";
             this.lblCurrentTime.Size = new System.Drawing.Size(163, 21);
             this.lblCurrentTime.TabIndex = 0;
@@ -335,10 +335,11 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.lblCurrentTime);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(1081, 0);
+            this.panel5.Location = new System.Drawing.Point(1029, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(127, 30);
+            this.panel5.Size = new System.Drawing.Size(179, 30);
             this.panel5.TabIndex = 1;
             // 
             // lblMessage
@@ -556,6 +557,17 @@
             this.panel12.Size = new System.Drawing.Size(842, 29);
             this.panel12.TabIndex = 48;
             // 
+            // txtNoRealAccount
+            // 
+            this.txtNoRealAccount.AutoSize = true;
+            this.txtNoRealAccount.Location = new System.Drawing.Point(562, 8);
+            this.txtNoRealAccount.Name = "txtNoRealAccount";
+            this.txtNoRealAccount.Size = new System.Drawing.Size(60, 16);
+            this.txtNoRealAccount.TabIndex = 10;
+            this.txtNoRealAccount.Text = "模拟盘";
+            this.txtNoRealAccount.UseVisualStyleBackColor = true;
+            this.txtNoRealAccount.CheckedChanged += new System.EventHandler(this.txtNoRealAccount_CheckedChanged);
+            // 
             // txtHoldQty
             // 
             this.txtHoldQty.AutoSize = true;
@@ -647,11 +659,11 @@
             // 
             // chartPrice
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea3);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend3);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1255,17 +1267,6 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // txtNoRealAccount
-            // 
-            this.txtNoRealAccount.AutoSize = true;
-            this.txtNoRealAccount.Location = new System.Drawing.Point(562, 8);
-            this.txtNoRealAccount.Name = "txtNoRealAccount";
-            this.txtNoRealAccount.Size = new System.Drawing.Size(60, 16);
-            this.txtNoRealAccount.TabIndex = 10;
-            this.txtNoRealAccount.Text = "模拟盘";
-            this.txtNoRealAccount.UseVisualStyleBackColor = true;
-            this.txtNoRealAccount.CheckedChanged += new System.EventHandler(this.txtNoRealAccount_CheckedChanged);
-            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1287,6 +1288,8 @@
             this.toolStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
