@@ -83,5 +83,19 @@ namespace StockSimulateService.Service
             }
             Repository.Instance.Update<StockEntity>(stocks, new string[] { "EPE", "Growth", "Target", "Safety", "Advise" });
         }
+
+        public static StockResultInfo[] GetStockInfos()
+        {
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            return stocks.Select(c => new StockResultInfo()
+            {
+                Code = c.Code,
+                Name = c.Name,
+                Price = c.Price,
+                UDPer = c.UDPer,
+                TTM = c.TTM,
+                Amount = c.Amount
+            }).ToArray();
+        }
     }
 }

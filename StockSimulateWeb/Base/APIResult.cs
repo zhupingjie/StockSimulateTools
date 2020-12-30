@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StockSimulateCore.Controllers
+namespace StockSimulateWeb.Base
 {
     public class APIResult
     {
