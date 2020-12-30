@@ -459,14 +459,11 @@ namespace StockPriceTools
 
         void LoadMessageInfo()
         {
-            var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and NoticeTime<='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' and ReadTime is null", "ID asc");
+            var messages = StockMessageService.GetWinMessages();
             foreach(var message in messages)
             {
-                message.ReadTime = DateTime.Now;
-
                 this.ActionLog(message.Title);
             }
-            Repository.Instance.Update<MessageEntity>(messages, new string[] { "ReadTime" });
         }
 
         void LoadPriceChartData(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)

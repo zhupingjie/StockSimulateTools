@@ -28,8 +28,11 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public DateTime NoticeTime { get; set; }
 
-        [Description("读取时间(Time)")]
-        public DateTime? ReadTime { get; set; }
+        [Description("Win读取时间(Time)")]
+        public DateTime? WinReadTime { get; set; }
+
+        [Description("App读取时间(Time)")]
+        public DateTime? AppReadTime { get; set; }
 
         [Description("是否处理")]
         [GridColumnIgnore]

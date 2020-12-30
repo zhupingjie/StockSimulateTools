@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StockSimulateCore\StockSimulateCore.csproj" />
+    <ProjectReference Include="..\StockSimulateDomain\StockSimulateDomain.csproj" />
+    <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj" />
+  </ItemGroup>
+
+
+</Project>
