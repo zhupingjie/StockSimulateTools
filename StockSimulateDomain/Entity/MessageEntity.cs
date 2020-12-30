@@ -21,7 +21,7 @@ namespace StockSimulateDomain.Entity
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
 
-        [Description("消息标题")]
+        [Description("消息内容")]
         public string Title { get; set; }
 
         [Description("消息时间(Time)")]

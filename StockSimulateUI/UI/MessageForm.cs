@@ -23,17 +23,19 @@ namespace StockSimulateUI.UI
 
         void LoadMessageList()
         {
-            var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}'", "ID asc");
+            var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}'", "ID desc");
             var dt = ObjectUtil.ConvertTable(messages, true);
             this.gridMessageList.DataSource = null;
             this.gridMessageList.DataSource = dt.DefaultView;
 
+            var goodCellStyle = new DataGridViewCellStyle();
+            goodCellStyle.BackColor = Color.LightYellow;
             for (var i = 0; i < this.gridMessageList.ColumnCount; i++)
             {
                 this.gridMessageList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                 var columnName = this.gridMessageList.Columns[i].Name;
-                if (columnName == "消息标题")
+                if (columnName == "消息内容")
                 {
                     this.gridMessageList.Columns[i].Width = 300;
                 }
@@ -41,22 +43,28 @@ namespace StockSimulateUI.UI
                 {
                     this.gridMessageList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 }
+                this.gridMessageList.Columns[i].DefaultCellStyle.ForeColor = Color.DarkGray;
+                if (new string[] { "股票代码", "股票名称", "股价", "浮动(%)", "消息内容" }.Contains(columnName))
+                {
+                    this.gridMessageList.Columns[i].DefaultCellStyle = goodCellStyle;
+                }
             }
-
             for (var i = 0; i < this.gridMessageList.Rows.Count; i++)
             {
                 var row = this.gridMessageList.Rows[i];
                 var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
                 if (value > 0)
                 {
-                    this.gridMessageList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                    row.Cells["股价"].Style.ForeColor = Color.Red;
+                    row.Cells["浮动(%)"].Style.ForeColor = Color.Red;
                 }
                 else
                 {
-                    this.gridMessageList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                    row.Cells["股价"].Style.ForeColor = Color.Green;
+                    row.Cells["浮动(%)"].Style.ForeColor = Color.Green;
                 }
                 value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
-                this.gridMessageList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("#.###");
+                row.Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("#.###");
             }
         }
 
