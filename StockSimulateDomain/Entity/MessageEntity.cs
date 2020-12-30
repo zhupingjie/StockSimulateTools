@@ -15,6 +15,12 @@ namespace StockSimulateDomain.Entity
         [Description("股票名称")]
         public string StockName { get; set; }
 
+        [Description("股价")]
+        public decimal Price { get; set; }
+
+        [Description("浮动(%)")]
+        public decimal UDPer { get; set; }
+
         [Description("消息标题")]
         public string Title { get; set; }
 

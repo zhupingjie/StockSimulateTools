@@ -15,6 +15,8 @@ namespace StockSimulateService.Service
             {
                 StockCode = stock.Code,
                 StockName = stock.Name,
+                Price = stock.Price,
+                UDPer = stock.UDPer,
                 Title = title,
                 NoticeTime = DateTime.Now,
             };

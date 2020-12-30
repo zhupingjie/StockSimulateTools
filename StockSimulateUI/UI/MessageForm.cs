@@ -42,6 +42,22 @@ namespace StockSimulateUI.UI
                     this.gridMessageList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 }
             }
+
+            for (var i = 0; i < this.gridMessageList.Rows.Count; i++)
+            {
+                var row = this.gridMessageList.Rows[i];
+                var value = ObjectUtil.ToValue<decimal>(row.Cells["浮动(%)"].Value, 0);
+                if (value > 0)
+                {
+                    this.gridMessageList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    this.gridMessageList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
+                this.gridMessageList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("#.###");
+            }
         }
 
         private void MessageForm_Load(object sender, EventArgs e)

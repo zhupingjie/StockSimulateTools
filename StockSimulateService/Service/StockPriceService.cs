@@ -181,7 +181,7 @@ namespace StockSimulateService.Service
                 //计算当前趋势
                 stock.Trend = GetTrend(stock, stockAverage, yestAvgPrice);
             }
-            Repository.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "LastAvgPrice5", "LastAvgPrice10", "LastAvgPrice20", "LastAvgPrice60", "LastAvgPrice120", "LastAvgPrice250" });
+            Repository.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250", "Trend5", "Trend10", "Trend20", "Trend60", "Trend120", "Trend250" });
             Repository.Instance.Update<StockAverageEntity>(stockAverages);
             Repository.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
