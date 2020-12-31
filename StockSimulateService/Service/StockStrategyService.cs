@@ -391,7 +391,7 @@ namespace StockSimulateService.Service
                 item.ExecuteOK = result.Success ? 1 : 2;
                 item.Message = result.Message;
             }
-            Repository.Instance.Update<StockStrategyEntity>(runStrategys);
+            Repository.Instance.Update<StockStrategyEntity>(runStrategys, new string[] { "ExecuteOK", "Message" });
         }
 
         public static StrategyInfo ExchangeRun(StockStrategyEntity stockStrategy, ExchangeInfo exchangeInfo)

@@ -26,7 +26,7 @@ namespace StockSimulateService.Service
             {
                 stockInfo.DayPrice.ID = price.ID;
                 stockInfo.DayPrice.DealTime = "";
-                Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice, new string[] { "DealTime", "Price", "UDPer", "TodayStartPrice", "TodayEndPrice", "TodayMaxPrice", "TodayMinPrice" });
             }
             if (stock.Foucs > 0)
             {
@@ -46,7 +46,7 @@ namespace StockSimulateService.Service
                     stockInfo.DayPrice.ID = price2.ID;
                     stockInfo.DayPrice.DateType = 1;//分钟
                     stockInfo.DayPrice.DealTime = dealTime;
-                    Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
+                    Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice, new string[] { "DealTime", "DateType", "Price", "UDPer" });
                 }
             }
         }

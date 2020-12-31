@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using Dapper;
 using StockSimulateCore.Config;
 using StockSimulateCore.Utils;
 using StockSimulateDomain.Attributes;
@@ -57,14 +57,14 @@ namespace StockSimulateCore.Data
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where, orderBy, takeSize, columns, withNoLock);
+            return QueryEntitys<TEntity>(tableName, where, orderBy, takeSize, columns, withNoLock);
         }
 
         public TEntity QueryFirst<TEntity>(string where = "", string orderBy = "ID desc", bool withNoLock = false) where TEntity : BaseEntity, new()
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
 
-            return GetEntitys<TEntity>(tableName, where, orderBy, withNoLock:withNoLock).FirstOrDefault();
+            return QueryEntitys<TEntity>(tableName, where, orderBy, withNoLock:withNoLock).FirstOrDefault();
         }
 
         public bool Insert<TEntity>(TEntity entity) where TEntity : BaseEntity
@@ -113,7 +113,7 @@ namespace StockSimulateCore.Data
             return DeleteEntity(tableName, where);
         }
 
-        TEntity[] GetEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null, bool withNoLock = false) where TEntity : BaseEntity, new()
+        TEntity[] QueryEntitys<TEntity>(string table, string where, string orderBy = "", int takeSize = 0, string[] columns = null, bool withNoLock = false) where TEntity : BaseEntity, new()
         {
             var lst = new List<TEntity>();
             var sql = "";
@@ -125,13 +125,10 @@ namespace StockSimulateCore.Data
             if (takeSize > 0) sql = $"{sql} limit {takeSize}";
             if (withNoLock) sql = $"{sql}; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;";
 
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                var reader = cmd.ExecuteReader();
+                var reader = conn.ExecuteReader(sql, commandTimeout: commandTimeout);
                 while (reader.Read())
                 {
                     var item = new TEntity();
@@ -157,7 +154,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 
@@ -214,13 +211,10 @@ namespace StockSimulateCore.Data
                 sql += $"insert into `{tableName}` (`ID` {sbCol.ToString()}) values (NULL {sbVal.ToString()});";
             }
 
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, commandTimeout: commandTimeout);
                 return true;
             }
             catch (Exception ex)
@@ -230,7 +224,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 
@@ -278,13 +272,10 @@ namespace StockSimulateCore.Data
                 sql += $"update {table} set `lastdate`='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' {sb.ToString()} where `ID`={entity.ID};";
             }
 
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, commandTimeout: commandTimeout);
                 return true;
             }
             catch (Exception ex)
@@ -294,7 +285,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 
@@ -307,13 +298,10 @@ namespace StockSimulateCore.Data
             {
                 sb.Append($"delete from {table} where `ID`='{entity.ID}';");
             }
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql = sb.ToString();
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, commandTimeout: commandTimeout);
                 return true;
             }
             catch (Exception ex)
@@ -323,7 +311,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 
@@ -331,13 +319,10 @@ namespace StockSimulateCore.Data
         {
             var sql = $"delete from {table} where {where}";
 
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, commandTimeout: commandTimeout);
                 return true;
             }
             catch (Exception ex)
@@ -347,7 +332,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 
@@ -380,13 +365,10 @@ namespace StockSimulateCore.Data
             sb.Append(",PRIMARY KEY (`ID`)");
             sb.Append(") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;");
 
-            var conn = Pool.GetConnection();
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = sql = sb.ToString();
-            cmd.CommandTimeout = commandTimeout;
+            var conn = Pool.Rent();
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, commandTimeout: commandTimeout);
             }
             catch(Exception ex)
             {
@@ -394,7 +376,7 @@ namespace StockSimulateCore.Data
             }
             finally
             {
-                Pool.CloseConnection(conn);
+                Pool.Free(conn);
             }
         }
 

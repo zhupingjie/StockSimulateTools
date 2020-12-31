@@ -20,7 +20,7 @@ namespace StockSimulateNetService.Serivce
         /// <param name="actionLog"></param>
         public static void GatherPriceData(Action<string> actionLog)
         {
-            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            var stocks = Repository.Instance.QueryAll<StockEntity>(withNoLock: true);
             foreach (var stock in stocks)
             {
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);

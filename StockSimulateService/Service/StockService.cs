@@ -33,16 +33,18 @@ namespace StockSimulateService.Service
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
+            var columns = new List<string>();
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
             {
                 if (prep.GetCustomAttributes(typeof(GatherColumnAttribute), true).Length == 0) continue;
 
-                var prepValue = ObjectUtil.GetPropertyValue(stockInfo.Stock, prep.Name);
+                var changeValue = ObjectUtil.GetPropertyValue(stockInfo.Stock, prep.Name);
+                ObjectUtil.SetPropertyValue(stock, prep.Name, changeValue);
 
-                ObjectUtil.SetPropertyValue(stock, prep.Name, prepValue);
+                columns.Add(prep.Name);
             }
-            Repository.Instance.Update<StockEntity>(stock);
+            Repository.Instance.Update<StockEntity>(stock, columns.ToArray());
         }
 
         public static void Delete(string stockCode)

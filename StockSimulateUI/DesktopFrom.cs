@@ -40,15 +40,7 @@ namespace StockPriceTools
 
         void LoadData()
         {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    StockConfigService.LoadGlobalConfig(RC);
-
-                    Thread.Sleep(RC.LoadGlobalConfigInterval * 1000);
-                }
-            }, CancellationTokenSource.Token);
+            StockConfigService.LoadGlobalConfig(RC);
 
             Task.Factory.StartNew(() =>
             {

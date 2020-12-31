@@ -1,11 +1,7 @@
-﻿using MySqlConnector;
-using StockSimulateCore.Utils;
+﻿using StockSimulateCore.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace StockSimulateCore.Data
 {
@@ -15,7 +11,7 @@ namespace StockSimulateCore.Data
         private static Object objlock = typeof(ConnectionPool);//池管理对象实例
         private int maxPoolSize = 200;//最大连接数
         private int useCount = 0;//已经使用的连接数
-        private Queue<MySqlConnection> pool = null;//连接保存的集合
+        private Queue<IDbConnection> pool = null;//连接保存的集合
         private string ConnectionStr = "";//连接字符串
 
         public ConnectionPool(string connStr)
@@ -23,7 +19,7 @@ namespace StockSimulateCore.Data
             //数据库连接字符串
             ConnectionStr = connStr;
             //创建可用连接的集合
-            pool = new Queue<MySqlConnection>();
+            pool = new Queue<IDbConnection>();
         }
 
         #region 创建获取连接池对象
@@ -49,21 +45,24 @@ namespace StockSimulateCore.Data
         {
             for (var i = 0; i < defaultPoolSize; i++)
             {
-                MySqlConnection tmp = null;
-                tmp = CreateConnection(tmp);
+                var conn = CreateConnection(); 
 
-                CloseConnection(tmp);
+                Free(conn);
             }
         }
 
         #endregion
 
         #region 获取池中的连接
-        public MySqlConnection GetConnection()
+        /// <summary>
+        /// 从连接池中获取一个链接
+        /// </summary>
+        /// <returns></returns>
+        public IDbConnection Rent()
         {
             lock (pool)
             {
-                MySqlConnection tmp = null;
+                IDbConnection tmp = null;
                 //可用连接数量大于0
                 if (pool.Count > 0)
                 {
@@ -78,8 +77,8 @@ namespace StockSimulateCore.Data
                         //LogUtil.Debug($"!!! Bad Connection, Pool={pool.Count},UserConn={useCount},Thread={tmp.ServerThread}");
                         //可用的连接数据已去掉一个
                         useCount--;
-                        if (tmp.State == System.Data.ConnectionState.Open) tmp.Close();
-                        tmp = GetConnection();
+                        if (tmp.State == ConnectionState.Open) tmp.Close();
+                        tmp = Rent();
                     }
                 }
                 else
@@ -90,7 +89,7 @@ namespace StockSimulateCore.Data
                         try
                         {
                             //创建连接
-                            tmp = CreateConnection(tmp);
+                            tmp = CreateConnection();
                         }
                         catch (Exception e)
                         {
@@ -108,21 +107,24 @@ namespace StockSimulateCore.Data
         #endregion
 
         #region 创建连接
-        private MySqlConnection CreateConnection(MySqlConnection tmp)
+        private IDbConnection CreateConnection()
         {
             //创建连接
-            MySqlConnection conn = new MySqlConnection(ConnectionStr);
+            var conn = SqlDBFactory.GetDBConnection(DatabaseTypeEnum.MySQL, ConnectionStr);
             conn.Open();
             //可用的连接数加上一个
             useCount++;
-            tmp = conn;
             //LogUtil.Debug($"!!! Create Connection, Pool={pool.Count},UseConn={useCount},Thread={tmp.ServerThread}");
-            return tmp;
+            return conn;
         }
         #endregion
 
         #region 关闭连接,加连接回到池中
-        public void CloseConnection(MySqlConnection con)
+        /// <summary>
+        /// 释放链接(放回连接池)
+        /// </summary>
+        /// <param name="con"></param>
+        public void Free(IDbConnection con)
         {
             lock (pool)
             {
@@ -138,14 +140,14 @@ namespace StockSimulateCore.Data
         #endregion
 
         #region 目的保证所创连接成功,测试池中连接
-        private bool isUserful(MySqlConnection con)
+        private bool isUserful(IDbConnection con)
         {
             //主要用于不同用户
             bool result = true;
             if (con != null)
             {
-                string sql = "select 1";//随便执行对数据库操作
-                MySqlCommand cmd = new MySqlCommand(sql, con);
+                var cmd = con.CreateCommand();
+                cmd.CommandText = "select 1";
                 try
                 {
                     cmd.ExecuteScalar();
