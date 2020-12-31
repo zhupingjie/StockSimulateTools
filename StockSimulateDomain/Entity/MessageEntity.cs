@@ -36,6 +36,6 @@ namespace StockSimulateDomain.Entity
 
         [Description("是否处理")]
         [GridColumnIgnore]
-        public bool Handled { get; set; }
+        public int Handled { get; set; }
     }
 }

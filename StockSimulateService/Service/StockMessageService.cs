@@ -55,7 +55,7 @@ namespace StockSimulateService.Service
             var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}' and ID in ({string.Join(",", ids)})");
             foreach(var message in messages)
             {
-                message.Handled = true;
+                message.Handled = 1;
             }
             Repository.Instance.Update<MessageEntity>(messages);
         }
@@ -65,7 +65,7 @@ namespace StockSimulateService.Service
             var messages = Repository.Instance.QueryAll<MessageEntity>($"Handled=0 and ReadTime>='{DateTime.Now.ToString("yyyy-MM-dd")}'");
             foreach (var message in messages)
             {
-                message.Handled = true;
+                message.Handled = 1;
             }
             Repository.Instance.Update<MessageEntity>(messages);
         }
