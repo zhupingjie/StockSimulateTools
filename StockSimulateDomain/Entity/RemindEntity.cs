@@ -22,7 +22,7 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int RType { get; set; }
         [Description("类型")]
-        [NotMapped]
+        [DBNotMapped]
         public string RTypeText
         {
             get
@@ -53,7 +53,7 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int Handled { get; set; }
         [Description("是否执行")]
-        [NotMapped]
+        [DBNotMapped]
         public string HandledText
         {
             get

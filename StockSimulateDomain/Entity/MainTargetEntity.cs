@@ -27,7 +27,7 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int Rtype { get; set; }
         [Description("指标类型")]
-        [NotMapped]
+        [DBNotMapped]
         public string RtypeText
         {
             get

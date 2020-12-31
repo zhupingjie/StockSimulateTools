@@ -20,7 +20,7 @@ namespace StockSimulateDomain.Entity
         public int DateType { get; set; }
 
         [Description("时间类型")]
-        [NotMapped]
+        [DBNotMapped]
         public string DateTypeText
         {
             get

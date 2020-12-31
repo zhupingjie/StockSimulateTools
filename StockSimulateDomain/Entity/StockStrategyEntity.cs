@@ -26,7 +26,7 @@ namespace StockSimulateDomain.Entity
         public int ExecuteMode { get; set; }
 
         [Description("执行策略")]
-        [NotMapped]
+        [DBNotMapped]
         public string ExecuteModeText
         {
             get
@@ -42,7 +42,7 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int Condition { get; set; }
         [Description("条件")]
-        [NotMapped]
+        [DBNotMapped]
         public string 条件Text
         {
             get
@@ -89,7 +89,7 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int ExecuteOK { get; set; }
         [Description("执行结果")]
-        [NotMapped]
+        [DBNotMapped]
         public string ExecuteOKText
         {
             get

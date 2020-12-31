@@ -6,7 +6,6 @@ using StockSimulateDomain.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -246,7 +245,7 @@ namespace StockSimulateCore.Utils
             var types = objType.GetProperties();
             foreach(var type in types)
             {
-                if (type.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+                if (type.GetCustomAttributes(typeof(DBNotMappedAttribute), true).Length > 0) continue;
 
                 pInfos.Add(type);
             }

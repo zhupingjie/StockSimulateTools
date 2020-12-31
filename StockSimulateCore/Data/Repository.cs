@@ -1,10 +1,10 @@
 ﻿using MySqlConnector;
 using StockSimulateCore.Config;
 using StockSimulateCore.Utils;
+using StockSimulateDomain.Attributes;
 using StockSimulateDomain.Data;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -172,7 +172,7 @@ namespace StockSimulateCore.Data
                 foreach (var field in fields)
                 {
                     if (field.Name == "ID") continue;
-                    if (field.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+                    if (field.GetCustomAttributes(typeof(DBNotMappedAttribute), true).Length > 0) continue;
 
                     sbCol.Append($",`{field.Name}`");
 
@@ -243,7 +243,7 @@ namespace StockSimulateCore.Data
                 {
                     if (field.Name == "ID" || field.Name == "LastDate") continue;
                     if (columns != null && !columns.Contains(field.Name)) continue;
-                    if (field.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+                    if (field.GetCustomAttributes(typeof(DBNotMappedAttribute), true).Length > 0) continue;
 
                     var value = field.GetValue(entity);
                     if (value != null)
@@ -401,7 +401,7 @@ namespace StockSimulateCore.Data
 
                 foreach (var prep in preps)
                 {
-                    if (prep.GetCustomAttributes(typeof(NotMappedAttribute), true).Length > 0) continue;
+                    if (prep.GetCustomAttributes(typeof(DBNotMappedAttribute), true).Length > 0) continue;
 
                     var col = ObjectUtil.GetDBColumnType(prep.Name, prep.PropertyType);
                     if (col.ColumnName.Equals("ID", StringComparison.CurrentCultureIgnoreCase)) continue;

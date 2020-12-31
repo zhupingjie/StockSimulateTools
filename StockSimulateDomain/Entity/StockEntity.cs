@@ -17,7 +17,7 @@ namespace StockSimulateDomain.Entity
         public int Type { get; set; }
 
         [Description("股票类型")]
-        [NotMapped]
+        [DBNotMapped]
         public string TypeText
         {
             get
@@ -31,7 +31,7 @@ namespace StockSimulateDomain.Entity
         public int Foucs { get; set; }
 
         [Description("关注")]
-        [NotMapped]
+        [DBNotMapped]
         public string FoucsText {
             get {
                 return Foucs == 1 ? "✔" : Foucs == 2 ? "◉" : "×";
@@ -205,7 +205,7 @@ namespace StockSimulateDomain.Entity
         public decimal EPE { get; set; }
 
         [Description("预测盈利(%)")]
-        [NotMapped]
+        [DBNotMapped]
         [GridColumnIgnore]
         public decimal UPPer
         {

@@ -46,7 +46,7 @@ namespace StockSimulateDomain.Entity
         public string PdfCode { get; set; }
 
         [Description("地址")]
-        [NotMapped]
+        [DBNotMapped]
         [GridColumnIgnore]
         public string PdfUrl
         {
