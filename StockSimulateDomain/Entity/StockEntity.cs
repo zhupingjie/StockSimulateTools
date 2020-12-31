@@ -34,7 +34,7 @@ namespace StockSimulateDomain.Entity
         [DBNotMapped]
         public string FoucsText {
             get {
-                return Foucs == 1 ? "✔" : Foucs == 2 ? "◉" : "×";
+                return Foucs == 1 ? "✔" : Foucs == 2 ? "◉" :  Foucs == 3 ? "▼" : "×";
             }
         }
 

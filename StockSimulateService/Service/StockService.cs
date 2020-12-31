@@ -19,7 +19,7 @@ namespace StockSimulateService.Service
             var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
             stock.Foucs += 1;
-            if (stock.Foucs > 2) stock.Foucs = 0;
+            if (stock.Foucs > 3) stock.Foucs = 0;
             Repository.Instance.Update<StockEntity>(stock, new string[] { "Foucs" });
         }
 
