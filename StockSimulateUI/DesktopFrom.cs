@@ -58,6 +58,7 @@ namespace StockPriceTools
                     Action act = delegate ()
                     {
                         this.LoadStockList();
+                        this.LoadTopInfo();
                     };
                     this.Invoke(act);
 
@@ -79,9 +80,28 @@ namespace StockPriceTools
                     Thread.Sleep(RC.LoadMessageInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
-
         }
 
+        void LoadTopInfo()
+        {
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"(Top=1 or Code='{RC.SHZSOfStockCode}')");
+
+            var message = new List<string>();
+            var shzs = stocks.FirstOrDefault(c => c.Code == RC.SHZSOfStockCode);
+            if (shzs != null)
+            {
+                message.Add($"[{shzs.Name} {shzs.Price.ToString("#.##")} {shzs.UDPer}%]");//
+
+                if (shzs.UDPer > 0) this.lblMessage.ForeColor = Color.Red;
+                else if (shzs.UDPer < 0) this.lblMessage.ForeColor = Color.Green;
+                else this.lblMessage.ForeColor = Color.Blue;
+            }
+            foreach (var stock in stocks.Where(c => c.Code != RC.SHZSOfStockCode))
+            {
+                message.Add($"[{stock.Name} {stock.UDPer.ToString("#.##")}%]");//{stock.Price} 
+            }
+            this.lblMessage.Text = string.Join(" ", message);
+        }
         void LoadStockData()
         {
             Task.Factory.StartNew(() =>
@@ -90,6 +110,7 @@ namespace StockPriceTools
                 {
                     this.gridStockList.Enabled = false;
                     this.LoadStockList();
+                    this.LoadTopInfo();
                     this.gridStockList.Enabled = true;
                 };
                 this.Invoke(act);
@@ -271,16 +292,6 @@ namespace StockPriceTools
             var time = "无更新数据";
             if (stocks.Length > 0) time = stocks.Max(c => c.LastDate).ToString("yyyy-MM-dd HH:mm:ss");
             this.lblCurrentTime.Text = $"{time}";
-
-            var shzs = Repository.Instance.QueryFirst<StockEntity>($"Code='{RC.SHZSOfStockCode}'");
-            if (shzs != null)
-            {
-                if (shzs.UDPer > 0) this.lblMessage.ForeColor = Color.Red;
-                else if (shzs.UDPer < 0) this.lblMessage.ForeColor = Color.Green;
-                else this.lblMessage.ForeColor = Color.Blue;
-
-                this.lblMessage.Text = $"上证指数 [{shzs.Price} {shzs.UDPer}%]";
-            }
         }
 
         void LoadAccountStockList()
@@ -363,6 +374,17 @@ namespace StockPriceTools
 
             this.LoadStockData();
         }
+        private void btnTop_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+
+            StockService.Top(stockCode);
+
+            this.LoadStockData();
+        }
+
         private void txtFoucST_CheckedChanged(object sender, EventArgs e)
         {
             if (txtFoucST.Checked)
@@ -527,7 +549,7 @@ namespace StockPriceTools
                     var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
                     if (zsSeries == null) zsSeries = this.chartPrice.Series.Add("ZS");
 
-                    this.BindStockPriceChart(zsSeries, "SH000001", dateType, Color.Blue);
+                    this.BindStockPriceChart(zsSeries, RC.SHZSOfStockCode, dateType, Color.Blue);
                 }
             }
 

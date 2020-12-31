@@ -34,7 +34,7 @@ namespace StockSimulateDomain.Entity
         [DBNotMapped]
         public string FoucsText {
             get {
-                return Foucs == 1 ? "✔" : Foucs == 2 ? "◉" :  Foucs == 3 ? "▼" : "×";
+                return (Foucs == 1 ? "★" : Foucs == 2 ? "☆" : "")  + (Top == 1 ? " 🖤" : "");
             }
         }
 
@@ -221,5 +221,8 @@ namespace StockSimulateDomain.Entity
 
         [Description("报告日期")]
         public string ReportDate { get; set; }
+
+        [Description("置顶")]
+        public int Top { get; set; }
     }
 }
