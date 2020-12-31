@@ -21,6 +21,8 @@ namespace StockSimulateCore.Data
         }
         private static Object objlock = typeof(Repository);
 
+        private static int commandTimeout = 120;
+
         private static Repository _instance = null;
         public static Repository Instance
         {
@@ -126,6 +128,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 var reader = cmd.ExecuteReader();
@@ -214,6 +217,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 cmd.ExecuteNonQuery();
@@ -277,6 +281,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 cmd.ExecuteNonQuery();
@@ -305,6 +310,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql = sb.ToString();
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 cmd.ExecuteNonQuery();
@@ -328,6 +334,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 cmd.ExecuteNonQuery();
@@ -376,6 +383,7 @@ namespace StockSimulateCore.Data
             var conn = Pool.GetConnection();
             var cmd = conn.CreateCommand();
             cmd.CommandText = sql = sb.ToString();
+            cmd.CommandTimeout = commandTimeout;
             try
             {
                 cmd.ExecuteNonQuery();
