@@ -18,7 +18,7 @@ namespace StockSimulateService.Service
             var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
 
-            Repository.Instance.Delete<RemindEntity>($"StrategyName='批量设置' and RType=0");
+            Repository.Instance.Delete<RemindEntity>($"StrategyName='主动设置' and RType=0");
 
             var stocks = Repository.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
@@ -26,11 +26,11 @@ namespace StockSimulateService.Service
                 Create(account, stock, new RemindInfo()
                 {
                     UDPer = strUPPer
-                }, true);
+                });
             }
         }
 
-        public static void Create(RemindInfo remindInfo, bool batchCreate = false)
+        public static void Create(RemindInfo remindInfo)
         {
             var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{remindInfo.AccountName}'");
             if (account == null) return;
@@ -38,20 +38,18 @@ namespace StockSimulateService.Service
             var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
             if (stock == null) return;
 
-            Create(account, stock, remindInfo, batchCreate);
+            Create(account, stock, remindInfo);
         }
 
-        public static void Create(AccountEntity account, StockEntity stock, RemindInfo remindInfo, bool batchCreate = false)
+        public static void Create(AccountEntity account, StockEntity stock, RemindInfo remindInfo)
         {
             var decNum = stock.Type == 0 ? 2 : 3;
 
             var reminds = new List<RemindEntity>();
             if (!string.IsNullOrEmpty(remindInfo.UDPer))
             {
-                if (!batchCreate)
-                {
-                    Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
-                }
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=0");
+
                 var udPers = ObjectUtil.GetSplitArray(remindInfo.UDPer, ",");
                 foreach (var udPer in udPers)
                 {
@@ -65,7 +63,7 @@ namespace StockSimulateService.Service
                         Email = account.Email,
                         QQ = account.QQ,
                         RType = 0,
-                        StrategyName = batchCreate ? "批量设置" : "主动设置",
+                        StrategyName = "主动设置",
                         StrategyTarget = $"波动{target}%"
                     };
                     reminds.Add(remind);
