@@ -82,7 +82,7 @@ namespace StockPriceTools
             var shzs = stocks.FirstOrDefault(c => c.Code == RC.SHZSOfStockCode);
             if (shzs != null)
             {
-                message.Add($"[{shzs.Name} {shzs.Price.ToString("#.##")} {shzs.UDPer}%]");//
+                message.Add($"[{shzs.Name} {shzs.Price.ToString("0.##")} {shzs.UDPer}%]");//
 
                 if (shzs.UDPer > 0) this.lblMessage.ForeColor = Color.Red;
                 else if (shzs.UDPer < 0) this.lblMessage.ForeColor = Color.Green;
@@ -90,7 +90,7 @@ namespace StockPriceTools
             }
             foreach (var stock in stocks.Where(c => c.Code != RC.SHZSOfStockCode))
             {
-                message.Add($"[{stock.Name} {stock.UDPer.ToString("#.##")}%]");//{stock.Price} 
+                message.Add($"[{stock.Name} {stock.UDPer.ToString("0.##")}%]");//{stock.Price} 
             }
             this.lblMessage.Text = string.Join(" ", message);
         }
