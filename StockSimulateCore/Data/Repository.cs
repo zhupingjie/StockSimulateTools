@@ -141,7 +141,8 @@ namespace StockSimulateCore.Data
                         if (dbValue != DBNull.Value) value = dbValue;
                         ObjectUtil.SetPropertyValue(item, name, value);
                     }
-                    if (item.ID > 0) lst.Add(item);
+                    //if (item.ID > 0) 
+                    lst.Add(item);
                 }
                 if(!reader.IsClosed) reader.Close();
 
