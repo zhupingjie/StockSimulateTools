@@ -409,7 +409,7 @@ namespace StockSimulateService.Service
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, rd.Email);
                         }
                         if (RunningConfig.Instance.RemindNoticeByMessage)
                         {
@@ -438,7 +438,7 @@ namespace StockSimulateService.Service
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, rd.Email);
                         }
                         if (RunningConfig.Instance.RemindNoticeByMessage)
                         {

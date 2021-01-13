@@ -319,13 +319,14 @@ namespace StockSimulateCore.Utils
             }
         }
 
-        public static bool EffectStockDealTime()
+        public static bool EffectStockDealTime(int offsetMinute = 5)
         {
             if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return false;
 
-            var now = DateTime.Now.ToString("HH:mm");
-            if (now.CompareTo("09:25") >= 0 && now.CompareTo("11:30") < 0) return true;
-            if (now.CompareTo("13:00") >= 0 && now.CompareTo("15:00") < 0) return true;
+            var from = DateTime.Now.AddMinutes(offsetMinute).ToString("HH:mm");
+            var to = DateTime.Now.AddMinutes(-1 * offsetMinute).ToString("HH:mm");
+            if (from.CompareTo("09:15") >= 0 && to.CompareTo("11:30") < 0) return true;
+            if (from.CompareTo("13:00") >= 0 && to.CompareTo("15:00") < 0) return true;
             return false;
         }
 
