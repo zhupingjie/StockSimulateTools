@@ -81,8 +81,12 @@ namespace StockSimulateUI.UI
             if (string.IsNullOrEmpty(uDPer)) return;
 
             var averagePrice = this.txtUpAverage.Text;
+            var upAveragePrice = this.txtUpAverage.Text;
+            var downAveragePrice = this.txtDownAverage.Text;
+            var upMinDayPricePer = this.txtUpMinDayPricePer.Text;
+            var downMaxDayPricePer = this.txtDownMaxDayPricePer.Text;
 
-            StockRemindService.Create(accountName, uDPer);
+            StockRemindService.Create(accountName, uDPer, upAveragePrice, downAveragePrice, upMinDayPricePer, downMaxDayPricePer);
 
             this.DialogResult = DialogResult.OK;
             this.Close();

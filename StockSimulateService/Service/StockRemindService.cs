@@ -13,19 +13,21 @@ namespace StockSimulateService.Service
 {
     public class StockRemindService
     {
-        public static void Create(string accountName, string strUPPer)
+        public static void Create(string accountName, string strUPPer, string upAveragePrice, string downAveragePrice, string upMinDayPricePer, string downMaxDayPricePer)
         {
             var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
             if (account == null) return;
-
-            Repository.Instance.Delete<RemindEntity>($"StrategyName='主动设置' and RType=0");
 
             var stocks = Repository.Instance.QueryAll<StockEntity>($"");
             foreach(var stock in stocks)
             {
                 Create(account, stock, new RemindInfo()
                 {
-                    UDPer = strUPPer
+                    UDPer = strUPPer,
+                    UpAveragePrice = upAveragePrice,
+                    DownAveragePrice = downAveragePrice,
+                    UpMinDayPricePer = upMinDayPricePer,
+                    DownMaxDayPricePer = downMaxDayPricePer
                 });
             }
         }
@@ -179,7 +181,7 @@ namespace StockSimulateService.Service
                         QQ = account.QQ,
                         RType = 5,
                         StrategyName = "主动设置",
-                        StrategyTarget = $"反弹{target}%"
+                        StrategyTarget = $"低点反弹{target}%"
                     };
                     reminds.Add(remind);
                 }
@@ -200,7 +202,7 @@ namespace StockSimulateService.Service
                         QQ = account.QQ,
                         RType = 6,
                         StrategyName = "主动设置",
-                        StrategyTarget = $"下跌{target}%"
+                        StrategyTarget = $"高点回落{target}%"
                     };
                     reminds.Add(remind);
                 }

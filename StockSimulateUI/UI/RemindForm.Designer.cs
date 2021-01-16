@@ -268,7 +268,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(219, 31);
             this.label7.TabIndex = 70;
-            this.label7.Text = "当日最高价下跌(%)";
+            this.label7.Text = "当日最高价回落(%)";
             // 
             // txtUpMinDayPricePer
             // 
