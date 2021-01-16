@@ -177,8 +177,7 @@ namespace StockSimulateService.Service
                             });
                         }
                     }
-                    //Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
-                    Thread.Sleep(5 * 1000);
+                    Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
 
