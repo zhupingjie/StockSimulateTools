@@ -124,6 +124,8 @@ namespace StockSimulateService.Service
             }
             if (!string.IsNullOrEmpty(remindInfo.UpAveragePrice))
             {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=3");
+
                 var averagePrices = ObjectUtil.GetSplitArray(remindInfo.UpAveragePrice, ",");
                 foreach (var avg in averagePrices)
                 {
@@ -146,6 +148,8 @@ namespace StockSimulateService.Service
 
             if (!string.IsNullOrEmpty(remindInfo.DownAveragePrice))
             {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=4");
+
                 var averagePrices = ObjectUtil.GetSplitArray(remindInfo.DownAveragePrice, ",");
                 foreach (var avg in averagePrices)
                 {
@@ -167,6 +171,8 @@ namespace StockSimulateService.Service
             }
             if (!string.IsNullOrEmpty(remindInfo.UpMinDayPricePer))
             {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=5");
+
                 var averagePrices = ObjectUtil.GetSplitArray(remindInfo.UpMinDayPricePer, ",");
                 foreach (var avg in averagePrices)
                 {
@@ -188,6 +194,8 @@ namespace StockSimulateService.Service
             }
             if (!string.IsNullOrEmpty(remindInfo.DownMaxDayPricePer))
             {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=6");
+
                 var averagePrices = ObjectUtil.GetSplitArray(remindInfo.DownMaxDayPricePer, ",");
                 foreach (var avg in averagePrices)
                 {
