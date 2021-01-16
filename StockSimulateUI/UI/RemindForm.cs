@@ -50,10 +50,10 @@ namespace StockSimulateUI.UI
                 DownPrice = this.txtDownPrice.Text,
                 UpAveragePrice = this.txtUpAverage.Text,
                 DownAveragePrice = this.txtDownAverage.Text,
-                UpAveragePriceReverse = this.txtUpAverageReverse.Text,
-                DownAveragePriceReverse = this.txtDownAverageReverse.Text
+                UpMinDayPricePer = this.txtUpMinDayPricePer.Text,
+                DownMaxDayPricePer = this.txtDownMaxDayPricePer.Text
             };
-            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpAveragePriceReverse}{remindInfo.DownAveragePriceReverse}")) return;
+            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpMinDayPricePer}{remindInfo.DownMaxDayPricePer}")) return;
 
             StockRemindService.Create(remindInfo);
 
@@ -105,12 +105,12 @@ namespace StockSimulateUI.UI
 
         private void btnUpAverageReverse_Click(object sender, EventArgs e)
         {
-            this.txtUpAverageReverse.Text = "5,10";
+            this.txtUpMinDayPricePer.Text = "1.5";
         }
 
         private void btnDownAverageReverse_Click(object sender, EventArgs e)
         {
-            this.txtDownAverageReverse.Text = "5,10";
+            this.txtDownMaxDayPricePer.Text = "1.5";
         }
     }
 }

@@ -163,9 +163,9 @@ namespace StockSimulateService.Service
                     reminds.Add(remind);
                 }
             }
-            if (!string.IsNullOrEmpty(remindInfo.UpAveragePriceReverse))
+            if (!string.IsNullOrEmpty(remindInfo.UpMinDayPricePer))
             {
-                var averagePrices = ObjectUtil.GetSplitArray(remindInfo.UpAveragePriceReverse, ",");
+                var averagePrices = ObjectUtil.GetSplitArray(remindInfo.UpMinDayPricePer, ",");
                 foreach (var avg in averagePrices)
                 {
                     var target = ObjectUtil.ToValue<decimal>(avg, 0);
@@ -179,14 +179,14 @@ namespace StockSimulateService.Service
                         QQ = account.QQ,
                         RType = 5,
                         StrategyName = "主动设置",
-                        StrategyTarget = $"反转{target}均线"
+                        StrategyTarget = $"反弹{target}%"
                     };
                     reminds.Add(remind);
                 }
             }
-            if (!string.IsNullOrEmpty(remindInfo.DownAveragePriceReverse))
+            if (!string.IsNullOrEmpty(remindInfo.DownMaxDayPricePer))
             {
-                var averagePrices = ObjectUtil.GetSplitArray(remindInfo.DownAveragePriceReverse, ",");
+                var averagePrices = ObjectUtil.GetSplitArray(remindInfo.DownMaxDayPricePer, ",");
                 foreach (var avg in averagePrices)
                 {
                     var target = ObjectUtil.ToValue<decimal>(avg, 0);
@@ -200,7 +200,7 @@ namespace StockSimulateService.Service
                         QQ = account.QQ,
                         RType = 6,
                         StrategyName = "主动设置",
-                        StrategyTarget = $"逆转{target}日均线"
+                        StrategyTarget = $"下跌{target}%"
                     };
                     reminds.Add(remind);
                 }
@@ -251,13 +251,13 @@ namespace StockSimulateService.Service
             Repository.Instance.Delete<RemindEntity>($"StockCode='{stockCode}'  and ID in ({string.Join(",", ids)})");
         }
 
-        public static void CheckAutoRun(Action<string> action)
+        public static void CheckAutoRun(IList<StockCacheInfo> stockCaches, IList<StockPriceCacheInfo> stockPriceCaches, Action<string> action)
         {
-            var reminds = Repository.Instance.QueryAll<RemindEntity>($"Handled=0");
-            var stockCodes = reminds.Select(c => c.StockCode).Distinct().ToArray();
-            if (stockCodes.Length == 0) return;
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"Handled=0", withNoLock: true);
+            if (reminds.Length == 0) return;
 
-            var stocks = Repository.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}') and Price>0 and LastDate>='{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
+            var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Price>0 and PriceDate='{dealDate}'");
 
             foreach (var stock in stocks)
             {
@@ -395,61 +395,81 @@ namespace StockSimulateService.Service
                     }
                 }
 
-                rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 5 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
-                foreach (var rd in rds)
+                //当前股价从最低价上涨比例
+                var upPer = (stock.Price - stock.MinPrice) / stock.MinPrice;
+                if (upPer > 0 && stock.StartPrice > stock.MinPrice)
                 {
-                    if ((rd.Target == 5 && ObjectUtil.CheckTrendReverse(stock.Trend5, true))
-                        || (rd.Target == 10 && ObjectUtil.CheckTrendReverse(stock.Trend10, true))
-                        || (rd.Target == 20 && ObjectUtil.CheckTrendReverse(stock.Trend20, true))
-                        || (rd.Target == 60 && ObjectUtil.CheckTrendReverse(stock.Trend60, true))
-                        || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, true))
-                        || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, true)))
+                    remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 5 && c.Target < upPer && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                    if (remind != null)
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已反转[{rd.Target}]日均线,请注意!";
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var nextRemind = new RemindEntity()
+                        {
+                            RType = 5,
+                            StockCode = remind.StockCode,
+                            Target = remind.Target,
+                            Email = remind.Email,
+                            QQ = remind.QQ,
+                            StrategyName = remind.StrategyName,
+                            StrategyTarget = remind.StrategyTarget,
+                            PlanRemind = DateTime.Now.Date.AddDays(1)
+                        };
+                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从低点反弹超过幅度[{remind.Target}%],请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, rd.Email);
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                         }
                         if (RunningConfig.Instance.RemindNoticeByMessage)
                         {
                             StockMessageService.SendMessage(stock, message);
                         }
                         action(message);
-
-                        rd.Handled = 1;
-                        rd.LastRemind = DateTime.Now;
-                        rd.RemindPrice = stock.Price;
-                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
-                rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 6 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
-                foreach (var rd in rds)
+                //当前股价从最高价下跌比例
+                var downPer = (stock.Price - stock.MaxPrice) / stock.MaxPrice;
+                if (downPer < 0 && stock.StartPrice < stock.MaxPrice)
                 {
-                    if ((rd.Target == 5 && ObjectUtil.CheckTrendReverse(stock.Trend5, false))
-                        || (rd.Target == 10 && ObjectUtil.CheckTrendReverse(stock.Trend10, false))
-                        || (rd.Target == 20 && ObjectUtil.CheckTrendReverse(stock.Trend20, false))
-                        || (rd.Target == 60 && ObjectUtil.CheckTrendReverse(stock.Trend60, false))
-                        || (rd.Target == 120 && ObjectUtil.CheckTrendReverse(stock.Trend120, false))
-                        || (rd.Target == 250 && ObjectUtil.CheckTrendReverse(stock.Trend250, false)))
+                    remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 6 && c.Target < Math.Abs(downPer) && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                    if (remind != null)
                     {
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已逆转[{rd.Target}]日均线,请注意!";
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var nextRemind = new RemindEntity()
+                        {
+                            RType = 6,
+                            StockCode = remind.StockCode,
+                            Target = remind.Target,
+                            Email = remind.Email,
+                            QQ = remind.QQ,
+                            StrategyName = remind.StrategyName,
+                            StrategyTarget = remind.StrategyTarget,
+                            PlanRemind = DateTime.Now.Date.AddDays(1)
+                        };
+                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从高点下跌超过幅度[{remind.Target}%],请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, rd.Email);
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                         }
                         if (RunningConfig.Instance.RemindNoticeByMessage)
                         {
                             StockMessageService.SendMessage(stock, message);
                         }
                         action(message);
-
-                        rd.Handled = 1;
-                        rd.LastRemind = DateTime.Now;
-                        rd.RemindPrice = stock.Price;
-                        Repository.Instance.Update<RemindEntity>(rd);
                     }
                 }
 
@@ -493,6 +513,11 @@ namespace StockSimulateService.Service
                     Repository.Instance.Update<RemindEntity>(remind);
                 }
             }
+        }
+
+        public static void Clear()
+        {
+            Repository.Instance.Delete<RemindEntity>($"Handled=1  and RType=0");
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using StockSimulateCore.Config;
 using StockSimulateCore.Data;
+using StockSimulateDomain.Model;
 
 namespace StockSimulateService.Service
 {
@@ -46,11 +47,23 @@ namespace StockSimulateService.Service
         /// </summary>
         RunningConfig RC = RunningConfig.Instance;
 
+        /// <summary>
+        /// 股票基本信息缓存
+        /// </summary>
+        List<StockCacheInfo> StockCache = new List<StockCacheInfo>();
+
+        /// <summary>
+        /// 股票250日历史价格缓存
+        /// </summary>
+        List<StockPriceCacheInfo> StockPriceCache = new List<StockPriceCacheInfo>();
+
         #endregion
 
         #region 服务启动&停止
         public void Start()
         {
+            this.LoadCacheData();
+
             this.LoadConfigData();
 
             this.GatherData();
@@ -69,6 +82,26 @@ namespace StockSimulateService.Service
         #endregion
 
         #region 启动事件
+
+        bool CacheDataLoaded = false;
+        void LoadCacheData()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    CacheDataLoaded = false;
+
+                    StockCacheService.LoadCacheInfo(StockCache, StockPriceCache);
+
+                    CacheDataLoaded = true;
+
+                    //固定半小时调用一次
+                    Thread.Sleep(30 * 60 * 1000);
+                }
+
+            }, CancellationTokenSource.Token);
+        }
 
         void LoadConfigData()
         {
@@ -91,13 +124,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(2000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
-                        this.ActionLog("采集今日股价数据...");
-                        StockGatherService.GatherPriceData((message) =>
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                         {
-                            this.ActionLog(message);
-                        });
+                            this.ActionLog("采集今日股价数据...");
+                            StockGatherService.GatherPriceData(StockCache, StockPriceCache, (message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
                     }
                     Thread.Sleep(RC.GatherStockPriceInterval * 1000);
                 }
@@ -109,13 +145,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
-                        this.ActionLog("计算持有股价盈亏数据...");
-                        StockPriceService.CalculateProfit((message) =>
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                         {
-                            this.ActionLog(message);
-                        });
+                            this.ActionLog("计算持有股价盈亏数据...");
+                            StockPriceService.CalculateProfit((message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
                     }
                     Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
                 }
@@ -127,15 +166,19 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
-                        this.ActionLog("计算股票均线价格数据...");
-                        StockPriceService.CalculateNowAvgrage((message) =>
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                         {
-                            this.ActionLog(message);
-                        });
+                            this.ActionLog("计算股票均线价格数据...");
+                            StockPriceService.CalculateNowAvgrage(StockCache, StockPriceCache, (message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
                     }
-                    Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
+                    //Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
+                    Thread.Sleep(5 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -145,13 +188,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
-                        this.ActionLog("采集基金持仓比例数据...");
-                        StockGatherService.GatherFundStockData((message) =>
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                         {
-                            this.ActionLog(message);
-                        });
+                            this.ActionLog("采集基金持仓比例数据...");
+                            StockGatherService.GatherFundStockData(StockCache, (message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
                     }
                     Thread.Sleep(RC.GatherFundStockPositionInterval * 1000);
                 }
@@ -163,13 +209,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
-                        this.ActionLog("采集财务指标数据...");
-                        StockGatherService.GatherFinanceData((message) =>
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                         {
-                            this.ActionLog(message);
-                        });
+                            this.ActionLog("采集财务指标数据...");
+                            StockGatherService.GatherFinanceData(StockCache, (message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
                     }
                     Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
                 }
@@ -181,10 +230,10 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (CacheDataLoaded)
                     {
                         this.ActionLog("采集机构研报数据...");
-                        StockGatherService.GatherReportData((message) =>
+                        StockGatherService.GatherReportData(StockCache, (message) =>
                         {
                             this.ActionLog(message);
                         });
@@ -203,7 +252,7 @@ namespace StockSimulateService.Service
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
                         this.ActionLog("检测股价策略提醒数据...");
-                        StockRemindService.CheckAutoRun((message) =>
+                        StockRemindService.CheckAutoRun(StockCache, StockPriceCache, (message) =>
                         {
                             this.ActionLog(message);
                         });
@@ -221,8 +270,9 @@ namespace StockSimulateService.Service
                 {
                     if (DateTime.Now.Hour == 8 || DateTime.Now.Hour == 17)
                     {
-                        this.ActionLog("清除股价消息历史数据...");
+                        this.ActionLog("清除无效历史数据...");
                         StockPriceService.Clear();
+                        StockRemindService.Clear();
                     }
                     Thread.Sleep(30 * 60 * 1000);
                 }

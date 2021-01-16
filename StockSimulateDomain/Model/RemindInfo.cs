@@ -17,7 +17,7 @@ namespace StockSimulateDomain.Model
         public string UpAveragePrice { get; set; }
         public string DownAveragePrice { get; set; }
 
-        public string UpAveragePriceReverse { get; set; }
-        public string DownAveragePriceReverse { get; set; }
+        public string UpMinDayPricePer { get; set; }
+        public string DownMaxDayPricePer { get; set; }
     }
 }

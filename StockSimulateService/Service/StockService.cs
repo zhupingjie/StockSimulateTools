@@ -31,8 +31,12 @@ namespace StockSimulateService.Service
             Repository.Instance.Update<StockEntity>(stock, new string[] { "Top" });
         }
 
-        public static void Update(StockEntity stock, StockInfo stockInfo)
+        public static void Update(StockCacheInfo stockCache, IList<StockPriceCacheInfo> stockPriceCaches, StockInfo stockInfo)
         {
+            var stock = stockInfo.Stock;
+            stock.ID = stockCache.StockID;
+
+            var decNum = stockCache.Type == 0 ? 2 : 3;
             var columns = new List<string>();
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
@@ -44,7 +48,29 @@ namespace StockSimulateService.Service
 
                 columns.Add(prep.Name);
             }
-            Repository.Instance.Update<StockEntity>(stock, columns.ToArray());
+            if (stockPriceCaches.Count > 0)
+            {
+                var avgPrices = stockPriceCaches
+                    .Where(c => c.DealDate.CompareTo(stockCache.PriceDate) < 0)
+                    .OrderByDescending(c => c.DealDate)
+                    .Select(c => c.Price)
+                    .ToList();
+                avgPrices.Insert(0, stock.Price);
+
+                if (avgPrices.Count >= 0) stock.AvgPrice5 = Math.Round(avgPrices.Take(5).Average(), decNum);
+                if (avgPrices.Count >= 10) stock.AvgPrice10 = Math.Round(avgPrices.Take(10).Average(), decNum);
+                if (avgPrices.Count >= 20) stock.AvgPrice20 = Math.Round(avgPrices.Take(20).Average(), decNum);
+                if (avgPrices.Count >= 30) stock.AvgPrice30 = Math.Round(avgPrices.Take(30).Average(), decNum);
+                if (avgPrices.Count >= 60) stock.AvgPrice60 = Math.Round(avgPrices.Take(60).Average(), decNum);
+                if (avgPrices.Count >= 120) stock.AvgPrice120 = Math.Round(avgPrices.Take(120).Average(), decNum);
+                if (avgPrices.Count >= 250) stock.AvgPrice250 = Math.Round(avgPrices.Take(250).Average(), decNum);
+
+                Repository.Instance.Update<StockEntity>(stock, columns.Concat(new string[] { "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250" }).ToArray());
+            }
+            else
+            {
+                Repository.Instance.Update<StockEntity>(stock, columns.ToArray());
+            }
         }
 
         public static void Delete(string stockCode)

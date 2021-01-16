@@ -49,9 +49,9 @@
             this.btnUDPer = new System.Windows.Forms.Button();
             this.btnUpAverageReverse = new System.Windows.Forms.Button();
             this.btnDownAverageReverse = new System.Windows.Forms.Button();
-            this.txtDownAverageReverse = new System.Windows.Forms.TextBox();
+            this.txtDownMaxDayPricePer = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtUpAverageReverse = new System.Windows.Forms.TextBox();
+            this.txtUpMinDayPricePer = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -164,7 +164,7 @@
             // txtUpAverage
             // 
             this.txtUpAverage.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUpAverage.Location = new System.Drawing.Point(283, 209);
+            this.txtUpAverage.Location = new System.Drawing.Point(283, 307);
             this.txtUpAverage.Name = "txtUpAverage";
             this.txtUpAverage.Size = new System.Drawing.Size(217, 39);
             this.txtUpAverage.TabIndex = 62;
@@ -173,7 +173,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(106, 212);
+            this.label4.Location = new System.Drawing.Point(106, 310);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(158, 31);
             this.label4.TabIndex = 61;
@@ -182,7 +182,7 @@
             // txtDownAverage
             // 
             this.txtDownAverage.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtDownAverage.Location = new System.Drawing.Point(283, 257);
+            this.txtDownAverage.Location = new System.Drawing.Point(283, 355);
             this.txtDownAverage.Name = "txtDownAverage";
             this.txtDownAverage.Size = new System.Drawing.Size(217, 39);
             this.txtDownAverage.TabIndex = 64;
@@ -191,7 +191,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(106, 258);
+            this.label6.Location = new System.Drawing.Point(106, 356);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(158, 31);
             this.label6.TabIndex = 63;
@@ -200,7 +200,7 @@
             // btnDownAverage
             // 
             this.btnDownAverage.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnDownAverage.Location = new System.Drawing.Point(506, 258);
+            this.btnDownAverage.Location = new System.Drawing.Point(506, 356);
             this.btnDownAverage.Name = "btnDownAverage";
             this.btnDownAverage.Size = new System.Drawing.Size(58, 39);
             this.btnDownAverage.TabIndex = 65;
@@ -211,7 +211,7 @@
             // btnUpAverage
             // 
             this.btnUpAverage.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnUpAverage.Location = new System.Drawing.Point(506, 210);
+            this.btnUpAverage.Location = new System.Drawing.Point(506, 308);
             this.btnUpAverage.Name = "btnUpAverage";
             this.btnUpAverage.Size = new System.Drawing.Size(58, 39);
             this.btnUpAverage.TabIndex = 66;
@@ -233,7 +233,7 @@
             // btnUpAverageReverse
             // 
             this.btnUpAverageReverse.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnUpAverageReverse.Location = new System.Drawing.Point(506, 310);
+            this.btnUpAverageReverse.Location = new System.Drawing.Point(506, 211);
             this.btnUpAverageReverse.Name = "btnUpAverageReverse";
             this.btnUpAverageReverse.Size = new System.Drawing.Size(58, 39);
             this.btnUpAverageReverse.TabIndex = 73;
@@ -244,7 +244,7 @@
             // btnDownAverageReverse
             // 
             this.btnDownAverageReverse.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnDownAverageReverse.Location = new System.Drawing.Point(506, 358);
+            this.btnDownAverageReverse.Location = new System.Drawing.Point(506, 259);
             this.btnDownAverageReverse.Name = "btnDownAverageReverse";
             this.btnDownAverageReverse.Size = new System.Drawing.Size(58, 39);
             this.btnDownAverageReverse.TabIndex = 72;
@@ -252,41 +252,41 @@
             this.btnDownAverageReverse.UseVisualStyleBackColor = true;
             this.btnDownAverageReverse.Click += new System.EventHandler(this.btnDownAverageReverse_Click);
             // 
-            // txtDownAverageReverse
+            // txtDownMaxDayPricePer
             // 
-            this.txtDownAverageReverse.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtDownAverageReverse.Location = new System.Drawing.Point(283, 357);
-            this.txtDownAverageReverse.Name = "txtDownAverageReverse";
-            this.txtDownAverageReverse.Size = new System.Drawing.Size(217, 39);
-            this.txtDownAverageReverse.TabIndex = 71;
+            this.txtDownMaxDayPricePer.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtDownMaxDayPricePer.Location = new System.Drawing.Point(283, 258);
+            this.txtDownMaxDayPricePer.Name = "txtDownMaxDayPricePer";
+            this.txtDownMaxDayPricePer.Size = new System.Drawing.Size(217, 39);
+            this.txtDownMaxDayPricePer.TabIndex = 71;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(106, 359);
+            this.label7.Location = new System.Drawing.Point(42, 258);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(158, 31);
+            this.label7.Size = new System.Drawing.Size(219, 31);
             this.label7.TabIndex = 70;
-            this.label7.Text = "均线趋势逆转";
+            this.label7.Text = "当日最高价下跌(%)";
             // 
-            // txtUpAverageReverse
+            // txtUpMinDayPricePer
             // 
-            this.txtUpAverageReverse.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtUpAverageReverse.Location = new System.Drawing.Point(283, 309);
-            this.txtUpAverageReverse.Name = "txtUpAverageReverse";
-            this.txtUpAverageReverse.Size = new System.Drawing.Size(217, 39);
-            this.txtUpAverageReverse.TabIndex = 69;
+            this.txtUpMinDayPricePer.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtUpMinDayPricePer.Location = new System.Drawing.Point(283, 210);
+            this.txtUpMinDayPricePer.Name = "txtUpMinDayPricePer";
+            this.txtUpMinDayPricePer.Size = new System.Drawing.Size(217, 39);
+            this.txtUpMinDayPricePer.TabIndex = 69;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label8.Location = new System.Drawing.Point(106, 309);
+            this.label8.Location = new System.Drawing.Point(42, 210);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(158, 31);
+            this.label8.Size = new System.Drawing.Size(219, 31);
             this.label8.TabIndex = 68;
-            this.label8.Text = "均线趋势反转";
+            this.label8.Text = "当日最低价反弹(%)";
             // 
             // RemindForm
             // 
@@ -295,9 +295,9 @@
             this.ClientSize = new System.Drawing.Size(576, 483);
             this.Controls.Add(this.btnUpAverageReverse);
             this.Controls.Add(this.btnDownAverageReverse);
-            this.Controls.Add(this.txtDownAverageReverse);
+            this.Controls.Add(this.txtDownMaxDayPricePer);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.txtUpAverageReverse);
+            this.Controls.Add(this.txtUpMinDayPricePer);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.btnUDPer);
             this.Controls.Add(this.btnUpAverage);
@@ -348,9 +348,9 @@
         private System.Windows.Forms.Button btnUDPer;
         private System.Windows.Forms.Button btnUpAverageReverse;
         private System.Windows.Forms.Button btnDownAverageReverse;
-        private System.Windows.Forms.TextBox txtDownAverageReverse;
+        private System.Windows.Forms.TextBox txtDownMaxDayPricePer;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtUpAverageReverse;
+        private System.Windows.Forms.TextBox txtUpMinDayPricePer;
         private System.Windows.Forms.Label label8;
     }
 }

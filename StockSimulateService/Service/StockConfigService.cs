@@ -14,7 +14,7 @@ namespace StockSimulateService.Service
     {
         public static void LoadGlobalConfig(RunningConfig rc)
         {
-            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>(withNoLock: true);
+            var configs = Repository.Instance.QueryAll<GlobalConfigEntity>("Value!=''", withNoLock: true);
             foreach (var config in configs)
             {
                 var prepInfo = ObjectUtil.GetPropertyInfo(rc, config.Name);
@@ -25,25 +25,6 @@ namespace StockSimulateService.Service
                 {
                     ObjectUtil.SetPropertyValue(rc, config.Name, value);
                 }
-            }
-        }
-
-        public static void LastUpdateTime()
-        {
-            var config = Repository.Instance.QueryFirst<GlobalConfigEntity>($"Name='LastServiceUpdateTime'");
-            if(config == null)
-            {
-                config = new GlobalConfigEntity()
-                {
-                    Name = "LastServiceUpdateTime",
-                    Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                };
-                Repository.Instance.Insert<GlobalConfigEntity>(config);
-            }
-            else
-            {
-                config.Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Repository.Instance.Update<GlobalConfigEntity>(config);
             }
         }
     }

@@ -53,6 +53,19 @@ namespace StockSimulateDomain.Entity
         [GatherColumn]
         public decimal UDPer { get; set; }
 
+
+        [Description("当日开盘价")]
+        [GatherColumn]
+        public decimal StartPrice { get; set; }
+
+        [Description("当日最高价")]
+        [GatherColumn]
+        public decimal MaxPrice { get; set; }
+
+        [Description("当日最低价")]
+        [GatherColumn]
+        public decimal MinPrice { get; set; }
+
         [Description("安全股价")]
         public decimal Safety { get; set; }
 
@@ -74,6 +87,10 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public decimal AvgPrice20 { get; set; }
 
+        [Description("30日均价")]
+        [GridColumnIgnore]
+        public decimal AvgPrice30 { get; set; }
+
         [Description("60日均价")]
         [GridColumnIgnore]
         public decimal AvgPrice60 { get; set; }
@@ -85,30 +102,6 @@ namespace StockSimulateDomain.Entity
         [Description("250日均价")]
         [GridColumnIgnore]
         public decimal AvgPrice250 { get; set; }
-
-        [Description("5日趋势")]
-        [GridColumnIgnore]
-        public string Trend5 { get; set; }
-
-        [Description("10日趋势")]
-        [GridColumnIgnore]
-        public string Trend10 { get; set; }
-
-        [Description("20日趋势")]
-        [GridColumnIgnore]
-        public string Trend20 { get; set; }
-
-        [Description("60日趋势")]
-        [GridColumnIgnore]
-        public string Trend60 { get; set; }
-
-        [Description("120日趋势")]
-        [GridColumnIgnore]
-        public string Trend120 { get; set; }
-
-        [Description("250日趋势")]
-        [GridColumnIgnore]
-        public string Trend250 { get; set; }
 
         [Description("交易锁定(天)")]
         [GridColumnIgnore]
@@ -221,6 +214,9 @@ namespace StockSimulateDomain.Entity
 
         [Description("报告日期")]
         public string ReportDate { get; set; }
+
+        [Description("股价日期")]
+        public string PriceDate { get; set; }
 
         [Description("置顶")]
         public int Top { get; set; }
