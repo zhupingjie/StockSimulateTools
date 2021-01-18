@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StockSimulateWeb.Controllers
 {
-    public class StockController : BaseController
+    public class StockController : BaseController<StockEntity>
     {
         [HttpGet]
         public APIResult GetStocks()

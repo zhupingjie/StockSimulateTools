@@ -35,9 +35,10 @@ namespace StockSimulateService.Service
         {
             var stock = stockInfo.Stock;
             stock.ID = stockCache.StockID;
+            stock.PriceDate = stockInfo.DayPrice.DealDate;
 
             var decNum = stockCache.Type == 0 ? 2 : 3;
-            var columns = new List<string>();
+            var columns = new List<string>() { "PriceDate" };
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
             {
