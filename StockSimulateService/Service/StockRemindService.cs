@@ -261,7 +261,7 @@ namespace StockSimulateService.Service
             Repository.Instance.Delete<RemindEntity>($"StockCode='{stockCode}'  and ID in ({string.Join(",", ids)})");
         }
 
-        public static void CheckAutoRun(IList<StockCacheInfo> stockCaches, IList<StockPriceCacheInfo> stockPriceCaches, Action<string> action)
+        public static void CheckAutoRun(Action<string> action)
         {
             var reminds = Repository.Instance.QueryAll<RemindEntity>($"Handled=0", withNoLock: true);
             if (reminds.Length == 0) return;
@@ -298,7 +298,7 @@ namespace StockSimulateService.Service
                     {
                         MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
                     }
-                    if(RunningConfig.Instance.RemindNoticeByMessage)
+                    if (RunningConfig.Instance.RemindNoticeByMessage)
                     {
                         StockMessageService.SendMessage(stock, message);
                     }
@@ -406,80 +406,86 @@ namespace StockSimulateService.Service
                 }
 
                 //当前股价从最低价上涨比例
-                var upPer = (stock.Price - stock.MinPrice) / stock.MinPrice;
-                if (upPer > 0 && stock.StartPrice > stock.MinPrice)
+                if (stock.MinPrice > 0)
                 {
-                    remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 5 && c.Target < upPer && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
-                    if (remind != null)
+                    var upPer = (stock.Price - stock.MinPrice) / stock.MinPrice;
+                    if (upPer > 0 && stock.StartPrice > stock.MinPrice)
                     {
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        Repository.Instance.Update<RemindEntity>(remind);
-
-                        var nextRemind = new RemindEntity()
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 5 && c.Target < upPer && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                        if (remind != null)
                         {
-                            RType = 5,
-                            StockCode = remind.StockCode,
-                            Target = remind.Target,
-                            Email = remind.Email,
-                            QQ = remind.QQ,
-                            StrategyName = remind.StrategyName,
-                            StrategyTarget = remind.StrategyTarget,
-                            PlanRemind = DateTime.Now.Date.AddDays(1)
-                        };
-                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+                            remind.Handled = 1;
+                            remind.LastRemind = DateTime.Now;
+                            remind.RemindPrice = stock.Price;
+                            Repository.Instance.Update<RemindEntity>(remind);
 
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从低点反弹超过幅度[{remind.Target}%],请注意!";
+                            var nextRemind = new RemindEntity()
+                            {
+                                RType = 5,
+                                StockCode = remind.StockCode,
+                                Target = remind.Target,
+                                Email = remind.Email,
+                                QQ = remind.QQ,
+                                StrategyName = remind.StrategyName,
+                                StrategyTarget = remind.StrategyTarget,
+                                PlanRemind = DateTime.Now.Date.AddDays(1)
+                            };
+                            Repository.Instance.Insert<RemindEntity>(nextRemind);
 
-                        if (RunningConfig.Instance.RemindNoticeByEmail)
-                        {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从低点反弹超过幅度[{remind.Target}%],请注意!";
+
+                            if (RunningConfig.Instance.RemindNoticeByEmail)
+                            {
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            }
+                            if (RunningConfig.Instance.RemindNoticeByMessage)
+                            {
+                                StockMessageService.SendMessage(stock, message);
+                            }
+                            action(message);
                         }
-                        if (RunningConfig.Instance.RemindNoticeByMessage)
-                        {
-                            StockMessageService.SendMessage(stock, message);
-                        }
-                        action(message);
                     }
                 }
 
-                //当前股价从最高价下跌比例
-                var downPer = (stock.Price - stock.MaxPrice) / stock.MaxPrice;
-                if (downPer < 0 && stock.StartPrice < stock.MaxPrice)
+                if (stock.MaxPrice > 0)
                 {
-                    remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 6 && c.Target < Math.Abs(downPer) && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
-                    if (remind != null)
+                    //当前股价从最高价下跌比例
+                    var downPer = (stock.Price - stock.MaxPrice) / stock.MaxPrice;
+                    if (downPer < 0 && stock.StartPrice < stock.MaxPrice)
                     {
-                        remind.Handled = 1;
-                        remind.LastRemind = DateTime.Now;
-                        remind.RemindPrice = stock.Price;
-                        Repository.Instance.Update<RemindEntity>(remind);
-
-                        var nextRemind = new RemindEntity()
+                        remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 6 && c.Target < Math.Abs(downPer) && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                        if (remind != null)
                         {
-                            RType = 6,
-                            StockCode = remind.StockCode,
-                            Target = remind.Target,
-                            Email = remind.Email,
-                            QQ = remind.QQ,
-                            StrategyName = remind.StrategyName,
-                            StrategyTarget = remind.StrategyTarget,
-                            PlanRemind = DateTime.Now.Date.AddDays(1)
-                        };
-                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+                            remind.Handled = 1;
+                            remind.LastRemind = DateTime.Now;
+                            remind.RemindPrice = stock.Price;
+                            Repository.Instance.Update<RemindEntity>(remind);
 
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从高点下跌超过幅度[{remind.Target}%],请注意!";
+                            var nextRemind = new RemindEntity()
+                            {
+                                RType = 6,
+                                StockCode = remind.StockCode,
+                                Target = remind.Target,
+                                Email = remind.Email,
+                                QQ = remind.QQ,
+                                StrategyName = remind.StrategyName,
+                                StrategyTarget = remind.StrategyTarget,
+                                PlanRemind = DateTime.Now.Date.AddDays(1)
+                            };
+                            Repository.Instance.Insert<RemindEntity>(nextRemind);
 
-                        if (RunningConfig.Instance.RemindNoticeByEmail)
-                        {
-                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已从高点下跌超过幅度[{remind.Target}%],请注意!";
+
+                            if (RunningConfig.Instance.RemindNoticeByEmail)
+                            {
+                                MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                            }
+                            if (RunningConfig.Instance.RemindNoticeByMessage)
+                            {
+                                StockMessageService.SendMessage(stock, message);
+                            }
+                            action(message);
                         }
-                        if (RunningConfig.Instance.RemindNoticeByMessage)
-                        {
-                            StockMessageService.SendMessage(stock, message);
-                        }
-                        action(message);
                     }
                 }
 

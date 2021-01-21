@@ -189,14 +189,11 @@ namespace StockSimulateService.Service
                 {
                     if (CacheDataLoaded)
                     {
-                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        this.ActionLog("采集基金持仓比例数据...");
+                        StockGatherService.GatherFundStockData(StockCache, (message) =>
                         {
-                            this.ActionLog("采集基金持仓比例数据...");
-                            StockGatherService.GatherFundStockData(StockCache, (message) =>
-                            {
-                                this.ActionLog(message);
-                            });
-                        }
+                            this.ActionLog(message);
+                        });
                     }
                     Thread.Sleep(RC.GatherFundStockPositionInterval * 1000);
                 }
@@ -210,14 +207,11 @@ namespace StockSimulateService.Service
                 {
                     if (CacheDataLoaded)
                     {
-                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        this.ActionLog("采集财务指标数据...");
+                        StockGatherService.GatherFinanceData(StockCache, (message) =>
                         {
-                            this.ActionLog("采集财务指标数据...");
-                            StockGatherService.GatherFinanceData(StockCache, (message) =>
-                            {
-                                this.ActionLog(message);
-                            });
-                        }
+                            this.ActionLog(message);
+                        });
                     }
                     Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
                 }
@@ -246,12 +240,13 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
+                Thread.Sleep(3000);
                 while (true)
                 {
                     if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
                         this.ActionLog("检测股价策略提醒数据...");
-                        StockRemindService.CheckAutoRun(StockCache, StockPriceCache, (message) =>
+                        StockRemindService.CheckAutoRun((message) =>
                         {
                             this.ActionLog(message);
                         });
@@ -265,6 +260,7 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
+                Thread.Sleep(3000);
                 while (true)
                 {
                     if (DateTime.Now.Hour == 8 || DateTime.Now.Hour == 17)

@@ -36,9 +36,11 @@ namespace StockSimulateService.Service
             var stock = stockInfo.Stock;
             stock.ID = stockCache.StockID;
             stock.PriceDate = stockInfo.DayPrice.DealDate;
+            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price) stock.MinPrice = stock.Price;
+            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price) stock.MaxPrice = stock.Price;
 
             var decNum = stockCache.Type == 0 ? 2 : 3;
-            var columns = new List<string>() { "PriceDate" };
+            var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice" };
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
             {
