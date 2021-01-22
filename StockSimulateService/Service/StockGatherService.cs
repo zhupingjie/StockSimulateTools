@@ -19,25 +19,25 @@ namespace StockSimulateNetService.Serivce
         /// 采集自选股信息
         /// </summary>
         /// <param name="actionLog"></param>
-        public static void GatherPriceData(IList<StockCacheInfo> stockCaches, IList<StockPriceCacheInfo> stockPriceCaches, Action<string> actionLog)
+        public static void GatherPriceData(Action<string> actionLog)
         {
-            foreach (var stockCache in stockCaches)
+            var stocks = Repository.Instance.QueryAll<StockEntity>(null);
+            foreach (var stock in stocks)
             {
-                var stockInfo = EastMoneyUtil.GetStockPrice(stockCache.StockCode);
+                var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
                 if (stockInfo == null) continue; ;
                 if (stockInfo.DayPrice.Price == 0) continue;
 
-                var stockPriceInfos = stockPriceCaches.Where(c => c.StockCode == stockCache.StockCode).ToArray();
                 //更新当前股票信息
-                StockService.Update(stockCache, stockPriceInfos, stockInfo);
+                StockService.Update(stock, stockInfo);
 
                 if (ObjectUtil.EffectStockDealTime(1))
                 {
                     //更新当前股价
-                    StockPriceService.Update(stockCache, stockInfo);
+                    StockPriceService.Update(stock, stockInfo);
 
                     //检测自动交易策略 
-                    StockStrategyService.CheckRun(stockCache.StockCode, stockInfo.Stock.Price, DateTime.Now);
+                    StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
 
                     ////减少日志输出,每5分钟输出一次
                     //if(DateTime.Now.Minute % 5 == 0)
@@ -47,10 +47,10 @@ namespace StockSimulateNetService.Serivce
                 //采集历史价格数据
                 if (RunningConfig.Instance.DebugMode)
                 {
-                    var gatherCount = GatherHisPriceData(stockCache.StockCode);
+                    var gatherCount = GatherHisPriceData(stock.Code);
                     if (gatherCount > 0)
                     {
-                        actionLog($"已采集[{stockCache.StockName}]历史股价数据...[{gatherCount}天]");
+                        actionLog($"已采集[{stock.Name}]历史股价数据...[{gatherCount}天]");
                     }
                 }
             }

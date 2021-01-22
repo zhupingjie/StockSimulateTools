@@ -14,10 +14,10 @@ namespace StockSimulateService.Service
 {
     public class StockPriceService 
     {
-        public static void Update(StockCacheInfo stock, StockInfo stockInfo)
+        public static void Update(StockEntity stock, StockInfo stockInfo)
         {
             var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
-            var price = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.StockCode}' and DealDate='{dealDate}' and DateType=0");
+            var price = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
             if (price == null)
             {
                 var stockPrice = stockInfo.DayPrice;
@@ -30,13 +30,13 @@ namespace StockSimulateService.Service
                 stockInfo.DayPrice.DealTime = "";
                 Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice, new string[] { "DealTime", "Price", "UDPer", "TodayStartPrice", "TodayEndPrice", "TodayMaxPrice", "TodayMinPrice" });
             }
-            if (stock.Focus > 0)
+            if (false)
             {
                 var dealTime = DateTime.Now.ToString("HH:mm");
                 if (dealTime.CompareTo("15:01") >= 0) return;
                 if (dealTime.CompareTo("09:14") <= 0) return;
 
-                var price2 = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.StockCode}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
+                var price2 = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DealTime='{dealTime}' and DateType=1");
                 if (price2 == null)
                 {
                     stockInfo.DayPrice.DateType = 1;//分钟

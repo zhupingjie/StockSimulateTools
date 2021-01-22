@@ -333,6 +333,20 @@ namespace StockSimulateService.Service
             Repository.Instance.Delete<StockStrategyEntity>($"StockCode='{stockCode}' and ID in ({string.Join(",", ids)})");
         }
 
+        public static void AutoCheckRun()
+        {
+            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1 and ExecuteOK!=1 and (BuyQty>0 || SaleQty>0)");
+            var stockCodes = stockStrategys.Select(c => c.StockCode).Distinct().ToArray();
+            if (stockCodes.Length == 0) return;
+
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Code in ('{string.Join("','", stockCodes)}')", columns: new string[] { "Code", "Price" }, withNoLock: true);
+            foreach(var stock in stocks)
+            {
+                var runStrategys = stockStrategys.Where(c => (c.Condition == 0 && c.Price >= stock.Price || c.Condition == 1 && c.Price <= stock.Price)).ToArray();
+
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -342,11 +356,9 @@ namespace StockSimulateService.Service
         /// <param name="accountName"></param>
         public static void CheckRun(string stockCode, decimal stockPrice, DateTime dealTime, string accountName = "")
         {
-            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"ExecuteMode=1");
+            var stockStrategys = Repository.Instance.QueryAll<StockStrategyEntity>($"StockCode='{stockCode}' and ExecuteMode=1 and ExecuteOK!=1");
 
             var runStrategys = stockStrategys.Where(c => (c.AccountName == accountName || string.IsNullOrEmpty(accountName)) 
-                    && c.ExecuteOK != 1
-                    && c.StockCode == stockCode
                     && (c.Condition == 0 && c.Price >= stockPrice || c.Condition == 1 && c.Price <= stockPrice)
                     && (c.BuyQty > 0 || c.SaleQty > 0))
                 .ToArray();
