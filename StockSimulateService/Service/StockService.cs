@@ -33,12 +33,14 @@ namespace StockSimulateService.Service
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
+            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MinPrice = stock.Price;
+            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MaxPrice = stock.Price;
+            if (stock.PriceDate != stockInfo.DayPrice.DealDate) stock.StartPrice = stockInfo.DayPrice.TodayStartPrice;
+            
             stock.PriceDate = stockInfo.DayPrice.DealDate;
-            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price) stock.MinPrice = stock.Price;
-            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price) stock.MaxPrice = stock.Price;
 
             var decNum = stock.Type == 0 ? 2 : 3;
-            var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice" };
+            var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice", "StartPrice" };
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
             {

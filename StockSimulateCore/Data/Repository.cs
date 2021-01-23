@@ -341,7 +341,6 @@ namespace StockSimulateCore.Data
         {
             LogUtil.Debug($"检测并创建表[{tableName}]...");
 
-            var sql = "";
             StringBuilder sb = new StringBuilder();
             sb.Append($"create table IF NOT EXISTS {tableName} (`ID` int(11) NOT NULL AUTO_INCREMENT");
             foreach (var column in columns)
@@ -365,7 +364,8 @@ namespace StockSimulateCore.Data
             }
             sb.Append(",PRIMARY KEY (`ID`)");
             sb.Append(") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;");
-
+            
+            var sql = sb.ToString();
             var conn = Pool.Rent();
             try
             {

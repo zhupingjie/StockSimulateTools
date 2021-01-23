@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -56,6 +56,7 @@
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.btnTop = new System.Windows.Forms.Button();
             this.btnFoucsStock = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.txtFoucST = new System.Windows.Forms.RadioButton();
@@ -79,7 +80,6 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.txtChartWithZS = new System.Windows.Forms.CheckBox();
             this.btnWebChart = new System.Windows.Forms.Button();
-            this.btnMinuteChart = new System.Windows.Forms.Button();
             this.btnDayChart = new System.Windows.Forms.Button();
             this.tabPriceList = new System.Windows.Forms.TabPage();
             this.gridPriceList = new System.Windows.Forms.DataGridView();
@@ -133,7 +133,6 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnTop = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel120.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -446,6 +445,17 @@
             this.panel10.Size = new System.Drawing.Size(836, 29);
             this.panel10.TabIndex = 47;
             // 
+            // btnTop
+            // 
+            this.btnTop.BackColor = System.Drawing.Color.White;
+            this.btnTop.Location = new System.Drawing.Point(793, 3);
+            this.btnTop.Name = "btnTop";
+            this.btnTop.Size = new System.Drawing.Size(43, 23);
+            this.btnTop.TabIndex = 8;
+            this.btnTop.Text = "置顶";
+            this.btnTop.UseVisualStyleBackColor = false;
+            this.btnTop.Click += new System.EventHandler(this.btnTop_Click);
+            // 
             // btnFoucsStock
             // 
             this.btnFoucsStock.BackColor = System.Drawing.Color.White;
@@ -661,11 +671,11 @@
             // 
             // chartPrice
             // 
-            chartArea11.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea11);
+            chartArea1.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea1);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend11.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend11);
+            legend1.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend1);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -677,7 +687,6 @@
             // 
             this.panel9.Controls.Add(this.txtChartWithZS);
             this.panel9.Controls.Add(this.btnWebChart);
-            this.panel9.Controls.Add(this.btnMinuteChart);
             this.panel9.Controls.Add(this.btnDayChart);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
@@ -700,7 +709,7 @@
             // btnWebChart
             // 
             this.btnWebChart.BackColor = System.Drawing.Color.White;
-            this.btnWebChart.Location = new System.Drawing.Point(106, 3);
+            this.btnWebChart.Location = new System.Drawing.Point(55, 3);
             this.btnWebChart.Name = "btnWebChart";
             this.btnWebChart.Size = new System.Drawing.Size(79, 23);
             this.btnWebChart.TabIndex = 6;
@@ -708,23 +717,11 @@
             this.btnWebChart.UseVisualStyleBackColor = false;
             this.btnWebChart.Click += new System.EventHandler(this.btnWebChart_Click);
             // 
-            // btnMinuteChart
-            // 
-            this.btnMinuteChart.BackColor = System.Drawing.Color.Gold;
-            this.btnMinuteChart.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnMinuteChart.Location = new System.Drawing.Point(2, 3);
-            this.btnMinuteChart.Name = "btnMinuteChart";
-            this.btnMinuteChart.Size = new System.Drawing.Size(54, 23);
-            this.btnMinuteChart.TabIndex = 1;
-            this.btnMinuteChart.Text = "分时图";
-            this.btnMinuteChart.UseVisualStyleBackColor = false;
-            this.btnMinuteChart.Click += new System.EventHandler(this.btnMinuteChart_Click);
-            // 
             // btnDayChart
             // 
             this.btnDayChart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnDayChart.ForeColor = System.Drawing.Color.White;
-            this.btnDayChart.Location = new System.Drawing.Point(56, 3);
+            this.btnDayChart.Location = new System.Drawing.Point(3, 3);
             this.btnDayChart.Name = "btnDayChart";
             this.btnDayChart.Size = new System.Drawing.Size(50, 23);
             this.btnDayChart.TabIndex = 0;
@@ -1269,17 +1266,6 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // btnTop
-            // 
-            this.btnTop.BackColor = System.Drawing.Color.White;
-            this.btnTop.Location = new System.Drawing.Point(793, 3);
-            this.btnTop.Name = "btnTop";
-            this.btnTop.Size = new System.Drawing.Size(43, 23);
-            this.btnTop.TabIndex = 8;
-            this.btnTop.Text = "置顶";
-            this.btnTop.UseVisualStyleBackColor = false;
-            this.btnTop.Click += new System.EventHandler(this.btnTop_Click);
-            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1439,7 +1425,6 @@
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.CheckBox txtChartWithZS;
         private System.Windows.Forms.Button btnWebChart;
-        private System.Windows.Forms.Button btnMinuteChart;
         private System.Windows.Forms.Button btnDayChart;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;

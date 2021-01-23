@@ -69,12 +69,17 @@ namespace StockSimulateUI.UI
 
         private void btnCalcAvgPrice_Click(object sender, EventArgs e)
         {
-            StockPriceService.CalculateAllAvgrage();
+            StockPriceService.CalculateAllAvgrage(5);
         }
 
         private void btnCheckDBTable_Click(object sender, EventArgs e)
         {
             Repository.Instance.InitDataBase();
+        }
+
+        private void btnCalcMACD_Click(object sender, EventArgs e)
+        {
+            StockPriceService.CalculateAllMACD();
         }
     }
 }

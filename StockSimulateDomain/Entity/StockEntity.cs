@@ -72,37 +72,6 @@ namespace StockSimulateDomain.Entity
         [Description("预测股价")]
         public decimal Target { get; set; }
 
-        [Description("均线趋势(NSML)")]
-        public string Trend { get; set; }
-
-        [Description("5日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice5 { get; set; }
-
-        [Description("10日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice10 { get; set; }
-
-        [Description("20日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice20 { get; set; }
-
-        [Description("30日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice30 { get; set; }
-
-        [Description("60日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice60 { get; set; }
-
-        [Description("120日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice120 { get; set; }
-
-        [Description("250日均价")]
-        [GridColumnIgnore]
-        public decimal AvgPrice250 { get; set; }
-
         [Description("交易锁定(天)")]
         [GridColumnIgnore]
         public int LockDay { get; set; }

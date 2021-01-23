@@ -43,9 +43,9 @@ namespace StockSimulateCore.Config
         public int GatherStockPriceInterval { get; set; } = 30;
 
         /// <summary>
-        /// 股票财务指标采集时间频率(秒)
+        /// 股票财务研报采集时间频率(秒)
         /// </summary>
-        public int GatherStockFinanceTargetInterval { get; set; } = 24 * 60 * 60;
+        public int GatherStockFinanceReportInterval { get; set; } = 24 * 60 * 60;
 
         /// <summary>
         /// 股票研报采集时间频率(秒)
@@ -60,7 +60,7 @@ namespace StockSimulateCore.Config
         /// <summary>
         /// 股票策略提醒时间频率(秒)
         /// </summary>
-        public int RemindStockStrategyInterval { get; set; } = 30;
+        public int RemindStockStrategyInterval { get; set; } = 2 * 60;
 
         /// <summary>
         /// 股票价格买卖点浮动比例(%)
@@ -74,9 +74,15 @@ namespace StockSimulateCore.Config
 
 
         /// <summary>
-        /// 股票均线价格计算时间频率(秒)
+        /// 股票辅助指标计算时间频率(秒)(均线/MACD)
         /// </summary>
-        public int UpdateStockAveragePriceInterval { get; set; } = 5 * 60;
+        public int UpdateStockAssistTargetInterval { get; set; } = 5 * 60;
+
+
+        /// <summary>
+        /// 股票辅助指标数据保留天数(天)
+        /// </summary>
+        public int KeepStockAssistTargetDays { get; set; } = 5;
 
         /// <summary>
         /// 提醒消息显示时间(秒)

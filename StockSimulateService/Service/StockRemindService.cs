@@ -268,6 +268,7 @@ namespace StockSimulateService.Service
 
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
             var stocks = Repository.Instance.QueryAll<StockEntity>($"Price>0 and PriceDate='{dealDate}'");
+            var stockAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
 
             foreach (var stock in stocks)
             {
@@ -350,12 +351,16 @@ namespace StockSimulateService.Service
                 var rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 3 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    if ((rd.Target == 5 && stock.Price > stock.AvgPrice5 && stock.AvgPrice5 > 0)
-                        || (rd.Target == 10 && stock.Price > stock.AvgPrice10 && stock.AvgPrice10 > 0)
-                        || (rd.Target == 20 && stock.Price > stock.AvgPrice20 && stock.AvgPrice20 > 0)
-                        || (rd.Target == 60 && stock.Price > stock.AvgPrice60 && stock.AvgPrice60 > 0)
-                        || (rd.Target == 120 && stock.Price > stock.AvgPrice120 && stock.AvgPrice120 > 0)
-                        || (rd.Target == 250 && stock.Price > stock.AvgPrice250 && stock.AvgPrice250 > 0))
+                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code);
+                    if (avgPrice == null) continue;
+
+                    if ((rd.Target == 5 && stock.Price > avgPrice.AvgPrice10 && avgPrice.AvgPrice10 > 0)
+                        || (rd.Target == 20 && stock.Price > avgPrice.AvgPrice20 && avgPrice.AvgPrice20 > 0)
+                        || (rd.Target == 30 && stock.Price > avgPrice.AvgPrice30 && avgPrice.AvgPrice30 > 0)
+                        || (rd.Target == 60 && stock.Price > avgPrice.AvgPrice60 && avgPrice.AvgPrice60 > 0)
+                        || (rd.Target == 120 && stock.Price > avgPrice.AvgPrice120 && avgPrice.AvgPrice120 > 0)
+                        || (rd.Target == 180 && stock.Price > avgPrice.AvgPrice180 && avgPrice.AvgPrice180 > 0)
+                        || (rd.Target == 250 && stock.Price > avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已突破[{rd.Target}]日均线,请注意!";
 
@@ -379,12 +384,17 @@ namespace StockSimulateService.Service
                 rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 4 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    if ((rd.Target == 5 && stock.Price < stock.AvgPrice5 && stock.AvgPrice5 > 0)
-                        || (rd.Target == 10 && stock.Price < stock.AvgPrice10 && stock.AvgPrice10 > 0)
-                        || (rd.Target == 20 && stock.Price < stock.AvgPrice20 && stock.AvgPrice20 > 0)
-                        || (rd.Target == 60 && stock.Price < stock.AvgPrice60 && stock.AvgPrice60 > 0)
-                        || (rd.Target == 120 && stock.Price < stock.AvgPrice120 && stock.AvgPrice120 > 0)
-                        || (rd.Target == 250 && stock.Price < stock.AvgPrice250 && stock.AvgPrice250 > 0))
+                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code);
+                    if (avgPrice == null) continue;
+
+                    if ((rd.Target == 5 && stock.Price < avgPrice.AvgPrice5 && avgPrice.AvgPrice5 > 0)
+                        || (rd.Target == 10 && stock.Price < avgPrice.AvgPrice10 && avgPrice.AvgPrice10 > 0)
+                        || (rd.Target == 20 && stock.Price < avgPrice.AvgPrice20 && avgPrice.AvgPrice20 > 0)
+                        || (rd.Target == 30 && stock.Price < avgPrice.AvgPrice30 && avgPrice.AvgPrice30 > 0)
+                        || (rd.Target == 60 && stock.Price < avgPrice.AvgPrice60 && avgPrice.AvgPrice60 > 0)
+                        || (rd.Target == 120 && stock.Price < avgPrice.AvgPrice120 && avgPrice.AvgPrice120 > 0)
+                        || (rd.Target == 180 && stock.Price < avgPrice.AvgPrice180 && avgPrice.AvgPrice180 > 0)
+                        || (rd.Target == 250 && stock.Price < avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已跌破[{rd.Target}]日均线,请注意!";
 

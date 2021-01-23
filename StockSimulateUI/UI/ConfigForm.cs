@@ -28,15 +28,15 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.RemindNoticeByEmail = this.txtRemindNoticeByEmail.Checked;
             RunningConfig.Instance.RemindNoticeByMessage = this.txtRemindNoticeByMessage.Checked;
             RunningConfig.Instance.GatherStockPriceInterval = ObjectUtil.ToValue<int>(this.txtGatherStockPriceInterval.Text, 0);
-            RunningConfig.Instance.GatherStockFinanceTargetInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
-            RunningConfig.Instance.GatherStockReportInterval = ObjectUtil.ToValue<int>(this.txtGatherStockReportInterval.Text, 0);
+            RunningConfig.Instance.GatherStockFinanceReportInterval = ObjectUtil.ToValue<int>(this.txtGatherStockMainTargetInterval.Text, 0);
             RunningConfig.Instance.GatherFundStockPositionInterval = ObjectUtil.ToValue<int>(this.txtGatherFundStockPositionInterval.Text, 0);
             RunningConfig.Instance.RemindStockStrategyInterval = ObjectUtil.ToValue<int>(this.txtRemindStockStrategyInterval.Text, 0);
             RunningConfig.Instance.RemindStockPriceFloatPer = ObjectUtil.ToValue<decimal>(this.txtRemindStockPriceFloatPer.Text, 0);
             RunningConfig.Instance.UpdateAccountStockProfitInterval = ObjectUtil.ToValue<int>(this.txtUpdateAccountStockProfitInterval.Text, 0);
+            RunningConfig.Instance.UpdateStockAssistTargetInterval = ObjectUtil.ToValue<int>(this.txtUpdateStockAssistTargetInterval.Text, 0);
             RunningConfig.Instance.LoadMessageInterval = ObjectUtil.ToValue<int>(this.txtLoadMessageInterval.Text, 0);
-            RunningConfig.Instance.RemindMessageShowTime = ObjectUtil.ToValue<int>(this.txtRemindMessageShowTime.Text, 0);
             RunningConfig.Instance.LoadGlobalConfigInterval = ObjectUtil.ToValue<int>(this.txtLoadGlobalConfigInterval.Text, 0);
+            RunningConfig.Instance.KeepStockAssistTargetDays = ObjectUtil.ToValue<int>(this.txtKeepStockAssistTargetDays.Text, 0);
             RunningConfig.Instance.CurrentAccountName = this.txtAccount.Text;
 
             var configs = Repository.Instance.QueryAll<GlobalConfigEntity>();
@@ -72,18 +72,18 @@ namespace StockSimulateUI.UI
             this.txtAccount.Items.AddRange(accounts.Select(c => c.Name).ToArray());
 
             this.txtGatherStockPriceInterval.Text = $"{RunningConfig.Instance.GatherStockPriceInterval}";
-            this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockFinanceTargetInterval}";
-            this.txtGatherStockReportInterval.Text = $"{RunningConfig.Instance.GatherStockReportInterval}";
+            this.txtGatherStockMainTargetInterval.Text = $"{RunningConfig.Instance.GatherStockFinanceReportInterval}";
+            this.txtUpdateStockAssistTargetInterval.Text = $"{RunningConfig.Instance.UpdateStockAssistTargetInterval}";
             this.txtGatherFundStockPositionInterval.Text = $"{RunningConfig.Instance.GatherFundStockPositionInterval}";
             this.txtRemindStockStrategyInterval.Text = $"{RunningConfig.Instance.RemindStockStrategyInterval}";
             this.txtRemindStockPriceFloatPer.Text = $"{RunningConfig.Instance.RemindStockPriceFloatPer}";
             this.txtUpdateAccountStockProfitInterval.Text = $"{RunningConfig.Instance.UpdateAccountStockProfitInterval}";
-            this.txtRemindMessageShowTime.Text = $"{RunningConfig.Instance.RemindMessageShowTime}";
             this.txtLoadMessageInterval.Text = $"{RunningConfig.Instance.LoadMessageInterval}";
             this.txtLoadGlobalConfigInterval.Text = $"{RunningConfig.Instance.LoadGlobalConfigInterval}";
             this.txtDebugMode.Checked = RunningConfig.Instance.DebugMode;
             this.txtRemindNoticeByMessage.Checked = RunningConfig.Instance.RemindNoticeByMessage;
             this.txtRemindNoticeByEmail.Checked = RunningConfig.Instance.RemindNoticeByEmail;
+            this.txtKeepStockAssistTargetDays.Text = $"{RunningConfig.Instance.KeepStockAssistTargetDays}";
             this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
         }
     }

@@ -9,6 +9,7 @@ using StockSimulateCore.Utils;
 using StockSimulateService.Helper;
 using StockSimulateCore.Data;
 using StockSimulateDomain.Model;
+using StockSimulateCore.Config;
 
 namespace StockSimulateService.Service
 {
@@ -65,6 +66,15 @@ namespace StockSimulateService.Service
                 dealDate = lastDate.DealDate;
             }
             Repository.Instance.Delete<StockPriceEntity>($"DateType=1 and DealDate<'{dealDate}'");
+
+            var lastAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
+            if(lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)
+            {
+                dealDate = lastAvgPrices.OrderBy(c => c.DealDate).FirstOrDefault().DealDate;
+
+                Repository.Instance.Delete<StockAverageEntity>($"DealDate<'{dealDate}'");
+                Repository.Instance.Delete<StockMacdEntity>($"DealDate<'{dealDate}'");
+            }
         }
 
         /// <summary>
@@ -120,214 +130,138 @@ namespace StockSimulateService.Service
             Repository.Instance.Update<AccountStockEntity>(accountStock);
         }
 
-        public static void CalculateNowAvgrage(IList<StockCacheInfo> stockCaches, IList<StockPriceCacheInfo> stockPriceCaches, Action<string> actionLog)
-        {
-            var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-            var lastPrice = stockPriceCaches.FirstOrDefault();
-            if (lastPrice != null && lastPrice.DealDate != DateTime.Now.Date.ToString("yyyy-MM-dd")) dealDate = lastPrice.DealDate;
-
-            var extAverages = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'", takeSize: 1);
-            if (extAverages.Length > 0) return;
-            
-            var newStockAverages = new List<StockAverageEntity>();
-
-            var yestDate = DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
-            var yestPrice = stockPriceCaches.Where(c => c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
-            if (yestPrice != null) yestDate = yestPrice.DealDate;
-
-            var nextAverages = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{yestDate}'");
-            foreach (var stockCache in stockCaches)
-            {
-                var decNum = stockCache.Type == 0 ? 2 : 3;
-
-                var stockPrices = stockPriceCaches.Where(c => c.StockCode == stockCache.StockCode && c.DealDate.CompareTo(dealDate) <= 0).OrderByDescending(c => c.DealDate).ToArray();
-                if (stockPrices.Length == 0) continue;
-
-                var lastStockPrice = stockPrices.FirstOrDefault();
-
-                var stockAverage = new StockAverageEntity()
-                {
-                    StockCode = stockCache.StockCode,
-                    Price = lastStockPrice.Price,
-                    DealDate = dealDate,
-                };
-                newStockAverages.Add(stockAverage);
-
-                stockAverage.Price = lastStockPrice.Price;
-                if (stockPrices.Length >= 250) stockAverage.AvgPrice250 = Math.Round(stockPrices.Take(250).Average(c => c.Price), decNum);
-                if (stockPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(stockPrices.Take(120).Average(c => c.Price), decNum);
-                if (stockPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(stockPrices.Take(60).Average(c => c.Price), decNum);
-                if (stockPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(stockPrices.Take(20).Average(c => c.Price), decNum);
-                if (stockPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(stockPrices.Take(10).Average(c => c.Price), decNum);
-                if (stockPrices.Length > 0) stockAverage.AvgPrice5 = Math.Round(stockPrices.Take(5).Average(c => c.Price), decNum);
-            }
-            Repository.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
-        }
-
-        static string GetSingleTrend(string trend, decimal nowAverage, decimal yestAverage)
-        {
-            if (nowAverage == 0 || yestAverage == 0) return trend;
-
-            if (nowAverage > yestAverage) trend = $"上{trend}";
-            else if (nowAverage < yestAverage) trend = $"下{trend}";
-            else trend = $"平{trend}";
-
-            if (trend.Length > 5) trend = trend.Substring(0, 5);
-            return trend;
-        }
-
-        /// <summary>
-        /// ↘↗
-        /// </summary>
-        /// <param name="stock"></param>
-        /// <param name="nowAverage"></param>
-        /// <returns></returns>
-        static string GetTrend(StockEntity stock, StockAverageEntity nowAverage, StockAverageEntity yestAvgPrices)
-        {
-            if (yestAvgPrices == null) return "";
-
-            var lng = "";
-            if (nowAverage.AvgPrice250 > 0)
-            {
-                if (nowAverage.AvgPrice250 > yestAvgPrices.AvgPrice250)
-                {
-                    lng = "L.上行";
-                }
-                else if (nowAverage.AvgPrice250 < yestAvgPrices.AvgPrice250)
-                {
-                    lng = "L.下行";
-                }
-            }
-            var mid = "";
-            if (nowAverage.AvgPrice120 > 0 && nowAverage.AvgPrice60 > 0)
-            {
-                if (nowAverage.AvgPrice120 > yestAvgPrices.AvgPrice120 && nowAverage.AvgPrice60 > yestAvgPrices.AvgPrice60)
-                {
-                    mid = "M.上行";
-                }
-                else if (nowAverage.AvgPrice120 < yestAvgPrices.AvgPrice120 && nowAverage.AvgPrice60 < yestAvgPrices.AvgPrice60)
-                {
-                    mid = "M.下行";
-                }
-                else
-                {
-                    mid = "M.震荡";
-                }
-            }
-            var sht = "";
-            if (nowAverage.AvgPrice20 > 0 && nowAverage.AvgPrice10 > 0 && nowAverage.AvgPrice5 > 0)
-            {
-                if (nowAverage.AvgPrice20 > yestAvgPrices.AvgPrice20 && nowAverage.AvgPrice10 > yestAvgPrices.AvgPrice10 && nowAverage.AvgPrice5 > yestAvgPrices.AvgPrice5)
-                {
-                    sht = "S.上行";
-                }
-                else if (nowAverage.AvgPrice20 < yestAvgPrices.AvgPrice20 && nowAverage.AvgPrice10 < yestAvgPrices.AvgPrice10 && nowAverage.AvgPrice5 < yestAvgPrices.AvgPrice5)
-                {
-                    sht = "S.下行";
-                }
-                else
-                {
-                    sht = "S.震荡";
-                }
-            }
-            var tdy = "";
-            if (stock.Price < nowAverage.AvgPrice5)
-            {
-                tdy = "N.↘";
-            }
-            else if (stock.Price > nowAverage.AvgPrice5)
-            {
-                tdy = "N.↗";
-            }
-            else
-            {
-                tdy = "N.→";
-            }
-            if (!string.IsNullOrEmpty(lng))
-                return lng;
-            return $"{tdy} {sht} {mid}";
-        }
 
         /// <summary>
         /// 计算所有可计算的平均价格
         /// </summary>
-        public static void CalculateAllAvgrage()
+        public static void CalculateAllAvgrage(int calculateDays = 1)
         {
-            var newStockAverages = new List<StockAverageEntity>();
             var stocks = Repository.Instance.QueryAll<StockEntity>();
-            var stockAverages = Repository.Instance.QueryAll<StockAverageEntity>();
             foreach (var stock in stocks)
             {
-                var decNum = stock.Type == 0 ? 2 : 3;
-
-                var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", 0, new string[] { "StockCode", "DealDate", "Price" });
-                if (stockPrices.Length == 0) continue;
-
-                foreach(var stockPrice in stockPrices)
+                var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0", "DealDate desc", calculateDays);
+                foreach (var stockPrice in stockPrices)
                 {
-                    var calcPrices = stockPrices.Where(c => c.DealDate.CompareTo(stockPrice.DealDate) <= 0).OrderByDescending(c => c.DealDate).ToArray();
-
-                    var stockAverage = stockAverages.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == stockPrice.DealDate);
-                    if (stockAverage == null)
-                    {
-                        stockAverage = new StockAverageEntity()
-                        {
-                            StockCode = stock.Code,
-                            Price = stockPrice.Price,
-                            DealDate = stockPrice.DealDate,
-                        };
-                        newStockAverages.Add(stockAverage);
-                    }
-                    stockAverage.Price = stockPrice.Price;
-                    if (calcPrices.Length >= 250) stockAverage.AvgPrice250 = Math.Round(calcPrices.Take(250).Average(c => c.Price), decNum);
-                    if (calcPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(calcPrices.Take(120).Average(c => c.Price), decNum);
-                    if (calcPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(calcPrices.Take(60).Average(c => c.Price), decNum);
-                    if (calcPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(calcPrices.Take(20).Average(c => c.Price), decNum);
-                    if (calcPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(calcPrices.Take(10).Average(c => c.Price), decNum);
-                    if (calcPrices.Length > 0) stockAverage.AvgPrice5 = Math.Round(calcPrices.Take(5).Average(c => c.Price), decNum);
+                    CalculateNowAvgrage(stock.Code, stockPrice.DealDate);
                 }
-
-                var nowStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).OrderByDescending(c => c.DealDate).FirstOrDefault();
-                //if (nowStockAverage != null)
-                //{
-                //    stock.AvgPrice5 = nowStockAverage.AvgPrice5;
-                //    stock.AvgPrice10 = nowStockAverage.AvgPrice10;
-                //    stock.AvgPrice20 = nowStockAverage.AvgPrice20;
-                //    stock.AvgPrice60 = nowStockAverage.AvgPrice60;
-                //    stock.AvgPrice120 = nowStockAverage.AvgPrice120;
-                //    stock.AvgPrice250 = nowStockAverage.AvgPrice250;
-                //}
-                var allStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).Concat(newStockAverages.Where(c => c.StockCode == stock.Code)).OrderByDescending(c => c.DealDate).Take(6).ToArray();
-                //if (allStockAverage.Length > 0)
-                //{
-                //    stock.Trend5 = GetSingleHidTrend(stock.Trend5, allStockAverage.Select(c => c.AvgPrice5).ToArray());
-                //    stock.Trend10 = GetSingleHidTrend(stock.Trend10, allStockAverage.Select(c => c.AvgPrice10).ToArray());
-                //    stock.Trend20 = GetSingleHidTrend(stock.Trend20, allStockAverage.Select(c => c.AvgPrice20).ToArray());
-                //    stock.Trend60 = GetSingleHidTrend(stock.Trend60, allStockAverage.Select(c => c.AvgPrice60).ToArray());
-                //    stock.Trend120 = GetSingleHidTrend(stock.Trend120, allStockAverage.Select(c => c.AvgPrice120).ToArray());
-                //    stock.Trend250 = GetSingleHidTrend(stock.Trend250, allStockAverage.Select(c => c.AvgPrice250).ToArray());
-                //}
-
-                //计算当前趋势
-                var yestStockAverage = stockAverages.Where(c => c.StockCode == stock.Code).OrderByDescending(c => c.DealDate).Skip(1).FirstOrDefault();
-                //stock.Trend = GetTrend(stock, nowStockAverage, yestStockAverage);
             }
-            //Repository.Instance.Update<StockEntity>(stocks, new string[] { "Trend", "AvgPrice5", "AvgPrice10", "AvgPrice20", "AvgPrice60", "AvgPrice120", "AvgPrice250" });
-            Repository.Instance.Update<StockAverageEntity>(stockAverages);
+        }
+
+        public static void CalculateNowAvgrage(string stockCode, string dealDate = "")
+        {
+            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+            if (stock == null) return;
+
+            if (string.IsNullOrEmpty(dealDate))
+            {
+                dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
+                var lastPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 1).FirstOrDefault();
+                if (lastPrice != null && lastPrice.DealDate != DateTime.Now.Date.ToString("yyyy-MM-dd")) dealDate = lastPrice.DealDate;
+            }
+
+            var extAverages = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{stockCode}' and DealDate='{dealDate}'", takeSize: 1);
+            if (extAverages.Length > 0) return;
+
+            var newStockAverages = new List<StockAverageEntity>();
+
+            var allStockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0", "DealDate desc", 250);
+
+            //var yestDate = DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
+            //var yestPrice = allStockPrices.Where(c => c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+            //if (yestPrice != null) yestDate = yestPrice.DealDate;
+
+            //var nextAverages = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{stockCode}' and DealDate='{yestDate}'");
+            var decNum = stock.Type == 0 ? 2 : 3;
+
+            var stockPrices = allStockPrices.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) <= 0).OrderByDescending(c => c.DealDate).ToArray();
+            if (stockPrices.Length == 0) return;
+
+            var lastStockPrice = stockPrices.FirstOrDefault();
+
+            var stockAverage = new StockAverageEntity()
+            {
+                StockCode = stock.Code,
+                Price = lastStockPrice.Price,
+                DealDate = dealDate,
+            };
+            newStockAverages.Add(stockAverage);
+
+            stockAverage.Price = lastStockPrice.Price;
+            if (stockPrices.Length >= 250) stockAverage.AvgPrice250 = Math.Round(stockPrices.Take(250).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 180) stockAverage.AvgPrice180 = Math.Round(stockPrices.Take(180).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 120) stockAverage.AvgPrice120 = Math.Round(stockPrices.Take(120).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 60) stockAverage.AvgPrice60 = Math.Round(stockPrices.Take(60).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 30) stockAverage.AvgPrice30 = Math.Round(stockPrices.Take(30).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 20) stockAverage.AvgPrice20 = Math.Round(stockPrices.Take(20).Average(c => c.Price), decNum);
+            if (stockPrices.Length >= 10) stockAverage.AvgPrice10 = Math.Round(stockPrices.Take(10).Average(c => c.Price), decNum);
+            if (stockPrices.Length > 0) stockAverage.AvgPrice5 = Math.Round(stockPrices.Take(5).Average(c => c.Price), decNum);
+
             Repository.Instance.Insert<StockAverageEntity>(newStockAverages.ToArray());
         }
 
-        static string GetSingleHidTrend(string trend, decimal[] averages)
+        public static void CalculateAllMACD(int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
         {
-            var arr = averages.Reverse().ToArray();
-            for (var i = 0; i < arr.Length; i++)
+            if (string.IsNullOrEmpty(startDate)) startDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            foreach(var stock in stocks)
             {
-                if (i + 1 < arr.Length)
-                {
-                    trend = GetSingleTrend(trend, arr[i + 1], arr[i]);
-                }
+                CalculateNowMACD(stock.Code, shortAvgDays, midAvgDays, longAvgDays, startDate);
             }
-            return trend;
+        }
+
+        public static void CalculateNowMACD(string stockCode, int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
+        {
+            var lastEMA12 = 0m;
+            var lastEMA26 = 0m;
+            var lastDEA = 0m;
+
+            var stockMacds = new List<StockMacdEntity>();
+            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0 and DealDate>='{startDate}'").OrderBy(c => c.DealDate).ToArray();
+            var extMacds = Repository.Instance.QueryAll<StockMacdEntity>($"StockCode='{stockCode}'");
+            var lastExtMacd = extMacds.Where(c => c.DealDate.CompareTo(startDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+            if(lastExtMacd != null)
+            {
+                lastEMA12 = lastExtMacd.EMA12;
+                lastEMA26 = lastExtMacd.EMA26;
+                lastDEA = lastExtMacd.DEA;
+            }
+            var nowDate = stockPrices.Max(c => c.DealDate);
+            foreach (var price in stockPrices)
+            {
+                var ema12 = Math.Round(lastEMA12 * 11 / 13 + price.Price * 2 / 13, 3);
+                var ema26 = Math.Round(lastEMA26 * 25 / 27 + price.Price * 2 / 27, 3);
+                var dif = ema12 - ema26;
+                var dea = Math.Round(lastDEA * 8 / 10 + dif * 2 / 10, 3);
+                var macd = (dif - dea) * 2;
+                var stockMacd = extMacds.FirstOrDefault(c => c.DealDate == price.DealDate);
+                if (stockMacd == null)
+                {
+                    stockMacd = new StockMacdEntity()
+                    {
+                        StockCode = stockCode,
+                        DealDate = price.DealDate,
+                        EMA12 = ema12,
+                        EMA26 = ema26,
+                        DIF = dif,
+                        DEA = dea,
+                        MACD = macd,
+                    };
+                    stockMacds.Add(stockMacd);
+                }
+                else if(price.DealDate == nowDate)
+                {
+                    stockMacd.EMA12 = ema12;
+                    stockMacd.EMA26 = ema26;
+                    stockMacd.DEA = dea;
+                    stockMacd.DIF = dif;
+                    stockMacd.MACD = macd;
+                    Repository.Instance.Update<StockMacdEntity>(stockMacd);
+                }
+                lastEMA12 = ema12;
+                lastEMA26 = ema26;
+                lastDEA = dea;
+            }
+            Repository.Instance.Insert<StockMacdEntity>(stockMacds.ToArray());
         }
     }
 }

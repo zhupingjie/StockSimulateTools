@@ -29,11 +29,17 @@ namespace StockSimulateDomain.Entity
         [Description("20日均价")]
         public decimal AvgPrice20 { get; set; }
 
+        [Description("30日均价")]
+        public decimal AvgPrice30 { get; set; }
+
         [Description("60日均价")]
         public decimal AvgPrice60 { get; set; }
 
         [Description("120日均价")]
         public decimal AvgPrice120 { get; set; }
+
+        [Description("180日均价")]
+        public decimal AvgPrice180 { get; set; }
 
         [Description("250日均价")]
         public decimal AvgPrice250 { get; set; }

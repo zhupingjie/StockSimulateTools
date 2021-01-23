@@ -274,8 +274,11 @@ namespace StockPriceTools
                 {
                     this.gridStockList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
-                value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
-                this.gridStockList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("0.###");
+                if (row.Cells["股价"].Value != null)
+                {
+                    value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
+                    this.gridStockList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("0.###");
+                }
             }
 
             LoadStockGridListData = false;
@@ -480,14 +483,14 @@ namespace StockPriceTools
             }
         }
 
-        void LoadPriceChartData(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)
+        void LoadPriceChartData(string stockCode, string stockName, int chartType = 0, bool chartWithZS = true)
         {
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(100);
                 Action act = delegate ()
                 {
-                    LoadPriceChart(stockCode, stockName, dateType, chartWithZS);
+                    LoadPriceChart(stockCode, stockName, chartType, chartWithZS);
                 };
                 this.Invoke(act);
             });
@@ -497,23 +500,28 @@ namespace StockPriceTools
         ///  加载走势图
         /// </summary>
         /// <param name="stockCode"></param>
-        /// <param name="dateType">0:日,1:分钟</param>
-        void LoadPriceChart(string stockCode, string stockName, int dateType = 0, bool chartWithZS = true)
+        /// <param name="chartType">0:日线图,1:MACD图</param>
+        void LoadPriceChart(string stockCode, string stockName, int chartType = 0, bool chartWithZS = false)
         {
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
-            var text = $"【{stockName}】分时图";
+            var text = $"【{stockName}】{(chartType==0?"日线":"MACD")}图";
             var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock != null)
             {
-                text += "【";
-                text += $"M5:{stock.AvgPrice5}{(stock.Price > stock.AvgPrice5 ? "↗" : stock.Price < stock.AvgPrice5 ? "↘" : "→")}";
-                if (stock.AvgPrice10 > 0) text += $",M10:{stock.AvgPrice10}{(stock.Price > stock.AvgPrice10 ? "↗" : stock.Price < stock.AvgPrice10 ? "↘" : "→")}";
-                if (stock.AvgPrice20 > 0) text += $",M20:{stock.AvgPrice20}{(stock.Price > stock.AvgPrice20 ? "↗" : stock.Price < stock.AvgPrice20 ? "↘" : "→")}";
-                if (stock.AvgPrice60 > 0) text += $",M60:{stock.AvgPrice60}{(stock.Price > stock.AvgPrice60 ? "↗" : stock.Price < stock.AvgPrice60 ? "↘" : "→")}";
-                if (stock.AvgPrice120 > 0) text += $",M120:{stock.AvgPrice120}{(stock.Price > stock.AvgPrice120 ? "↗" : stock.Price < stock.AvgPrice120 ? "↘" : "→")}";
-                if (stock.AvgPrice250 > 0) text += $",M250:{stock.AvgPrice250}{(stock.Price > stock.AvgPrice250 ? "↗" : stock.Price < stock.AvgPrice250 ? "↘" : "→")}";
-                text += "】";
+                var stockAvgPrice = Repository.Instance.QueryFirst<StockAverageEntity>($"StockCode='{stock.Code}' and DealDate='{stock.PriceDate}'");
+                if (stockAvgPrice != null)
+                {
+                    text += "【";
+                    text += $"M5:{stockAvgPrice.AvgPrice5}{(stock.Price > stockAvgPrice.AvgPrice5 ? "↗" : stock.Price < stockAvgPrice.AvgPrice5 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice10 > 0) text += $",M10:{stockAvgPrice.AvgPrice10}{(stock.Price > stockAvgPrice.AvgPrice10 ? "↗" : stock.Price < stockAvgPrice.AvgPrice10 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice20 > 0) text += $",M20:{stockAvgPrice.AvgPrice20}{(stock.Price > stockAvgPrice.AvgPrice20 ? "↗" : stock.Price < stockAvgPrice.AvgPrice20 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice30 > 0) text += $",M20:{stockAvgPrice.AvgPrice30}{(stock.Price > stockAvgPrice.AvgPrice30 ? "↗" : stock.Price < stockAvgPrice.AvgPrice30 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice60 > 0) text += $",M60:{stockAvgPrice.AvgPrice60}{(stock.Price > stockAvgPrice.AvgPrice60 ? "↗" : stock.Price < stockAvgPrice.AvgPrice60 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice120 > 0) text += $",M120:{stockAvgPrice.AvgPrice120}{(stock.Price > stockAvgPrice.AvgPrice120 ? "↗" : stock.Price < stockAvgPrice.AvgPrice120 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice250 > 0) text += $",M250:{stockAvgPrice.AvgPrice250}{(stock.Price > stockAvgPrice.AvgPrice250 ? "↗" : stock.Price < stockAvgPrice.AvgPrice250 ? "↘" : "→")}";
+                    text += "】";
+                }
             }
             title.Text = text;
             title.ForeColor = Color.Blue;
@@ -521,28 +529,27 @@ namespace StockPriceTools
             var series = this.chartPrice.Series.FirstOrDefault(c => c.Name == "FOUCS");
             if (series == null) series = this.chartPrice.Series.Add("FOUCS");
 
-            if (dateType == 0)
+            if (chartType == 0)
             {
                 series.IsValueShownAsLabel = true;
 
-                this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
-
-                var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
-                if (zsSeries != null) this.chartPrice.Series.Remove(zsSeries);
-            }
-            else
-            {
-                series.IsValueShownAsLabel = false;
-
-                this.BindStockPriceChart(series, stockCode, dateType, Color.Red);
+                this.BindStockPriceChart(series, stockCode, chartType, Color.Red);
 
                 if (chartWithZS)
                 {
                     var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
                     if (zsSeries == null) zsSeries = this.chartPrice.Series.Add("ZS");
 
-                    this.BindStockPriceChart(zsSeries, RC.SHZSOfStockCode, dateType, Color.Blue);
+                    this.BindStockPriceChart(zsSeries, RC.SHZSOfStockCode, chartType, Color.Blue);
                 }
+            }
+            else
+            {
+                series.IsValueShownAsLabel = false;
+
+                var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
+                if (zsSeries != null) this.chartPrice.Series.Remove(zsSeries);
+                //this.BindStockPriceChart(series, stockCode, chartType, Color.Red);
             }
 
             var chartArea = this.chartPrice.ChartAreas[0];
@@ -601,7 +608,7 @@ namespace StockPriceTools
             foreach (var item in stockPrices)
             {
                 var xvalue = ObjectUtil.ToValue<DateTime>(item.DealDate, DateTime.Now).ToString("MM-dd");
-                series.Points.AddXY(xvalue, item.Price);
+                series.Points.AddXY(xvalue, item.UDPer);
             }
         }
         
@@ -876,7 +883,7 @@ namespace StockPriceTools
             switch (tabIndex)
             {
                 case 1:
-                    this.LoadPriceChartData(stockCode, stockName, 1);
+                    this.LoadPriceChartData(stockCode, stockName, 0);
                     break;
                 case 2:
                     this.LoadPriceList(stockCode);
@@ -906,8 +913,19 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
+            var chartWithZS = this.txtChartWithZS.Checked;
 
-            this.LoadPriceChartData(stockCode, stockName, 0);
+            this.LoadPriceChartData(stockCode, stockName, 0, chartWithZS);
+        }
+
+        private void btnMACDChart_Click(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var stockName = $"{selectRow.Cells["股票名称"].Value}";
+
+            this.LoadPriceChartData(stockCode, stockName, 1);
         }
 
         private void btnWebChart_Click(object sender, EventArgs e)
@@ -921,13 +939,7 @@ namespace StockPriceTools
 
         private void btnMinuteChart_Click(object sender, EventArgs e)
         {
-            if (this.gridStockList.SelectedRows.Count == 0) return;
-            var selectRow = this.gridStockList.SelectedRows[0];
-            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var stockName = $"{selectRow.Cells["股票名称"].Value}";
-            var chartWithZS = this.txtChartWithZS.Checked;
 
-            this.LoadPriceChartData(stockCode, stockName, 1, chartWithZS);
         }
 
         private void btnHandleRemind_Click(object sender, EventArgs e)

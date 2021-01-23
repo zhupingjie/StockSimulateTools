@@ -198,10 +198,7 @@ namespace StockSimulateService.Service
                             this.ActionLog("计算股票均线价格数据...");
                             try
                             {
-                                StockPriceService.CalculateNowAvgrage(StockCache, StockPriceCache, (message) =>
-                                {
-                                    this.ActionLog(message);
-                                });
+                                StockPriceService.CalculateAllAvgrage();
                             }
                             catch (Exception ex)
                             {
@@ -209,7 +206,32 @@ namespace StockSimulateService.Service
                             }
                         }
                     }
-                    Thread.Sleep(RC.UpdateStockAveragePriceInterval * 1000);
+                    Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
+            //计算MACD
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5000);
+                while (true)
+                {
+                    if (CacheDataLoaded)
+                    {
+                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        {
+                            this.ActionLog("计算股票MACD数据...");
+                            try
+                            {
+                                StockPriceService.CalculateAllMACD();
+                            }
+                            catch (Exception ex)
+                            {
+                                LogUtil.Error($"CalculateAllMACD Error:{ex.Message}");
+                            }
+                        }
+                    }
+                    Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -259,7 +281,7 @@ namespace StockSimulateService.Service
                             LogUtil.Error($"GatherFinanceData Error:{ex.Message}");
                         }
                 }
-                    Thread.Sleep(RC.GatherStockFinanceTargetInterval * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -284,7 +306,7 @@ namespace StockSimulateService.Service
                             LogUtil.Error($"GatherReportData Error:{ex.Message}");
                         }
                     }
-                    Thread.Sleep(RC.GatherStockReportInterval * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
         }
