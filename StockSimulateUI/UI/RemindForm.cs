@@ -51,9 +51,11 @@ namespace StockSimulateUI.UI
                 UpAveragePrice = this.txtUpAverage.Text,
                 DownAveragePrice = this.txtDownAverage.Text,
                 UpMinDayPricePer = this.txtUpMinDayPricePer.Text,
-                DownMaxDayPricePer = this.txtDownMaxDayPricePer.Text
+                DownMaxDayPricePer = this.txtDownMaxDayPricePer.Text,
+                GoldMacd = this.txtGoldMacd.Checked,
+                DieMacd = this.txtDieMacd.Checked
             };
-            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpMinDayPricePer}{remindInfo.DownMaxDayPricePer}")) return;
+            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpPrice}{remindInfo.DownPrice}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpMinDayPricePer}{remindInfo.DownMaxDayPricePer}") && !this.txtGoldMacd.Checked && !this.txtDieMacd.Checked) return;
 
             StockRemindService.Create(remindInfo);
 
@@ -82,10 +84,21 @@ namespace StockSimulateUI.UI
             var downAveragePrice = this.txtDownAverage.Text;
             var upMinDayPricePer = this.txtUpMinDayPricePer.Text;
             var downMaxDayPricePer = this.txtDownMaxDayPricePer.Text;
-            if (string.IsNullOrEmpty(uDPer + upAveragePrice + downAveragePrice + upMinDayPricePer + downMaxDayPricePer)) return;
 
+            var remindInfo = new RemindInfo()
+            {
+                AccountName = accountName,
+                UDPer = this.txtUDPer.Text,
+                UpAveragePrice = this.txtUpAverage.Text,
+                DownAveragePrice = this.txtDownAverage.Text,
+                UpMinDayPricePer = this.txtUpMinDayPricePer.Text,
+                DownMaxDayPricePer = this.txtDownMaxDayPricePer.Text,
+                GoldMacd = this.txtGoldMacd.Checked,
+                DieMacd = this.txtDieMacd.Checked
+            };
+            if (string.IsNullOrEmpty($"{remindInfo.UDPer}{remindInfo.UpAveragePrice}{remindInfo.DownAveragePrice}{remindInfo.UpMinDayPricePer}{remindInfo.DownMaxDayPricePer}") && !this.txtGoldMacd.Checked && !this.txtDieMacd.Checked) return;
 
-            StockRemindService.Create(accountName, uDPer, upAveragePrice, downAveragePrice, upMinDayPricePer, downMaxDayPricePer);
+            StockRemindService.Create(remindInfo);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -98,12 +111,12 @@ namespace StockSimulateUI.UI
 
         private void btnUpAverage_Click(object sender, EventArgs e)
         {
-            this.txtUpAverage.Text = "10,20,60";
+            this.txtUpAverage.Text = "10,20,30,60";
         }
 
         private void btnDownAverage_Click(object sender, EventArgs e)
         {
-            this.txtDownAverage.Text = "10,20,60";
+            this.txtDownAverage.Text = "10,20,30,60";
         }
 
         private void btnUpAverageReverse_Click(object sender, EventArgs e)

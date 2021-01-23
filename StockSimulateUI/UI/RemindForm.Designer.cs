@@ -53,12 +53,16 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtUpMinDayPricePer = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtGoldMacd = new System.Windows.Forms.CheckBox();
+            this.txtDieMacd = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(418, 415);
+            this.btnOK.Location = new System.Drawing.Point(418, 509);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(82, 43);
             this.btnOK.TabIndex = 3;
@@ -142,7 +146,7 @@
             // btnRemindAll
             // 
             this.btnRemindAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRemindAll.Location = new System.Drawing.Point(12, 415);
+            this.btnRemindAll.Location = new System.Drawing.Point(12, 509);
             this.btnRemindAll.Name = "btnRemindAll";
             this.btnRemindAll.Size = new System.Drawing.Size(252, 43);
             this.btnRemindAll.TabIndex = 59;
@@ -153,7 +157,7 @@
             // btnOKAll
             // 
             this.btnOKAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOKAll.Location = new System.Drawing.Point(283, 415);
+            this.btnOKAll.Location = new System.Drawing.Point(283, 509);
             this.btnOKAll.Name = "btnOKAll";
             this.btnOKAll.Size = new System.Drawing.Size(129, 43);
             this.btnOKAll.TabIndex = 60;
@@ -288,11 +292,55 @@
             this.label8.TabIndex = 68;
             this.label8.Text = "当日最低价反弹(%)";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label9.Location = new System.Drawing.Point(53, 407);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(208, 31);
+            this.label9.TabIndex = 74;
+            this.label9.Text = "MACD零轴下金叉";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label10.Location = new System.Drawing.Point(53, 455);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(208, 31);
+            this.label10.TabIndex = 77;
+            this.label10.Text = "MACD零轴上死叉";
+            // 
+            // txtGoldMacd
+            // 
+            this.txtGoldMacd.AutoSize = true;
+            this.txtGoldMacd.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtGoldMacd.Location = new System.Drawing.Point(283, 421);
+            this.txtGoldMacd.Name = "txtGoldMacd";
+            this.txtGoldMacd.Size = new System.Drawing.Size(15, 14);
+            this.txtGoldMacd.TabIndex = 78;
+            this.txtGoldMacd.UseVisualStyleBackColor = true;
+            // 
+            // txtDieMacd
+            // 
+            this.txtDieMacd.AutoSize = true;
+            this.txtDieMacd.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtDieMacd.Location = new System.Drawing.Point(283, 467);
+            this.txtDieMacd.Name = "txtDieMacd";
+            this.txtDieMacd.Size = new System.Drawing.Size(15, 14);
+            this.txtDieMacd.TabIndex = 79;
+            this.txtDieMacd.UseVisualStyleBackColor = true;
+            // 
             // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 483);
+            this.ClientSize = new System.Drawing.Size(576, 570);
+            this.Controls.Add(this.txtDieMacd);
+            this.Controls.Add(this.txtGoldMacd);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.btnUpAverageReverse);
             this.Controls.Add(this.btnDownAverageReverse);
             this.Controls.Add(this.txtDownMaxDayPricePer);
@@ -352,5 +400,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtUpMinDayPricePer;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox txtGoldMacd;
+        private System.Windows.Forms.CheckBox txtDieMacd;
     }
 }

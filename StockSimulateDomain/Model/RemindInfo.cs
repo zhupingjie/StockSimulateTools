@@ -19,5 +19,8 @@ namespace StockSimulateDomain.Model
 
         public string UpMinDayPricePer { get; set; }
         public string DownMaxDayPricePer { get; set; }
+
+        public bool GoldMacd { get; set; }
+        public bool DieMacd { get; set; }
     }
 }

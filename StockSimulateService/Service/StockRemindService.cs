@@ -13,34 +13,30 @@ namespace StockSimulateService.Service
 {
     public class StockRemindService
     {
-        public static void Create(string accountName, string strUPPer, string upAveragePrice, string downAveragePrice, string upMinDayPricePer, string downMaxDayPricePer)
-        {
-            var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{accountName}'");
-            if (account == null) return;
-
-            var stocks = Repository.Instance.QueryAll<StockEntity>($"");
-            foreach(var stock in stocks)
-            {
-                Create(account, stock, new RemindInfo()
-                {
-                    UDPer = strUPPer,
-                    UpAveragePrice = upAveragePrice,
-                    DownAveragePrice = downAveragePrice,
-                    UpMinDayPricePer = upMinDayPricePer,
-                    DownMaxDayPricePer = downMaxDayPricePer
-                });
-            }
-        }
-
         public static void Create(RemindInfo remindInfo)
         {
             var account = Repository.Instance.QueryFirst<AccountEntity>($"Name='{remindInfo.AccountName}'");
             if (account == null) return;
 
-            var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
-            if (stock == null) return;
+            if (string.IsNullOrEmpty(remindInfo.StockCode))
+            {
+                var stocks = Repository.Instance.QueryAll<StockEntity>($"");
+                {
+                    foreach (var stock in stocks)
+                    {
+                        remindInfo.StockCode = stock.Code;
 
-            Create(account, stock, remindInfo);
+                        Create(account, stock, remindInfo);
+                    }
+                }
+            }
+            else
+            {
+                var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
+                if (stock == null) return;
+
+                Create(account, stock, remindInfo);
+            }
         }
 
         public static void Create(AccountEntity account, StockEntity stock, RemindInfo remindInfo)
@@ -215,6 +211,39 @@ namespace StockSimulateService.Service
                     reminds.Add(remind);
                 }
             }
+
+            if(remindInfo.GoldMacd)
+            {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=10");
+
+                var remind = new RemindEntity()
+                {
+                    StockCode = stock.Code,
+                    Target = 0,
+                    Email = account.Email,
+                    QQ = account.QQ,
+                    RType = 10,
+                    StrategyName = "主动设置",
+                    StrategyTarget = $"零轴下金叉"
+                };
+                reminds.Add(remind);
+            }
+            if(remindInfo.DieMacd)
+            {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=11");
+
+                var remind = new RemindEntity()
+                {
+                    StockCode = stock.Code,
+                    Target = 0,
+                    Email = account.Email,
+                    QQ = account.QQ,
+                    RType = 11,
+                    StrategyName = "主动设置",
+                    StrategyTarget = $"零轴上死叉"
+                };
+                reminds.Add(remind);
+            }
             Repository.Instance.Insert<RemindEntity>(reminds.ToArray());
         }
         public static void AutoCreate(string accountName)
@@ -268,7 +297,8 @@ namespace StockSimulateService.Service
 
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
             var stocks = Repository.Instance.QueryAll<StockEntity>($"Price>0 and PriceDate='{dealDate}'");
-            var stockAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"DealDate='{dealDate}'");
+            var stockAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"");
+            var stockMacds = Repository.Instance.QueryAll<StockMacdEntity>($"");
 
             foreach (var stock in stocks)
             {
@@ -282,7 +312,7 @@ namespace StockSimulateService.Service
 
                     var nextRemind = new RemindEntity()
                     {
-                        RType = 0,
+                        RType = remind.RType,
                         StockCode = remind.StockCode,
                         Target = remind.Target,
                         Email = remind.Email,
@@ -351,7 +381,7 @@ namespace StockSimulateService.Service
                 var rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 3 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code);
+                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     if (avgPrice == null) continue;
 
                     if ((rd.Target == 5 && stock.Price > avgPrice.AvgPrice10 && avgPrice.AvgPrice10 > 0)
@@ -384,7 +414,7 @@ namespace StockSimulateService.Service
                 rds = reminds.Where(c => c.StockCode == stock.Code && c.RType == 4 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date)).ToArray();
                 foreach (var rd in rds)
                 {
-                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code);
+                    var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     if (avgPrice == null) continue;
 
                     if ((rd.Target == 5 && stock.Price < avgPrice.AvgPrice5 && avgPrice.AvgPrice5 > 0)
@@ -431,7 +461,7 @@ namespace StockSimulateService.Service
 
                             var nextRemind = new RemindEntity()
                             {
-                                RType = 5,
+                                RType = remind.RType,
                                 StockCode = remind.StockCode,
                                 Target = remind.Target,
                                 Email = remind.Email,
@@ -473,7 +503,7 @@ namespace StockSimulateService.Service
 
                             var nextRemind = new RemindEntity()
                             {
-                                RType = 6,
+                                RType = remind.RType,
                                 StockCode = remind.StockCode,
                                 Target = remind.Target,
                                 Email = remind.Email,
@@ -537,6 +567,90 @@ namespace StockSimulateService.Service
                     remind.LastRemind = DateTime.Now;
                     remind.RemindPrice = stock.Price;
                     Repository.Instance.Update<RemindEntity>(remind);
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 10 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                if (remind != null)
+                {
+                    var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
+                    var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestMacd == null || nowMacd == null) continue;
+                    if (nowMacd.MACD >= 0 || yestMacd.MACD > 0) continue;
+
+                    if (yestMacd.DIF < yestMacd.DEA && nowMacd.DIF >= nowMacd.DEA)
+                    {
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var nextRemind = new RemindEntity()
+                        {
+                            RType = remind.RType,
+                            StockCode = remind.StockCode,
+                            Target = remind.Target,
+                            Email = remind.Email,
+                            QQ = remind.QQ,
+                            StrategyName = remind.StrategyName,
+                            StrategyTarget = remind.StrategyTarget,
+                            PlanRemind = DateTime.Now.Date.AddDays(1)
+                        };
+                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴下金叉,请注意!";
+
+                        if (RunningConfig.Instance.RemindNoticeByEmail)
+                        {
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                        }
+                        if (RunningConfig.Instance.RemindNoticeByMessage)
+                        {
+                            StockMessageService.SendMessage(stock, message);
+                        }
+                        action(message);
+                    }
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 11 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                if (remind != null)
+                {
+                    var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
+                    var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestMacd == null || nowMacd == null) continue;
+                    if (nowMacd.MACD <= 0 || yestMacd.MACD <= 0) continue;
+
+                    if (yestMacd.DIF > yestMacd.DEA && nowMacd.DIF <= nowMacd.DEA)
+                    {
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var nextRemind = new RemindEntity()
+                        {
+                            RType = remind.RType,
+                            StockCode = remind.StockCode,
+                            Target = remind.Target,
+                            Email = remind.Email,
+                            QQ = remind.QQ,
+                            StrategyName = remind.StrategyName,
+                            StrategyTarget = remind.StrategyTarget,
+                            PlanRemind = DateTime.Now.Date.AddDays(1)
+                        };
+                        Repository.Instance.Insert<RemindEntity>(nextRemind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴下金叉,请注意!";
+
+                        if (RunningConfig.Instance.RemindNoticeByEmail)
+                        {
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                        }
+                        if (RunningConfig.Instance.RemindNoticeByMessage)
+                        {
+                            StockMessageService.SendMessage(stock, message);
+                        }
+                        action(message);
+                    }
                 }
             }
         }
