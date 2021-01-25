@@ -22,5 +22,8 @@ namespace StockSimulateDomain.Model
 
         public bool GoldMacd { get; set; }
         public bool DieMacd { get; set; }
+
+        public bool UpMacd { get; set; }
+        public bool DownMacd { get; set; }
     }
 }

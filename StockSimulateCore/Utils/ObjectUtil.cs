@@ -330,6 +330,19 @@ namespace StockSimulateCore.Utils
             return false;
         }
 
+        public static bool EffectStockMacdTime(int offsetMinute = 0)
+        {
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return false;
+
+            var from = DateTime.Now.AddMinutes(offsetMinute).ToString("HH:mm");
+            var to = DateTime.Now.AddMinutes(-1 * offsetMinute).ToString("HH:mm");
+            if (from.CompareTo("09:45") >= 0 && to.CompareTo("10:00") < 0) return true;
+            if (from.CompareTo("11:15") >= 0 && to.CompareTo("11:20") < 0) return true;
+            if (from.CompareTo("13:45") >= 0 && to.CompareTo("13:50") < 0) return true;
+            if (from.CompareTo("14:45") >= 0 && to.CompareTo("14:50") < 0) return true;
+            return false;
+        }
+
         public static string[] GetSplitArray(object text, string split)
         {
             if (text == null) return new string[] { };

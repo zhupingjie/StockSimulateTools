@@ -224,7 +224,7 @@ namespace StockSimulateService.Service
                     QQ = account.QQ,
                     RType = 10,
                     StrategyName = "主动设置",
-                    StrategyTarget = $"零轴下金叉"
+                    StrategyTarget = $"MACD金叉"
                 };
                 reminds.Add(remind);
             }
@@ -240,7 +240,40 @@ namespace StockSimulateService.Service
                     QQ = account.QQ,
                     RType = 11,
                     StrategyName = "主动设置",
-                    StrategyTarget = $"零轴上死叉"
+                    StrategyTarget = $"MACD死叉"
+                };
+                reminds.Add(remind);
+            }
+
+            if (remindInfo.UpMacd)
+            {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=12");
+
+                var remind = new RemindEntity()
+                {
+                    StockCode = stock.Code,
+                    Target = 0,
+                    Email = account.Email,
+                    QQ = account.QQ,
+                    RType = 12,
+                    StrategyName = "主动设置",
+                    StrategyTarget = $"MACD看多"
+                };
+                reminds.Add(remind);
+            }
+            if (remindInfo.DownMacd)
+            {
+                Repository.Instance.Delete<RemindEntity>($"StockCode='{stock.Code}' and StrategyName='主动设置' and RType=13");
+
+                var remind = new RemindEntity()
+                {
+                    StockCode = stock.Code,
+                    Target = 0,
+                    Email = account.Email,
+                    QQ = account.QQ,
+                    RType = 13,
+                    StrategyName = "主动设置",
+                    StrategyTarget = $"MACD看空"
                 };
                 reminds.Add(remind);
             }
@@ -572,10 +605,12 @@ namespace StockSimulateService.Service
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 10 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
                 if (remind != null)
                 {
+                    if (!ObjectUtil.EffectStockMacdTime()) continue;
+
                     var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
                     if (yestMacd == null || nowMacd == null) continue;
-                    if (nowMacd.MACD >= 0 || yestMacd.MACD > 0) continue;
+                    //if (nowMacd.MACD >= 0 || yestMacd.MACD > 0) continue;
 
                     if (yestMacd.DIF < yestMacd.DEA && nowMacd.DIF >= nowMacd.DEA)
                     {
@@ -597,7 +632,7 @@ namespace StockSimulateService.Service
                         };
                         Repository.Instance.Insert<RemindEntity>(nextRemind);
 
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴下金叉,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴{(nowMacd.MACD>=0?"上": "下")}金叉,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {
@@ -614,12 +649,14 @@ namespace StockSimulateService.Service
                 remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 11 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
                 if (remind != null)
                 {
+                    if (!ObjectUtil.EffectStockMacdTime()) continue;
+
                     var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
                     if (yestMacd == null || nowMacd == null) continue;
-                    if (nowMacd.MACD <= 0 || yestMacd.MACD <= 0) continue;
+                    //if (nowMacd.MACD <= 0 || yestMacd.MACD <= 0) continue;
 
-                    if (yestMacd.DIF > yestMacd.DEA && nowMacd.DIF <= nowMacd.DEA)
+                    if (yestMacd.DIF >= yestMacd.DEA && nowMacd.DIF < nowMacd.DEA)
                     {
                         remind.Handled = 1;
                         remind.LastRemind = DateTime.Now;
@@ -639,7 +676,69 @@ namespace StockSimulateService.Service
                         };
                         Repository.Instance.Insert<RemindEntity>(nextRemind);
 
-                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴下金叉,请注意!";
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴{(nowMacd.MACD >= 0 ? "上" : "下")}死叉,请注意!";
+
+                        if (RunningConfig.Instance.RemindNoticeByEmail)
+                        {
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                        }
+                        if (RunningConfig.Instance.RemindNoticeByMessage)
+                        {
+                            StockMessageService.SendMessage(stock, message);
+                        }
+                        action(message);
+                    }
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 12 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                if (remind != null)
+                {
+                    if (!ObjectUtil.EffectStockMacdTime()) continue;
+
+                    var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
+                    var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestMacd == null || nowMacd == null) continue;
+                    //if (nowMacd.MACD >= 0 || yestMacd.MACD > 0) continue;
+
+                    if (yestMacd.MACD < nowMacd.MACD)
+                    {
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴{(nowMacd.MACD >= 0 ? "上" : "下")}{(nowMacd.MACD >= 0 && yestMacd.MACD < 0 ? "转势" : "")}看多,请注意!";
+
+                        if (RunningConfig.Instance.RemindNoticeByEmail)
+                        {
+                            MailUtil.SendMailAsync(new SenderMailConfig(), message, message, remind.Email);
+                        }
+                        if (RunningConfig.Instance.RemindNoticeByMessage)
+                        {
+                            StockMessageService.SendMessage(stock, message);
+                        }
+                        action(message);
+                    }
+                }
+
+                remind = reminds.FirstOrDefault(c => c.StockCode == stock.Code && c.RType == 13 && (!c.PlanRemind.HasValue || c.PlanRemind <= DateTime.Now.Date));
+                if (remind != null)
+                {
+                    if (!ObjectUtil.EffectStockMacdTime()) continue;
+
+                    var nowMacd = stockMacds.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
+                    var yestMacd = stockMacds.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestMacd == null || nowMacd == null) continue;
+                    //if (nowMacd.MACD >= 0 || yestMacd.MACD > 0) continue;
+
+                    if (yestMacd.MACD > nowMacd.MACD)
+                    {
+                        remind.Handled = 1;
+                        remind.LastRemind = DateTime.Now;
+                        remind.RemindPrice = stock.Price;
+                        Repository.Instance.Update<RemindEntity>(remind);
+
+                        var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]MACD零轴{(nowMacd.MACD >= 0 ? "上" : "下")}{(nowMacd.MACD < 0 && yestMacd.MACD >= 0 ? "转势" : "")}看空,请注意!";
 
                         if (RunningConfig.Instance.RemindNoticeByEmail)
                         {

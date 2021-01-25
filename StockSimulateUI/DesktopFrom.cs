@@ -516,7 +516,7 @@ namespace StockPriceTools
                     text += $"M5:{stockAvgPrice.AvgPrice5}{(stock.Price > stockAvgPrice.AvgPrice5 ? "↗" : stock.Price < stockAvgPrice.AvgPrice5 ? "↘" : "→")}";
                     if (stockAvgPrice.AvgPrice10 > 0) text += $",M10:{stockAvgPrice.AvgPrice10}{(stock.Price > stockAvgPrice.AvgPrice10 ? "↗" : stock.Price < stockAvgPrice.AvgPrice10 ? "↘" : "→")}";
                     if (stockAvgPrice.AvgPrice20 > 0) text += $",M20:{stockAvgPrice.AvgPrice20}{(stock.Price > stockAvgPrice.AvgPrice20 ? "↗" : stock.Price < stockAvgPrice.AvgPrice20 ? "↘" : "→")}";
-                    if (stockAvgPrice.AvgPrice30 > 0) text += $",M20:{stockAvgPrice.AvgPrice30}{(stock.Price > stockAvgPrice.AvgPrice30 ? "↗" : stock.Price < stockAvgPrice.AvgPrice30 ? "↘" : "→")}";
+                    if (stockAvgPrice.AvgPrice30 > 0) text += $",M30:{stockAvgPrice.AvgPrice30}{(stock.Price > stockAvgPrice.AvgPrice30 ? "↗" : stock.Price < stockAvgPrice.AvgPrice30 ? "↘" : "→")}";
                     if (stockAvgPrice.AvgPrice60 > 0) text += $",M60:{stockAvgPrice.AvgPrice60}{(stock.Price > stockAvgPrice.AvgPrice60 ? "↗" : stock.Price < stockAvgPrice.AvgPrice60 ? "↘" : "→")}";
                     if (stockAvgPrice.AvgPrice120 > 0) text += $",M120:{stockAvgPrice.AvgPrice120}{(stock.Price > stockAvgPrice.AvgPrice120 ? "↗" : stock.Price < stockAvgPrice.AvgPrice120 ? "↘" : "→")}";
                     if (stockAvgPrice.AvgPrice250 > 0) text += $",M250:{stockAvgPrice.AvgPrice250}{(stock.Price > stockAvgPrice.AvgPrice250 ? "↗" : stock.Price < stockAvgPrice.AvgPrice250 ? "↘" : "→")}";

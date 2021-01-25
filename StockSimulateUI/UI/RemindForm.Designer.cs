@@ -57,12 +57,17 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtGoldMacd = new System.Windows.Forms.CheckBox();
             this.txtDieMacd = new System.Windows.Forms.CheckBox();
+            this.txtDieKdj = new System.Windows.Forms.CheckBox();
+            this.txtGoldKdj = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtMacdDown = new System.Windows.Forms.CheckBox();
+            this.txtMacdUp = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(418, 509);
+            this.btnOK.Location = new System.Drawing.Point(418, 554);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(82, 43);
             this.btnOK.TabIndex = 3;
@@ -74,11 +79,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(45, 67);
+            this.label1.Location = new System.Drawing.Point(34, 67);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(219, 31);
+            this.label1.Size = new System.Drawing.Size(230, 31);
             this.label1.TabIndex = 6;
-            this.label1.Text = "股价涨跌幅超过(%)";
+            this.label1.Text = "*股价涨跌幅超过(%)";
             // 
             // txtUDPer
             // 
@@ -146,7 +151,7 @@
             // btnRemindAll
             // 
             this.btnRemindAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRemindAll.Location = new System.Drawing.Point(12, 509);
+            this.btnRemindAll.Location = new System.Drawing.Point(12, 554);
             this.btnRemindAll.Name = "btnRemindAll";
             this.btnRemindAll.Size = new System.Drawing.Size(252, 43);
             this.btnRemindAll.TabIndex = 59;
@@ -157,7 +162,7 @@
             // btnOKAll
             // 
             this.btnOKAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOKAll.Location = new System.Drawing.Point(283, 509);
+            this.btnOKAll.Location = new System.Drawing.Point(283, 554);
             this.btnOKAll.Name = "btnOKAll";
             this.btnOKAll.Size = new System.Drawing.Size(129, 43);
             this.btnOKAll.TabIndex = 60;
@@ -177,11 +182,11 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(106, 310);
+            this.label4.Location = new System.Drawing.Point(95, 309);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(158, 31);
+            this.label4.Size = new System.Drawing.Size(169, 31);
             this.label4.TabIndex = 61;
-            this.label4.Text = "股价突破均线";
+            this.label4.Text = "*股价突破均线";
             // 
             // txtDownAverage
             // 
@@ -195,11 +200,11 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(106, 356);
+            this.label6.Location = new System.Drawing.Point(95, 357);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(158, 31);
+            this.label6.Size = new System.Drawing.Size(169, 31);
             this.label6.TabIndex = 63;
-            this.label6.Text = "股价跌破均线";
+            this.label6.Text = "*股价跌破均线";
             // 
             // btnDownAverage
             // 
@@ -268,11 +273,11 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(42, 258);
+            this.label7.Location = new System.Drawing.Point(34, 258);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(219, 31);
+            this.label7.Size = new System.Drawing.Size(230, 31);
             this.label7.TabIndex = 70;
-            this.label7.Text = "当日最高价回落(%)";
+            this.label7.Text = "*当日最高价回落(%)";
             // 
             // txtUpMinDayPricePer
             // 
@@ -286,57 +291,120 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label8.Location = new System.Drawing.Point(42, 210);
+            this.label8.Location = new System.Drawing.Point(34, 210);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(219, 31);
+            this.label8.Size = new System.Drawing.Size(230, 31);
             this.label8.TabIndex = 68;
-            this.label8.Text = "当日最低价反弹(%)";
+            this.label8.Text = "*当日最低价反弹(%)";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label9.Location = new System.Drawing.Point(53, 407);
+            this.label9.Location = new System.Drawing.Point(64, 411);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(208, 31);
+            this.label9.Size = new System.Drawing.Size(195, 31);
             this.label9.TabIndex = 74;
-            this.label9.Text = "MACD零轴下金叉";
+            this.label9.Text = "*MACD快线趋势";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label10.Location = new System.Drawing.Point(53, 455);
+            this.label10.Location = new System.Drawing.Point(154, 506);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(208, 31);
+            this.label10.Size = new System.Drawing.Size(105, 31);
             this.label10.TabIndex = 77;
-            this.label10.Text = "MACD零轴上死叉";
+            this.label10.Text = "KDJ指标";
             // 
             // txtGoldMacd
             // 
             this.txtGoldMacd.AutoSize = true;
             this.txtGoldMacd.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtGoldMacd.Location = new System.Drawing.Point(283, 421);
+            this.txtGoldMacd.Location = new System.Drawing.Point(283, 411);
             this.txtGoldMacd.Name = "txtGoldMacd";
-            this.txtGoldMacd.Size = new System.Drawing.Size(15, 14);
+            this.txtGoldMacd.Size = new System.Drawing.Size(81, 35);
             this.txtGoldMacd.TabIndex = 78;
+            this.txtGoldMacd.Text = "金叉";
             this.txtGoldMacd.UseVisualStyleBackColor = true;
             // 
             // txtDieMacd
             // 
             this.txtDieMacd.AutoSize = true;
             this.txtDieMacd.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtDieMacd.Location = new System.Drawing.Point(283, 467);
+            this.txtDieMacd.Location = new System.Drawing.Point(380, 411);
             this.txtDieMacd.Name = "txtDieMacd";
-            this.txtDieMacd.Size = new System.Drawing.Size(15, 14);
+            this.txtDieMacd.Size = new System.Drawing.Size(81, 35);
             this.txtDieMacd.TabIndex = 79;
+            this.txtDieMacd.Text = "死叉";
             this.txtDieMacd.UseVisualStyleBackColor = true;
+            // 
+            // txtDieKdj
+            // 
+            this.txtDieKdj.AutoSize = true;
+            this.txtDieKdj.Enabled = false;
+            this.txtDieKdj.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtDieKdj.Location = new System.Drawing.Point(380, 503);
+            this.txtDieKdj.Name = "txtDieKdj";
+            this.txtDieKdj.Size = new System.Drawing.Size(81, 35);
+            this.txtDieKdj.TabIndex = 81;
+            this.txtDieKdj.Text = "死叉";
+            this.txtDieKdj.UseVisualStyleBackColor = true;
+            // 
+            // txtGoldKdj
+            // 
+            this.txtGoldKdj.AutoSize = true;
+            this.txtGoldKdj.Enabled = false;
+            this.txtGoldKdj.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtGoldKdj.Location = new System.Drawing.Point(283, 503);
+            this.txtGoldKdj.Name = "txtGoldKdj";
+            this.txtGoldKdj.Size = new System.Drawing.Size(81, 35);
+            this.txtGoldKdj.TabIndex = 80;
+            this.txtGoldKdj.Text = "金叉";
+            this.txtGoldKdj.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.Location = new System.Drawing.Point(77, 456);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(184, 31);
+            this.label11.TabIndex = 82;
+            this.label11.Text = "MACD柱状趋势";
+            // 
+            // txtMacdDown
+            // 
+            this.txtMacdDown.AutoSize = true;
+            this.txtMacdDown.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtMacdDown.Location = new System.Drawing.Point(380, 456);
+            this.txtMacdDown.Name = "txtMacdDown";
+            this.txtMacdDown.Size = new System.Drawing.Size(81, 35);
+            this.txtMacdDown.TabIndex = 84;
+            this.txtMacdDown.Text = "看空";
+            this.txtMacdDown.UseVisualStyleBackColor = true;
+            // 
+            // txtMacdUp
+            // 
+            this.txtMacdUp.AutoSize = true;
+            this.txtMacdUp.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtMacdUp.Location = new System.Drawing.Point(283, 456);
+            this.txtMacdUp.Name = "txtMacdUp";
+            this.txtMacdUp.Size = new System.Drawing.Size(81, 35);
+            this.txtMacdUp.TabIndex = 83;
+            this.txtMacdUp.Text = "看多";
+            this.txtMacdUp.UseVisualStyleBackColor = true;
             // 
             // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 570);
+            this.ClientSize = new System.Drawing.Size(576, 617);
+            this.Controls.Add(this.txtMacdDown);
+            this.Controls.Add(this.txtMacdUp);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.txtDieKdj);
+            this.Controls.Add(this.txtGoldKdj);
             this.Controls.Add(this.txtDieMacd);
             this.Controls.Add(this.txtGoldMacd);
             this.Controls.Add(this.label10);
@@ -404,5 +472,10 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox txtGoldMacd;
         private System.Windows.Forms.CheckBox txtDieMacd;
+        private System.Windows.Forms.CheckBox txtDieKdj;
+        private System.Windows.Forms.CheckBox txtGoldKdj;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox txtMacdDown;
+        private System.Windows.Forms.CheckBox txtMacdUp;
     }
 }
