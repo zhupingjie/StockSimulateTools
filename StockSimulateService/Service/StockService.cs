@@ -33,8 +33,8 @@ namespace StockSimulateService.Service
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
-            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MinPrice = stock.Price;
-            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MaxPrice = stock.Price;
+            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MinPrice = stockInfo.DayPrice.TodayMinPrice;
+            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MaxPrice = stockInfo.DayPrice.TodayMaxPrice;
             if (stock.PriceDate != stockInfo.DayPrice.DealDate) stock.StartPrice = stockInfo.DayPrice.TodayStartPrice;
             
             stock.PriceDate = stockInfo.DayPrice.DealDate;
@@ -45,6 +45,7 @@ namespace StockSimulateService.Service
             foreach(var prep in preps)
             {
                 if (prep.GetCustomAttributes(typeof(GatherColumnAttribute), true).Length == 0) continue;
+                if (columns.Contains(prep.Name)) continue;
 
                 var changeValue = ObjectUtil.GetPropertyValue(stockInfo.Stock, prep.Name);
                 ObjectUtil.SetPropertyValue(stock, prep.Name, changeValue);
