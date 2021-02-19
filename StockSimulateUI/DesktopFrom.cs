@@ -715,7 +715,7 @@ namespace StockPriceTools
 
         void LoadRemindList(string stockCode)
         {
-            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "ID desc", 60);
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "RType asc", 60);
             var dt = ObjectUtil.ConvertTable(reminds, true);
             this.gridRemindList.DataSource = null;
             this.gridRemindList.DataSource = dt.DefaultView;
