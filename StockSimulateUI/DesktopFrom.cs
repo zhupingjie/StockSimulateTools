@@ -125,6 +125,8 @@ namespace StockPriceTools
         #endregion
 
         #region 顶部工具栏按钮事件
+
+
         private void btnAddStock_Click(object sender, EventArgs e)
         {
             var frm = new NewStockForm();
@@ -1217,5 +1219,36 @@ namespace StockPriceTools
             return entitys;
         }
         #endregion
+
+        private void gridStockList_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F1:
+                    btnAccountInfo_Click(sender, e);
+                    break;
+                case Keys.F2:
+                    btnAddStock_Click(sender, e);
+                    break;
+                case Keys.F3:
+                    btnDeleteStock_Click(sender, e);
+                    break;
+                case Keys.F4:
+                    btnAddRmind_Click(sender, e);
+                    break;
+                case Keys.F5:
+                    btnSetStrategy_Click(sender, e);
+                    break;
+                case Keys.F6:
+                    btnValuate_Click(sender, e);
+                    break;
+                case Keys.F11:
+                    btnDebug_Click(sender, e);
+                    break;
+                case Keys.F12:
+                    btnConfig_Click(sender, e);
+                    break;
+            }
+        }
     }
 }

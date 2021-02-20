@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -197,12 +197,12 @@
             this.btnAddStock,
             this.btnDeleteStock,
             this.toolStripSeparator1,
-            this.btnSetStrategy,
             this.btnAddRmind,
+            this.btnSetStrategy,
             this.toolStripSplitButton1,
             this.btnValuate,
-            this.btnDebug,
             this.toolStripSeparator3,
+            this.btnDebug,
             this.btnConfig});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -216,8 +216,8 @@
             this.btnAccountInfo.Image = ((System.Drawing.Image)(resources.GetObject("btnAccountInfo.Image")));
             this.btnAccountInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAccountInfo.Name = "btnAccountInfo";
-            this.btnAccountInfo.Size = new System.Drawing.Size(60, 22);
-            this.btnAccountInfo.Text = "我的账户";
+            this.btnAccountInfo.Size = new System.Drawing.Size(81, 22);
+            this.btnAccountInfo.Text = "我的账户(F1)";
             this.btnAccountInfo.Click += new System.EventHandler(this.btnAccountInfo_Click);
             // 
             // toolStripSeparator2
@@ -231,8 +231,8 @@
             this.btnAddStock.Image = ((System.Drawing.Image)(resources.GetObject("btnAddStock.Image")));
             this.btnAddStock.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddStock.Name = "btnAddStock";
-            this.btnAddStock.Size = new System.Drawing.Size(60, 22);
-            this.btnAddStock.Text = "添加股票";
+            this.btnAddStock.Size = new System.Drawing.Size(81, 22);
+            this.btnAddStock.Text = "添加股票(F2)";
             this.btnAddStock.Click += new System.EventHandler(this.btnAddStock_Click);
             // 
             // btnDeleteStock
@@ -241,8 +241,8 @@
             this.btnDeleteStock.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteStock.Image")));
             this.btnDeleteStock.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDeleteStock.Name = "btnDeleteStock";
-            this.btnDeleteStock.Size = new System.Drawing.Size(60, 22);
-            this.btnDeleteStock.Text = "删除股票";
+            this.btnDeleteStock.Size = new System.Drawing.Size(81, 22);
+            this.btnDeleteStock.Text = "删除股票(F3)";
             this.btnDeleteStock.Click += new System.EventHandler(this.btnDeleteStock_Click);
             // 
             // toolStripSeparator1
@@ -256,8 +256,8 @@
             this.btnSetStrategy.Image = ((System.Drawing.Image)(resources.GetObject("btnSetStrategy.Image")));
             this.btnSetStrategy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSetStrategy.Name = "btnSetStrategy";
-            this.btnSetStrategy.Size = new System.Drawing.Size(60, 22);
-            this.btnSetStrategy.Text = "设置策略";
+            this.btnSetStrategy.Size = new System.Drawing.Size(81, 22);
+            this.btnSetStrategy.Text = "设置策略(F5)";
             this.btnSetStrategy.Click += new System.EventHandler(this.btnSetStrategy_Click);
             // 
             // btnAddRmind
@@ -266,8 +266,8 @@
             this.btnAddRmind.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRmind.Image")));
             this.btnAddRmind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddRmind.Name = "btnAddRmind";
-            this.btnAddRmind.Size = new System.Drawing.Size(60, 22);
-            this.btnAddRmind.Text = "设置提醒";
+            this.btnAddRmind.Size = new System.Drawing.Size(81, 22);
+            this.btnAddRmind.Text = "设置提醒(F4)";
             this.btnAddRmind.Click += new System.EventHandler(this.btnAddRmind_Click);
             // 
             // toolStripSplitButton1
@@ -281,8 +281,8 @@
             this.btnValuate.Image = ((System.Drawing.Image)(resources.GetObject("btnValuate.Image")));
             this.btnValuate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnValuate.Name = "btnValuate";
-            this.btnValuate.Size = new System.Drawing.Size(60, 22);
-            this.btnValuate.Text = "预测估值";
+            this.btnValuate.Size = new System.Drawing.Size(81, 22);
+            this.btnValuate.Text = "预测估值(F6)";
             this.btnValuate.Click += new System.EventHandler(this.btnValuate_Click);
             // 
             // btnDebug
@@ -291,8 +291,8 @@
             this.btnDebug.Image = ((System.Drawing.Image)(resources.GetObject("btnDebug.Image")));
             this.btnDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDebug.Name = "btnDebug";
-            this.btnDebug.Size = new System.Drawing.Size(60, 22);
-            this.btnDebug.Text = "策略调试";
+            this.btnDebug.Size = new System.Drawing.Size(64, 22);
+            this.btnDebug.Text = "调试(F11)";
             this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
             // 
             // toolStripSeparator3
@@ -306,8 +306,8 @@
             this.btnConfig.Image = ((System.Drawing.Image)(resources.GetObject("btnConfig.Image")));
             this.btnConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(36, 22);
-            this.btnConfig.Text = "设置";
+            this.btnConfig.Size = new System.Drawing.Size(64, 22);
+            this.btnConfig.Text = "设置(F12)";
             this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
             // panel120
@@ -427,6 +427,7 @@
             this.gridStockList.TabIndex = 48;
             this.gridStockList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridStockList_DataBindingComplete);
             this.gridStockList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockList_RowEnter);
+            this.gridStockList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridStockList_KeyDown);
             // 
             // panel10
             // 
@@ -670,11 +671,11 @@
             // 
             // chartPrice
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea1);
+            chartArea6.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea6);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend1);
+            legend6.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend6);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
