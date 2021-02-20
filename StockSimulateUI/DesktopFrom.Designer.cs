@@ -78,7 +78,6 @@
             this.tabPriceChart = new System.Windows.Forms.TabPage();
             this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.txtChartWithZS = new System.Windows.Forms.CheckBox();
             this.btnWebChart = new System.Windows.Forms.Button();
             this.btnDayChart = new System.Windows.Forms.Button();
             this.tabPriceList = new System.Windows.Forms.TabPage();
@@ -685,7 +684,6 @@
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.txtChartWithZS);
             this.panel9.Controls.Add(this.btnWebChart);
             this.panel9.Controls.Add(this.btnDayChart);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
@@ -693,18 +691,6 @@
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(842, 29);
             this.panel9.TabIndex = 48;
-            // 
-            // txtChartWithZS
-            // 
-            this.txtChartWithZS.AutoSize = true;
-            this.txtChartWithZS.Checked = true;
-            this.txtChartWithZS.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtChartWithZS.Location = new System.Drawing.Point(767, 7);
-            this.txtChartWithZS.Name = "txtChartWithZS";
-            this.txtChartWithZS.Size = new System.Drawing.Size(72, 16);
-            this.txtChartWithZS.TabIndex = 50;
-            this.txtChartWithZS.Text = "对比指数";
-            this.txtChartWithZS.UseVisualStyleBackColor = true;
             // 
             // btnWebChart
             // 
@@ -1311,7 +1297,6 @@
             this.tabPriceChart.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).EndInit();
             this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
             this.tabPriceList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
             this.tabStockStrategyDetail.ResumeLayout(false);
@@ -1423,7 +1408,6 @@
         private System.Windows.Forms.Button btnOpenBrower;
         private System.Windows.Forms.CheckBox txtHoldQty;
         private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.CheckBox txtChartWithZS;
         private System.Windows.Forms.Button btnWebChart;
         private System.Windows.Forms.Button btnDayChart;
         private System.Windows.Forms.NotifyIcon notifyIcon1;

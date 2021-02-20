@@ -104,27 +104,37 @@ namespace StockSimulateUI.UI
 
         private void btnUDPer_Click(object sender, EventArgs e)
         {
-            this.txtUDPer.Text = "1.5,3,5,9";
+            this.txtUDPer.Text = "3,5,9";
         }
 
         private void btnUpAverage_Click(object sender, EventArgs e)
         {
-            this.txtUpAverage.Text = "10,20,30,60";
+            this.txtUpAverage.Text = "30";
         }
 
         private void btnDownAverage_Click(object sender, EventArgs e)
         {
-            this.txtDownAverage.Text = "10,20,30,60";
+            this.txtDownAverage.Text = "20";
         }
 
         private void btnUpAverageReverse_Click(object sender, EventArgs e)
         {
-            this.txtUpMinDayPricePer.Text = "1.5";
+            this.txtUpMinDayPricePer.Text = "2";
         }
 
         private void btnDownAverageReverse_Click(object sender, EventArgs e)
         {
-            this.txtDownMaxDayPricePer.Text = "1.5";
+            this.txtDownMaxDayPricePer.Text = "2";
+        }
+
+        private void btnClearRemind_Click(object sender, EventArgs e)
+        {
+            StockRemindService.Clear(StockCode, true);
+        }
+
+        private void btnClearAllRemind_Click(object sender, EventArgs e)
+        {
+            StockRemindService.Clear(clearAll: true);
         }
     }
 }

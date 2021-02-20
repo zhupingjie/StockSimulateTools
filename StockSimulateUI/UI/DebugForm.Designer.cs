@@ -42,6 +42,7 @@
             this.btnCalcAvgPrice = new System.Windows.Forms.Button();
             this.btnCheckDBTable = new System.Windows.Forms.Button();
             this.btnCalcMACD = new System.Windows.Forms.Button();
+            this.btnClearHisData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtStockPrice
@@ -66,9 +67,9 @@
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(605, 317);
+            this.btnOK.Location = new System.Drawing.Point(617, 317);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 41);
+            this.btnOK.Size = new System.Drawing.Size(63, 41);
             this.btnOK.TabIndex = 6;
             this.btnOK.Text = "模拟";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -133,9 +134,9 @@
             // btnClearDebug
             // 
             this.btnClearDebug.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnClearDebug.Location = new System.Drawing.Point(41, 317);
+            this.btnClearDebug.Location = new System.Drawing.Point(114, 317);
             this.btnClearDebug.Name = "btnClearDebug";
-            this.btnClearDebug.Size = new System.Drawing.Size(127, 41);
+            this.btnClearDebug.Size = new System.Drawing.Size(115, 41);
             this.btnClearDebug.TabIndex = 25;
             this.btnClearDebug.Text = "清空模拟数据";
             this.btnClearDebug.UseVisualStyleBackColor = true;
@@ -144,7 +145,7 @@
             // btnCalcAvgPrice
             // 
             this.btnCalcAvgPrice.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCalcAvgPrice.Location = new System.Drawing.Point(307, 317);
+            this.btnCalcAvgPrice.Location = new System.Drawing.Point(354, 317);
             this.btnCalcAvgPrice.Name = "btnCalcAvgPrice";
             this.btnCalcAvgPrice.Size = new System.Drawing.Size(119, 41);
             this.btnCalcAvgPrice.TabIndex = 27;
@@ -155,9 +156,9 @@
             // btnCheckDBTable
             // 
             this.btnCheckDBTable.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCheckDBTable.Location = new System.Drawing.Point(174, 317);
+            this.btnCheckDBTable.Location = new System.Drawing.Point(10, 317);
             this.btnCheckDBTable.Name = "btnCheckDBTable";
-            this.btnCheckDBTable.Size = new System.Drawing.Size(127, 41);
+            this.btnCheckDBTable.Size = new System.Drawing.Size(99, 41);
             this.btnCheckDBTable.TabIndex = 28;
             this.btnCheckDBTable.Text = "检查表结构";
             this.btnCheckDBTable.UseVisualStyleBackColor = true;
@@ -166,7 +167,7 @@
             // btnCalcMACD
             // 
             this.btnCalcMACD.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCalcMACD.Location = new System.Drawing.Point(432, 317);
+            this.btnCalcMACD.Location = new System.Drawing.Point(477, 317);
             this.btnCalcMACD.Name = "btnCalcMACD";
             this.btnCalcMACD.Size = new System.Drawing.Size(134, 41);
             this.btnCalcMACD.TabIndex = 29;
@@ -174,11 +175,23 @@
             this.btnCalcMACD.UseVisualStyleBackColor = true;
             this.btnCalcMACD.Click += new System.EventHandler(this.btnCalcMACD_Click);
             // 
+            // btnClearHisData
+            // 
+            this.btnClearHisData.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnClearHisData.Location = new System.Drawing.Point(233, 317);
+            this.btnClearHisData.Name = "btnClearHisData";
+            this.btnClearHisData.Size = new System.Drawing.Size(117, 41);
+            this.btnClearHisData.TabIndex = 30;
+            this.btnClearHisData.Text = "清空历史数据";
+            this.btnClearHisData.UseVisualStyleBackColor = true;
+            this.btnClearHisData.Click += new System.EventHandler(this.btnClearHisData_Click);
+            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 382);
+            this.Controls.Add(this.btnClearHisData);
             this.Controls.Add(this.btnCalcMACD);
             this.Controls.Add(this.btnCheckDBTable);
             this.Controls.Add(this.btnCalcAvgPrice);
@@ -216,5 +229,6 @@
         private System.Windows.Forms.Button btnCalcAvgPrice;
         private System.Windows.Forms.Button btnCheckDBTable;
         private System.Windows.Forms.Button btnCalcMACD;
+        private System.Windows.Forms.Button btnClearHisData;
     }
 }

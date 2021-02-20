@@ -17,7 +17,7 @@ namespace StockSimulateService.Service
     {
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
-            var dealDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var dealDate = stockInfo.DayPrice.DealDate;
             var price = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stock.Code}' and DealDate='{dealDate}' and DateType=0");
             if (price == null)
             {
@@ -201,10 +201,11 @@ namespace StockSimulateService.Service
 
         public static void CalculateAllMACD(int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
         {
-            if (string.IsNullOrEmpty(startDate)) startDate = DateTime.Now.ToString("yyyy-MM-dd");
             var stocks = Repository.Instance.QueryAll<StockEntity>();
             foreach(var stock in stocks)
             {
+                if (string.IsNullOrEmpty(startDate)) startDate = stock.PriceDate;
+
                 CalculateNowMACD(stock.Code, shortAvgDays, midAvgDays, longAvgDays, startDate);
             }
         }

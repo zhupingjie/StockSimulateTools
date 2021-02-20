@@ -483,14 +483,14 @@ namespace StockPriceTools
             }
         }
 
-        void LoadPriceChartData(string stockCode, string stockName, int chartType = 0, bool chartWithZS = true)
+        void LoadPriceChartData(string stockCode, string stockName, int chartType = 0)
         {
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(100);
                 Action act = delegate ()
                 {
-                    LoadPriceChart(stockCode, stockName, chartType, chartWithZS);
+                    LoadPriceChart(stockCode, stockName, chartType);
                 };
                 this.Invoke(act);
             });
@@ -501,7 +501,7 @@ namespace StockPriceTools
         /// </summary>
         /// <param name="stockCode"></param>
         /// <param name="chartType">0:日线图,1:MACD图</param>
-        void LoadPriceChart(string stockCode, string stockName, int chartType = 0, bool chartWithZS = false)
+        void LoadPriceChart(string stockCode, string stockName, int chartType = 0)
         {
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
@@ -531,25 +531,13 @@ namespace StockPriceTools
 
             if (chartType == 0)
             {
-                series.IsValueShownAsLabel = true;
+                series.IsValueShownAsLabel = false;
 
                 this.BindStockPriceChart(series, stockCode, chartType, Color.Red);
-
-                if (chartWithZS)
-                {
-                    var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
-                    if (zsSeries == null) zsSeries = this.chartPrice.Series.Add("ZS");
-
-                    this.BindStockPriceChart(zsSeries, RC.SHZSOfStockCode, chartType, Color.Blue);
-                }
             }
             else
             {
                 series.IsValueShownAsLabel = false;
-
-                var zsSeries = this.chartPrice.Series.FirstOrDefault(c => c.Name == "ZS");
-                if (zsSeries != null) this.chartPrice.Series.Remove(zsSeries);
-                //this.BindStockPriceChart(series, stockCode, chartType, Color.Red);
             }
 
             var chartArea = this.chartPrice.ChartAreas[0];
@@ -573,7 +561,7 @@ namespace StockPriceTools
             series.ShadowOffset = 2;
 
             var startDate = DateTime.Now.Date;
-            if (dateType == 0) startDate = startDate.AddMonths(-1);
+            if (dateType == 0) startDate = startDate.AddDays(-90);
             else
             {
                 var lastDate = Repository.Instance.QueryFirst<StockPriceEntity>($"StockCode='{stockCode}' and DateType={dateType}", "ID Desc");
@@ -608,7 +596,7 @@ namespace StockPriceTools
             foreach (var item in stockPrices)
             {
                 var xvalue = ObjectUtil.ToValue<DateTime>(item.DealDate, DateTime.Now).ToString("MM-dd");
-                series.Points.AddXY(xvalue, item.UDPer);
+                series.Points.AddXY(xvalue, item.Price);
             }
         }
         
@@ -913,9 +901,8 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
-            var chartWithZS = this.txtChartWithZS.Checked;
 
-            this.LoadPriceChartData(stockCode, stockName, 0, chartWithZS);
+            this.LoadPriceChartData(stockCode, stockName, 0);
         }
 
         private void btnMACDChart_Click(object sender, EventArgs e)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StockSimulateCore.Utils;
 using StockSimulateCore.Data;
+using System.Threading;
 
 namespace StockSimulateService.Service
 {
@@ -52,6 +53,51 @@ namespace StockSimulateService.Service
             account.HoldAmount = 0;
             account.Profit = 0;
             Repository.Instance.Update<AccountEntity>(account);
+        }
+
+        public static void Test()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                for (var i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        var stocks = Repository.Instance.QueryAll<StockEntity>($"Type=0", withNoLock:true);
+                        foreach(var stock in stocks)
+                        {
+                            stock.ROE = 0;
+                            Repository.Instance.Update<StockEntity>(stock, new string[] { "ROE" });
+                        }
+                        Console.WriteLine($"Thd{Thread.CurrentThread.ManagedThreadId} {(i + 1).ToString().PadLeft(4, '0')} stock... {stocks.Max(x=>x.LastDate).ToString("yyyy-MM-dd HH:mm:ss")}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Thd{Thread.CurrentThread.ManagedThreadId} {(i + 1).ToString().PadLeft(4, '0')} stock... Error:{ex.Message}");
+                    }
+                }
+            });
+
+            Task.Factory.StartNew(() =>
+            {
+                for (var i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        var reminds = Repository.Instance.QueryAll<RemindEntity>($"Handled=0");
+                        foreach (var remind in reminds)
+                        {
+                            remind.Handled = 0;
+                            Repository.Instance.Update<RemindEntity>(remind, new string[] { "Handled" });
+                        }
+                        Console.WriteLine($"Thd{Thread.CurrentThread.ManagedThreadId} {(i + 1).ToString().PadLeft(4, '0')} remind... {reminds.Max(x => x.LastDate).ToString("yyyy-MM-dd HH:mm:ss")}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Thd{Thread.CurrentThread.ManagedThreadId} {(i + 1).ToString().PadLeft(4, '0')} remind... Error:{ex.Message}");
+                    }
+                }
+            });
         }
     }
 }

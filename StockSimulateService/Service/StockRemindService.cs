@@ -20,7 +20,7 @@ namespace StockSimulateService.Service
 
             if (string.IsNullOrEmpty(remindInfo.StockCode))
             {
-                var stocks = Repository.Instance.QueryAll<StockEntity>($"");
+                var stocks = Repository.Instance.QueryAll<StockEntity>($"Foucs>0");
                 foreach (var stock in stocks)
                 {
                     remindInfo.StockCode = stock.Code;
@@ -32,7 +32,10 @@ namespace StockSimulateService.Service
             {
                 var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{remindInfo.StockCode}'");
                 if (stock == null) return;
-
+                if (stock.Foucs == 0)
+                {
+                    StockService.Foucs(stock.Code);
+                }
                 Create(account, stock, remindInfo);
             }
         }
@@ -283,7 +286,7 @@ namespace StockSimulateService.Service
             if (account == null) return;
 
             var reminds = new List<RemindEntity>();
-            var stocks = Repository.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Type=0 and Safety > 0 and Foucs>0");
             foreach (var stock in stocks)
             {
                 var decNum = stock.Type == 0 ? 2 : 3;
@@ -327,7 +330,9 @@ namespace StockSimulateService.Service
             if (reminds.Length == 0) return;
 
             var dealDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-            var stocks = Repository.Instance.QueryAll<StockEntity>($"Price>0 and PriceDate='{dealDate}'");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"Price>0 and PriceDate='{dealDate}' and Foucs>0");
+            if (stocks.Length == 0) return;
+
             var stockAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"");
             var stockMacds = Repository.Instance.QueryAll<StockMacdEntity>($"");
 
@@ -402,13 +407,25 @@ namespace StockSimulateService.Service
                     var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     if (avgPrice == null) continue;
 
+                    var yestPrice = stockAvgPrices.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestPrice == null) continue;
+
                     if ((rd.Target == 5 && stock.Price > avgPrice.AvgPrice10 && avgPrice.AvgPrice10 > 0)
                         || (rd.Target == 20 && stock.Price > avgPrice.AvgPrice20 && avgPrice.AvgPrice20 > 0)
                         || (rd.Target == 30 && stock.Price > avgPrice.AvgPrice30 && avgPrice.AvgPrice30 > 0)
                         || (rd.Target == 60 && stock.Price > avgPrice.AvgPrice60 && avgPrice.AvgPrice60 > 0)
                         || (rd.Target == 120 && stock.Price > avgPrice.AvgPrice120 && avgPrice.AvgPrice120 > 0)
                         || (rd.Target == 180 && stock.Price > avgPrice.AvgPrice180 && avgPrice.AvgPrice180 > 0)
-                        || (rd.Target == 250 && stock.Price > avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0))
+                        || (rd.Target == 250 && stock.Price > avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0)
+                        &&
+                        (rd.Target == 5 && yestPrice.Price <= yestPrice.AvgPrice5 && yestPrice.AvgPrice5 > 0)
+                        || (rd.Target == 10 && yestPrice.Price <= yestPrice.AvgPrice10 && yestPrice.AvgPrice10 > 0)
+                        || (rd.Target == 20 && yestPrice.Price <= yestPrice.AvgPrice20 && yestPrice.AvgPrice20 > 0)
+                        || (rd.Target == 30 && yestPrice.Price <= yestPrice.AvgPrice30 && yestPrice.AvgPrice30 > 0)
+                        || (rd.Target == 60 && yestPrice.Price <= yestPrice.AvgPrice60 && yestPrice.AvgPrice60 > 0)
+                        || (rd.Target == 120 && yestPrice.Price <= yestPrice.AvgPrice120 && yestPrice.AvgPrice120 > 0)
+                        || (rd.Target == 180 && yestPrice.Price <= yestPrice.AvgPrice180 && yestPrice.AvgPrice180 > 0)
+                        || (rd.Target == 250 && yestPrice.Price <= yestPrice.AvgPrice250 && yestPrice.AvgPrice250 > 0))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已突破[{rd.Target}]日均线,请注意!";
 
@@ -435,6 +452,9 @@ namespace StockSimulateService.Service
                     var avgPrice = stockAvgPrices.FirstOrDefault(c => c.StockCode == stock.Code && c.DealDate == dealDate);
                     if (avgPrice == null) continue;
 
+                    var yestPrice = stockAvgPrices.Where(c => c.StockCode == stock.Code && c.DealDate.CompareTo(dealDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
+                    if (yestPrice == null) continue;
+
                     if ((rd.Target == 5 && stock.Price < avgPrice.AvgPrice5 && avgPrice.AvgPrice5 > 0)
                         || (rd.Target == 10 && stock.Price < avgPrice.AvgPrice10 && avgPrice.AvgPrice10 > 0)
                         || (rd.Target == 20 && stock.Price < avgPrice.AvgPrice20 && avgPrice.AvgPrice20 > 0)
@@ -442,7 +462,16 @@ namespace StockSimulateService.Service
                         || (rd.Target == 60 && stock.Price < avgPrice.AvgPrice60 && avgPrice.AvgPrice60 > 0)
                         || (rd.Target == 120 && stock.Price < avgPrice.AvgPrice120 && avgPrice.AvgPrice120 > 0)
                         || (rd.Target == 180 && stock.Price < avgPrice.AvgPrice180 && avgPrice.AvgPrice180 > 0)
-                        || (rd.Target == 250 && stock.Price < avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0))
+                        || (rd.Target == 250 && stock.Price < avgPrice.AvgPrice250 && avgPrice.AvgPrice250 > 0)
+                        &&
+                        (rd.Target == 5 && yestPrice.Price >= yestPrice.AvgPrice5 && yestPrice.AvgPrice5 > 0)
+                        || (rd.Target == 10 && yestPrice.Price >= yestPrice.AvgPrice10 && yestPrice.AvgPrice10 > 0)
+                        || (rd.Target == 20 && yestPrice.Price >= yestPrice.AvgPrice20 && yestPrice.AvgPrice20 > 0)
+                        || (rd.Target == 30 && yestPrice.Price >= yestPrice.AvgPrice30 && yestPrice.AvgPrice30 > 0)
+                        || (rd.Target == 60 && yestPrice.Price >= yestPrice.AvgPrice60 && yestPrice.AvgPrice60 > 0)
+                        || (rd.Target == 120 && yestPrice.Price >= yestPrice.AvgPrice120 && yestPrice.AvgPrice120 > 0)
+                        || (rd.Target == 180 && yestPrice.Price >= yestPrice.AvgPrice180 && yestPrice.AvgPrice180 > 0)
+                        || (rd.Target == 250 && yestPrice.Price >= yestPrice.AvgPrice250 && yestPrice.AvgPrice250 > 0))
                     {
                         var message = $"[{stock.Name}]当前股价[{stock.Price} | {stock.UDPer}%]已跌破[{rd.Target}]日均线,请注意!";
 
@@ -687,9 +716,30 @@ namespace StockSimulateService.Service
             }
         }
 
-        public static void Clear()
+        public static void Clear(string stockCode = "", bool clearAll = false)
         {
-            Repository.Instance.Delete<RemindEntity>($"Handled=1  and RType=0");
+            if (clearAll)
+            {
+                if (string.IsNullOrEmpty(stockCode))
+                {
+                    Repository.Instance.Delete<RemindEntity>($"ID>0");
+                }
+                else
+                {
+                    Repository.Instance.Delete<RemindEntity>($"StockCode='{stockCode}'");
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(stockCode))
+                {
+                    Repository.Instance.Delete<RemindEntity>($"Handled=1");
+                }
+                else
+                {
+                    Repository.Instance.Delete<RemindEntity>($"StockCode='{stockCode}' and Handled=1");
+                }
+            }
         }
     }
 }

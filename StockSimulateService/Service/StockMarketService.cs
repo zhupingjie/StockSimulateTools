@@ -79,6 +79,11 @@ namespace StockSimulateService.Service
 
             LogUtil.Debug($"程序停止运行...");
         }
+
+        public void Test()
+        {
+            StockDebugService.Test();
+        }
         #endregion
 
         #region 启动事件
@@ -191,19 +196,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        this.ActionLog("计算股票均线价格数据...");
+                        try
                         {
-                            this.ActionLog("计算股票均线价格数据...");
-                            try
-                            {
-                                StockPriceService.CalculateAllAvgrage();
-                            }
-                            catch (Exception ex)
-                            {
-                                LogUtil.Error($"CalculateNowAvgrage Error:{ex.Message}");
-                            }
+                            StockPriceService.CalculateAllAvgrage();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"CalculateNowAvgrage Error:{ex.Message}");
                         }
                     }
                     Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);
@@ -216,19 +218,16 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        this.ActionLog("计算股票MACD数据...");
+                        try
                         {
-                            this.ActionLog("计算股票MACD数据...");
-                            try
-                            {
-                                StockPriceService.CalculateAllMACD();
-                            }
-                            catch (Exception ex)
-                            {
-                                LogUtil.Error($"CalculateAllMACD Error:{ex.Message}");
-                            }
+                            StockPriceService.CalculateAllMACD();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"CalculateAllMACD Error:{ex.Message}");
                         }
                     }
                     Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);

@@ -62,12 +62,14 @@
             this.label11 = new System.Windows.Forms.Label();
             this.txtMacdDown = new System.Windows.Forms.CheckBox();
             this.txtMacdUp = new System.Windows.Forms.CheckBox();
+            this.btnClearRemind = new System.Windows.Forms.Button();
+            this.btnClearAllRemind = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOK.Location = new System.Drawing.Point(418, 554);
+            this.btnOK.Location = new System.Drawing.Point(483, 554);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(82, 43);
             this.btnOK.TabIndex = 3;
@@ -151,18 +153,18 @@
             // btnRemindAll
             // 
             this.btnRemindAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRemindAll.Location = new System.Drawing.Point(12, 554);
+            this.btnRemindAll.Location = new System.Drawing.Point(198, 554);
             this.btnRemindAll.Name = "btnRemindAll";
-            this.btnRemindAll.Size = new System.Drawing.Size(252, 43);
+            this.btnRemindAll.Size = new System.Drawing.Size(144, 43);
             this.btnRemindAll.TabIndex = 59;
-            this.btnRemindAll.Text = "按安全价设置买入提醒";
+            this.btnRemindAll.Text = "按安全价设置";
             this.btnRemindAll.UseVisualStyleBackColor = true;
             this.btnRemindAll.Click += new System.EventHandler(this.btnRemindAll_Click);
             // 
             // btnOKAll
             // 
             this.btnOKAll.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnOKAll.Location = new System.Drawing.Point(283, 554);
+            this.btnOKAll.Location = new System.Drawing.Point(348, 554);
             this.btnOKAll.Name = "btnOKAll";
             this.btnOKAll.Size = new System.Drawing.Size(129, 43);
             this.btnOKAll.TabIndex = 60;
@@ -395,11 +397,35 @@
             this.txtMacdUp.Text = "看多";
             this.txtMacdUp.UseVisualStyleBackColor = true;
             // 
+            // btnClearRemind
+            // 
+            this.btnClearRemind.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnClearRemind.Location = new System.Drawing.Point(120, 554);
+            this.btnClearRemind.Name = "btnClearRemind";
+            this.btnClearRemind.Size = new System.Drawing.Size(72, 43);
+            this.btnClearRemind.TabIndex = 85;
+            this.btnClearRemind.Text = "清空";
+            this.btnClearRemind.UseVisualStyleBackColor = true;
+            this.btnClearRemind.Click += new System.EventHandler(this.btnClearRemind_Click);
+            // 
+            // btnClearAllRemind
+            // 
+            this.btnClearAllRemind.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnClearAllRemind.Location = new System.Drawing.Point(12, 554);
+            this.btnClearAllRemind.Name = "btnClearAllRemind";
+            this.btnClearAllRemind.Size = new System.Drawing.Size(102, 43);
+            this.btnClearAllRemind.TabIndex = 86;
+            this.btnClearAllRemind.Text = "全部清空";
+            this.btnClearAllRemind.UseVisualStyleBackColor = true;
+            this.btnClearAllRemind.Click += new System.EventHandler(this.btnClearAllRemind_Click);
+            // 
             // RemindForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 617);
+            this.Controls.Add(this.btnClearAllRemind);
+            this.Controls.Add(this.btnClearRemind);
             this.Controls.Add(this.txtMacdDown);
             this.Controls.Add(this.txtMacdUp);
             this.Controls.Add(this.label11);
@@ -477,5 +503,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox txtMacdDown;
         private System.Windows.Forms.CheckBox txtMacdUp;
+        private System.Windows.Forms.Button btnClearRemind;
+        private System.Windows.Forms.Button btnClearAllRemind;
     }
 }

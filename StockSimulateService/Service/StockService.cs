@@ -21,6 +21,11 @@ namespace StockSimulateService.Service
             stock.Foucs += 1;
             if (stock.Foucs > 2) stock.Foucs = 0;
             Repository.Instance.Update<StockEntity>(stock, new string[] { "Foucs" });
+
+            if(stock.Foucs == 0)
+            {
+                StockRemindService.Clear(stockCode, true);
+            }
         }
         public static void Top(string stockCode)
         {
@@ -33,11 +38,11 @@ namespace StockSimulateService.Service
 
         public static void Update(StockEntity stock, StockInfo stockInfo)
         {
-            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MinPrice = stockInfo.DayPrice.TodayMinPrice;
-            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price || stock.PriceDate != stockInfo.DayPrice.DealDate) stock.MaxPrice = stockInfo.DayPrice.TodayMaxPrice;
-            if (stock.PriceDate != stockInfo.DayPrice.DealDate) stock.StartPrice = stockInfo.DayPrice.TodayStartPrice;
+            if (stock.MinPrice == 0 || stock.MinPrice > stock.Price || stock.PriceDate != stockInfo.Stock.PriceDate) stock.MinPrice = stockInfo.DayPrice.TodayMinPrice;
+            if (stock.MaxPrice == 0 || stock.MaxPrice < stock.Price || stock.PriceDate != stockInfo.Stock.PriceDate) stock.MaxPrice = stockInfo.DayPrice.TodayMaxPrice;
+            if (stock.StartPrice == 0 || stock.PriceDate != stockInfo.Stock.PriceDate) stock.StartPrice = stockInfo.DayPrice.TodayStartPrice;
             
-            stock.PriceDate = stockInfo.DayPrice.DealDate;
+            stock.PriceDate = stockInfo.Stock.PriceDate;
 
             var decNum = stock.Type == 0 ? 2 : 3;
             var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice", "StartPrice" };

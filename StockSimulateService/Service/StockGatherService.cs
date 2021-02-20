@@ -21,11 +21,12 @@ namespace StockSimulateNetService.Serivce
         /// <param name="actionLog"></param>
         public static void GatherPriceData(Action<string> actionLog)
         {
-            var stocks = Repository.Instance.QueryAll<StockEntity>(null);
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"", "ID asc");
             foreach (var stock in stocks)
             {
+                bool newStock = stock.Price == 0;
                 var stockInfo = EastMoneyUtil.GetStockPrice(stock.Code);
-                if (stockInfo == null) continue; ;
+                if (stockInfo == null) continue;
                 if (stockInfo.DayPrice.Price == 0) continue;
 
                 //更新当前股票信息
@@ -36,16 +37,16 @@ namespace StockSimulateNetService.Serivce
                     //更新当前股价
                     StockPriceService.Update(stock, stockInfo);
 
-                    //检测自动交易策略 
-                    StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
-
-                    ////减少日志输出,每5分钟输出一次
-                    //if(DateTime.Now.Minute % 5 == 0)
-                    //    actionLog($"已采集[{stock.StockName}]今日股价数据...[{stockInfo.DayPrice.Price}] [{stockInfo.DayPrice.UDPer}%]");
+                    //当天日期=股价日期（开市）
+                    if (stockInfo.Stock.PriceDate == DateTime.Now.ToString("yyyy-MM-dd"))
+                    {
+                        //检测自动交易策略 
+                        StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
+                    }
                 }
 
                 //采集历史价格数据
-                if (RunningConfig.Instance.DebugMode)
+                if (newStock)
                 {
                     var gatherCount = GatherHisPriceData(stock.Code);
                     if (gatherCount > 0)
@@ -63,9 +64,6 @@ namespace StockSimulateNetService.Serivce
         /// <returns></returns>
         public static int GatherHisPriceData(string stockCode)
         {
-            var priceIds = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "ID desc", 20, new string[] { "ID" });
-            if (priceIds.Length >= 20) return 0;
-
             var stockPrices = EastMoneyUtil.GetStockHisPrice(stockCode);
             if (stockPrices == null) return 0;
 

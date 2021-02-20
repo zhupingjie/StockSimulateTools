@@ -56,6 +56,11 @@ namespace StockSimulateUI.UI
             StockDebugService.MakeCheckStrategyRun(accountName, stockCode, stockPrice, dealTime);
         }
 
+        private void btnCheckDBTable_Click(object sender, EventArgs e)
+        {
+            Repository.Instance.InitDataBase();
+        }
+
         private void btnClearDebug_Click(object sender, EventArgs e)
         {
             var accountName = this.txtAccount.Text;
@@ -69,17 +74,34 @@ namespace StockSimulateUI.UI
 
         private void btnCalcAvgPrice_Click(object sender, EventArgs e)
         {
-            StockPriceService.CalculateAllAvgrage(5);
-        }
+            StockPriceService.CalculateAllAvgrage(RunningConfig.Instance.KeepStockAssistTargetDays);
 
-        private void btnCheckDBTable_Click(object sender, EventArgs e)
-        {
-            Repository.Instance.InitDataBase();
+            var lastAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
+            if (lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)
+            {
+                var dealDate = lastAvgPrices.OrderBy(c => c.DealDate).FirstOrDefault().DealDate;
+
+                Repository.Instance.Delete<StockAverageEntity>($"DealDate<'{dealDate}'");
+            }
         }
 
         private void btnCalcMACD_Click(object sender, EventArgs e)
         {
-            StockPriceService.CalculateAllMACD();
+            StockPriceService.CalculateAllMACD(startDate:"1900-01-01");
+
+            var lastAvgPrices = Repository.Instance.QueryAll<StockMacdEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
+            if (lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)
+            {
+                var dealDate = lastAvgPrices.OrderBy(c => c.DealDate).FirstOrDefault().DealDate;
+
+                Repository.Instance.Delete<StockMacdEntity>($"DealDate<'{dealDate}'");
+            }
+        }
+
+        private void btnClearHisData_Click(object sender, EventArgs e)
+        {
+            StockPriceService.Clear();
+            StockRemindService.Clear();
         }
     }
 }

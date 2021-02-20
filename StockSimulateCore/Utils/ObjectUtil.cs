@@ -164,6 +164,12 @@ namespace StockSimulateCore.Utils
             return new DBColumn(name, colType, length, decLength);
         }
 
+        public static DateTime StampToDateTime(long timeStamp)
+        {
+            var start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return start.AddSeconds(timeStamp).AddHours(8);
+        }
+
         public static object GetPropertyValue(object obj, string propertyName)
         {
             if (obj == null) return null;
