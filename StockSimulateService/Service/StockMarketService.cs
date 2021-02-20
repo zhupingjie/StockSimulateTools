@@ -62,8 +62,6 @@ namespace StockSimulateService.Service
         #region 服务启动&停止
         public void Start()
         {
-            this.LoadCacheData();
-
             this.LoadConfigData();
 
             this.GatherData();
@@ -87,33 +85,6 @@ namespace StockSimulateService.Service
         #endregion
 
         #region 启动事件
-
-        bool CacheDataLoaded = false;
-        void LoadCacheData()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    CacheDataLoaded = false;
-
-                    this.ActionLog("加载缓存数据...");
-                    try
-                    {
-                        StockCacheService.LoadCacheInfo(StockCache, StockPriceCache);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogUtil.Error($"LoadCacheInfo Error:{ex.Message}");
-                    }
-                    CacheDataLoaded = true;
-
-                    //固定半小时调用一次
-                    Thread.Sleep(30 * 60 * 1000);
-                }
-
-            }, CancellationTokenSource.Token);
-        }
 
         void LoadConfigData()
         {
@@ -168,22 +139,19 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
                     {
-                        if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                        this.ActionLog("计算持有股价盈亏数据...");
+                        try
                         {
-                            this.ActionLog("计算持有股价盈亏数据...");
-                            try
+                            StockPriceService.CalculateProfit((message) =>
                             {
-                                StockPriceService.CalculateProfit((message) =>
-                                {
-                                    this.ActionLog(message);
-                                });
-                            }
-                            catch (Exception ex)
-                            {
-                                LogUtil.Error($"CalculateProfit Error:{ex.Message}");
-                            }
+                                this.ActionLog(message);
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"CalculateProfit Error:{ex.Message}");
                         }
                     }
                     Thread.Sleep(RC.UpdateAccountStockProfitInterval * 1000);
@@ -240,22 +208,19 @@ namespace StockSimulateService.Service
                 Thread.Sleep(5000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    this.ActionLog("采集基金持仓比例数据...");
+                    try
                     {
-                        this.ActionLog("采集基金持仓比例数据...");
-                        try
+                        StockGatherService.GatherFundStockData((message) =>
                         {
-                            StockGatherService.GatherFundStockData(StockCache, (message) =>
-                            {
-                                this.ActionLog(message);
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            LogUtil.Error($"GatherFundStockData Error:{ex.Message}");
-                        }
-                }
-                    Thread.Sleep(RC.GatherFundStockPositionInterval * 1000);
+                            this.ActionLog(message);
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"GatherFundStockData Error:{ex.Message}");
+                    }
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -265,22 +230,19 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    this.ActionLog("采集财务指标数据...");
+                    try
                     {
-                        this.ActionLog("采集财务指标数据...");
-                        try
+                        StockGatherService.GatherFinanceData((message) =>
                         {
-                            StockGatherService.GatherFinanceData(StockCache, (message) =>
-                            {
-                                this.ActionLog(message);
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            LogUtil.Error($"GatherFinanceData Error:{ex.Message}");
-                        }
-                }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 1000);
+                            this.ActionLog(message);
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"GatherFinanceData Error:{ex.Message}");
+                    }
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -290,22 +252,41 @@ namespace StockSimulateService.Service
                 Thread.Sleep(10000);
                 while (true)
                 {
-                    if (CacheDataLoaded)
+                    this.ActionLog("采集机构研报数据...");
+                    try
                     {
-                        this.ActionLog("采集机构研报数据...");
-                        try
+                        StockGatherService.GatherReportData((message) =>
                         {
-                            StockGatherService.GatherReportData(StockCache, (message) =>
-                            {
-                                this.ActionLog(message);
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            LogUtil.Error($"GatherReportData Error:{ex.Message}");
-                        }
+                            this.ActionLog(message);
+                        });
                     }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 1000);
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"GatherReportData Error:{ex.Message}");
+                    }
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
+            //机构预测数据
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(10000);
+                while (true)
+                {
+                    this.ActionLog("采集机构预测数据...");
+                    try
+                    {
+                        StockGatherService.GatherForecastData((message) =>
+                        {
+                            this.ActionLog(message);
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"GatherForecastData Error:{ex.Message}");
+                    }
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
                 }
             }, CancellationTokenSource.Token);
         }

@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -132,6 +132,7 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtFoucZS = new System.Windows.Forms.RadioButton();
             this.toolStrip1.SuspendLayout();
             this.panel120.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -431,6 +432,7 @@
             // 
             // panel10
             // 
+            this.panel10.Controls.Add(this.txtFoucZS);
             this.panel10.Controls.Add(this.btnTop);
             this.panel10.Controls.Add(this.btnFoucsStock);
             this.panel10.Controls.Add(this.txtSearch);
@@ -484,7 +486,7 @@
             this.txtFoucST.Size = new System.Drawing.Size(71, 16);
             this.txtFoucST.TabIndex = 4;
             this.txtFoucST.TabStop = true;
-            this.txtFoucST.Text = "重点关注";
+            this.txtFoucST.Text = "关注股票";
             this.txtFoucST.UseVisualStyleBackColor = true;
             this.txtFoucST.CheckedChanged += new System.EventHandler(this.txtFoucST_CheckedChanged);
             // 
@@ -500,7 +502,7 @@
             // txtETF
             // 
             this.txtETF.AutoSize = true;
-            this.txtETF.Location = new System.Drawing.Point(143, 7);
+            this.txtETF.Location = new System.Drawing.Point(295, 7);
             this.txtETF.Name = "txtETF";
             this.txtETF.Size = new System.Drawing.Size(77, 16);
             this.txtETF.TabIndex = 2;
@@ -511,7 +513,7 @@
             // txtSHSZ
             // 
             this.txtSHSZ.AutoSize = true;
-            this.txtSHSZ.Location = new System.Drawing.Point(82, 7);
+            this.txtSHSZ.Location = new System.Drawing.Point(234, 7);
             this.txtSHSZ.Name = "txtSHSZ";
             this.txtSHSZ.Size = new System.Drawing.Size(59, 16);
             this.txtSHSZ.TabIndex = 1;
@@ -522,11 +524,11 @@
             // txtAllStock
             // 
             this.txtAllStock.AutoSize = true;
-            this.txtAllStock.Location = new System.Drawing.Point(223, 7);
+            this.txtAllStock.Location = new System.Drawing.Point(158, 7);
             this.txtAllStock.Name = "txtAllStock";
-            this.txtAllStock.Size = new System.Drawing.Size(47, 16);
+            this.txtAllStock.Size = new System.Drawing.Size(71, 16);
             this.txtAllStock.TabIndex = 0;
-            this.txtAllStock.Text = "全部";
+            this.txtAllStock.Text = "所有关注";
             this.txtAllStock.UseVisualStyleBackColor = true;
             this.txtAllStock.CheckedChanged += new System.EventHandler(this.txtAllStock_CheckedChanged);
             // 
@@ -671,11 +673,11 @@
             // 
             // chartPrice
             // 
-            chartArea6.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea6);
+            chartArea3.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea3);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend6.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend6);
+            legend3.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend3);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1253,6 +1255,17 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
+            // txtFoucZS
+            // 
+            this.txtFoucZS.AutoSize = true;
+            this.txtFoucZS.Location = new System.Drawing.Point(82, 7);
+            this.txtFoucZS.Name = "txtFoucZS";
+            this.txtFoucZS.Size = new System.Drawing.Size(71, 16);
+            this.txtFoucZS.TabIndex = 9;
+            this.txtFoucZS.Text = "关注基金";
+            this.txtFoucZS.UseVisualStyleBackColor = true;
+            this.txtFoucZS.CheckedChanged += new System.EventHandler(this.txtFoucZS_CheckedChanged);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1428,5 +1441,6 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.CheckBox txtNoRealAccount;
         private System.Windows.Forms.Button btnTop;
+        private System.Windows.Forms.RadioButton txtFoucZS;
     }
 }

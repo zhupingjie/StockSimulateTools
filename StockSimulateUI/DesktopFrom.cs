@@ -220,6 +220,37 @@ namespace StockPriceTools
             frm.StockCode = stockCode;
             frm.Show();
         }
+
+        private void gridStockList_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F1:
+                    btnAccountInfo_Click(sender, e);
+                    break;
+                case Keys.F2:
+                    btnAddStock_Click(sender, e);
+                    break;
+                case Keys.F3:
+                    btnDeleteStock_Click(sender, e);
+                    break;
+                case Keys.F4:
+                    btnAddRmind_Click(sender, e);
+                    break;
+                case Keys.F5:
+                    btnSetStrategy_Click(sender, e);
+                    break;
+                case Keys.F6:
+                    btnValuate_Click(sender, e);
+                    break;
+                case Keys.F11:
+                    btnDebug_Click(sender, e);
+                    break;
+                case Keys.F12:
+                    btnConfig_Click(sender, e);
+                    break;
+            }
+        }
         #endregion
 
         #region 中间TabControl区域事件
@@ -235,10 +266,11 @@ namespace StockPriceTools
 
             var where = "1>0";//"Price>0";
             if (!string.IsNullOrEmpty(this.txtSearch.Text.Trim())) where += $" and (Code like '%{this.txtSearch.Text.Trim()}%' or Name like '%{this.txtSearch.Text.Trim()}%')";
-            if (this.txtFoucST.Checked) where += $" and (Foucs=1)";
+            if (this.txtFoucST.Checked) where += $" and (Foucs>0 and Type=0)";
+            else if(this.txtFoucZS.Checked) where += $" and (Foucs>0 and Type=1)";
             else if (this.txtSHSZ.Checked) where += $" and (Type=0)";
             else if (this.txtETF.Checked) where += $" and (Type=1)";
-            else if (this.txtAllStock.Checked) where += "";
+            else if (this.txtAllStock.Checked) where += " and (Foucs>0)";
 
             //var stocks = GetDataSource<StockEntity>(where);
             //this.gridStockList.DataSource = stocks;
@@ -389,6 +421,15 @@ namespace StockPriceTools
                 this.LoadStockData();
             }
         }
+
+        private void txtFoucZS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (txtFoucZS.Checked)
+            {
+                this.LoadStockData();
+            }
+        }
+
         private void txtAllStock_CheckedChanged(object sender, EventArgs e)
         {
             if (this.txtAllStock.Checked)
@@ -1219,36 +1260,5 @@ namespace StockPriceTools
             return entitys;
         }
         #endregion
-
-        private void gridStockList_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.F1:
-                    btnAccountInfo_Click(sender, e);
-                    break;
-                case Keys.F2:
-                    btnAddStock_Click(sender, e);
-                    break;
-                case Keys.F3:
-                    btnDeleteStock_Click(sender, e);
-                    break;
-                case Keys.F4:
-                    btnAddRmind_Click(sender, e);
-                    break;
-                case Keys.F5:
-                    btnSetStrategy_Click(sender, e);
-                    break;
-                case Keys.F6:
-                    btnValuate_Click(sender, e);
-                    break;
-                case Keys.F11:
-                    btnDebug_Click(sender, e);
-                    break;
-                case Keys.F12:
-                    btnConfig_Click(sender, e);
-                    break;
-            }
-        }
     }
 }

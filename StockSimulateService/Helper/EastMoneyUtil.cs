@@ -119,6 +119,30 @@ namespace StockSimulateService.Helper
         }
         #endregion
 
+        #region 机构预测信息
+
+        public static StockForecastInfo GetStockForecast(string code)
+        {
+            try
+            {
+                var api = $"http://f10.eastmoney.com/ProfitForecast/ProfitForecastAjax?code={code}";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<StockForecastInfo>(retStr);
+                if (apiModel == null) return null;
+
+                return apiModel;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
         #region 财务主要指标
 
         public static MainTargetEntity[] GetMainTargets(string stockCode, int rtype)
@@ -602,6 +626,47 @@ namespace StockSimulateService.Helper
         public string orgSName { get; set; }
         public string infoCode { get; set; }
         public string indvInduName { get; set; }
+    }
+
+    public class StockForecastInfo
+    { 
+        public StockForecastModel[] mgsy { get; set; }
+
+        public StockForecastModel[] jzcsyl { get; set; }
+
+        public StockForecastModel[] gsjlr { get; set; }
+
+        public StockForecastModel[] yysr { get; set; }
+
+        public StockForecastJgycModel jgyc { get; set; }
+    }
+
+    public class StockForecastModel
+    {
+        public string Year { get; set; }
+        public decimal Value { get; set; }
+        public string Ratio { get; set; }
+    }
+
+    public class StockForecastJgycModel
+    {
+        public int baseYear { get; set; }
+       
+        public StockForecastJgycMxModel[] data { get; set; }
+    }
+
+    public class StockForecastJgycMxModel
+    {
+        public string Jgmc { get; set; }
+        public decimal Sy { get; set; }
+        public decimal Sy1 { get; set; }
+        public decimal Sy2 { get; set; }
+        public decimal Sy3 { get; set; }
+
+        public decimal Syl { get; set; }
+        public decimal Syl1 { get; set; }
+        public decimal Syl2 { get; set; }
+        public decimal Syl3 { get; set; }
     }
 
     public class StockInfo

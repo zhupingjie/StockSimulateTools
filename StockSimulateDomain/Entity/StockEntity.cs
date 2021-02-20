@@ -54,16 +54,19 @@ namespace StockSimulateDomain.Entity
         public decimal UDPer { get; set; }
 
 
-        [Description("当日开盘价")]
+        [Description("今开盘价")]
         [GatherColumn]
+        [GridColumnIgnore]
         public decimal StartPrice { get; set; }
 
-        [Description("当日最高价")]
+        [Description("今最高价")]
         [GatherColumn]
+        [GridColumnIgnore]
         public decimal MaxPrice { get; set; }
 
-        [Description("当日最低价")]
+        [Description("今最低价")]
         [GatherColumn]
+        [GridColumnIgnore]
         public decimal MinPrice { get; set; }
 
         [Description("安全股价")]

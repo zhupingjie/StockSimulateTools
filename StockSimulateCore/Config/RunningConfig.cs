@@ -45,17 +45,12 @@ namespace StockSimulateCore.Config
         /// <summary>
         /// 股票财务研报采集时间频率(秒)
         /// </summary>
-        public int GatherStockFinanceReportInterval { get; set; } = 24 * 60 * 60;
+        public int GatherStockFinanceReportInterval { get; set; } = 24;
 
         /// <summary>
         /// 股票研报采集时间频率(秒)
         /// </summary>
         public int GatherStockReportInterval { get; set; } = 24 * 60 * 60;
-
-        /// <summary>
-        /// 基金持仓比例采集时间频率(秒)
-        /// </summary>
-        public int GatherFundStockPositionInterval { get; set; } = 24 * 60 * 60;
 
         /// <summary>
         /// 股票策略提醒时间频率(秒)
