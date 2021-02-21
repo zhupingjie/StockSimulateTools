@@ -74,50 +74,50 @@
             this.txtSafePrice = new System.Windows.Forms.TextBox();
             this.txtSafeUPPer = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label21 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label22 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControlBottom = new System.Windows.Forms.TabControl();
             this.tabMaintarget = new System.Windows.Forms.TabPage();
-            this.tabBalanceTarget = new System.Windows.Forms.TabPage();
-            this.tabProfitTarget = new System.Windows.Forms.TabPage();
-            this.tabCashTarget = new System.Windows.Forms.TabPage();
             this.gridMaintargetList = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.txtByQuarter = new System.Windows.Forms.RadioButton();
             this.txtByYear = new System.Windows.Forms.RadioButton();
             this.txtByReport = new System.Windows.Forms.RadioButton();
+            this.tabBalanceTarget = new System.Windows.Forms.TabPage();
             this.gridBalanceTargetList = new System.Windows.Forms.DataGridView();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtByYearOfZCFZB = new System.Windows.Forms.RadioButton();
             this.txtByReportOfZCFZB = new System.Windows.Forms.RadioButton();
+            this.tabProfitTarget = new System.Windows.Forms.TabPage();
             this.gridProfitTargetList = new System.Windows.Forms.DataGridView();
             this.panel5 = new System.Windows.Forms.Panel();
             this.txtByQuarterOfLRB = new System.Windows.Forms.RadioButton();
             this.txtByYearOfLRB = new System.Windows.Forms.RadioButton();
             this.txtByReportOfLRB = new System.Windows.Forms.RadioButton();
+            this.tabCashTarget = new System.Windows.Forms.TabPage();
             this.gridCashTargetList = new System.Windows.Forms.DataGridView();
             this.panel6 = new System.Windows.Forms.Panel();
             this.txtByQuarterOfXJLLB = new System.Windows.Forms.RadioButton();
             this.txtByYearOfXJLLB = new System.Windows.Forms.RadioButton();
             this.txtByReportOfXJLLB = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabControlBottom.SuspendLayout();
             this.tabMaintarget.SuspendLayout();
-            this.tabBalanceTarget.SuspendLayout();
-            this.tabProfitTarget.SuspendLayout();
-            this.tabCashTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).BeginInit();
             this.panel3.SuspendLayout();
+            this.tabBalanceTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridBalanceTargetList)).BeginInit();
             this.panel4.SuspendLayout();
+            this.tabProfitTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProfitTargetList)).BeginInit();
             this.panel5.SuspendLayout();
+            this.tabCashTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridCashTargetList)).BeginInit();
             this.panel6.SuspendLayout();
             this.SuspendLayout();
@@ -415,7 +415,7 @@
             this.txtSafeRate.Name = "txtSafeRate";
             this.txtSafeRate.Size = new System.Drawing.Size(129, 29);
             this.txtSafeRate.TabIndex = 3;
-            this.txtSafeRate.Text = "80";
+            this.txtSafeRate.Text = "85";
             this.txtSafeRate.TextChanged += new System.EventHandler(this.txtSafeRate_TextChanged);
             // 
             // label16
@@ -554,58 +554,6 @@
             this.panel1.Size = new System.Drawing.Size(957, 300);
             this.panel1.TabIndex = 65;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.txtCapital);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.txtAdvise);
-            this.groupBox1.Controls.Add(this.txtYetLostNetProfit);
-            this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.txtAmount);
-            this.groupBox1.Controls.Add(this.label12);
-            this.groupBox1.Controls.Add(this.txtYetEPS);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txtPrice);
-            this.groupBox1.Controls.Add(this.txtNetProfit);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(312, 300);
-            this.groupBox1.TabIndex = 43;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "历史数据";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label22);
-            this.groupBox2.Controls.Add(this.txtWantProfitGrow);
-            this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.txtWantPE);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.txtSafeUPPer);
-            this.groupBox2.Controls.Add(this.txtWantNetProfit);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.btnOK);
-            this.groupBox2.Controls.Add(this.txtSafePrice);
-            this.groupBox2.Controls.Add(this.btnValuateAll);
-            this.groupBox2.Controls.Add(this.label20);
-            this.groupBox2.Controls.Add(this.txtSafeRate);
-            this.groupBox2.Controls.Add(this.label16);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox2.Location = new System.Drawing.Point(628, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(329, 300);
-            this.groupBox2.TabIndex = 44;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "预测数据";
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label21);
@@ -643,6 +591,31 @@
             this.label21.TabIndex = 62;
             this.label21.Text = "预测涨跌幅(%)";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label22);
+            this.groupBox2.Controls.Add(this.txtWantProfitGrow);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.txtWantPE);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.txtSafeUPPer);
+            this.groupBox2.Controls.Add(this.txtWantNetProfit);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.btnOK);
+            this.groupBox2.Controls.Add(this.txtSafePrice);
+            this.groupBox2.Controls.Add(this.btnValuateAll);
+            this.groupBox2.Controls.Add(this.label20);
+            this.groupBox2.Controls.Add(this.txtSafeRate);
+            this.groupBox2.Controls.Add(this.label16);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox2.Location = new System.Drawing.Point(628, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(329, 300);
+            this.groupBox2.TabIndex = 44;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "预测数据";
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -652,6 +625,33 @@
             this.label22.Size = new System.Drawing.Size(114, 21);
             this.label22.TabIndex = 63;
             this.label22.Text = "安全涨跌幅(%)";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.txtCapital);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label19);
+            this.groupBox1.Controls.Add(this.txtName);
+            this.groupBox1.Controls.Add(this.txtAdvise);
+            this.groupBox1.Controls.Add(this.txtYetLostNetProfit);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.txtAmount);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.txtYetEPS);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.txtPrice);
+            this.groupBox1.Controls.Add(this.txtNetProfit);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(312, 300);
+            this.groupBox1.TabIndex = 43;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "历史数据";
             // 
             // tabControlBottom
             // 
@@ -679,42 +679,6 @@
             this.tabMaintarget.TabIndex = 0;
             this.tabMaintarget.Text = "主要指标";
             this.tabMaintarget.UseVisualStyleBackColor = true;
-            // 
-            // tabBalanceTarget
-            // 
-            this.tabBalanceTarget.Controls.Add(this.gridBalanceTargetList);
-            this.tabBalanceTarget.Controls.Add(this.panel4);
-            this.tabBalanceTarget.Location = new System.Drawing.Point(4, 26);
-            this.tabBalanceTarget.Name = "tabBalanceTarget";
-            this.tabBalanceTarget.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBalanceTarget.Size = new System.Drawing.Size(949, 431);
-            this.tabBalanceTarget.TabIndex = 1;
-            this.tabBalanceTarget.Text = "资产负债表";
-            this.tabBalanceTarget.UseVisualStyleBackColor = true;
-            // 
-            // tabProfitTarget
-            // 
-            this.tabProfitTarget.Controls.Add(this.gridProfitTargetList);
-            this.tabProfitTarget.Controls.Add(this.panel5);
-            this.tabProfitTarget.Location = new System.Drawing.Point(4, 26);
-            this.tabProfitTarget.Name = "tabProfitTarget";
-            this.tabProfitTarget.Padding = new System.Windows.Forms.Padding(3);
-            this.tabProfitTarget.Size = new System.Drawing.Size(949, 431);
-            this.tabProfitTarget.TabIndex = 2;
-            this.tabProfitTarget.Text = "利润表";
-            this.tabProfitTarget.UseVisualStyleBackColor = true;
-            // 
-            // tabCashTarget
-            // 
-            this.tabCashTarget.Controls.Add(this.gridCashTargetList);
-            this.tabCashTarget.Controls.Add(this.panel6);
-            this.tabCashTarget.Location = new System.Drawing.Point(4, 26);
-            this.tabCashTarget.Name = "tabCashTarget";
-            this.tabCashTarget.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCashTarget.Size = new System.Drawing.Size(949, 431);
-            this.tabCashTarget.TabIndex = 3;
-            this.tabCashTarget.Text = "现金流量表";
-            this.tabCashTarget.UseVisualStyleBackColor = true;
             // 
             // gridMaintargetList
             // 
@@ -777,6 +741,18 @@
             this.txtByReport.UseVisualStyleBackColor = true;
             this.txtByReport.CheckedChanged += new System.EventHandler(this.txtByReport_CheckedChanged);
             // 
+            // tabBalanceTarget
+            // 
+            this.tabBalanceTarget.Controls.Add(this.gridBalanceTargetList);
+            this.tabBalanceTarget.Controls.Add(this.panel4);
+            this.tabBalanceTarget.Location = new System.Drawing.Point(4, 26);
+            this.tabBalanceTarget.Name = "tabBalanceTarget";
+            this.tabBalanceTarget.Padding = new System.Windows.Forms.Padding(3);
+            this.tabBalanceTarget.Size = new System.Drawing.Size(949, 431);
+            this.tabBalanceTarget.TabIndex = 1;
+            this.tabBalanceTarget.Text = "资产负债表";
+            this.tabBalanceTarget.UseVisualStyleBackColor = true;
+            // 
             // gridBalanceTargetList
             // 
             this.gridBalanceTargetList.BackgroundColor = System.Drawing.SystemColors.Control;
@@ -825,6 +801,18 @@
             this.txtByReportOfZCFZB.Text = "按报告期";
             this.txtByReportOfZCFZB.UseVisualStyleBackColor = true;
             this.txtByReportOfZCFZB.CheckedChanged += new System.EventHandler(this.txtByReportOfZCFZB_CheckedChanged);
+            // 
+            // tabProfitTarget
+            // 
+            this.tabProfitTarget.Controls.Add(this.gridProfitTargetList);
+            this.tabProfitTarget.Controls.Add(this.panel5);
+            this.tabProfitTarget.Location = new System.Drawing.Point(4, 26);
+            this.tabProfitTarget.Name = "tabProfitTarget";
+            this.tabProfitTarget.Padding = new System.Windows.Forms.Padding(3);
+            this.tabProfitTarget.Size = new System.Drawing.Size(949, 431);
+            this.tabProfitTarget.TabIndex = 2;
+            this.tabProfitTarget.Text = "利润表";
+            this.tabProfitTarget.UseVisualStyleBackColor = true;
             // 
             // gridProfitTargetList
             // 
@@ -886,6 +874,18 @@
             this.txtByReportOfLRB.Text = "按报告期";
             this.txtByReportOfLRB.UseVisualStyleBackColor = true;
             this.txtByReportOfLRB.CheckedChanged += new System.EventHandler(this.txtByReportOfLRB_CheckedChanged);
+            // 
+            // tabCashTarget
+            // 
+            this.tabCashTarget.Controls.Add(this.gridCashTargetList);
+            this.tabCashTarget.Controls.Add(this.panel6);
+            this.tabCashTarget.Location = new System.Drawing.Point(4, 26);
+            this.tabCashTarget.Name = "tabCashTarget";
+            this.tabCashTarget.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCashTarget.Size = new System.Drawing.Size(949, 431);
+            this.tabCashTarget.TabIndex = 3;
+            this.tabCashTarget.Text = "现金流量表";
+            this.tabCashTarget.UseVisualStyleBackColor = true;
             // 
             // gridCashTargetList
             // 
@@ -960,26 +960,26 @@
             this.Text = "预测估值";
             this.Load += new System.EventHandler(this.ValuateForm_Load);
             this.panel1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabControlBottom.ResumeLayout(false);
             this.tabMaintarget.ResumeLayout(false);
-            this.tabBalanceTarget.ResumeLayout(false);
-            this.tabProfitTarget.ResumeLayout(false);
-            this.tabCashTarget.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridMaintargetList)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.tabBalanceTarget.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridBalanceTargetList)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.tabProfitTarget.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProfitTargetList)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.tabCashTarget.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridCashTargetList)).EndInit();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();

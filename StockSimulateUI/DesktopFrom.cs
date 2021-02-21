@@ -290,7 +290,7 @@ namespace StockPriceTools
 
                     var columnName = this.gridStockList.Columns[i].Name;
                     this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
-                    if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
+                    if (new string[] { "股价", "安全股价", "目标股价", "股价E", "浮动(%)" }.Contains(columnName))
                     {
                         this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
                     }

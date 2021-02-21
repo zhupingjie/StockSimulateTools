@@ -56,6 +56,8 @@ namespace StockSimulateUI.UI
             this.txtPrice.Text = $"{stock.Price}";
             this.txtAmount.Text = $"{stock.Amount}";
             this.txtWantNetProfit.Text = $"{stock.ENetProfit}"; 
+            this.txtWantPE.Text = $"{stock.EPE}";
+            this.txtWantProfitGrow.Text = $"{stock.EGrowth}";
 
             Action act = delegate ()
             {
@@ -122,7 +124,7 @@ namespace StockSimulateUI.UI
 
         private void btnValuateAll_Click(object sender, EventArgs e)
         {
-            var safety = ObjectUtil.ToValue<decimal>(this.txtSafePrice.Text, 0);
+            var safety = ObjectUtil.ToValue<decimal>(this.txtSafeRate.Text, 0);
 
             var results = StockValuateService.Valuate(safety);
             if(results.Length > 0)

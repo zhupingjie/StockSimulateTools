@@ -49,12 +49,13 @@ namespace StockSimulateService.Service
             var price = stock.Price;
             var capital = stock.Capital;
             var yetNetProfit = mainTarget.Gsjlr;
-            var yetGrowth = mainTarget.Gsjlrtbzz;
-            var yetEPS = mainTarget.Jbmgsy;
+            var yetGrowth = stock.EGrowth;
+            var yetEPS = stock.EEPS;
+            var yetPE = stock.EPE;
 
             //自动预测按去年增长率及TTM计算
             var wantGrowth = growth == 0 ? yetGrowth : growth;
-            var wantPE = pe == 0 ? stock.TTM : pe;
+            var wantPE = pe == 0 ? yetPE : pe;
 
             //预测净利润
             var wantNetProfit = yetNetProfit * (1 + wantGrowth / 100m);
@@ -87,7 +88,7 @@ namespace StockSimulateService.Service
             if (price <= safePrice * 0.8m) advise = "重仓";
             else if (price <= safePrice) advise = "买入";
             else if (price > safePrice && price <= wantPrice) advise = "等待";
-            else if (price > wantPrice && price <= wantPrice * 1.2m) advise = "减仓";
+            else if (price > wantPrice *1.05m && price <= wantPrice * 1.2m) advise = "减仓";
             else if (price > wantPrice * 1.2m) advise = "卖出";
 
             return new ValuateResultInfo()
