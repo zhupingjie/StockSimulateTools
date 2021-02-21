@@ -69,16 +69,16 @@ namespace StockSimulateDomain.Entity
         [Description("市盈率E")]
         public decimal EPE { get; set; }
 
+        [Description("PEG")]
+        [GatherColumn]
+        public decimal PEG { get; set; }
+
         [Description("推荐操作")]
         public string Advise { get; set; }
 
         [Description("市净率")]
         [GatherColumn]
         public decimal PB { get; set; }
-
-        [Description("PEG")]
-        [GatherColumn]
-        public decimal PEG { get; set; }
 
         [Description("ROE")]
         [GatherColumn]
