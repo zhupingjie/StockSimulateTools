@@ -317,6 +317,7 @@ namespace StockSimulateNetService.Serivce
                 var forecastInfo = EastMoneyUtil.GetStockForecast(stock.Code);
                 if (forecastInfo.mgsy == null || forecastInfo.jzcsyl == null || forecastInfo.gsjlr == null || forecastInfo.jgyc == null || forecastInfo.jgyc.data == null) continue;
 
+                var updateStocks = new List<StockEntity>();
                 var newForecasts = new List<StockForecastEntity>();
                 var years = forecastInfo.mgsy.Select(c => c.Year).ToArray();
 
@@ -358,6 +359,7 @@ namespace StockSimulateNetService.Serivce
                     }
                     newForecasts.Add(newForecast);
 
+                    //同步ROE
                     stock.ROE = newForecast.ROE;
                 }
                 for (var i = 1; i <= 3; i++)
@@ -371,26 +373,26 @@ namespace StockSimulateNetService.Serivce
                             BaseYear = actualYear,
                             TargetYear = ycYear
                         };
-                        var mgsy = forecastInfo.mgsy.FirstOrDefault(c => c.Year == actualYear);
+                        var mgsy = forecastInfo.mgsy.FirstOrDefault(c => c.Year == ycYear);
                         if (mgsy != null)
                         {
                             newForecast.Mgsy = mgsy.Value;
                             newForecast.MgsyRaito = mgsy.Ratio == "-" ? 0 : ObjectUtil.ToValue<decimal>(mgsy.Ratio);
                         }
-                        var jzcsyl = forecastInfo.jzcsyl.FirstOrDefault(c => c.Year == actualYear);
+                        var jzcsyl = forecastInfo.jzcsyl.FirstOrDefault(c => c.Year == ycYear);
                         if (jzcsyl != null)
                         {
                             newForecast.ROE = jzcsyl.Value;
                         }
-                        var gsjlr = forecastInfo.gsjlr.FirstOrDefault(c => c.Year == actualYear);
+                        var gsjlr = forecastInfo.gsjlr.FirstOrDefault(c => c.Year == ycYear);
                         if (gsjlr != null)
                         {
-                            newForecast.Gsjlr = gsjlr.Value;
+                            newForecast.Gsjlr = Math.Round(gsjlr.Value / 100000000, 3);
                         }
-                        var yysr = forecastInfo.yysr.FirstOrDefault(c => c.Year == actualYear);
+                        var yysr = forecastInfo.yysr.FirstOrDefault(c => c.Year == ycYear);
                         if (yysr != null)
                         {
-                            newForecast.Yysr = yysr.Value;
+                            newForecast.Yysr = Math.Round(yysr.Value / 100000000, 3);
                         }
                         var jgyc = forecastInfo.jgyc.data.FirstOrDefault(c => c.Jgmc.EndsWith("平均"));
                         if (jgyc != null)
@@ -398,9 +400,23 @@ namespace StockSimulateNetService.Serivce
                             newForecast.PE = (i == 1 ? jgyc.Syl1 : i == 2 ? jgyc.Syl2 : jgyc.Syl3);
                         }
                         newForecasts.Add(newForecast);
+
+                        if (i == 1)
+                        {
+                            //同步机构预测结果
+                            stock.EPE = newForecast.PE;
+                            stock.ENetProfit = newForecast.Gsjlr;
+                            stock.EGrowth = newForecast.MgsyRaito;
+                            stock.EEPS = newForecast.Mgsy;
+                            stock.EPrice = stock.EEPS * stock.EPE;
+                            updateStocks.Add(stock);
+                        }
                     }
                 }
-
+                if (updateStocks.Count > 0)
+                {
+                    Repository.Instance.Update<StockEntity>(updateStocks.ToArray(), new string[] { "ROE", "EPE", "ENetProfit", "EGrowth", "EEPS", "EPrice" });
+                }
                 if (newForecasts.Count > 0)
                 {
                     Repository.Instance.Insert<StockForecastEntity>(newForecasts.ToArray());

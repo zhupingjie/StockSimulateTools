@@ -220,7 +220,7 @@ namespace StockSimulateService.Service
                     {
                         LogUtil.Error($"GatherFundStockData Error:{ex.Message}");
                     }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 60 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -242,7 +242,7 @@ namespace StockSimulateService.Service
                     {
                         LogUtil.Error($"GatherFinanceData Error:{ex.Message}");
                     }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 60 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -264,7 +264,7 @@ namespace StockSimulateService.Service
                     {
                         LogUtil.Error($"GatherReportData Error:{ex.Message}");
                     }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 60 * 1000);
                 }
             }, CancellationTokenSource.Token);
 
@@ -286,7 +286,7 @@ namespace StockSimulateService.Service
                     {
                         LogUtil.Error($"GatherForecastData Error:{ex.Message}");
                     }
-                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 66 * 1000);
+                    Thread.Sleep(RC.GatherStockFinanceReportInterval * 60 * 60 * 1000);
                 }
             }, CancellationTokenSource.Token);
         }

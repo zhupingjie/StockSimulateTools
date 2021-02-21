@@ -55,6 +55,7 @@ namespace StockSimulateUI.UI
             this.txtNetProfit.Text = $"{stock.NetProfit}";
             this.txtPrice.Text = $"{stock.Price}";
             this.txtAmount.Text = $"{stock.Amount}";
+            this.txtWantNetProfit.Text = $"{stock.ENetProfit}"; 
 
             Action act = delegate ()
             {

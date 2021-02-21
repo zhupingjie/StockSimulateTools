@@ -82,7 +82,7 @@ namespace StockSimulateCore.Data
         public bool Update<TEntity>(TEntity entity, string[] columns = null) where TEntity : BaseEntity
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
-            return UpdateEntity(new TEntity[] { entity }, tableName);
+            return UpdateEntity(new TEntity[] { entity }, tableName, columns);
         }
 
         public bool Update<TEntity>(TEntity[] entitys, string[] columns = null) where TEntity : BaseEntity

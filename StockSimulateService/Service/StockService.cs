@@ -44,8 +44,7 @@ namespace StockSimulateService.Service
             
             stock.PriceDate = stockInfo.Stock.PriceDate;
 
-            var decNum = stock.Type == 0 ? 2 : 3;
-            var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice", "StartPrice" };
+            var columns = new List<string>() { "PriceDate", "MaxPrice", "MinPrice", "StartPrice", "PEG", "Advise" };
             var preps = typeof(StockEntity).GetProperties();
             foreach(var prep in preps)
             {
@@ -56,6 +55,33 @@ namespace StockSimulateService.Service
                 ObjectUtil.SetPropertyValue(stock, prep.Name, changeValue);
 
                 columns.Add(prep.Name);
+            }
+            if (stock.ProfitGrewPer > 0)
+            {
+                stock.PEG = Math.Round(stock.TTM / stock.ProfitGrewPer, 2);
+            }
+            if(stock.EPrice > 0)
+            {
+                if (stock.Price >= stock.EPrice * 0.95m && stock.Price <= stock.EPrice * 1.05m)
+                {
+                    stock.Advise = "等待";
+                }
+                else if (stock.Price > stock.EPrice * 0.8m && stock.Price < stock.EPrice * 0.95m)
+                {
+                    stock.Advise = "买入";
+                }
+                else if (stock.Price < stock.EPrice * 0.8m)
+                {
+                    stock.Advise = "重仓";
+                }
+                else if (stock.Price > stock.EPrice * 1.05m && stock.Price < stock.EPrice * 1.2m)
+                {
+                    stock.Advise = "减仓";
+                }
+                else if (stock.Price > stock.EPrice * 1.2m)
+                {
+                    stock.Advise = "卖出";
+                }
             }
             Repository.Instance.Update<StockEntity>(stock, columns.ToArray());
         }
@@ -79,12 +105,12 @@ namespace StockSimulateService.Service
             var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock == null) return;
 
-            stock.EPE = pe;
-            stock.Growth = growth;
+            //stock.EPE = pe;
+            //stock.Growth = growth;
             stock.Target = target;
             stock.Safety = safety;
-            stock.Advise = advise;
-            Repository.Instance.Update<StockEntity>(stock, new string[] { "EPE", "Growth", "Target", "Safety", "Advise" });
+            //stock.Advise = advise;
+            Repository.Instance.Update<StockEntity>(stock, new string[] { "Target", "Safety" });
         }
 
         public static void SaveValuateResult(ValuateResultInfo[] results)
@@ -98,13 +124,13 @@ namespace StockSimulateService.Service
                 var result = results.FirstOrDefault(c => c.StockCode == stock.Code);
                 if (result == null) continue;
 
-                stock.EPE = result.PE;
-                stock.Growth = result.Growth;
+                //stock.EPE = result.PE;
+                //stock.Growth = result.Growth;
                 stock.Target = result.Price;
                 stock.Safety = result.SafePrice;
-                stock.Advise = result.Advise;
+                //stock.Advise = result.Advise;
             }
-            Repository.Instance.Update<StockEntity>(stocks, new string[] { "EPE", "Growth", "Target", "Safety", "Advise" });
+            Repository.Instance.Update<StockEntity>(stocks, new string[] { "Target", "Safety" });
         }
 
         public static StockResultInfo[] GetStockInfos()

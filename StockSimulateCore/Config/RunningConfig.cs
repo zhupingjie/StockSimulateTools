@@ -48,11 +48,6 @@ namespace StockSimulateCore.Config
         public int GatherStockFinanceReportInterval { get; set; } = 24;
 
         /// <summary>
-        /// 股票研报采集时间频率(秒)
-        /// </summary>
-        public int GatherStockReportInterval { get; set; } = 24 * 60 * 60;
-
-        /// <summary>
         /// 股票策略提醒时间频率(秒)
         /// </summary>
         public int RemindStockStrategyInterval { get; set; } = 2 * 60;
