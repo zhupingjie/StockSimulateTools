@@ -290,7 +290,7 @@ namespace StockPriceTools
 
                     var columnName = this.gridStockList.Columns[i].Name;
                     this.gridStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
-                    if (new string[] { "股价", "安全股价", "目标股价", "股价E", "浮动(%)" }.Contains(columnName))
+                    if (new string[] { "股价", "安全股价", "预测股价", "浮动(%)" }.Contains(columnName))
                     {
                         this.gridStockList.Columns[i].DefaultCellStyle = goodCellStyle;
                     }
@@ -311,7 +311,15 @@ namespace StockPriceTools
                 if (row.Cells["股价"].Value != null)
                 {
                     value = ObjectUtil.ToValue<decimal>(row.Cells["股价"].Value, 0);
-                    this.gridStockList.Rows[i].Cells["股价"].Value = ObjectUtil.ToValue<decimal>(value, 0).ToString("0.###");
+                    this.gridStockList.Rows[i].Cells["股价"].Value = value.ToString("0.###");
+                }
+                if (row.Cells["预测股价"].Value != null)
+                {
+                    value = ObjectUtil.ToValue<decimal>(row.Cells["预测股价"].Value, 0);
+                    if (value == 0)
+                    {
+                        this.gridStockList.Rows[i].Cells["预测股价"].Value = "-";
+                    }
                 }
             }
 

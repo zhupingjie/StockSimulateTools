@@ -54,10 +54,23 @@ namespace StockSimulateDomain.Entity
         public decimal Price { get; set; }
 
         [Description("股价E")]
+        [GridColumnIgnore]
         public decimal EPrice { get; set; }
 
         [Description("目标股价")]
+        [GridColumnIgnore]
         public decimal Target { get; set; }
+
+        [Description("预测股价")]
+        public decimal GoPrice
+        {
+            get
+            {
+                if (Target != 0) return Target;
+                if (EPrice != 0) return EPrice;
+                return 0;
+            }
+        }
 
         [Description("安全股价")]
         public decimal Safety { get; set; }
