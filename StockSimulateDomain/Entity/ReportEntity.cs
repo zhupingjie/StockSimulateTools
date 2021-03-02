@@ -15,6 +15,9 @@ namespace StockSimulateDomain.Entity
         [Description("股票代码")]
         public string StockCode { get; set; }
 
+        [Description("行业名称")]
+        public string IndustryName { get; set; }
+
         [Description("发布日期")]
         public string PublishDate { get; set; }
 

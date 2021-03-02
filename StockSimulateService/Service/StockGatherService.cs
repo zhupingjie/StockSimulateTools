@@ -289,7 +289,7 @@ namespace StockSimulateNetService.Serivce
             var stocks = Repository.Instance.QueryAll<StockEntity>($"Type=0");
             foreach (var stock in stocks)
             {
-                var reports = EastMoneyUtil.GetReports(stock.Code);
+                var reports = EastMoneyUtil.GetStockReports(stock.Code);
                 var codes = reports.Select(c => c.PdfCode).ToArray();
 
                 var hasReports = Repository.Instance.QueryAll<ReportEntity>($"StockCode='{stock.Code}'  and PdfCode in ('{string.Join("','", codes)}')");
@@ -301,6 +301,23 @@ namespace StockSimulateNetService.Serivce
                     Repository.Instance.Insert<ReportEntity>(newReports);
 
                     actionLog($"已采集[{stock.Name}]机构研报数据...[{newReports.Length}份]");
+                }
+            }
+            if (true)
+            {
+                var endDate = DateTime.Now.Date;
+                var reports = EastMoneyUtil.GetIndustryReports(DateTime.Now.Date.AddDays(-1 * RunningConfig.Instance.GatherIndustryReportPreDays), DateTime.Now.Date);
+                var codes = reports.Select(c => c.PdfCode).ToArray();
+
+                var hasReports = Repository.Instance.QueryAll<ReportEntity>($"PdfCode in ('{string.Join("','", codes)}')");
+                var hasCodes = hasReports.Select(c => c.PdfCode).Distinct().ToArray();
+
+                var newReports = reports.Where(c => !hasCodes.Contains(c.PdfCode)).ToArray();
+                if (newReports.Length > 0)
+                {
+                    Repository.Instance.Insert<ReportEntity>(newReports);
+
+                    actionLog($"已采集行业研报数据...[{newReports.Length}份]");
                 }
             }
         }

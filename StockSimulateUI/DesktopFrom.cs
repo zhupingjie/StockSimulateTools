@@ -754,7 +754,7 @@ namespace StockPriceTools
 
         void LoadRemindList(string stockCode)
         {
-            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "RType asc", 60);
+            var reminds = Repository.Instance.QueryAll<RemindEntity>($"StockCode='{stockCode}'", "RType asc", 100);
             var dt = ObjectUtil.ConvertTable(reminds, true);
             this.gridRemindList.DataSource = null;
             this.gridRemindList.DataSource = dt.DefaultView;
@@ -786,7 +786,7 @@ namespace StockPriceTools
 
         void LoadExchangeList(string stockCode)
         {
-            var exchangeOrders = Repository.Instance.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ID desc", 60);
+            var exchangeOrders = Repository.Instance.QueryAll<ExchangeOrderEntity>($"StockCode='{stockCode}'", "ID desc", 100);
             var dt = ObjectUtil.ConvertTable(exchangeOrders);
             this.gridExchangeList.DataSource = null;
             this.gridExchangeList.DataSource = dt.DefaultView;
@@ -805,7 +805,7 @@ namespace StockPriceTools
 
         void LoadReportList(string stockCode)
         {
-            var reports = Repository.Instance.QueryAll<ReportEntity>($"StockCode='{stockCode}'", "PublishDate desc", 60);
+            var reports = Repository.Instance.QueryAll<ReportEntity>($"StockCode='{stockCode}'", "PublishDate desc", 100);
             var dt = ObjectUtil.ConvertTable(reports);
             this.gridReportList.DataSource = null;
             this.gridReportList.DataSource = dt.DefaultView;
@@ -842,6 +842,38 @@ namespace StockPriceTools
                 else
                 {
                     this.gridFundStockList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
+                }
+            }
+        }
+
+        void LoadIndustryName()
+        {
+            var names = Repository.Instance.QueryObjectList($"select IndustryName from Report where StockCode='' group by IndustryName");
+            this.txtIndustryName.Items.Clear();
+            this.txtIndustryName.Items.AddRange(names);
+        }
+
+        void LoadIndustryList(string industryName = "")
+        {
+            var where = "StockCode=''";
+            if (!string.IsNullOrEmpty(industryName))
+            {
+                where += $" and IndustryName like '%{industryName}%'";
+            }
+            var reports = Repository.Instance.QueryAll<ReportEntity>(where, "PublishDate desc", 100);
+            var dt = ObjectUtil.ConvertTable(reports);
+            this.gridIndustryList.DataSource = null;
+            this.gridIndustryList.DataSource = dt.DefaultView;
+            for (var i = 0; i < this.gridIndustryList.ColumnCount; i++)
+            {
+                this.gridIndustryList.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                var columnName = this.gridIndustryList.Columns[i].Name;
+                if (columnName == "股票代码") this.gridIndustryList.Columns[i].Visible = false;
+                else
+                {
+                    if (columnName == "研报标题") this.gridIndustryList.Columns[i].Width = 250;
+                    else this.gridIndustryList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 }
             }
         }
@@ -941,6 +973,10 @@ namespace StockPriceTools
                     break;
                 case 7:
                     this.LoadFundStockList(stockCode);
+                    break;
+                case 8:
+                    this.LoadIndustryName();
+                    this.LoadIndustryList();
                     break;
             }
         }
@@ -1127,6 +1163,26 @@ namespace StockPriceTools
             if (report == null) return;
 
             ObjectUtil.OpenBrowserUrl(report.PdfUrl);
+        }
+
+        private void btnOpenIndustry_Click(object sender, EventArgs e)
+        {
+            if (this.gridIndustryList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridIndustryList.SelectedRows[0];
+            var pdfCode = $"{selectRow.Cells["编号"].Value}";
+
+            var report = Repository.Instance.QueryFirst<ReportEntity>($"PdfCode='{pdfCode}'");
+            if (report == null) return;
+
+            ObjectUtil.OpenBrowserUrl(report.PdfUrl);
+        }
+
+        private void txtIndustryName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var industryName = this.txtIndustryName.Text;
+            if (industryName == "所有行业") return;
+
+            this.LoadIndustryList(industryName);
         }
 
         private void btnFouncStock_Click(object sender, EventArgs e)

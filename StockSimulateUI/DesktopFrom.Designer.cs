@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -39,12 +39,12 @@
             this.btnAddStock = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteStock = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnSetStrategy = new System.Windows.Forms.ToolStripButton();
             this.btnAddRmind = new System.Windows.Forms.ToolStripButton();
+            this.btnSetStrategy = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnValuate = new System.Windows.Forms.ToolStripButton();
-            this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnConfig = new System.Windows.Forms.ToolStripButton();
             this.panel120 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -56,6 +56,7 @@
             this.tabStockList = new System.Windows.Forms.TabPage();
             this.gridStockList = new System.Windows.Forms.DataGridView();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.txtFoucZS = new System.Windows.Forms.RadioButton();
             this.btnTop = new System.Windows.Forms.Button();
             this.btnFoucsStock = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -132,7 +133,11 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtFoucZS = new System.Windows.Forms.RadioButton();
+            this.tabIndustry = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnOpenIndustry = new System.Windows.Forms.Button();
+            this.gridIndustryList = new System.Windows.Forms.DataGridView();
+            this.txtIndustryName = new System.Windows.Forms.ComboBox();
             this.toolStrip1.SuspendLayout();
             this.panel120.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -180,6 +185,9 @@
             this.tabStrategyData.SuspendLayout();
             this.tabExchange.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.tabIndustry.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridIndustryList)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -251,16 +259,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // btnSetStrategy
-            // 
-            this.btnSetStrategy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnSetStrategy.Image = ((System.Drawing.Image)(resources.GetObject("btnSetStrategy.Image")));
-            this.btnSetStrategy.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSetStrategy.Name = "btnSetStrategy";
-            this.btnSetStrategy.Size = new System.Drawing.Size(81, 22);
-            this.btnSetStrategy.Text = "设置策略(F5)";
-            this.btnSetStrategy.Click += new System.EventHandler(this.btnSetStrategy_Click);
-            // 
             // btnAddRmind
             // 
             this.btnAddRmind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -270,6 +268,16 @@
             this.btnAddRmind.Size = new System.Drawing.Size(81, 22);
             this.btnAddRmind.Text = "设置提醒(F4)";
             this.btnAddRmind.Click += new System.EventHandler(this.btnAddRmind_Click);
+            // 
+            // btnSetStrategy
+            // 
+            this.btnSetStrategy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnSetStrategy.Image = ((System.Drawing.Image)(resources.GetObject("btnSetStrategy.Image")));
+            this.btnSetStrategy.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSetStrategy.Name = "btnSetStrategy";
+            this.btnSetStrategy.Size = new System.Drawing.Size(81, 22);
+            this.btnSetStrategy.Text = "设置策略(F5)";
+            this.btnSetStrategy.Click += new System.EventHandler(this.btnSetStrategy_Click);
             // 
             // toolStripSplitButton1
             // 
@@ -286,6 +294,11 @@
             this.btnValuate.Text = "预测估值(F6)";
             this.btnValuate.Click += new System.EventHandler(this.btnValuate_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // btnDebug
             // 
             this.btnDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -295,11 +308,6 @@
             this.btnDebug.Size = new System.Drawing.Size(64, 22);
             this.btnDebug.Text = "调试(F11)";
             this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // btnConfig
             // 
@@ -446,6 +454,17 @@
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(836, 29);
             this.panel10.TabIndex = 47;
+            // 
+            // txtFoucZS
+            // 
+            this.txtFoucZS.AutoSize = true;
+            this.txtFoucZS.Location = new System.Drawing.Point(82, 7);
+            this.txtFoucZS.Name = "txtFoucZS";
+            this.txtFoucZS.Size = new System.Drawing.Size(71, 16);
+            this.txtFoucZS.TabIndex = 9;
+            this.txtFoucZS.Text = "关注基金";
+            this.txtFoucZS.UseVisualStyleBackColor = true;
+            this.txtFoucZS.CheckedChanged += new System.EventHandler(this.txtFoucZS_CheckedChanged);
             // 
             // btnTop
             // 
@@ -631,6 +650,7 @@
             this.tabControlBottom.Controls.Add(this.tabExchangeList);
             this.tabControlBottom.Controls.Add(this.tabReport);
             this.tabControlBottom.Controls.Add(this.tabFundStock);
+            this.tabControlBottom.Controls.Add(this.tabIndustry);
             this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlBottom.Location = new System.Drawing.Point(0, 0);
             this.tabControlBottom.Name = "tabControlBottom";
@@ -673,11 +693,11 @@
             // 
             // chartPrice
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea3);
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend3);
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1255,16 +1275,61 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // txtFoucZS
+            // tabIndustry
             // 
-            this.txtFoucZS.AutoSize = true;
-            this.txtFoucZS.Location = new System.Drawing.Point(82, 7);
-            this.txtFoucZS.Name = "txtFoucZS";
-            this.txtFoucZS.Size = new System.Drawing.Size(71, 16);
-            this.txtFoucZS.TabIndex = 9;
-            this.txtFoucZS.Text = "关注基金";
-            this.txtFoucZS.UseVisualStyleBackColor = true;
-            this.txtFoucZS.CheckedChanged += new System.EventHandler(this.txtFoucZS_CheckedChanged);
+            this.tabIndustry.Controls.Add(this.gridIndustryList);
+            this.tabIndustry.Controls.Add(this.panel2);
+            this.tabIndustry.Location = new System.Drawing.Point(4, 22);
+            this.tabIndustry.Name = "tabIndustry";
+            this.tabIndustry.Size = new System.Drawing.Size(842, 221);
+            this.tabIndustry.TabIndex = 12;
+            this.tabIndustry.Text = "行业研报";
+            this.tabIndustry.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.txtIndustryName);
+            this.panel2.Controls.Add(this.btnOpenIndustry);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(842, 29);
+            this.panel2.TabIndex = 50;
+            // 
+            // btnOpenIndustry
+            // 
+            this.btnOpenIndustry.BackColor = System.Drawing.Color.White;
+            this.btnOpenIndustry.Location = new System.Drawing.Point(126, 3);
+            this.btnOpenIndustry.Name = "btnOpenIndustry";
+            this.btnOpenIndustry.Size = new System.Drawing.Size(64, 23);
+            this.btnOpenIndustry.TabIndex = 0;
+            this.btnOpenIndustry.Text = "浏览";
+            this.btnOpenIndustry.UseVisualStyleBackColor = false;
+            this.btnOpenIndustry.Click += new System.EventHandler(this.btnOpenIndustry_Click);
+            // 
+            // gridIndustryList
+            // 
+            this.gridIndustryList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridIndustryList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridIndustryList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridIndustryList.Location = new System.Drawing.Point(0, 29);
+            this.gridIndustryList.MultiSelect = false;
+            this.gridIndustryList.Name = "gridIndustryList";
+            this.gridIndustryList.ReadOnly = true;
+            this.gridIndustryList.RowHeadersWidth = 10;
+            this.gridIndustryList.RowTemplate.Height = 23;
+            this.gridIndustryList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridIndustryList.Size = new System.Drawing.Size(842, 192);
+            this.gridIndustryList.TabIndex = 51;
+            // 
+            // txtIndustryName
+            // 
+            this.txtIndustryName.FormattingEnabled = true;
+            this.txtIndustryName.Location = new System.Drawing.Point(2, 4);
+            this.txtIndustryName.Name = "txtIndustryName";
+            this.txtIndustryName.Size = new System.Drawing.Size(121, 20);
+            this.txtIndustryName.TabIndex = 1;
+            this.txtIndustryName.SelectedIndexChanged += new System.EventHandler(this.txtIndustryName_SelectedIndexChanged);
             // 
             // DesktopFrom
             // 
@@ -1335,6 +1400,9 @@
             this.tabStrategyData.ResumeLayout(false);
             this.tabExchange.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.tabIndustry.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridIndustryList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1442,5 +1510,10 @@
         private System.Windows.Forms.CheckBox txtNoRealAccount;
         private System.Windows.Forms.Button btnTop;
         private System.Windows.Forms.RadioButton txtFoucZS;
+        private System.Windows.Forms.TabPage tabIndustry;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnOpenIndustry;
+        private System.Windows.Forms.DataGridView gridIndustryList;
+        private System.Windows.Forms.ComboBox txtIndustryName;
     }
 }

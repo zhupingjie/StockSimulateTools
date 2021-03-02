@@ -435,7 +435,7 @@ namespace StockSimulateService.Helper
 
         #region 研报信息
 
-        public static ReportEntity[] GetReports(string stockCode)
+        public static ReportEntity[] GetStockReports(string stockCode)
         {
             try
             {
@@ -457,6 +457,7 @@ namespace StockSimulateService.Helper
                     return result.data.Where(c => c.publishDate > gatherDate).Select(c => new ReportEntity()
                     {
                         StockCode = stockCode,
+                        IndustryName = c.industryName,
                         Title = c.title,
                         PublishDate = c.publishDate.ToString("yyyy-MM-dd"),
                         PdfCode = c.infoCode,
@@ -474,6 +475,61 @@ namespace StockSimulateService.Helper
             catch (Exception ex)
             {
                 return new ReportEntity[] { };
+            }
+        }
+
+        public static ReportEntity[] GetIndustryReports(DateTime startDate, DateTime endDate)
+        {
+            var apiModel = GetIndustryReports(startDate, endDate, 1);
+            if (apiModel == null) return new ReportEntity[] { };
+
+            var reports = new List<ReportModel>();
+            reports.AddRange(apiModel.data);
+
+            if(apiModel.TotalPage > 1)
+            {
+                for (var i = 2; i <= apiModel.TotalPage; i++)
+                {
+                    var model = GetIndustryReports(startDate, endDate, i);
+                    if (model == null) continue;
+
+                    reports.AddRange(model.data);
+                }
+            }
+            return reports.Select(c => new ReportEntity()
+            {
+                StockCode = string.Empty,
+                IndustryName = c.industryName,
+                Title = c.title,
+                PublishDate = c.publishDate.ToString("yyyy-MM-dd"),
+                PdfCode = c.infoCode,
+                OrgNam = c.orgSName,
+                ThisYearPE = c.predictThisYearPe,
+                ThisYearEPS = c.predictThisYearEps,
+                NextYearPE = c.predictNextYearPe,
+                NextYearEPS = c.predictThisYearEps,
+                NextTwoYearPE = c.predictNextYearPe,
+                NextTwoYearEPS = c.predictNextYearEps,
+            }).ToArray();
+        }
+
+        static EastMoneyReportModel GetIndustryReports(DateTime startDate, DateTime endDate, int pageNo)
+        {
+            try
+            {
+                var api = $"http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime={startDate.ToString("yyyy-MM-dd")}&endTime={endDate.ToString("yyyy-MM-dd")}&pageNo={pageNo}&qType=1";
+                var retStr = api.GetJsonFromUrl(requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyReportModel>(retStr);
+                if (apiModel.hits == 0 || apiModel.data == null || apiModel.data.Length == 0) return null;
+
+                return apiModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
@@ -594,6 +650,10 @@ namespace StockSimulateService.Helper
 
     public class EastMoneyReportModel
     {
+        public int TotalPage { get; set; }
+        public int hits { get; set; }
+        public int pageNo { get; set; }
+        public int size { get; set; }
         public ReportModel[] data { get; set; }
     }
 
@@ -626,6 +686,7 @@ namespace StockSimulateService.Helper
         public string orgSName { get; set; }
         public string infoCode { get; set; }
         public string indvInduName { get; set; }
+        public string industryName { get; set; }
     }
 
     public class StockForecastInfo
