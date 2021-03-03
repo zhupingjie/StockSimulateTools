@@ -62,6 +62,7 @@ namespace StockSimulateDomain.Entity
         public decimal Target { get; set; }
 
         [Description("预测股价")]
+        [DBNotMapped]
         public decimal GoPrice
         {
             get

@@ -872,7 +872,7 @@ namespace StockPriceTools
                 if (columnName == "股票代码") this.gridIndustryList.Columns[i].Visible = false;
                 else
                 {
-                    if (columnName == "研报标题") this.gridIndustryList.Columns[i].Width = 250;
+                    if (columnName == "研报标题") this.gridIndustryList.Columns[i].Width = 500;
                     else this.gridIndustryList.Columns[i].Width = ObjectUtil.GetGridColumnLength(columnName);
                 }
             }

@@ -24,7 +24,7 @@ namespace StockSimulateDomain.Entity
         [Description("研报标题")]
         public string Title { get; set; }
 
-        [Description("机构")]
+        [Description("机构名称")]
         public string OrgNam { get; set; }
 
         [Description("今年PE")]
