@@ -602,6 +602,74 @@ namespace StockSimulateService.Helper
 
         #endregion
 
+        #region 资金流向
+
+        public static FundFlowEntity GetStockFundFlows(string stockCode, string dealDate)
+        {
+            try
+            {
+                var secid = GetStockSecid(stockCode);
+                var api = $"http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids={secid}&fields=f62,f184,f66,f69,f72,f75,f78,f81,f84,f87,f64,f65,f70,f71,f76,f77,f82,f83,f164,f166,f168,f170,f172,f252,f253,f254,f255,f256,f124,f6,f278,f279,f280,f281,f282";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastAmountAPIModel>(retStr);
+                if (apiModel == null || apiModel.data == null || apiModel.data.diff == null || apiModel.data.diff.Length == 0) return null;
+                var model = apiModel.data.diff.FirstOrDefault();
+
+                var fundFlow = new FundFlowEntity()
+                {
+                    StockCode = stockCode,
+                    DealDate = dealDate
+                };
+                fundFlow.Amount = Math.Round(model.f62 / 100000000, 3);
+                //fundFlow.RetailAmount = Math.Round((model.f78 + model.f84) / 100000000, 3);
+                //fundFlow.Amount = Math.Round((model.f66 + model.f72 + model.f78 + model.f84) / 100000000, 3);
+                return fundFlow;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static FundFlowEntity[] GetIndustryFundFlows(string dealDate)
+        {
+            try
+            {
+                var api = $"http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12,f13,f14,f62,f66,f72,f78,f84&fid=f62&fs=m:90+t:2";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastAmountAPIModel>(retStr);
+                if (apiModel == null || apiModel.data == null || apiModel.data.diff == null || apiModel.data.diff.Length == 0) return null;
+
+                var fundFlows = new List<FundFlowEntity>();
+                foreach (var model in apiModel.data.diff)
+                {
+                    var fundFlow = new FundFlowEntity()
+                    {
+                        StockCode = string.Empty,
+                        DealDate = dealDate,
+                        IndustryName = model.f14
+                    };
+                    fundFlow.Amount = Math.Round(model.f62 / 100000000, 3);
+                    //fundFlow.RetailAmount = Math.Round((model.f78 + model.f84) / 100000000, 3);
+                    //fundFlow.Amount = Math.Round((model.f66 + model.f72 + model.f78 + model.f84) / 100000000, 3);
+                    fundFlows.Add(fundFlow);
+                }
+                return fundFlows.ToArray();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
         #region 辅助方法
 
         static string GetStockSecid(string code)
@@ -671,6 +739,27 @@ namespace StockSimulateService.Helper
         public string content { get; set; }
 
         public string curyear { get; set; }
+    }
+
+    public class EastAmountAPIModel
+    { 
+        public EastAmountModel data { get; set; }
+    }
+
+    public class EastAmountModel
+    {
+        public int total { get; set; }
+        public EastAmountDetailModel[] diff { get; set; }
+    }
+
+    public class EastAmountDetailModel
+    {
+        public string f14 { get; set; }
+        public decimal f62 { get; set; }
+        public decimal f66 { get; set; }
+        public decimal f72 { get; set; }
+        public decimal f78 { get; set; }
+        public decimal f84 { get; set; }
     }
 
     public class ReportModel
