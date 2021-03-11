@@ -299,6 +299,7 @@ namespace StockSimulateCore.Data
             {
                 sb.Append($"delete from {table} where `ID`='{entity.ID}';");
             }
+            sql = sb.ToString();
             var conn = Pool.Rent();
             try
             {
