@@ -18,23 +18,12 @@ namespace StockSimulateDomain.Entity
 
         [Description("股票类型")]
         [DBNotMapped]
+        [GridColumnIgnore]
         public string TypeText
         {
             get
             {
                 return Type == 0 ? "沪深股" : Type == 1 ? "基金(ETF)" : Type == 2 ? "指数" : "";
-            }
-        }
-
-        [Description("关注")]
-        [GridColumnIgnore]
-        public int Foucs { get; set; }
-
-        [Description("关注")]
-        [DBNotMapped]
-        public string FoucsText {
-            get {
-                return (Foucs == 1 ? "★" : Foucs == 2 ? "☆" : "")  + (Top == 1 ? " 🖤" : "");
             }
         }
 
@@ -44,6 +33,22 @@ namespace StockSimulateDomain.Entity
         [Description("股票名称")]
         [GatherColumn]
         public string Name { get; set; }
+
+        [Description("行业名称")]
+        [GatherColumn]
+        public string IndustryName { get; set; }
+
+        [Description("关注")]
+        [GridColumnIgnore]
+        public int Foucs { get; set; }
+
+        //[Description("关注")]
+        //[DBNotMapped]
+        //public string FoucsText {
+        //    get {
+        //        return (Foucs == 1 ? "★" : Foucs == 2 ? "☆" : "")  + (Top == 1 ? " 🖤" : "");
+        //    }
+        //}
 
         [Description("浮动(%)")]
         [GatherColumn]

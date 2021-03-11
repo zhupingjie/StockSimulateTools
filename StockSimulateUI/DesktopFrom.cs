@@ -51,6 +51,8 @@ namespace StockPriceTools
                     {
                         this.LoadStockList();
                         this.LoadTopInfo();
+                        this.LoadIndustryName();
+                        this.LoadFundFlowInfo("", "", DateTime.Now.ToString("yyyy-MM-dd"));
                     };
                     this.Invoke(act);
 
@@ -270,7 +272,7 @@ namespace StockPriceTools
             else if(this.txtFoucZS.Checked) where += $" and (Foucs>0 and Type=1)";
             else if (this.txtSHSZ.Checked) where += $" and (Type=0)";
             else if (this.txtETF.Checked) where += $" and (Type=1)";
-            else if (this.txtAllStock.Checked) where += " and (Foucs>0)";
+            else if (this.txtAllStock.Checked) where += " ";
 
             //var stocks = GetDataSource<StockEntity>(where);
             //this.gridStockList.DataSource = stocks;
@@ -392,16 +394,18 @@ namespace StockPriceTools
         {
             if (this.gridStockList.SelectedRows.Count == 0) return;
             this.lstBaseInfo.Items.Clear();
+            this.txtIndustryName.Text = "";
 
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
             var dealDate = $"{selectRow.Cells["股价日期"].Value}";
+            var industryName = $"{selectRow.Cells["行业名称"].Value}";
             if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
             this.LoadStockBaseInfo(stockCode);
-            this.LoadFundFlowInfo(stockCode, dealDate);
-            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
+            this.LoadFundFlowInfo(stockCode, industryName, dealDate);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
         }
         private void btnFoucsStock_Click(object sender, EventArgs e)
         {
@@ -523,7 +527,7 @@ namespace StockPriceTools
             }
         }
 
-        void LoadFundFlowInfo(string stockCode, string dealDate)
+        void LoadFundFlowInfo(string stockCode, string industryName, string dealDate)
         {
             this.lstAmountInfo.Items.Clear();
             var stockFunds = Repository.Instance.QueryAll<FundFlowEntity>($"StockCode='{stockCode}'", "DealDate desc", 20, withNoLock: true);
@@ -536,7 +540,22 @@ namespace StockPriceTools
             }
 
             this.lstIndustryInfo.Items.Clear();
-            var industryFunds = Repository.Instance.QueryAll<FundFlowEntity>($"StockCode='' and DealDate='{dealDate}'", "Amount desc", 100, withNoLock: true);
+            var where = "StockCode=''";
+            if (this.txtStockAmount.Checked)
+            {
+                if (!string.IsNullOrEmpty(industryName))
+                {
+                    where += $" and IndustryName='{industryName}'";
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(dealDate))
+                {
+                    where += $" and DealDate='{dealDate}'";
+                }
+            }
+            var industryFunds = Repository.Instance.QueryAll<FundFlowEntity>(where, "Amount desc", 100, withNoLock: true);
             foreach (var item in industryFunds)
             {
                 var listViewItem = new ListViewItem();
@@ -545,6 +564,17 @@ namespace StockPriceTools
                 listViewItem.SubItems.Add($"{item.Amount}");
                 this.lstIndustryInfo.Items.Add(listViewItem);
             }
+        }
+
+        private void txtStockAmount_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var dealDate = $"{selectRow.Cells["股价日期"].Value}";
+            var industryName = $"{selectRow.Cells["行业名称"].Value}";
+
+            this.LoadFundFlowInfo(stockCode, industryName, dealDate);
         }
 
         #endregion
@@ -874,7 +904,8 @@ namespace StockPriceTools
 
         void LoadIndustryName()
         {
-            var names = Repository.Instance.QueryObjectList($"select IndustryName from Report where StockCode='' group by IndustryName");
+            //var names = Repository.Instance.QueryObjectList($"select IndustryName from Report where StockCode='' group by IndustryName");
+            var names = Repository.Instance.QueryAll<IndustryEntity>(null, "Name asc").Select(c=>c.Name).ToArray();
             this.txtIndustryName.Items.Clear();
             this.txtIndustryName.Items.AddRange(names);
         }
@@ -941,11 +972,12 @@ namespace StockPriceTools
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
             var stockName = $"{selectRow.Cells["股票名称"].Value}";
+            var industryName = $"{selectRow.Cells["行业名称"].Value}";
 
-            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
         }
 
-        void LoadTabGridList(int tabIndex, string stockCode, string stockName)
+        void LoadTabGridList(int tabIndex, string stockCode, string stockName, string industryName)
         {
             switch (tabIndex)
             {
@@ -971,8 +1003,7 @@ namespace StockPriceTools
                     this.LoadFundStockList(stockCode);
                     break;
                 case 8:
-                    this.LoadIndustryName();
-                    this.LoadIndustryList();
+                    this.LoadIndustryList(this.txtStockIndustry.Checked ? industryName : "");
                     break;
             }
         }
@@ -1181,6 +1212,16 @@ namespace StockPriceTools
             this.LoadIndustryList(industryName);
         }
 
+        private void txtStockIndustry_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.gridStockList.SelectedRows.Count == 0) return;
+
+            var selectRow = this.gridStockList.SelectedRows[0];
+            var industryName = $"{selectRow.Cells["行业名称"].Value}";
+
+            this.LoadIndustryList(this.txtStockIndustry.Checked ? industryName : "");
+        }
+
         private void btnFouncStock_Click(object sender, EventArgs e)
         {
             if (this.gridFundStockList.SelectedRows.Count == 0) return;
@@ -1320,5 +1361,6 @@ namespace StockPriceTools
             return entitys;
         }
         #endregion
+
     }
 }

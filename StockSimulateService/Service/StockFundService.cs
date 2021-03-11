@@ -46,6 +46,9 @@ namespace StockSimulateService.Service
             var newFunds = new List<FundFlowEntity>();
             var updFunds = new List<FundFlowEntity>();
             var funds = Repository.Instance.QueryAll<FundFlowEntity>($"StockCode='' and IndustryName<>'' and DealDate='{stock.PriceDate}'");
+            var industrys = Repository.Instance.QueryAll<IndustryEntity>(null);
+
+            var newIndustrys = new List<IndustryEntity>();
             var fundFlows = EastMoneyUtil.GetIndustryFundFlows(stock.PriceDate);
             foreach(var item in fundFlows)
             {
@@ -59,9 +62,20 @@ namespace StockSimulateService.Service
                     item.ID = fund.ID;
                     updFunds.Add(item);
                 }
+
+                var industry = industrys.FirstOrDefault(c => c.Name == item.IndustryName);
+                if(industry == null)
+                {
+                    industry = new IndustryEntity()
+                    {
+                        Name = item.IndustryName
+                    };
+                    newIndustrys.Add(industry);
+                }
             }
             Repository.Instance.Insert<FundFlowEntity>(newFunds.ToArray());
             Repository.Instance.Update<FundFlowEntity>(updFunds.ToArray(), new string[] { "MainAmount", "RetailAmount", "Amount"});
+            Repository.Instance.Insert<IndustryEntity>(newIndustrys.ToArray());
         }
     }
 }

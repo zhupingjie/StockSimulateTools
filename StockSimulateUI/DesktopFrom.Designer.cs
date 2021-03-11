@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -135,6 +135,10 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtStockIndustry = new System.Windows.Forms.CheckBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.txtStockAmount = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.panel120.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -184,6 +188,7 @@
             this.tabAmountData.SuspendLayout();
             this.tabIndustryData.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -517,7 +522,7 @@
             // txtETF
             // 
             this.txtETF.AutoSize = true;
-            this.txtETF.Location = new System.Drawing.Point(295, 7);
+            this.txtETF.Location = new System.Drawing.Point(217, 7);
             this.txtETF.Name = "txtETF";
             this.txtETF.Size = new System.Drawing.Size(77, 16);
             this.txtETF.TabIndex = 2;
@@ -528,7 +533,7 @@
             // txtSHSZ
             // 
             this.txtSHSZ.AutoSize = true;
-            this.txtSHSZ.Location = new System.Drawing.Point(234, 7);
+            this.txtSHSZ.Location = new System.Drawing.Point(156, 7);
             this.txtSHSZ.Name = "txtSHSZ";
             this.txtSHSZ.Size = new System.Drawing.Size(59, 16);
             this.txtSHSZ.TabIndex = 1;
@@ -539,11 +544,11 @@
             // txtAllStock
             // 
             this.txtAllStock.AutoSize = true;
-            this.txtAllStock.Location = new System.Drawing.Point(158, 7);
+            this.txtAllStock.Location = new System.Drawing.Point(296, 7);
             this.txtAllStock.Name = "txtAllStock";
             this.txtAllStock.Size = new System.Drawing.Size(71, 16);
             this.txtAllStock.TabIndex = 0;
-            this.txtAllStock.Text = "所有关注";
+            this.txtAllStock.Text = "所有股票";
             this.txtAllStock.UseVisualStyleBackColor = true;
             this.txtAllStock.CheckedChanged += new System.EventHandler(this.txtAllStock_CheckedChanged);
             // 
@@ -689,11 +694,11 @@
             // 
             // chartPrice
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea1);
+            chartArea7.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea7);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend1);
+            legend7.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend7);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1067,6 +1072,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.txtStockIndustry);
             this.panel2.Controls.Add(this.txtIndustryName);
             this.panel2.Controls.Add(this.btnOpenIndustry);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1077,10 +1083,11 @@
             // 
             // txtIndustryName
             // 
+            this.txtIndustryName.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtIndustryName.FormattingEnabled = true;
-            this.txtIndustryName.Location = new System.Drawing.Point(2, 4);
+            this.txtIndustryName.Location = new System.Drawing.Point(2, 2);
             this.txtIndustryName.Name = "txtIndustryName";
-            this.txtIndustryName.Size = new System.Drawing.Size(121, 20);
+            this.txtIndustryName.Size = new System.Drawing.Size(121, 25);
             this.txtIndustryName.TabIndex = 1;
             this.txtIndustryName.SelectedIndexChanged += new System.EventHandler(this.txtIndustryName_SelectedIndexChanged);
             // 
@@ -1195,6 +1202,7 @@
             // tabIndustryData
             // 
             this.tabIndustryData.Controls.Add(this.lstIndustryInfo);
+            this.tabIndustryData.Controls.Add(this.panel6);
             this.tabIndustryData.Location = new System.Drawing.Point(4, 22);
             this.tabIndustryData.Name = "tabIndustryData";
             this.tabIndustryData.Padding = new System.Windows.Forms.Padding(3);
@@ -1213,10 +1221,10 @@
             this.lstIndustryInfo.FullRowSelect = true;
             this.lstIndustryInfo.GridLines = true;
             this.lstIndustryInfo.HideSelection = false;
-            this.lstIndustryInfo.Location = new System.Drawing.Point(3, 3);
+            this.lstIndustryInfo.Location = new System.Drawing.Point(3, 32);
             this.lstIndustryInfo.MultiSelect = false;
             this.lstIndustryInfo.Name = "lstIndustryInfo";
-            this.lstIndustryInfo.Size = new System.Drawing.Size(340, 525);
+            this.lstIndustryInfo.Size = new System.Drawing.Size(340, 496);
             this.lstIndustryInfo.TabIndex = 1;
             this.lstIndustryInfo.UseCompatibleStateImageBehavior = false;
             this.lstIndustryInfo.View = System.Windows.Forms.View.Details;
@@ -1295,6 +1303,55 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
+            // txtStockIndustry
+            // 
+            this.txtStockIndustry.AutoSize = true;
+            this.txtStockIndustry.Checked = true;
+            this.txtStockIndustry.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtStockIndustry.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtStockIndustry.Location = new System.Drawing.Point(761, 7);
+            this.txtStockIndustry.Name = "txtStockIndustry";
+            this.txtStockIndustry.Size = new System.Drawing.Size(75, 21);
+            this.txtStockIndustry.TabIndex = 2;
+            this.txtStockIndustry.Text = "当前股票";
+            this.txtStockIndustry.UseVisualStyleBackColor = true;
+            this.txtStockIndustry.CheckedChanged += new System.EventHandler(this.txtStockIndustry_CheckedChanged);
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.txtStockAmount);
+            this.panel6.Controls.Add(this.checkBox1);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(3, 3);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(340, 29);
+            this.panel6.TabIndex = 51;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox1.Location = new System.Drawing.Point(761, 7);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(75, 21);
+            this.checkBox1.TabIndex = 2;
+            this.checkBox1.Text = "当前股票";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // txtStockAmount
+            // 
+            this.txtStockAmount.AutoSize = true;
+            this.txtStockAmount.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtStockAmount.Location = new System.Drawing.Point(265, 4);
+            this.txtStockAmount.Name = "txtStockAmount";
+            this.txtStockAmount.Size = new System.Drawing.Size(75, 21);
+            this.txtStockAmount.TabIndex = 3;
+            this.txtStockAmount.Text = "当前股票";
+            this.txtStockAmount.UseVisualStyleBackColor = true;
+            this.txtStockAmount.CheckedChanged += new System.EventHandler(this.txtStockAmount_CheckedChanged);
+            // 
             // DesktopFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1360,12 +1417,15 @@
             this.tabIndustry.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridIndustryList)).EndInit();
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
             this.tabAmountData.ResumeLayout(false);
             this.tabIndustryData.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1475,5 +1535,9 @@
         private System.Windows.Forms.DataGridView gridIndustryList;
         private System.Windows.Forms.ComboBox txtIndustryName;
         private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.CheckBox txtStockIndustry;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.CheckBox txtStockAmount;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
