@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DesktopFrom));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAccountInfo = new System.Windows.Forms.ToolStripButton();
@@ -689,11 +689,11 @@
             // 
             // chartPrice
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea1);
             this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend1);
             this.chartPrice.Location = new System.Drawing.Point(0, 29);
             this.chartPrice.Name = "chartPrice";
             this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
@@ -1233,7 +1233,7 @@
             // 
             // columnHeader9
             // 
-            this.columnHeader9.Text = "主力净额";
+            this.columnHeader9.Text = "主力净额(亿)";
             this.columnHeader9.Width = 100;
             // 
             // notifyIcon1
