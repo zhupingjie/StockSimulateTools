@@ -147,7 +147,7 @@ namespace StockPriceTools
             if (MessageBox.Show($"确认要删除自选股[{stockName}]?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
             StockService.Delete(stockCode);
-           
+
             this.LoadStockList();
         }
 
@@ -267,7 +267,7 @@ namespace StockPriceTools
             var where = "1>0";//"Price>0";
             if (!string.IsNullOrEmpty(this.txtSearch.Text.Trim())) where += $" and (Code like '%{this.txtSearch.Text.Trim()}%' or Name like '%{this.txtSearch.Text.Trim()}%')";
             if (this.txtFoucST.Checked) where += $" and (Foucs>0 and Type=0)";
-            else if(this.txtFoucZS.Checked) where += $" and (Foucs>0 and Type=1)";
+            else if (this.txtFoucZS.Checked) where += $" and (Foucs>0 and Type=1)";
             else if (this.txtSHSZ.Checked) where += $" and (Type=0)";
             else if (this.txtETF.Checked) where += $" and (Type=1)";
             else if (this.txtAllStock.Checked) where += " and (Foucs>0)";
@@ -341,7 +341,7 @@ namespace StockPriceTools
             }
 
             var where = $"AccountName='{account.Name}'";
-            if(this.txtNoRealAccount.Checked) where = $"AccountName!='{account.Name}'";
+            if (this.txtNoRealAccount.Checked) where = $"AccountName!='{account.Name}'";
 
             var search = this.txtAccountSearch.Text.Trim();
             if (!string.IsNullOrEmpty(search)) where += $" and (Code like '%{search}%' or Name like '%{search}%')";
@@ -378,7 +378,7 @@ namespace StockPriceTools
 
         private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(this.tabControlMain.SelectedIndex)
+            switch (this.tabControlMain.SelectedIndex)
             {
                 case 0:
                     //this.LoadStockData();
@@ -468,7 +468,7 @@ namespace StockPriceTools
         private void gridStockList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             this.gridStockList.ClearSelection();
-            if (CurrentStockListSelectedIndex >= 0 && this.gridStockList.Rows.Count> CurrentStockListSelectedIndex) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
+            if (CurrentStockListSelectedIndex >= 0 && this.gridStockList.Rows.Count > CurrentStockListSelectedIndex) this.gridStockList.Rows[CurrentStockListSelectedIndex].Selected = true;
         }
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
@@ -505,7 +505,7 @@ namespace StockPriceTools
             if (stock == null) return;
 
             var preps = typeof(StockEntity).GetProperties();
-            foreach(var prep in preps)
+            foreach (var prep in preps)
             {
                 if (prep.Name == "ID") continue;
                 //if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
@@ -528,7 +528,7 @@ namespace StockPriceTools
         void LoadMessageInfo()
         {
             var messages = StockMessageService.GetWinMessages();
-            foreach(var message in messages)
+            foreach (var message in messages)
             {
                 this.ActionLog(message.Title);
             }
@@ -556,7 +556,7 @@ namespace StockPriceTools
         {
             var title = this.chartPrice.Titles.FirstOrDefault();
             if (title == null) title = this.chartPrice.Titles.Add("");
-            var text = $"【{stockName}】{(chartType==0?"日线":"MACD")}图";
+            var text = $"【{stockName}】{(chartType == 0 ? "日线" : "MACD")}图";
             var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
             if (stock != null)
             {
@@ -650,7 +650,7 @@ namespace StockPriceTools
                 series.Points.AddXY(xvalue, item.Price);
             }
         }
-        
+
         void BindChartMinutePoints(Series series, StockPriceEntity[] stockPrices, int minute, DateTime startDate)
         {
             var startTime = startDate.Date.AddHours(9);
@@ -741,7 +741,7 @@ namespace StockPriceTools
                 {
                     this.gridStockStrategyList.Rows[i].DefaultCellStyle.ForeColor = Color.Green;
                 }
-                else if(value == "失败")
+                else if (value == "失败")
                 {
                     this.gridStockStrategyList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
                 }
@@ -987,7 +987,7 @@ namespace StockPriceTools
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
 
             if (this.gridRemindList.SelectedRows.Count == 0) return;
-            
+
             if (MessageBox.Show($"确认要标记执行选中的提醒数据?", "操作提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
 
             var ids = new List<int>();
@@ -1092,7 +1092,7 @@ namespace StockPriceTools
             frm.StockName = stockName;
             frm.DealPrice = stockPrice;
             frm.StartPosition = FormStartPosition.CenterParent;
-            if(frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 this.LoadExchangeList(stockCode);
             }
@@ -1158,7 +1158,7 @@ namespace StockPriceTools
         #region 任务栏托盘事件
         private void DesktopFrom_SizeChanged(object sender, EventArgs e)
         {
-            if(this.WindowState == FormWindowState.Minimized)
+            if (this.WindowState == FormWindowState.Minimized)
             {
                 this.Hide();
                 this.notifyIcon1.Visible = true;
