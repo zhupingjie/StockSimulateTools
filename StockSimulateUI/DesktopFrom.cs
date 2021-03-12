@@ -42,6 +42,8 @@ namespace StockPriceTools
         {
             StockConfigService.LoadGlobalConfig(RC);
 
+            this.LoadIndustryName();
+
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(2 * 1000);
@@ -51,7 +53,6 @@ namespace StockPriceTools
                     {
                         this.LoadStockList();
                         this.LoadTopInfo();
-                        this.LoadIndustryName();
                         this.LoadFundFlowInfo("", "", DateTime.Now.ToString("yyyy-MM-dd"));
                     };
                     this.Invoke(act);
