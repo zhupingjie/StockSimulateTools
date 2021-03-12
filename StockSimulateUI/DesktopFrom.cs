@@ -556,7 +556,7 @@ namespace StockPriceTools
                     where += $" and DealDate='{dealDate}'";
                 }
             }
-            var industryFunds = Repository.Instance.QueryAll<FundFlowEntity>(where, "Amount desc", 100, withNoLock: true);
+            var industryFunds = Repository.Instance.QueryAll<FundFlowEntity>(where, "DealDate desc, Amount desc", 100, withNoLock: true);
             foreach (var item in industryFunds)
             {
                 var listViewItem = new ListViewItem();
