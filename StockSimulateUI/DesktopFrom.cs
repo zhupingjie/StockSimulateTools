@@ -512,7 +512,6 @@ namespace StockPriceTools
             foreach (var prep in preps)
             {
                 if (prep.Name == "ID") continue;
-                //if (prep.GetCustomAttributes(typeof(GridColumnIgnoreAttribute), true).Length > 0) continue;
 
                 var desc = prep.Name;
                 var attr = prep.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
