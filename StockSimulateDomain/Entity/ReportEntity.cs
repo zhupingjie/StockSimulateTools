@@ -12,6 +12,14 @@ namespace StockSimulateDomain.Entity
 {
     public class ReportEntity : BaseEntity
     {
+        /// <summary>
+        /// 0：股票研报
+        /// 1:  财务报表
+        /// 9:  行业研报
+        /// </summary>
+        [Description("研报类型")]
+        public int ReportType { get; set; }
+
         [Description("股票代码")]
         public string StockCode { get; set; }
 

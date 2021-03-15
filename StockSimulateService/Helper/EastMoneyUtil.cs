@@ -457,6 +457,7 @@ namespace StockSimulateService.Helper
                     var gatherDate = DateTime.Now.Date.AddMonths(-3);
                     return result.data.Where(c => c.publishDate > gatherDate).Select(c => new ReportEntity()
                     {
+                        ReportType = 0,
                         StockCode = stockCode,
                         IndustryName = c.industryName,
                         Title = c.title,
@@ -476,6 +477,62 @@ namespace StockSimulateService.Helper
             catch (Exception ex)
             {
                 return new ReportEntity[] { };
+            }
+        }
+
+        public static ReportEntity[] GetStockFinanceReports(string stockCode)
+        {
+            try
+            {
+                var apiModel = GetFinanceReports(stockCode, 1);
+                if (apiModel.data == null || apiModel.data.list.Length == 0) return null;
+
+                var reports = new List<EastMoneyFinanceReport>();
+                reports.AddRange(apiModel.data.list);
+
+                var totalPage = apiModel.data.total_hits * 1.0m / apiModel.data.page_size * 1.0m;
+                if (totalPage > 1)
+                {
+                    for (var i = 2; i <= Math.Ceiling(totalPage); i++)
+                    {
+                        var model = GetFinanceReports(stockCode, i);
+                        if (model == null) continue;
+
+                        reports.AddRange(model.data.list);
+                    }
+                }
+                return reports.Select(c => new ReportEntity()
+                {
+                    ReportType = 1,
+                    StockCode = stockCode,
+                    Title = c.title,
+                    PublishDate = c.notice_date.Substring(0, 10),
+                    PdfCode = c.art_code
+                }).ToArray();
+            }
+            catch (Exception ex)
+            {
+                return new ReportEntity[] { };
+            }
+        }
+
+        static EastMoneyFinanceReportModel GetFinanceReports(string stockCode, int pageNo)
+        {
+            try
+            {
+                var api = $"http://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=50&page_index={pageNo}&ann_type=A&stock_list={stockCode.Substring(2, 6)}&f_node=1&s_node=0";
+                var retStr = api.GetJsonFromUrl(requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyFinanceReportModel>(retStr);
+                if (apiModel.data == null || apiModel.data.list.Length == 0) return null;
+
+                return apiModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
@@ -499,6 +556,7 @@ namespace StockSimulateService.Helper
             }
             return reports.Select(c => new ReportEntity()
             {
+                ReportType = 9,
                 StockCode = string.Empty,
                 IndustryName = c.industryName,
                 Title = c.title,
@@ -724,6 +782,26 @@ namespace StockSimulateService.Helper
         public int pageNo { get; set; }
         public int size { get; set; }
         public ReportModel[] data { get; set; }
+    }
+
+    public class EastMoneyFinanceReportModel
+    {
+        public EastMoneyFinanceReportData data { get; set; }
+    }
+
+    public class EastMoneyFinanceReportData
+    {
+        public EastMoneyFinanceReport[] list { get; set; }
+        public int page_index { get; set; }
+        public int page_size { get; set; }
+        public int total_hits { get; set; }
+    }
+
+    public class EastMoneyFinanceReport
+    { 
+        public string art_code { get; set; }
+        public string notice_date { get; set; }
+        public string title { get; set; }
     }
 
     public class EastMoneyHisPriceAPIModel

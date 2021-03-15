@@ -292,7 +292,7 @@ namespace StockSimulateNetService.Serivce
                 var reports = EastMoneyUtil.GetStockReports(stock.Code);
                 var codes = reports.Select(c => c.PdfCode).ToArray();
 
-                var hasReports = Repository.Instance.QueryAll<ReportEntity>($"StockCode='{stock.Code}'  and PdfCode in ('{string.Join("','", codes)}')");
+                var hasReports = Repository.Instance.QueryAll<ReportEntity>($"ReportType=0 and StockCode='{stock.Code}'  and PdfCode in ('{string.Join("','", codes)}')");
                 var hasCodes = hasReports.Select(c => c.PdfCode).Distinct().ToArray();
 
                 var newReports = reports.Where(c => !hasCodes.Contains(c.PdfCode)).ToArray();
@@ -302,6 +302,20 @@ namespace StockSimulateNetService.Serivce
 
                     actionLog($"已采集[{stock.Name}]机构研报数据...[{newReports.Length}份]");
                 }
+
+                reports = EastMoneyUtil.GetStockFinanceReports(stock.Code);
+                codes = reports.Select(c => c.PdfCode).ToArray();
+
+                hasReports = Repository.Instance.QueryAll<ReportEntity>($"ReportType=1 and StockCode='{stock.Code}'  and PdfCode in ('{string.Join("','", codes)}')");
+                hasCodes = hasReports.Select(c => c.PdfCode).Distinct().ToArray();
+
+                newReports = reports.Where(c => !hasCodes.Contains(c.PdfCode)).ToArray();
+                if (newReports.Length > 0)
+                {
+                    Repository.Instance.Insert<ReportEntity>(newReports);
+
+                    actionLog($"已采集[{stock.Name}]财务报告数据...[{newReports.Length}份]");
+                }
             }
             if (true)
             {
@@ -309,7 +323,7 @@ namespace StockSimulateNetService.Serivce
                 var reports = EastMoneyUtil.GetIndustryReports(DateTime.Now.Date.AddDays(-1 * RunningConfig.Instance.GatherIndustryReportPreDays), DateTime.Now.Date);
                 var codes = reports.Select(c => c.PdfCode).ToArray();
 
-                var hasReports = Repository.Instance.QueryAll<ReportEntity>($"PdfCode in ('{string.Join("','", codes)}')");
+                var hasReports = Repository.Instance.QueryAll<ReportEntity>($"ReportType=9 and PdfCode in ('{string.Join("','", codes)}')");
                 var hasCodes = hasReports.Select(c => c.PdfCode).Distinct().ToArray();
 
                 var newReports = reports.Where(c => !hasCodes.Contains(c.PdfCode)).ToArray();
