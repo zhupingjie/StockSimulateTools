@@ -91,6 +91,11 @@ namespace StockSimulateCore.Config
         public int LoadGlobalConfigInterval { get; set; } = 300;
 
         /// <summary>
+        /// 行业研报采集天数
+        /// </summary>
+        public int GatherIndustryReportPreDays { get; set; } = 0;
+
+        /// <summary>
         /// 上证指数
         /// </summary>
         public string SHZSOfStockCode { get; set; } = "SH000001";

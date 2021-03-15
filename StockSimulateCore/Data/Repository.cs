@@ -299,6 +299,7 @@ namespace StockSimulateCore.Data
             {
                 sb.Append($"delete from {table} where `ID`='{entity.ID}';");
             }
+            sql = sb.ToString();
             var conn = Pool.Rent();
             try
             {
@@ -381,7 +382,40 @@ namespace StockSimulateCore.Data
             }
         }
 
+        public object[] QueryObjectList(string sql)
+        {
+            var lst = new List<object>();
+            var conn = Pool.Rent();
+            try
+            {
 
+                var reader = conn.ExecuteReader(sql, commandTimeout: commandTimeout);
+                while (reader.Read())
+                {
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        var name = reader.GetName(i);
+
+                        object value = null;
+                        var dbValue = reader.GetValue(i);
+                        if (dbValue != DBNull.Value) value = dbValue;
+                        lst.Add(value);
+                    }
+                }
+                if (!reader.IsClosed) reader.Close();
+
+                return lst.ToArray();
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"{ex.Message},SQL:{sql}");
+                return lst.ToArray();
+            }
+            finally
+            {
+                Pool.Free(conn);
+            }
+        }
         public void InitDataBase()
         {
             var entityTypes = ObjectUtil.FindEntityTypes();

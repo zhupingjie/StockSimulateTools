@@ -12,8 +12,19 @@ namespace StockSimulateDomain.Entity
 {
     public class ReportEntity : BaseEntity
     {
+        /// <summary>
+        /// 0：股票研报
+        /// 1:  财务报表
+        /// 9:  行业研报
+        /// </summary>
+        [Description("研报类型")]
+        public int ReportType { get; set; }
+
         [Description("股票代码")]
         public string StockCode { get; set; }
+
+        [Description("行业名称")]
+        public string IndustryName { get; set; }
 
         [Description("发布日期")]
         public string PublishDate { get; set; }
@@ -21,7 +32,7 @@ namespace StockSimulateDomain.Entity
         [Description("研报标题")]
         public string Title { get; set; }
 
-        [Description("机构")]
+        [Description("机构名称")]
         public string OrgNam { get; set; }
 
         [Description("今年PE")]

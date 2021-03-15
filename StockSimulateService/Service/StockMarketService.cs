@@ -202,6 +202,29 @@ namespace StockSimulateService.Service
                 }
             }, CancellationTokenSource.Token);
 
+            //计算资金流向
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5000);
+                while (true)
+                {
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    {
+                        this.ActionLog("计算股票资金流向数据...");
+                        try
+                        {
+                            StockFundService.GatherStockFundFlows();
+                            StockFundService.GatherIndustryFundFlows();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"GatherStockFundFlows Error:{ex.Message}");
+                        }
+                    }
+                    Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
             //采集基金持仓比例
             Task.Factory.StartNew(() =>
             {

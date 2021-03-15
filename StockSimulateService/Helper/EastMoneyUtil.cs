@@ -19,7 +19,7 @@ namespace StockSimulateService.Helper
             try
             {
                 var secid = GetStockSecid(code);
-                var api = $"http://push2.eastmoney.com/api/qt/stock/get?fltt=2&secid={secid}&fields=f43,f57,f58,f169,f170,f46,f44,f51,f168,f47,f164,f163,f116,f60,f45,f52,f50,f48,f167,f117,f71,f161,f49,f530,f135,f136,f137,f138,f139,f141,f142,f144,f145,f147,f148,f140,f143,f146,f149,f55,f62,f162,f92,f173,f104,f105,f84,f85,f183,f184,f185,f186,f187,f188,f189,f190,f191,f192,f206,f207,f208,f209,f210,f211,f212,f213,f214,f215,f78,f86,f107,f111,f177,f110,f262,f263,f264,f267,f268,f250,f251,f252,f253,f254,f255,f256,f257,f258,f266,f269,f270,f271,f273,f274,f275,f292";
+                var api = $"http://push2.eastmoney.com/api/qt/stock/get?fltt=2&secid={secid}&fields=f127,f43,f57,f58,f169,f170,f46,f44,f51,f168,f47,f164,f163,f116,f60,f45,f52,f50,f48,f167,f117,f71,f161,f49,f530,f135,f136,f137,f138,f139,f141,f142,f144,f145,f147,f148,f140,f143,f146,f149,f55,f62,f162,f92,f173,f104,f105,f84,f85,f183,f184,f185,f186,f187,f188,f189,f190,f191,f192,f206,f207,f208,f209,f210,f211,f212,f213,f214,f215,f78,f86,f107,f111,f177,f110,f262,f263,f264,f267,f268,f250,f251,f252,f253,f254,f255,f256,f257,f258,f266,f269,f270,f271,f273,f274,f275,f292";
                 var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
                 {
                     requestFilter.Timeout = 5 * 60 * 1000;
@@ -49,6 +49,7 @@ namespace StockSimulateService.Helper
                 var stock = new StockEntity();
                 stock.PriceDate = stockPrice.DealDate;
                 stock.Code = code;
+                stock.IndustryName = GetStringValue(model, "f127");
                 stock.Name = GetStringValue(model, "f58");
                 stock.UDPer = GetNumberValue(model, "f170");
                 stock.EPS = GetNumberValue(model, "f55");
@@ -435,7 +436,7 @@ namespace StockSimulateService.Helper
 
         #region 研报信息
 
-        public static ReportEntity[] GetReports(string stockCode)
+        public static ReportEntity[] GetStockReports(string stockCode)
         {
             try
             {
@@ -456,7 +457,9 @@ namespace StockSimulateService.Helper
                     var gatherDate = DateTime.Now.Date.AddMonths(-3);
                     return result.data.Where(c => c.publishDate > gatherDate).Select(c => new ReportEntity()
                     {
+                        ReportType = 0,
                         StockCode = stockCode,
+                        IndustryName = c.industryName,
                         Title = c.title,
                         PublishDate = c.publishDate.ToString("yyyy-MM-dd"),
                         PdfCode = c.infoCode,
@@ -474,6 +477,118 @@ namespace StockSimulateService.Helper
             catch (Exception ex)
             {
                 return new ReportEntity[] { };
+            }
+        }
+
+        public static ReportEntity[] GetStockFinanceReports(string stockCode)
+        {
+            try
+            {
+                var apiModel = GetFinanceReports(stockCode, 1);
+                if (apiModel.data == null || apiModel.data.list.Length == 0) return null;
+
+                var reports = new List<EastMoneyFinanceReport>();
+                reports.AddRange(apiModel.data.list);
+
+                var totalPage = apiModel.data.total_hits * 1.0m / apiModel.data.page_size * 1.0m;
+                if (totalPage > 1)
+                {
+                    for (var i = 2; i <= Math.Ceiling(totalPage); i++)
+                    {
+                        var model = GetFinanceReports(stockCode, i);
+                        if (model == null) continue;
+
+                        reports.AddRange(model.data.list);
+                    }
+                }
+                return reports.Select(c => new ReportEntity()
+                {
+                    ReportType = 1,
+                    StockCode = stockCode,
+                    Title = c.title,
+                    PublishDate = c.notice_date.Substring(0, 10),
+                    PdfCode = c.art_code
+                }).ToArray();
+            }
+            catch (Exception ex)
+            {
+                return new ReportEntity[] { };
+            }
+        }
+
+        static EastMoneyFinanceReportModel GetFinanceReports(string stockCode, int pageNo)
+        {
+            try
+            {
+                var api = $"http://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=50&page_index={pageNo}&ann_type=A&stock_list={stockCode.Substring(2, 6)}&f_node=1&s_node=0";
+                var retStr = api.GetJsonFromUrl(requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyFinanceReportModel>(retStr);
+                if (apiModel.data == null || apiModel.data.list.Length == 0) return null;
+
+                return apiModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static ReportEntity[] GetIndustryReports(DateTime startDate, DateTime endDate)
+        {
+            var apiModel = GetIndustryReports(startDate, endDate, 1);
+            if (apiModel == null) return new ReportEntity[] { };
+
+            var reports = new List<ReportModel>();
+            reports.AddRange(apiModel.data);
+
+            if(apiModel.TotalPage > 1)
+            {
+                for (var i = 2; i <= apiModel.TotalPage; i++)
+                {
+                    var model = GetIndustryReports(startDate, endDate, i);
+                    if (model == null) continue;
+
+                    reports.AddRange(model.data);
+                }
+            }
+            return reports.Select(c => new ReportEntity()
+            {
+                ReportType = 9,
+                StockCode = string.Empty,
+                IndustryName = c.industryName,
+                Title = c.title,
+                PublishDate = c.publishDate.ToString("yyyy-MM-dd"),
+                PdfCode = c.infoCode,
+                OrgNam = c.orgSName,
+                ThisYearPE = c.predictThisYearPe,
+                ThisYearEPS = c.predictThisYearEps,
+                NextYearPE = c.predictNextYearPe,
+                NextYearEPS = c.predictThisYearEps,
+                NextTwoYearPE = c.predictNextYearPe,
+                NextTwoYearEPS = c.predictNextYearEps,
+            }).ToArray();
+        }
+
+        static EastMoneyReportModel GetIndustryReports(DateTime startDate, DateTime endDate, int pageNo)
+        {
+            try
+            {
+                var api = $"http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime={startDate.ToString("yyyy-MM-dd")}&endTime={endDate.ToString("yyyy-MM-dd")}&pageNo={pageNo}&qType=1";
+                var retStr = api.GetJsonFromUrl(requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastMoneyReportModel>(retStr);
+                if (apiModel.hits == 0 || apiModel.data == null || apiModel.data.Length == 0) return null;
+
+                return apiModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
@@ -546,6 +661,74 @@ namespace StockSimulateService.Helper
 
         #endregion
 
+        #region 资金流向
+
+        public static FundFlowEntity GetStockFundFlows(string stockCode, string dealDate)
+        {
+            try
+            {
+                var secid = GetStockSecid(stockCode);
+                var api = $"http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids={secid}&fields=f62,f184,f66,f69,f72,f75,f78,f81,f84,f87,f64,f65,f70,f71,f76,f77,f82,f83,f164,f166,f168,f170,f172,f252,f253,f254,f255,f256,f124,f6,f278,f279,f280,f281,f282";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastAmountAPIModel>(retStr);
+                if (apiModel == null || apiModel.data == null || apiModel.data.diff == null || apiModel.data.diff.Length == 0) return null;
+                var model = apiModel.data.diff.FirstOrDefault();
+
+                var fundFlow = new FundFlowEntity()
+                {
+                    StockCode = stockCode,
+                    DealDate = dealDate
+                };
+                fundFlow.Amount = Math.Round(model.f62 / 100000000, 3);
+                //fundFlow.RetailAmount = Math.Round((model.f78 + model.f84) / 100000000, 3);
+                //fundFlow.Amount = Math.Round((model.f66 + model.f72 + model.f78 + model.f84) / 100000000, 3);
+                return fundFlow;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static FundFlowEntity[] GetIndustryFundFlows(string dealDate)
+        {
+            try
+            {
+                var api = $"http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12,f13,f14,f62,f66,f72,f78,f84&fid=f62&fs=m:90+t:2";
+                var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
+                {
+                    requestFilter.Timeout = 5 * 60 * 1000;
+                });
+                var apiModel = ServiceStack.Text.JsonSerializer.DeserializeFromString<EastAmountAPIModel>(retStr);
+                if (apiModel == null || apiModel.data == null || apiModel.data.diff == null || apiModel.data.diff.Length == 0) return null;
+
+                var fundFlows = new List<FundFlowEntity>();
+                foreach (var model in apiModel.data.diff)
+                {
+                    var fundFlow = new FundFlowEntity()
+                    {
+                        StockCode = string.Empty,
+                        DealDate = dealDate,
+                        IndustryName = model.f14
+                    };
+                    fundFlow.Amount = Math.Round(model.f62 / 100000000, 3);
+                    //fundFlow.RetailAmount = Math.Round((model.f78 + model.f84) / 100000000, 3);
+                    //fundFlow.Amount = Math.Round((model.f66 + model.f72 + model.f78 + model.f84) / 100000000, 3);
+                    fundFlows.Add(fundFlow);
+                }
+                return fundFlows.ToArray();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
         #region 辅助方法
 
         static string GetStockSecid(string code)
@@ -594,7 +777,31 @@ namespace StockSimulateService.Helper
 
     public class EastMoneyReportModel
     {
+        public int TotalPage { get; set; }
+        public int hits { get; set; }
+        public int pageNo { get; set; }
+        public int size { get; set; }
         public ReportModel[] data { get; set; }
+    }
+
+    public class EastMoneyFinanceReportModel
+    {
+        public EastMoneyFinanceReportData data { get; set; }
+    }
+
+    public class EastMoneyFinanceReportData
+    {
+        public EastMoneyFinanceReport[] list { get; set; }
+        public int page_index { get; set; }
+        public int page_size { get; set; }
+        public int total_hits { get; set; }
+    }
+
+    public class EastMoneyFinanceReport
+    { 
+        public string art_code { get; set; }
+        public string notice_date { get; set; }
+        public string title { get; set; }
     }
 
     public class EastMoneyHisPriceAPIModel
@@ -613,6 +820,27 @@ namespace StockSimulateService.Helper
         public string curyear { get; set; }
     }
 
+    public class EastAmountAPIModel
+    { 
+        public EastAmountModel data { get; set; }
+    }
+
+    public class EastAmountModel
+    {
+        public int total { get; set; }
+        public EastAmountDetailModel[] diff { get; set; }
+    }
+
+    public class EastAmountDetailModel
+    {
+        public string f14 { get; set; }
+        public decimal f62 { get; set; }
+        public decimal f66 { get; set; }
+        public decimal f72 { get; set; }
+        public decimal f78 { get; set; }
+        public decimal f84 { get; set; }
+    }
+
     public class ReportModel
     { 
         public string title { get; set; }
@@ -626,6 +854,7 @@ namespace StockSimulateService.Helper
         public string orgSName { get; set; }
         public string infoCode { get; set; }
         public string indvInduName { get; set; }
+        public string industryName { get; set; }
     }
 
     public class StockForecastInfo
