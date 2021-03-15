@@ -18,6 +18,7 @@ namespace StockSimulateDomain.Entity
         /// 9:  行业研报
         /// </summary>
         [Description("研报类型")]
+        [GridColumnIgnore]
         public int ReportType { get; set; }
 
         [Description("股票代码")]
@@ -63,7 +64,7 @@ namespace StockSimulateDomain.Entity
         {
             get
             {
-                return $"https://pdf.dfcfw.com/pdf/H3_{PdfCode}_1.pdf";
+                return $"https://pdf.dfcfw.com/pdf/H{(ReportType == 0 ? 3 : ReportType == 1 ? 2 : 3)}_{PdfCode}_1.pdf";
             }
         }
 
