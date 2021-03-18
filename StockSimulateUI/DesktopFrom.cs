@@ -51,7 +51,7 @@ namespace StockPriceTools
                     {
                         this.LoadStockList();
                         this.LoadTopInfo();
-                        this.LoadFundFlowInfo("", "", DateTime.Now.ToString("yyyy-MM-dd"));
+                        this.LoadFundFlowInfo("");
                     };
                     this.Invoke(act);
 
@@ -402,7 +402,7 @@ namespace StockPriceTools
             if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
             this.LoadStockBaseInfo(stockCode);
-            this.LoadFundFlowInfo(stockCode, industryName, dealDate);
+            this.LoadFundFlowInfo(stockCode);
             this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
         }
         private void btnFoucsStock_Click(object sender, EventArgs e)
@@ -524,7 +524,7 @@ namespace StockPriceTools
             }
         }
 
-        void LoadFundFlowInfo(string stockCode, string industryName, string dealDate)
+        void LoadFundFlowInfo(string stockCode)
         {
             this.lstAmountInfo.Items.Clear();
             var stockFunds = Repository.Instance.QueryAll<FundFlowEntity>($"StockCode='{stockCode}'", "DealDate desc", 20, withNoLock: true);
@@ -537,21 +537,32 @@ namespace StockPriceTools
             }
 
             this.lstIndustryInfo.Items.Clear();
+            string industryName = "";
+            string dealDate = "";
+
+            if (this.gridStockList.SelectedRows.Count > 0)
+            {
+                var selectRow = this.gridStockList.SelectedRows[0];
+                if (this.txtStockAmount.Checked)
+                {
+                    industryName = $"{selectRow.Cells["行业名称"].Value}";
+                }
+                else
+                {
+                    dealDate = $"{selectRow.Cells["股价日期"].Value}";
+                }
+            }
+
             var where = "StockCode=''";
-            if (this.txtStockAmount.Checked)
+            if (!string.IsNullOrEmpty(industryName))
             {
-                if (!string.IsNullOrEmpty(industryName))
-                {
-                    where += $" and IndustryName='{industryName}'";
-                }
+                where += $" and IndustryName='{industryName}'";
             }
-            else
+            if (!string.IsNullOrEmpty(dealDate))
             {
-                if (!string.IsNullOrEmpty(dealDate))
-                {
-                    where += $" and DealDate='{dealDate}'";
-                }
+                where += $" and DealDate='{dealDate}'";
             }
+            
             var industryFunds = Repository.Instance.QueryAll<FundFlowEntity>(where, "DealDate desc, Amount desc", 100, withNoLock: true);
             foreach (var item in industryFunds)
             {
@@ -568,10 +579,8 @@ namespace StockPriceTools
             if (this.gridStockList.SelectedRows.Count == 0) return;
             var selectRow = this.gridStockList.SelectedRows[0];
             var stockCode = $"{selectRow.Cells["股票代码"].Value}";
-            var dealDate = $"{selectRow.Cells["股价日期"].Value}";
-            var industryName = $"{selectRow.Cells["行业名称"].Value}";
 
-            this.LoadFundFlowInfo(stockCode, industryName, dealDate);
+            this.LoadFundFlowInfo(stockCode);
         }
 
         #endregion
