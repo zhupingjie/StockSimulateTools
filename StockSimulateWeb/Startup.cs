@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,11 +38,31 @@ namespace StockSimulateWeb
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("AllowAnyOrigin");
+
+            //app.Use(async (context, next) =>
+            //{
+            //    if (!Path.HasExtension(context.Request.Path.Value)
+            //    && context.Request.HttpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest"
+            //    && context.Request.Method.ToUpper() != "POST"
+            //    && context.Request.Method.ToUpper() != "PUT"
+            //    && context.Request.Method.ToUpper() != "DELETE")
+            //    {
+            //        await context.Response.WriteAsync(File.ReadAllText(env.WebRootPath + "/index.html"));
+            //    }
+
+            //    await next();
+            //});
 
             app.UseEndpoints(endpoints =>
             {

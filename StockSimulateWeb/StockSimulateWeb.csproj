@@ -11,5 +11,9 @@
     <ProjectReference Include="..\StockSimulateService\StockSimulateService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 
 </Project>
