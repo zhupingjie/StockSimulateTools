@@ -1,1 +1,30 @@
-<h1>Hello</h1>
+<html>
+<head>
+    <script type="text/javascript">
+        var showImages = function () {
+            var arr = this.location.href.split('?');
+            if (arr.length != 2) return;
+
+            var params = arr[1].split('&');
+            if (params.length != 2) return;
+
+            var category = "";
+            var status = "";
+            if (params[0].indexOf("category=") >= 0) {
+                category = params[0].split('=')[1];
+            }
+            if (params[1].indexOf("status=") >= 0) {
+                status = params[1].split('=')[1];
+            }
+            document.getElementById("img1").src = "http://121.4.29.105:8080/images/" + category + "/" + status + "_1.jpg";
+        };
+        window.onload = function () {
+            this.showImages();
+        };
+    </script>
+</head>
+<body>
+    <h1>Hello</h1>
+    <img id="img1" src="#"  width="500" height="500"/>
+</body>
+</html>
