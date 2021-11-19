@@ -100,9 +100,9 @@ namespace StockSimulateCore.Config
         /// </summary>
         public string SHZSOfStockCode { get; set; } = "SH000001";
 
-        public string DBServiceIP { get; set; } = "121.4.29.105";
+        public string DBServiceIP { get; set; } = "49.232.192.220";
         public string DBName { get; set; } = "stock";
-        public string DBUserID { get; set; } = "root";
+        public string DBUserID { get; set; } = "sa";
         public string DBPwd { get; set; } = "sa!123456";
         public int DBPort { get; set; } = 3306;
 
