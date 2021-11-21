@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,6 +95,16 @@ namespace StockSimulateCore.Config
         /// 行业研报采集天数
         /// </summary>
         public int GatherIndustryReportPreDays { get; set; } = 0;
+
+        public string BaseDirectory
+        {
+            get
+            {
+                return Path.Combine(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName, "cache");
+            }
+        }
+
+        public string SaveReportFilePath { get; set; } = "report";
 
         /// <summary>
         /// 上证指数

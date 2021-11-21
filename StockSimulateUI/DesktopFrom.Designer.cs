@@ -73,6 +73,43 @@
             this.lblAccountStockInfo = new System.Windows.Forms.Label();
             this.txtAccountSearch = new System.Windows.Forms.TextBox();
             this.lblAccountStockTotal = new System.Windows.Forms.Label();
+            this.tabControlBottom = new System.Windows.Forms.TabControl();
+            this.tabActionLog = new System.Windows.Forms.TabPage();
+            this.txtActionLog = new System.Windows.Forms.RichTextBox();
+            this.tabPriceChart = new System.Windows.Forms.TabPage();
+            this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.btnWebChart = new System.Windows.Forms.Button();
+            this.btnDayChart = new System.Windows.Forms.Button();
+            this.tabPriceList = new System.Windows.Forms.TabPage();
+            this.gridPriceList = new System.Windows.Forms.DataGridView();
+            this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
+            this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.btnCancelStrategy = new System.Windows.Forms.Button();
+            this.btnRunStrategy = new System.Windows.Forms.Button();
+            this.tabRemind = new System.Windows.Forms.TabPage();
+            this.gridRemindList = new System.Windows.Forms.DataGridView();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.btnCancelRemind = new System.Windows.Forms.Button();
+            this.btnHandleRemind = new System.Windows.Forms.Button();
+            this.tabExchangeList = new System.Windows.Forms.TabPage();
+            this.gridExchangeList = new System.Windows.Forms.DataGridView();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.btnSaleExchange = new System.Windows.Forms.Button();
+            this.btnBuyExchange = new System.Windows.Forms.Button();
+            this.tabReport = new System.Windows.Forms.TabPage();
+            this.gridReportList = new System.Windows.Forms.DataGridView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.txtIndustryChk = new System.Windows.Forms.RadioButton();
+            this.txtFinanceChk = new System.Windows.Forms.RadioButton();
+            this.txtReportChk = new System.Windows.Forms.RadioButton();
+            this.btnOpenBrower = new System.Windows.Forms.Button();
+            this.tabFundStock = new System.Windows.Forms.TabPage();
+            this.gridFundStockList = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.btnFouncStock = new System.Windows.Forms.Button();
+            this.btnWebFund = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControlLeft = new System.Windows.Forms.TabControl();
             this.tabBaseData = new System.Windows.Forms.TabPage();
@@ -99,43 +136,8 @@
             this.tmpActionLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmpExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabFundStock = new System.Windows.Forms.TabPage();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.btnWebFund = new System.Windows.Forms.Button();
-            this.btnFouncStock = new System.Windows.Forms.Button();
-            this.gridFundStockList = new System.Windows.Forms.DataGridView();
-            this.tabReport = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnOpenBrower = new System.Windows.Forms.Button();
-            this.txtReportChk = new System.Windows.Forms.RadioButton();
-            this.txtFinanceChk = new System.Windows.Forms.RadioButton();
-            this.txtIndustryChk = new System.Windows.Forms.RadioButton();
-            this.gridReportList = new System.Windows.Forms.DataGridView();
-            this.tabExchangeList = new System.Windows.Forms.TabPage();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.btnBuyExchange = new System.Windows.Forms.Button();
-            this.btnSaleExchange = new System.Windows.Forms.Button();
-            this.gridExchangeList = new System.Windows.Forms.DataGridView();
-            this.tabRemind = new System.Windows.Forms.TabPage();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.btnHandleRemind = new System.Windows.Forms.Button();
-            this.btnCancelRemind = new System.Windows.Forms.Button();
-            this.gridRemindList = new System.Windows.Forms.DataGridView();
-            this.tabStockStrategyDetail = new System.Windows.Forms.TabPage();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.btnRunStrategy = new System.Windows.Forms.Button();
-            this.btnCancelStrategy = new System.Windows.Forms.Button();
-            this.gridStockStrategyList = new System.Windows.Forms.DataGridView();
-            this.tabPriceList = new System.Windows.Forms.TabPage();
-            this.gridPriceList = new System.Windows.Forms.DataGridView();
-            this.tabPriceChart = new System.Windows.Forms.TabPage();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.btnDayChart = new System.Windows.Forms.Button();
-            this.btnWebChart = new System.Windows.Forms.Button();
-            this.chartPrice = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.tabActionLog = new System.Windows.Forms.TabPage();
-            this.txtActionLog = new System.Windows.Forms.RichTextBox();
-            this.tabControlBottom = new System.Windows.Forms.TabControl();
+            this.btnDownloadReport = new System.Windows.Forms.Button();
+            this.btnOpenCacheDir = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.panel120.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -154,6 +156,28 @@
             this.tabHoldStockList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).BeginInit();
             this.panel12.SuspendLayout();
+            this.tabControlBottom.SuspendLayout();
+            this.tabActionLog.SuspendLayout();
+            this.tabPriceChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).BeginInit();
+            this.panel9.SuspendLayout();
+            this.tabPriceList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).BeginInit();
+            this.tabStockStrategyDetail.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
+            this.panel11.SuspendLayout();
+            this.tabRemind.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).BeginInit();
+            this.panel8.SuspendLayout();
+            this.tabExchangeList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).BeginInit();
+            this.panel7.SuspendLayout();
+            this.tabReport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
+            this.panel3.SuspendLayout();
+            this.tabFundStock.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).BeginInit();
+            this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControlLeft.SuspendLayout();
             this.tabBaseData.SuspendLayout();
@@ -161,28 +185,6 @@
             this.tabIndustryData.SuspendLayout();
             this.panel6.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            this.tabFundStock.SuspendLayout();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).BeginInit();
-            this.tabReport.SuspendLayout();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).BeginInit();
-            this.tabExchangeList.SuspendLayout();
-            this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).BeginInit();
-            this.tabRemind.SuspendLayout();
-            this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).BeginInit();
-            this.tabStockStrategyDetail.SuspendLayout();
-            this.panel11.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).BeginInit();
-            this.tabPriceList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).BeginInit();
-            this.tabPriceChart.SuspendLayout();
-            this.panel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).BeginInit();
-            this.tabActionLog.SuspendLayout();
-            this.tabControlBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -635,6 +637,448 @@
             this.lblAccountStockTotal.TabIndex = 3;
             this.lblAccountStockTotal.Text = "总股票数:[0]";
             // 
+            // tabControlBottom
+            // 
+            this.tabControlBottom.Controls.Add(this.tabActionLog);
+            this.tabControlBottom.Controls.Add(this.tabPriceChart);
+            this.tabControlBottom.Controls.Add(this.tabPriceList);
+            this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
+            this.tabControlBottom.Controls.Add(this.tabRemind);
+            this.tabControlBottom.Controls.Add(this.tabExchangeList);
+            this.tabControlBottom.Controls.Add(this.tabReport);
+            this.tabControlBottom.Controls.Add(this.tabFundStock);
+            this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlBottom.Location = new System.Drawing.Point(0, 0);
+            this.tabControlBottom.Name = "tabControlBottom";
+            this.tabControlBottom.SelectedIndex = 0;
+            this.tabControlBottom.Size = new System.Drawing.Size(850, 247);
+            this.tabControlBottom.TabIndex = 48;
+            this.tabControlBottom.SelectedIndexChanged += new System.EventHandler(this.tabControlBottom_SelectedIndexChanged);
+            // 
+            // tabActionLog
+            // 
+            this.tabActionLog.Controls.Add(this.txtActionLog);
+            this.tabActionLog.Location = new System.Drawing.Point(4, 22);
+            this.tabActionLog.Name = "tabActionLog";
+            this.tabActionLog.Size = new System.Drawing.Size(842, 221);
+            this.tabActionLog.TabIndex = 7;
+            this.tabActionLog.Text = "通知消息";
+            this.tabActionLog.UseVisualStyleBackColor = true;
+            // 
+            // txtActionLog
+            // 
+            this.txtActionLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtActionLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtActionLog.Location = new System.Drawing.Point(0, 0);
+            this.txtActionLog.Name = "txtActionLog";
+            this.txtActionLog.ReadOnly = true;
+            this.txtActionLog.Size = new System.Drawing.Size(842, 221);
+            this.txtActionLog.TabIndex = 1;
+            this.txtActionLog.Text = "";
+            // 
+            // tabPriceChart
+            // 
+            this.tabPriceChart.Controls.Add(this.chartPrice);
+            this.tabPriceChart.Controls.Add(this.panel9);
+            this.tabPriceChart.Location = new System.Drawing.Point(4, 22);
+            this.tabPriceChart.Name = "tabPriceChart";
+            this.tabPriceChart.Size = new System.Drawing.Size(842, 221);
+            this.tabPriceChart.TabIndex = 9;
+            this.tabPriceChart.Text = "股价走势";
+            this.tabPriceChart.UseVisualStyleBackColor = true;
+            // 
+            // chartPrice
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chartPrice.ChartAreas.Add(chartArea2);
+            this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend2.Name = "Legend1";
+            this.chartPrice.Legends.Add(legend2);
+            this.chartPrice.Location = new System.Drawing.Point(0, 29);
+            this.chartPrice.Name = "chartPrice";
+            this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            this.chartPrice.Size = new System.Drawing.Size(842, 192);
+            this.chartPrice.TabIndex = 49;
+            this.chartPrice.Text = "股价日走势图";
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.btnWebChart);
+            this.panel9.Controls.Add(this.btnDayChart);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel9.Location = new System.Drawing.Point(0, 0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(842, 29);
+            this.panel9.TabIndex = 48;
+            // 
+            // btnWebChart
+            // 
+            this.btnWebChart.BackColor = System.Drawing.Color.White;
+            this.btnWebChart.Location = new System.Drawing.Point(55, 3);
+            this.btnWebChart.Name = "btnWebChart";
+            this.btnWebChart.Size = new System.Drawing.Size(79, 23);
+            this.btnWebChart.TabIndex = 6;
+            this.btnWebChart.Text = "在线走势图";
+            this.btnWebChart.UseVisualStyleBackColor = false;
+            this.btnWebChart.Click += new System.EventHandler(this.btnWebChart_Click);
+            // 
+            // btnDayChart
+            // 
+            this.btnDayChart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.btnDayChart.ForeColor = System.Drawing.Color.White;
+            this.btnDayChart.Location = new System.Drawing.Point(3, 3);
+            this.btnDayChart.Name = "btnDayChart";
+            this.btnDayChart.Size = new System.Drawing.Size(50, 23);
+            this.btnDayChart.TabIndex = 0;
+            this.btnDayChart.Text = "日时图";
+            this.btnDayChart.UseVisualStyleBackColor = false;
+            this.btnDayChart.Click += new System.EventHandler(this.btnDayChart_Click);
+            // 
+            // tabPriceList
+            // 
+            this.tabPriceList.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPriceList.Controls.Add(this.gridPriceList);
+            this.tabPriceList.Location = new System.Drawing.Point(4, 22);
+            this.tabPriceList.Name = "tabPriceList";
+            this.tabPriceList.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPriceList.Size = new System.Drawing.Size(842, 221);
+            this.tabPriceList.TabIndex = 0;
+            this.tabPriceList.Text = "历史股价";
+            // 
+            // gridPriceList
+            // 
+            this.gridPriceList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridPriceList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridPriceList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridPriceList.Location = new System.Drawing.Point(3, 3);
+            this.gridPriceList.MultiSelect = false;
+            this.gridPriceList.Name = "gridPriceList";
+            this.gridPriceList.ReadOnly = true;
+            this.gridPriceList.RowHeadersWidth = 10;
+            this.gridPriceList.RowTemplate.Height = 23;
+            this.gridPriceList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridPriceList.Size = new System.Drawing.Size(836, 215);
+            this.gridPriceList.TabIndex = 44;
+            this.gridPriceList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridPriceList_RowEnter);
+            // 
+            // tabStockStrategyDetail
+            // 
+            this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyList);
+            this.tabStockStrategyDetail.Controls.Add(this.panel11);
+            this.tabStockStrategyDetail.Location = new System.Drawing.Point(4, 22);
+            this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
+            this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 221);
+            this.tabStockStrategyDetail.TabIndex = 6;
+            this.tabStockStrategyDetail.Text = "买卖策略";
+            this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
+            // 
+            // gridStockStrategyList
+            // 
+            this.gridStockStrategyList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridStockStrategyList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridStockStrategyList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridStockStrategyList.Location = new System.Drawing.Point(0, 29);
+            this.gridStockStrategyList.Name = "gridStockStrategyList";
+            this.gridStockStrategyList.ReadOnly = true;
+            this.gridStockStrategyList.RowHeadersWidth = 10;
+            this.gridStockStrategyList.RowTemplate.Height = 23;
+            this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridStockStrategyList.Size = new System.Drawing.Size(842, 192);
+            this.gridStockStrategyList.TabIndex = 45;
+            this.gridStockStrategyList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockStrategyList_RowEnter);
+            // 
+            // panel11
+            // 
+            this.panel11.Controls.Add(this.btnCancelStrategy);
+            this.panel11.Controls.Add(this.btnRunStrategy);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(842, 29);
+            this.panel11.TabIndex = 51;
+            // 
+            // btnCancelStrategy
+            // 
+            this.btnCancelStrategy.BackColor = System.Drawing.Color.White;
+            this.btnCancelStrategy.Location = new System.Drawing.Point(79, 3);
+            this.btnCancelStrategy.Name = "btnCancelStrategy";
+            this.btnCancelStrategy.Size = new System.Drawing.Size(68, 23);
+            this.btnCancelStrategy.TabIndex = 1;
+            this.btnCancelStrategy.Text = "取消策略";
+            this.btnCancelStrategy.UseVisualStyleBackColor = false;
+            this.btnCancelStrategy.Click += new System.EventHandler(this.btnCancelStrategy_Click);
+            // 
+            // btnRunStrategy
+            // 
+            this.btnRunStrategy.BackColor = System.Drawing.Color.White;
+            this.btnRunStrategy.Location = new System.Drawing.Point(5, 3);
+            this.btnRunStrategy.Name = "btnRunStrategy";
+            this.btnRunStrategy.Size = new System.Drawing.Size(68, 23);
+            this.btnRunStrategy.TabIndex = 0;
+            this.btnRunStrategy.Text = "标记策略";
+            this.btnRunStrategy.UseVisualStyleBackColor = false;
+            this.btnRunStrategy.Click += new System.EventHandler(this.btnRunStrategy_Click);
+            // 
+            // tabRemind
+            // 
+            this.tabRemind.Controls.Add(this.gridRemindList);
+            this.tabRemind.Controls.Add(this.panel8);
+            this.tabRemind.Location = new System.Drawing.Point(4, 22);
+            this.tabRemind.Name = "tabRemind";
+            this.tabRemind.Size = new System.Drawing.Size(842, 221);
+            this.tabRemind.TabIndex = 8;
+            this.tabRemind.Text = "涨跌提醒";
+            this.tabRemind.UseVisualStyleBackColor = true;
+            // 
+            // gridRemindList
+            // 
+            this.gridRemindList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridRemindList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridRemindList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridRemindList.Location = new System.Drawing.Point(0, 29);
+            this.gridRemindList.Name = "gridRemindList";
+            this.gridRemindList.ReadOnly = true;
+            this.gridRemindList.RowHeadersWidth = 10;
+            this.gridRemindList.RowTemplate.Height = 23;
+            this.gridRemindList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridRemindList.Size = new System.Drawing.Size(842, 192);
+            this.gridRemindList.TabIndex = 51;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.btnCancelRemind);
+            this.panel8.Controls.Add(this.btnHandleRemind);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(842, 29);
+            this.panel8.TabIndex = 50;
+            // 
+            // btnCancelRemind
+            // 
+            this.btnCancelRemind.BackColor = System.Drawing.Color.White;
+            this.btnCancelRemind.Location = new System.Drawing.Point(79, 3);
+            this.btnCancelRemind.Name = "btnCancelRemind";
+            this.btnCancelRemind.Size = new System.Drawing.Size(68, 23);
+            this.btnCancelRemind.TabIndex = 1;
+            this.btnCancelRemind.Text = "取消提醒";
+            this.btnCancelRemind.UseVisualStyleBackColor = false;
+            this.btnCancelRemind.Click += new System.EventHandler(this.btnCancelRemind_Click);
+            // 
+            // btnHandleRemind
+            // 
+            this.btnHandleRemind.BackColor = System.Drawing.Color.White;
+            this.btnHandleRemind.Location = new System.Drawing.Point(5, 3);
+            this.btnHandleRemind.Name = "btnHandleRemind";
+            this.btnHandleRemind.Size = new System.Drawing.Size(68, 23);
+            this.btnHandleRemind.TabIndex = 0;
+            this.btnHandleRemind.Text = "标记执行";
+            this.btnHandleRemind.UseVisualStyleBackColor = false;
+            this.btnHandleRemind.Click += new System.EventHandler(this.btnHandleRemind_Click);
+            // 
+            // tabExchangeList
+            // 
+            this.tabExchangeList.Controls.Add(this.gridExchangeList);
+            this.tabExchangeList.Controls.Add(this.panel7);
+            this.tabExchangeList.Location = new System.Drawing.Point(4, 22);
+            this.tabExchangeList.Name = "tabExchangeList";
+            this.tabExchangeList.Padding = new System.Windows.Forms.Padding(3);
+            this.tabExchangeList.Size = new System.Drawing.Size(842, 221);
+            this.tabExchangeList.TabIndex = 1;
+            this.tabExchangeList.Text = "买卖交易";
+            this.tabExchangeList.UseVisualStyleBackColor = true;
+            // 
+            // gridExchangeList
+            // 
+            this.gridExchangeList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridExchangeList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridExchangeList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridExchangeList.Location = new System.Drawing.Point(3, 32);
+            this.gridExchangeList.MultiSelect = false;
+            this.gridExchangeList.Name = "gridExchangeList";
+            this.gridExchangeList.ReadOnly = true;
+            this.gridExchangeList.RowHeadersWidth = 10;
+            this.gridExchangeList.RowTemplate.Height = 23;
+            this.gridExchangeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridExchangeList.Size = new System.Drawing.Size(836, 186);
+            this.gridExchangeList.TabIndex = 48;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.btnSaleExchange);
+            this.panel7.Controls.Add(this.btnBuyExchange);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 3);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(836, 29);
+            this.panel7.TabIndex = 47;
+            // 
+            // btnSaleExchange
+            // 
+            this.btnSaleExchange.BackColor = System.Drawing.Color.White;
+            this.btnSaleExchange.Location = new System.Drawing.Point(75, 3);
+            this.btnSaleExchange.Name = "btnSaleExchange";
+            this.btnSaleExchange.Size = new System.Drawing.Size(64, 23);
+            this.btnSaleExchange.TabIndex = 1;
+            this.btnSaleExchange.Text = "卖出";
+            this.btnSaleExchange.UseVisualStyleBackColor = false;
+            this.btnSaleExchange.Click += new System.EventHandler(this.btnSaleExchange_Click);
+            // 
+            // btnBuyExchange
+            // 
+            this.btnBuyExchange.BackColor = System.Drawing.Color.White;
+            this.btnBuyExchange.Location = new System.Drawing.Point(5, 3);
+            this.btnBuyExchange.Name = "btnBuyExchange";
+            this.btnBuyExchange.Size = new System.Drawing.Size(64, 23);
+            this.btnBuyExchange.TabIndex = 0;
+            this.btnBuyExchange.Text = "买入";
+            this.btnBuyExchange.UseVisualStyleBackColor = false;
+            this.btnBuyExchange.Click += new System.EventHandler(this.btnBuyExchange_Click);
+            // 
+            // tabReport
+            // 
+            this.tabReport.Controls.Add(this.gridReportList);
+            this.tabReport.Controls.Add(this.panel3);
+            this.tabReport.Location = new System.Drawing.Point(4, 22);
+            this.tabReport.Name = "tabReport";
+            this.tabReport.Size = new System.Drawing.Size(842, 221);
+            this.tabReport.TabIndex = 10;
+            this.tabReport.Text = "机构研报";
+            this.tabReport.UseVisualStyleBackColor = true;
+            // 
+            // gridReportList
+            // 
+            this.gridReportList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridReportList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridReportList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridReportList.Location = new System.Drawing.Point(0, 29);
+            this.gridReportList.MultiSelect = false;
+            this.gridReportList.Name = "gridReportList";
+            this.gridReportList.ReadOnly = true;
+            this.gridReportList.RowHeadersWidth = 10;
+            this.gridReportList.RowTemplate.Height = 23;
+            this.gridReportList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridReportList.Size = new System.Drawing.Size(842, 192);
+            this.gridReportList.TabIndex = 50;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnOpenCacheDir);
+            this.panel3.Controls.Add(this.btnDownloadReport);
+            this.panel3.Controls.Add(this.txtIndustryChk);
+            this.panel3.Controls.Add(this.txtFinanceChk);
+            this.panel3.Controls.Add(this.txtReportChk);
+            this.panel3.Controls.Add(this.btnOpenBrower);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(842, 29);
+            this.panel3.TabIndex = 49;
+            // 
+            // txtIndustryChk
+            // 
+            this.txtIndustryChk.AutoSize = true;
+            this.txtIndustryChk.Location = new System.Drawing.Point(159, 6);
+            this.txtIndustryChk.Name = "txtIndustryChk";
+            this.txtIndustryChk.Size = new System.Drawing.Size(71, 16);
+            this.txtIndustryChk.TabIndex = 3;
+            this.txtIndustryChk.Text = "行业研报";
+            this.txtIndustryChk.UseVisualStyleBackColor = true;
+            this.txtIndustryChk.CheckedChanged += new System.EventHandler(this.txtIndustryChk_CheckedChanged);
+            // 
+            // txtFinanceChk
+            // 
+            this.txtFinanceChk.AutoSize = true;
+            this.txtFinanceChk.Location = new System.Drawing.Point(82, 6);
+            this.txtFinanceChk.Name = "txtFinanceChk";
+            this.txtFinanceChk.Size = new System.Drawing.Size(71, 16);
+            this.txtFinanceChk.TabIndex = 2;
+            this.txtFinanceChk.Text = "财务报告";
+            this.txtFinanceChk.UseVisualStyleBackColor = true;
+            this.txtFinanceChk.CheckedChanged += new System.EventHandler(this.txtFinanceChk_CheckedChanged);
+            // 
+            // txtReportChk
+            // 
+            this.txtReportChk.AutoSize = true;
+            this.txtReportChk.Checked = true;
+            this.txtReportChk.Location = new System.Drawing.Point(8, 6);
+            this.txtReportChk.Name = "txtReportChk";
+            this.txtReportChk.Size = new System.Drawing.Size(71, 16);
+            this.txtReportChk.TabIndex = 1;
+            this.txtReportChk.TabStop = true;
+            this.txtReportChk.Text = "机构研报";
+            this.txtReportChk.UseVisualStyleBackColor = true;
+            this.txtReportChk.CheckedChanged += new System.EventHandler(this.txtReportChk_CheckedChanged);
+            // 
+            // btnOpenBrower
+            // 
+            this.btnOpenBrower.BackColor = System.Drawing.Color.White;
+            this.btnOpenBrower.Location = new System.Drawing.Point(236, 3);
+            this.btnOpenBrower.Name = "btnOpenBrower";
+            this.btnOpenBrower.Size = new System.Drawing.Size(64, 23);
+            this.btnOpenBrower.TabIndex = 0;
+            this.btnOpenBrower.Text = "浏览";
+            this.btnOpenBrower.UseVisualStyleBackColor = false;
+            this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
+            // 
+            // tabFundStock
+            // 
+            this.tabFundStock.Controls.Add(this.gridFundStockList);
+            this.tabFundStock.Controls.Add(this.panel4);
+            this.tabFundStock.Location = new System.Drawing.Point(4, 22);
+            this.tabFundStock.Name = "tabFundStock";
+            this.tabFundStock.Size = new System.Drawing.Size(842, 221);
+            this.tabFundStock.TabIndex = 11;
+            this.tabFundStock.Text = "基金持仓";
+            this.tabFundStock.UseVisualStyleBackColor = true;
+            // 
+            // gridFundStockList
+            // 
+            this.gridFundStockList.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.gridFundStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridFundStockList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridFundStockList.Location = new System.Drawing.Point(0, 29);
+            this.gridFundStockList.MultiSelect = false;
+            this.gridFundStockList.Name = "gridFundStockList";
+            this.gridFundStockList.ReadOnly = true;
+            this.gridFundStockList.RowHeadersWidth = 10;
+            this.gridFundStockList.RowTemplate.Height = 23;
+            this.gridFundStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridFundStockList.Size = new System.Drawing.Size(842, 192);
+            this.gridFundStockList.TabIndex = 51;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.btnFouncStock);
+            this.panel4.Controls.Add(this.btnWebFund);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(842, 29);
+            this.panel4.TabIndex = 52;
+            // 
+            // btnFouncStock
+            // 
+            this.btnFouncStock.BackColor = System.Drawing.Color.White;
+            this.btnFouncStock.Location = new System.Drawing.Point(5, 3);
+            this.btnFouncStock.Name = "btnFouncStock";
+            this.btnFouncStock.Size = new System.Drawing.Size(64, 23);
+            this.btnFouncStock.TabIndex = 0;
+            this.btnFouncStock.Text = "关注股票";
+            this.btnFouncStock.UseVisualStyleBackColor = false;
+            this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
+            // 
+            // btnWebFund
+            // 
+            this.btnWebFund.BackColor = System.Drawing.Color.White;
+            this.btnWebFund.Location = new System.Drawing.Point(71, 3);
+            this.btnWebFund.Name = "btnWebFund";
+            this.btnWebFund.Size = new System.Drawing.Size(64, 23);
+            this.btnWebFund.TabIndex = 1;
+            this.btnWebFund.Text = "在线持仓";
+            this.btnWebFund.UseVisualStyleBackColor = false;
+            this.btnWebFund.Click += new System.EventHandler(this.btnWebFund_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
@@ -871,445 +1315,27 @@
             this.tmpExit.Text = "退出(Exit)";
             this.tmpExit.Click += new System.EventHandler(this.tmpExit_Click);
             // 
-            // tabFundStock
-            // 
-            this.tabFundStock.Controls.Add(this.gridFundStockList);
-            this.tabFundStock.Controls.Add(this.panel4);
-            this.tabFundStock.Location = new System.Drawing.Point(4, 22);
-            this.tabFundStock.Name = "tabFundStock";
-            this.tabFundStock.Size = new System.Drawing.Size(842, 221);
-            this.tabFundStock.TabIndex = 11;
-            this.tabFundStock.Text = "基金持仓";
-            this.tabFundStock.UseVisualStyleBackColor = true;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.btnFouncStock);
-            this.panel4.Controls.Add(this.btnWebFund);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(842, 29);
-            this.panel4.TabIndex = 52;
-            // 
-            // btnWebFund
-            // 
-            this.btnWebFund.BackColor = System.Drawing.Color.White;
-            this.btnWebFund.Location = new System.Drawing.Point(71, 3);
-            this.btnWebFund.Name = "btnWebFund";
-            this.btnWebFund.Size = new System.Drawing.Size(64, 23);
-            this.btnWebFund.TabIndex = 1;
-            this.btnWebFund.Text = "在线持仓";
-            this.btnWebFund.UseVisualStyleBackColor = false;
-            this.btnWebFund.Click += new System.EventHandler(this.btnWebFund_Click);
-            // 
-            // btnFouncStock
-            // 
-            this.btnFouncStock.BackColor = System.Drawing.Color.White;
-            this.btnFouncStock.Location = new System.Drawing.Point(5, 3);
-            this.btnFouncStock.Name = "btnFouncStock";
-            this.btnFouncStock.Size = new System.Drawing.Size(64, 23);
-            this.btnFouncStock.TabIndex = 0;
-            this.btnFouncStock.Text = "关注股票";
-            this.btnFouncStock.UseVisualStyleBackColor = false;
-            this.btnFouncStock.Click += new System.EventHandler(this.btnFouncStock_Click);
-            // 
-            // gridFundStockList
-            // 
-            this.gridFundStockList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridFundStockList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridFundStockList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridFundStockList.Location = new System.Drawing.Point(0, 29);
-            this.gridFundStockList.MultiSelect = false;
-            this.gridFundStockList.Name = "gridFundStockList";
-            this.gridFundStockList.ReadOnly = true;
-            this.gridFundStockList.RowHeadersWidth = 10;
-            this.gridFundStockList.RowTemplate.Height = 23;
-            this.gridFundStockList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFundStockList.Size = new System.Drawing.Size(842, 192);
-            this.gridFundStockList.TabIndex = 51;
-            // 
-            // tabReport
-            // 
-            this.tabReport.Controls.Add(this.gridReportList);
-            this.tabReport.Controls.Add(this.panel3);
-            this.tabReport.Location = new System.Drawing.Point(4, 22);
-            this.tabReport.Name = "tabReport";
-            this.tabReport.Size = new System.Drawing.Size(842, 221);
-            this.tabReport.TabIndex = 10;
-            this.tabReport.Text = "机构研报";
-            this.tabReport.UseVisualStyleBackColor = true;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.txtIndustryChk);
-            this.panel3.Controls.Add(this.txtFinanceChk);
-            this.panel3.Controls.Add(this.txtReportChk);
-            this.panel3.Controls.Add(this.btnOpenBrower);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(842, 29);
-            this.panel3.TabIndex = 49;
-            // 
-            // btnOpenBrower
-            // 
-            this.btnOpenBrower.BackColor = System.Drawing.Color.White;
-            this.btnOpenBrower.Location = new System.Drawing.Point(236, 3);
-            this.btnOpenBrower.Name = "btnOpenBrower";
-            this.btnOpenBrower.Size = new System.Drawing.Size(64, 23);
-            this.btnOpenBrower.TabIndex = 0;
-            this.btnOpenBrower.Text = "浏览";
-            this.btnOpenBrower.UseVisualStyleBackColor = false;
-            this.btnOpenBrower.Click += new System.EventHandler(this.btnOpenBrower_Click);
-            // 
-            // txtReportChk
-            // 
-            this.txtReportChk.AutoSize = true;
-            this.txtReportChk.Checked = true;
-            this.txtReportChk.Location = new System.Drawing.Point(8, 6);
-            this.txtReportChk.Name = "txtReportChk";
-            this.txtReportChk.Size = new System.Drawing.Size(71, 16);
-            this.txtReportChk.TabIndex = 1;
-            this.txtReportChk.TabStop = true;
-            this.txtReportChk.Text = "机构研报";
-            this.txtReportChk.UseVisualStyleBackColor = true;
-            this.txtReportChk.CheckedChanged += new System.EventHandler(this.txtReportChk_CheckedChanged);
-            // 
-            // txtFinanceChk
-            // 
-            this.txtFinanceChk.AutoSize = true;
-            this.txtFinanceChk.Location = new System.Drawing.Point(82, 6);
-            this.txtFinanceChk.Name = "txtFinanceChk";
-            this.txtFinanceChk.Size = new System.Drawing.Size(71, 16);
-            this.txtFinanceChk.TabIndex = 2;
-            this.txtFinanceChk.Text = "财务报告";
-            this.txtFinanceChk.UseVisualStyleBackColor = true;
-            this.txtFinanceChk.CheckedChanged += new System.EventHandler(this.txtFinanceChk_CheckedChanged);
-            // 
-            // txtIndustryChk
-            // 
-            this.txtIndustryChk.AutoSize = true;
-            this.txtIndustryChk.Location = new System.Drawing.Point(159, 6);
-            this.txtIndustryChk.Name = "txtIndustryChk";
-            this.txtIndustryChk.Size = new System.Drawing.Size(71, 16);
-            this.txtIndustryChk.TabIndex = 3;
-            this.txtIndustryChk.Text = "行业研报";
-            this.txtIndustryChk.UseVisualStyleBackColor = true;
-            this.txtIndustryChk.CheckedChanged += new System.EventHandler(this.txtIndustryChk_CheckedChanged);
-            // 
-            // gridReportList
-            // 
-            this.gridReportList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridReportList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridReportList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridReportList.Location = new System.Drawing.Point(0, 29);
-            this.gridReportList.MultiSelect = false;
-            this.gridReportList.Name = "gridReportList";
-            this.gridReportList.ReadOnly = true;
-            this.gridReportList.RowHeadersWidth = 10;
-            this.gridReportList.RowTemplate.Height = 23;
-            this.gridReportList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridReportList.Size = new System.Drawing.Size(842, 192);
-            this.gridReportList.TabIndex = 50;
-            // 
-            // tabExchangeList
-            // 
-            this.tabExchangeList.Controls.Add(this.gridExchangeList);
-            this.tabExchangeList.Controls.Add(this.panel7);
-            this.tabExchangeList.Location = new System.Drawing.Point(4, 22);
-            this.tabExchangeList.Name = "tabExchangeList";
-            this.tabExchangeList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExchangeList.Size = new System.Drawing.Size(842, 221);
-            this.tabExchangeList.TabIndex = 1;
-            this.tabExchangeList.Text = "买卖交易";
-            this.tabExchangeList.UseVisualStyleBackColor = true;
-            // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.btnSaleExchange);
-            this.panel7.Controls.Add(this.btnBuyExchange);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(3, 3);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(836, 29);
-            this.panel7.TabIndex = 47;
-            // 
-            // btnBuyExchange
-            // 
-            this.btnBuyExchange.BackColor = System.Drawing.Color.White;
-            this.btnBuyExchange.Location = new System.Drawing.Point(5, 3);
-            this.btnBuyExchange.Name = "btnBuyExchange";
-            this.btnBuyExchange.Size = new System.Drawing.Size(64, 23);
-            this.btnBuyExchange.TabIndex = 0;
-            this.btnBuyExchange.Text = "买入";
-            this.btnBuyExchange.UseVisualStyleBackColor = false;
-            this.btnBuyExchange.Click += new System.EventHandler(this.btnBuyExchange_Click);
-            // 
-            // btnSaleExchange
-            // 
-            this.btnSaleExchange.BackColor = System.Drawing.Color.White;
-            this.btnSaleExchange.Location = new System.Drawing.Point(75, 3);
-            this.btnSaleExchange.Name = "btnSaleExchange";
-            this.btnSaleExchange.Size = new System.Drawing.Size(64, 23);
-            this.btnSaleExchange.TabIndex = 1;
-            this.btnSaleExchange.Text = "卖出";
-            this.btnSaleExchange.UseVisualStyleBackColor = false;
-            this.btnSaleExchange.Click += new System.EventHandler(this.btnSaleExchange_Click);
-            // 
-            // gridExchangeList
-            // 
-            this.gridExchangeList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridExchangeList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridExchangeList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridExchangeList.Location = new System.Drawing.Point(3, 32);
-            this.gridExchangeList.MultiSelect = false;
-            this.gridExchangeList.Name = "gridExchangeList";
-            this.gridExchangeList.ReadOnly = true;
-            this.gridExchangeList.RowHeadersWidth = 10;
-            this.gridExchangeList.RowTemplate.Height = 23;
-            this.gridExchangeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridExchangeList.Size = new System.Drawing.Size(836, 186);
-            this.gridExchangeList.TabIndex = 48;
-            // 
-            // tabRemind
-            // 
-            this.tabRemind.Controls.Add(this.gridRemindList);
-            this.tabRemind.Controls.Add(this.panel8);
-            this.tabRemind.Location = new System.Drawing.Point(4, 22);
-            this.tabRemind.Name = "tabRemind";
-            this.tabRemind.Size = new System.Drawing.Size(842, 221);
-            this.tabRemind.TabIndex = 8;
-            this.tabRemind.Text = "涨跌提醒";
-            this.tabRemind.UseVisualStyleBackColor = true;
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.btnCancelRemind);
-            this.panel8.Controls.Add(this.btnHandleRemind);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(842, 29);
-            this.panel8.TabIndex = 50;
-            // 
-            // btnHandleRemind
-            // 
-            this.btnHandleRemind.BackColor = System.Drawing.Color.White;
-            this.btnHandleRemind.Location = new System.Drawing.Point(5, 3);
-            this.btnHandleRemind.Name = "btnHandleRemind";
-            this.btnHandleRemind.Size = new System.Drawing.Size(68, 23);
-            this.btnHandleRemind.TabIndex = 0;
-            this.btnHandleRemind.Text = "标记执行";
-            this.btnHandleRemind.UseVisualStyleBackColor = false;
-            this.btnHandleRemind.Click += new System.EventHandler(this.btnHandleRemind_Click);
-            // 
-            // btnCancelRemind
-            // 
-            this.btnCancelRemind.BackColor = System.Drawing.Color.White;
-            this.btnCancelRemind.Location = new System.Drawing.Point(79, 3);
-            this.btnCancelRemind.Name = "btnCancelRemind";
-            this.btnCancelRemind.Size = new System.Drawing.Size(68, 23);
-            this.btnCancelRemind.TabIndex = 1;
-            this.btnCancelRemind.Text = "取消提醒";
-            this.btnCancelRemind.UseVisualStyleBackColor = false;
-            this.btnCancelRemind.Click += new System.EventHandler(this.btnCancelRemind_Click);
-            // 
-            // gridRemindList
-            // 
-            this.gridRemindList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridRemindList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridRemindList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridRemindList.Location = new System.Drawing.Point(0, 29);
-            this.gridRemindList.Name = "gridRemindList";
-            this.gridRemindList.ReadOnly = true;
-            this.gridRemindList.RowHeadersWidth = 10;
-            this.gridRemindList.RowTemplate.Height = 23;
-            this.gridRemindList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridRemindList.Size = new System.Drawing.Size(842, 192);
-            this.gridRemindList.TabIndex = 51;
-            // 
-            // tabStockStrategyDetail
-            // 
-            this.tabStockStrategyDetail.Controls.Add(this.gridStockStrategyList);
-            this.tabStockStrategyDetail.Controls.Add(this.panel11);
-            this.tabStockStrategyDetail.Location = new System.Drawing.Point(4, 22);
-            this.tabStockStrategyDetail.Name = "tabStockStrategyDetail";
-            this.tabStockStrategyDetail.Size = new System.Drawing.Size(842, 221);
-            this.tabStockStrategyDetail.TabIndex = 6;
-            this.tabStockStrategyDetail.Text = "买卖策略";
-            this.tabStockStrategyDetail.UseVisualStyleBackColor = true;
-            // 
-            // panel11
-            // 
-            this.panel11.Controls.Add(this.btnCancelStrategy);
-            this.panel11.Controls.Add(this.btnRunStrategy);
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel11.Location = new System.Drawing.Point(0, 0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(842, 29);
-            this.panel11.TabIndex = 51;
-            // 
-            // btnRunStrategy
-            // 
-            this.btnRunStrategy.BackColor = System.Drawing.Color.White;
-            this.btnRunStrategy.Location = new System.Drawing.Point(5, 3);
-            this.btnRunStrategy.Name = "btnRunStrategy";
-            this.btnRunStrategy.Size = new System.Drawing.Size(68, 23);
-            this.btnRunStrategy.TabIndex = 0;
-            this.btnRunStrategy.Text = "标记策略";
-            this.btnRunStrategy.UseVisualStyleBackColor = false;
-            this.btnRunStrategy.Click += new System.EventHandler(this.btnRunStrategy_Click);
-            // 
-            // btnCancelStrategy
-            // 
-            this.btnCancelStrategy.BackColor = System.Drawing.Color.White;
-            this.btnCancelStrategy.Location = new System.Drawing.Point(79, 3);
-            this.btnCancelStrategy.Name = "btnCancelStrategy";
-            this.btnCancelStrategy.Size = new System.Drawing.Size(68, 23);
-            this.btnCancelStrategy.TabIndex = 1;
-            this.btnCancelStrategy.Text = "取消策略";
-            this.btnCancelStrategy.UseVisualStyleBackColor = false;
-            this.btnCancelStrategy.Click += new System.EventHandler(this.btnCancelStrategy_Click);
-            // 
-            // gridStockStrategyList
-            // 
-            this.gridStockStrategyList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridStockStrategyList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridStockStrategyList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridStockStrategyList.Location = new System.Drawing.Point(0, 29);
-            this.gridStockStrategyList.Name = "gridStockStrategyList";
-            this.gridStockStrategyList.ReadOnly = true;
-            this.gridStockStrategyList.RowHeadersWidth = 10;
-            this.gridStockStrategyList.RowTemplate.Height = 23;
-            this.gridStockStrategyList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridStockStrategyList.Size = new System.Drawing.Size(842, 192);
-            this.gridStockStrategyList.TabIndex = 45;
-            this.gridStockStrategyList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridStockStrategyList_RowEnter);
-            // 
-            // tabPriceList
-            // 
-            this.tabPriceList.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPriceList.Controls.Add(this.gridPriceList);
-            this.tabPriceList.Location = new System.Drawing.Point(4, 22);
-            this.tabPriceList.Name = "tabPriceList";
-            this.tabPriceList.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPriceList.Size = new System.Drawing.Size(842, 221);
-            this.tabPriceList.TabIndex = 0;
-            this.tabPriceList.Text = "历史股价";
-            // 
-            // gridPriceList
-            // 
-            this.gridPriceList.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.gridPriceList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridPriceList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridPriceList.Location = new System.Drawing.Point(3, 3);
-            this.gridPriceList.MultiSelect = false;
-            this.gridPriceList.Name = "gridPriceList";
-            this.gridPriceList.ReadOnly = true;
-            this.gridPriceList.RowHeadersWidth = 10;
-            this.gridPriceList.RowTemplate.Height = 23;
-            this.gridPriceList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridPriceList.Size = new System.Drawing.Size(836, 215);
-            this.gridPriceList.TabIndex = 44;
-            this.gridPriceList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridPriceList_RowEnter);
-            // 
-            // tabPriceChart
-            // 
-            this.tabPriceChart.Controls.Add(this.chartPrice);
-            this.tabPriceChart.Controls.Add(this.panel9);
-            this.tabPriceChart.Location = new System.Drawing.Point(4, 22);
-            this.tabPriceChart.Name = "tabPriceChart";
-            this.tabPriceChart.Size = new System.Drawing.Size(842, 221);
-            this.tabPriceChart.TabIndex = 9;
-            this.tabPriceChart.Text = "股价走势";
-            this.tabPriceChart.UseVisualStyleBackColor = true;
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.btnWebChart);
-            this.panel9.Controls.Add(this.btnDayChart);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel9.Location = new System.Drawing.Point(0, 0);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(842, 29);
-            this.panel9.TabIndex = 48;
-            // 
-            // btnDayChart
-            // 
-            this.btnDayChart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.btnDayChart.ForeColor = System.Drawing.Color.White;
-            this.btnDayChart.Location = new System.Drawing.Point(3, 3);
-            this.btnDayChart.Name = "btnDayChart";
-            this.btnDayChart.Size = new System.Drawing.Size(50, 23);
-            this.btnDayChart.TabIndex = 0;
-            this.btnDayChart.Text = "日时图";
-            this.btnDayChart.UseVisualStyleBackColor = false;
-            this.btnDayChart.Click += new System.EventHandler(this.btnDayChart_Click);
-            // 
-            // btnWebChart
-            // 
-            this.btnWebChart.BackColor = System.Drawing.Color.White;
-            this.btnWebChart.Location = new System.Drawing.Point(55, 3);
-            this.btnWebChart.Name = "btnWebChart";
-            this.btnWebChart.Size = new System.Drawing.Size(79, 23);
-            this.btnWebChart.TabIndex = 6;
-            this.btnWebChart.Text = "在线走势图";
-            this.btnWebChart.UseVisualStyleBackColor = false;
-            this.btnWebChart.Click += new System.EventHandler(this.btnWebChart_Click);
-            // 
-            // chartPrice
-            // 
-            chartArea2.Name = "ChartArea1";
-            this.chartPrice.ChartAreas.Add(chartArea2);
-            this.chartPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chartPrice.Legends.Add(legend2);
-            this.chartPrice.Location = new System.Drawing.Point(0, 29);
-            this.chartPrice.Name = "chartPrice";
-            this.chartPrice.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            this.chartPrice.Size = new System.Drawing.Size(842, 192);
-            this.chartPrice.TabIndex = 49;
-            this.chartPrice.Text = "股价日走势图";
-            // 
-            // tabActionLog
-            // 
-            this.tabActionLog.Controls.Add(this.txtActionLog);
-            this.tabActionLog.Location = new System.Drawing.Point(4, 22);
-            this.tabActionLog.Name = "tabActionLog";
-            this.tabActionLog.Size = new System.Drawing.Size(842, 221);
-            this.tabActionLog.TabIndex = 7;
-            this.tabActionLog.Text = "通知消息";
-            this.tabActionLog.UseVisualStyleBackColor = true;
-            // 
-            // txtActionLog
-            // 
-            this.txtActionLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtActionLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtActionLog.Location = new System.Drawing.Point(0, 0);
-            this.txtActionLog.Name = "txtActionLog";
-            this.txtActionLog.ReadOnly = true;
-            this.txtActionLog.Size = new System.Drawing.Size(842, 221);
-            this.txtActionLog.TabIndex = 1;
-            this.txtActionLog.Text = "";
-            // 
-            // tabControlBottom
-            // 
-            this.tabControlBottom.Controls.Add(this.tabActionLog);
-            this.tabControlBottom.Controls.Add(this.tabPriceChart);
-            this.tabControlBottom.Controls.Add(this.tabPriceList);
-            this.tabControlBottom.Controls.Add(this.tabStockStrategyDetail);
-            this.tabControlBottom.Controls.Add(this.tabRemind);
-            this.tabControlBottom.Controls.Add(this.tabExchangeList);
-            this.tabControlBottom.Controls.Add(this.tabReport);
-            this.tabControlBottom.Controls.Add(this.tabFundStock);
-            this.tabControlBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlBottom.Location = new System.Drawing.Point(0, 0);
-            this.tabControlBottom.Name = "tabControlBottom";
-            this.tabControlBottom.SelectedIndex = 0;
-            this.tabControlBottom.Size = new System.Drawing.Size(850, 247);
-            this.tabControlBottom.TabIndex = 48;
-            this.tabControlBottom.SelectedIndexChanged += new System.EventHandler(this.tabControlBottom_SelectedIndexChanged);
+            // btnDownloadReport
+            // 
+            this.btnDownloadReport.BackColor = System.Drawing.Color.White;
+            this.btnDownloadReport.Location = new System.Drawing.Point(306, 3);
+            this.btnDownloadReport.Name = "btnDownloadReport";
+            this.btnDownloadReport.Size = new System.Drawing.Size(64, 23);
+            this.btnDownloadReport.TabIndex = 4;
+            this.btnDownloadReport.Text = "下载";
+            this.btnDownloadReport.UseVisualStyleBackColor = false;
+            this.btnDownloadReport.Click += new System.EventHandler(this.btnDownloadReport_Click);
+            // 
+            // btnOpenCacheDir
+            // 
+            this.btnOpenCacheDir.BackColor = System.Drawing.Color.White;
+            this.btnOpenCacheDir.Location = new System.Drawing.Point(775, 3);
+            this.btnOpenCacheDir.Name = "btnOpenCacheDir";
+            this.btnOpenCacheDir.Size = new System.Drawing.Size(64, 23);
+            this.btnOpenCacheDir.TabIndex = 5;
+            this.btnOpenCacheDir.Text = "本地目录";
+            this.btnOpenCacheDir.UseVisualStyleBackColor = false;
+            this.btnOpenCacheDir.Click += new System.EventHandler(this.btnOpenCacheDir_Click);
             // 
             // DesktopFrom
             // 
@@ -1351,6 +1377,29 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridAccountStockList)).EndInit();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
+            this.tabControlBottom.ResumeLayout(false);
+            this.tabActionLog.ResumeLayout(false);
+            this.tabPriceChart.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).EndInit();
+            this.panel9.ResumeLayout(false);
+            this.tabPriceList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
+            this.tabStockStrategyDetail.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
+            this.panel11.ResumeLayout(false);
+            this.tabRemind.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).EndInit();
+            this.panel8.ResumeLayout(false);
+            this.tabExchangeList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).EndInit();
+            this.panel7.ResumeLayout(false);
+            this.tabReport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.tabFundStock.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabControlLeft.ResumeLayout(false);
             this.tabBaseData.ResumeLayout(false);
@@ -1359,29 +1408,6 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.tabFundStock.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridFundStockList)).EndInit();
-            this.tabReport.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridReportList)).EndInit();
-            this.tabExchangeList.ResumeLayout(false);
-            this.panel7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridExchangeList)).EndInit();
-            this.tabRemind.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridRemindList)).EndInit();
-            this.tabStockStrategyDetail.ResumeLayout(false);
-            this.panel11.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridStockStrategyList)).EndInit();
-            this.tabPriceList.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridPriceList)).EndInit();
-            this.tabPriceChart.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartPrice)).EndInit();
-            this.tabActionLog.ResumeLayout(false);
-            this.tabControlBottom.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1492,5 +1518,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnFouncStock;
         private System.Windows.Forms.Button btnWebFund;
+        private System.Windows.Forms.Button btnDownloadReport;
+        private System.Windows.Forms.Button btnOpenCacheDir;
     }
 }

@@ -393,6 +393,17 @@ namespace StockSimulateCore.Utils
             }
         }
 
+        public static void OpenDir(string filePath)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
+            catch
+            {
+            }
+        }
+
         /// <summary>
         /// 用IE打开浏览器
         /// </summary>

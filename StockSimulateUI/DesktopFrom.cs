@@ -18,6 +18,7 @@ using StockSimulateCore.Utils;
 using StockSimulateCore.Config;
 using StockSimulateDomain.Data;
 using StockSimulateCore.Data;
+using System.IO;
 
 namespace StockPriceTools
 {
@@ -1202,7 +1203,53 @@ namespace StockPriceTools
 
             ObjectUtil.OpenBrowserUrl(report.PdfUrl);
         }
-        
+
+        private void btnDownloadReport_Click(object sender, EventArgs e)
+        {
+            if (this.gridReportList.SelectedRows.Count == 0) return;
+
+            var selectRow = this.gridReportList.SelectedRows[0];
+            var stockCode = $"{selectRow.Cells["股票代码"].Value}";
+            var pdfCode = $"{selectRow.Cells["编号"].Value}";
+            var pdfTitle = $"{selectRow.Cells["研报标题"].Value}";
+
+            var report = Repository.Instance.QueryFirst<ReportEntity>($"StockCode='{stockCode}' and PdfCode='{pdfCode}'");
+            if (report == null) return;
+
+            var saveFile = $"{pdfTitle}.pdf";
+            if (!this.txtIndustryChk.Checked)
+            {
+                var stock = Repository.Instance.QueryFirst<StockEntity>($"Code='{stockCode}'");
+                if (stock == null) return;
+
+                saveFile = $"{stock.Name}_{saveFile}";
+            }
+            else
+            {
+                saveFile = $"{report.IndustryName}_{saveFile}";
+            }
+
+            var savePath = Path.Combine(RunningConfig.Instance.BaseDirectory, RunningConfig.Instance.SaveReportFilePath);
+            if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
+
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(1 * 1000);
+                var file = DownFileUtil.DownloadFile(report.PdfUrl, savePath, saveFile);
+                if (File.Exists(file))
+                {
+                    ObjectUtil.OpenDir(savePath);
+                }
+            }, CancellationTokenSource.Token);
+        }
+
+        private void btnOpenCacheDir_Click(object sender, EventArgs e)
+        {
+            var savePath = Path.Combine(RunningConfig.Instance.BaseDirectory, RunningConfig.Instance.SaveReportFilePath);
+
+            ObjectUtil.OpenDir(savePath);
+        }
+
         private void btnFouncStock_Click(object sender, EventArgs e)
         {
             if (this.gridFundStockList.SelectedRows.Count == 0) return;
