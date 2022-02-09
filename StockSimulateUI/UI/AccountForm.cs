@@ -74,6 +74,21 @@ namespace StockSimulateUI.UI
             {
                 account.Name = this.txtName.Text;
                 account.Amount = ObjectUtil.ToValue<decimal>(this.txtAmount.Text, 0);
+
+                var accountStocks = Repository.Instance.QueryAll<AccountStockEntity>($"AccountName='{account.Name}'");                
+                if(accountStocks.Length == 0)
+                {
+                    account.BuyAmount = 0;
+                    account.Profit = 0;
+                    account.TotalAmount = 0;
+                    account.HoldAmount = 0;
+                }
+                else
+                {
+                    account.TotalAmount = accountStocks.Sum(c => c.TotalAmount);
+                    account.HoldAmount = accountStocks.Sum(c => c.HoldAmount);
+                    account.Profit = accountStocks.Sum(c => c.Profit);
+                }
                 account.Email = this.txtEmail.Text;
                 account.Cash = account.Amount - account.BuyAmount;
                 account.QQ = this.txtQQ.Text;
