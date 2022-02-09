@@ -74,7 +74,6 @@ namespace StockSimulateUI.UI
             {
                 account.Name = this.txtName.Text;
                 account.Amount = ObjectUtil.ToValue<decimal>(this.txtAmount.Text, 0);
-
                 var accountStocks = Repository.Instance.QueryAll<AccountStockEntity>($"AccountName='{account.Name}'");                
                 if(accountStocks.Length == 0)
                 {
