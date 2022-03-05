@@ -97,7 +97,7 @@ namespace StockSimulateService.Service
                     item.Profit = item.HoldAmount - item.TotalAmount;
 
                     if (item.TotalAmount == 0 || item.HoldAmount == 0) item.UDPer = 0;
-                    else item.UDPer = Math.Round(item.Profit / item.HoldAmount * 100, 2);
+                    else item.UDPer = Math.Round(item.Profit / item.TotalAmount * 100, 2);
 
                     actionLog($"已计算[{item.StockName}]持有股价盈亏...[{item.Profit}] [{item.UDPer}%]");
                 }
