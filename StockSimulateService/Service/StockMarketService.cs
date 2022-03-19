@@ -133,6 +133,32 @@ namespace StockSimulateService.Service
                 }
             }, CancellationTokenSource.Token);
 
+            //采集历史价格数据
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(2000);
+                while (true)
+                {
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    {
+                        this.ActionLog("采集历史股价数据...");
+                        try
+                        {
+                            StockGatherService.GatherAllHistoryPriceData((message) =>
+                            {
+                                this.ActionLog(message);
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"GatherPriceData Error:{ex.Message}");
+                        }
+                    }
+                    Thread.Sleep(RC.GatherStockPriceInterval * 1000);
+                }
+            }, CancellationTokenSource.Token);
+
+
             //计算盈亏数据
             Task.Factory.StartNew(() =>
             {
@@ -353,6 +379,7 @@ namespace StockSimulateService.Service
                         this.ActionLog("清除无效历史数据...");
                         try
                         {
+                            LogUtil.Clear(30);
                             StockPriceService.Clear();
                             StockRemindService.Clear();
                         }

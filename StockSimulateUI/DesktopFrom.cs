@@ -276,7 +276,7 @@ namespace StockPriceTools
 
             //var stocks = GetDataSource<StockEntity>(where);
             //this.gridStockList.DataSource = stocks;
-            var stocks = Repository.Instance.QueryAll<StockEntity>(where);
+            var stocks = Repository.Instance.QueryAll<StockEntity>(where, "Seq asc");
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = dt.DefaultView;
 
@@ -411,7 +411,7 @@ namespace StockPriceTools
                 this.Invoke(act);
             });
             //this.LoadFundFlowInfo(stockCode);
-            //this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
+            this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
         }
         private void btnFoucsStock_Click(object sender, EventArgs e)
         {

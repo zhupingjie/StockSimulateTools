@@ -1,5 +1,4 @@
-﻿using StockSimulateService.Service;
-using StockSimulateDomain.Entity;
+﻿using StockSimulateDomain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace StockSimulateService.Service
             {
                 stockInfo.DayPrice.ID = price.ID;
                 stockInfo.DayPrice.DealTime = "";
-                Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice, new string[] { "DealTime", "Price", "UDPer", "TodayStartPrice", "TodayEndPrice", "TodayMaxPrice", "TodayMinPrice" });
+                Repository.Instance.Update<StockPriceEntity>(stockInfo.DayPrice);
             }
             if (false)
             {

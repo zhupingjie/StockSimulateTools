@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -9,6 +10,21 @@ namespace StockSimulateCore.Utils
     public class LogUtil
     {
         private static Mutex mutex = new Mutex();
+
+        public static void Clear(int preDay = 30)
+        {
+            var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            if (!Directory.Exists(logPath)) return;
+
+            var deleteDate = DateTime.Now.Date.AddDays(-1 * preDay).ToString("yyyy-MM-dd");
+            var files = Directory.GetFiles(logPath).Select(c => new FileInfo(c)).ToArray();
+            foreach(var file in files)
+            {
+                var fileName = file.Name.Replace(file.Extension, "").Replace("err", "").Replace("log", "");
+                if (fileName.CompareTo(deleteDate) < 0) file.Delete();
+            }
+        }
+
         public static void Debug(string message)
         {
             Logger(false, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}[{ThreadId()}]>{message}");

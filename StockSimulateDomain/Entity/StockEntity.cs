@@ -41,6 +41,11 @@ namespace StockSimulateDomain.Entity
         [GridColumnIgnore]
         public int Foucs { get; set; }
 
+        [Description("排序")]
+        [GridColumnIgnore]
+        public int Seq { get; set; }
+
+
         //[Description("关注")]
         //[DBNotMapped]
         //public string FoucsText {
