@@ -75,27 +75,11 @@ namespace StockSimulateUI.UI
         private void btnCalcAvgPrice_Click(object sender, EventArgs e)
         {
             StockPriceService.CalculateAllAvgrage(0);
-
-            var lastAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
-            if (lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)
-            {
-                var dealDate = lastAvgPrices.OrderBy(c => c.DealDate).FirstOrDefault().DealDate;
-
-                Repository.Instance.Delete<StockAverageEntity>($"DealDate<'{dealDate}'");
-            }
         }
 
         private void btnCalcMACD_Click(object sender, EventArgs e)
         {
             StockPriceService.CalculateAllMACD(startDate:"1900-01-01");
-
-            var lastAvgPrices = Repository.Instance.QueryAll<StockMacdEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
-            if (lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)
-            {
-                var dealDate = lastAvgPrices.OrderBy(c => c.DealDate).FirstOrDefault().DealDate;
-
-                Repository.Instance.Delete<StockMacdEntity>($"DealDate<'{dealDate}'");
-            }
         }
 
         private void btnClearHisData_Click(object sender, EventArgs e)

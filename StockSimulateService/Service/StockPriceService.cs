@@ -191,24 +191,29 @@ namespace StockSimulateService.Service
 
         public static void CalculateAllMACD(int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
         {
+            var newMacds = new List<StockMacdEntity>();
+            var updateMacds = new List<StockMacdEntity>();
+
             var stocks = Repository.Instance.QueryAll<StockEntity>();
             foreach(var stock in stocks)
             {
                 if (string.IsNullOrEmpty(startDate)) startDate = stock.PriceDate;
 
-                CalculateNowMACD(stock.Code, shortAvgDays, midAvgDays, longAvgDays, startDate);
+                var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stock.Code}' and DateType=0 and DealDate>='{startDate}'").OrderBy(c => c.DealDate).ToArray();
+                var extMacds = Repository.Instance.QueryAll<StockMacdEntity>($"StockCode='{stock.Code}'");
+
+                CalculateNowMACD(stock, stockPrices, extMacds, newMacds, updateMacds, shortAvgDays, midAvgDays, longAvgDays, startDate);
             }
+            Repository.Instance.Insert<StockMacdEntity>(newMacds.ToArray());
+            Repository.Instance.Update<StockMacdEntity>(updateMacds.ToArray());
         }
 
-        public static void CalculateNowMACD(string stockCode, int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
+        public static void CalculateNowMACD(StockEntity stock, StockPriceEntity[] stockPrices, StockMacdEntity[] extMacds, List<StockMacdEntity> newMacds, List<StockMacdEntity> updateMacds, int shortAvgDays = 9, int midAvgDays = 12, int longAvgDays = 26, string startDate = "")
         {
             var lastEMA12 = 0m;
             var lastEMA26 = 0m;
             var lastDEA = 0m;
 
-            var stockMacds = new List<StockMacdEntity>();
-            var stockPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DateType=0 and DealDate>='{startDate}'").OrderBy(c => c.DealDate).ToArray();
-            var extMacds = Repository.Instance.QueryAll<StockMacdEntity>($"StockCode='{stockCode}'");
             var lastExtMacd = extMacds.Where(c => c.DealDate.CompareTo(startDate) < 0).OrderByDescending(c => c.DealDate).FirstOrDefault();
             if(lastExtMacd != null)
             {
@@ -229,7 +234,7 @@ namespace StockSimulateService.Service
                 {
                     stockMacd = new StockMacdEntity()
                     {
-                        StockCode = stockCode,
+                        StockCode = stock.Code,
                         DealDate = price.DealDate,
                         EMA12 = ema12,
                         EMA26 = ema26,
@@ -237,7 +242,7 @@ namespace StockSimulateService.Service
                         DEA = dea,
                         MACD = macd,
                     };
-                    stockMacds.Add(stockMacd);
+                    newMacds.Add(stockMacd);
                 }
                 else if(price.DealDate == nowDate)
                 {
@@ -246,13 +251,12 @@ namespace StockSimulateService.Service
                     stockMacd.DEA = dea;
                     stockMacd.DIF = dif;
                     stockMacd.MACD = macd;
-                    Repository.Instance.Update<StockMacdEntity>(stockMacd);
+                    updateMacds.Add(stockMacd);
                 }
                 lastEMA12 = ema12;
                 lastEMA26 = ema26;
                 lastDEA = dea;
             }
-            Repository.Instance.Insert<StockMacdEntity>(stockMacds.ToArray());
         }
     }
 }
