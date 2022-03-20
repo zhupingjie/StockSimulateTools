@@ -74,7 +74,7 @@ namespace StockSimulateUI.UI
 
         private void btnCalcAvgPrice_Click(object sender, EventArgs e)
         {
-            StockPriceService.CalculateAllAvgrage(RunningConfig.Instance.KeepStockAssistTargetDays);
+            StockPriceService.CalculateAllAvgrage(0);
 
             var lastAvgPrices = Repository.Instance.QueryAll<StockAverageEntity>($"StockCode='{RunningConfig.Instance.SHZSOfStockCode}'", "DealDate desc", RunningConfig.Instance.KeepStockAssistTargetDays);
             if (lastAvgPrices.Length == RunningConfig.Instance.KeepStockAssistTargetDays)

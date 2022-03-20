@@ -101,6 +101,9 @@ namespace StockSimulateCore.Config
         /// </summary>
         public int GatherIndustryReportPreDays { get; set; } = 0;
 
+
+        public int BatchExecuteSQLRowCount { get; set; } = 1000;
+
         public string BaseDirectory
         {
             get

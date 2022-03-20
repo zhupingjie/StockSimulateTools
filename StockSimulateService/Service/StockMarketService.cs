@@ -347,7 +347,7 @@ namespace StockSimulateService.Service
                 Thread.Sleep(3000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime(0))
                     {
                         this.ActionLog("检测股价策略提醒数据...");
                         try

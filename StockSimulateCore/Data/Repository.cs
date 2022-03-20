@@ -70,6 +70,7 @@ namespace StockSimulateCore.Data
         public bool Insert<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
+
             return CreateEntity(new TEntity[] { entity }, tableName);
         }
         public bool Insert<TEntity>(TEntity[] entitys) where TEntity : BaseEntity
@@ -77,7 +78,23 @@ namespace StockSimulateCore.Data
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
             if (entitys.Length == 0) return false;
 
-            return CreateEntity(entitys, tableName);
+            var groupSize = RunningConfig.Instance.BatchExecuteSQLRowCount;
+            if (entitys.Length < groupSize)
+            {
+                return CreateEntity(entitys, tableName);
+            }
+            else
+            {
+                bool success = true;
+                var pageCount = Convert.ToInt32(Math.Ceiling(entitys.Length / (groupSize * 1d)));
+                for (var p = 0; p < pageCount; p++)
+                {
+                    var tempEntitys = entitys.Skip(p * groupSize).Take(groupSize).ToArray();
+                    success = success & CreateEntity(tempEntitys, tableName);
+                }
+                return success;
+            }
+
         }
         public bool Update<TEntity>(TEntity entity, string[] columns = null) where TEntity : BaseEntity
         {
@@ -90,7 +107,22 @@ namespace StockSimulateCore.Data
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
             if (entitys.Length == 0) return false;
 
-            return UpdateEntity(entitys, tableName, columns);
+            var groupSize = RunningConfig.Instance.BatchExecuteSQLRowCount;
+            if (entitys.Length < groupSize)
+            {
+                return UpdateEntity(entitys, tableName, columns);
+            }
+            else
+            {
+                bool success = true;
+                var pageCount = Convert.ToInt32(Math.Ceiling(entitys.Length / (groupSize * 1d)));
+                for (var p = 0; p < pageCount; p++)
+                {
+                    var tempEntitys = entitys.Skip(p * groupSize).Take(groupSize).ToArray();
+                    success = success & UpdateEntity(tempEntitys, tableName, columns);
+                }
+                return success;
+            }
         }
 
         public bool Delete<TEntity>(TEntity entity) where TEntity : BaseEntity
@@ -104,7 +136,22 @@ namespace StockSimulateCore.Data
             var tableName = ObjectUtil.GetEntityTypeName<TEntity>();
             if (entitys.Length == 0) return false;
 
-            return DeleteEntity(entitys, tableName);
+            var groupSize = RunningConfig.Instance.BatchExecuteSQLRowCount;
+            if (entitys.Length < groupSize)
+            {
+                return DeleteEntity(entitys, tableName);
+            }
+            else
+            {
+                bool success = true;
+                var pageCount = Convert.ToInt32(Math.Ceiling(entitys.Length / (groupSize * 1d)));
+                for (var p = 0; p < pageCount; p++)
+                {
+                    var tempEntitys = entitys.Skip(p * groupSize).Take(groupSize).ToArray();
+                    success = success & DeleteEntity(tempEntitys, tableName);
+                }
+                return success;
+            }
         }
 
         public bool Delete<TEntity>(string where) where TEntity : BaseEntity
