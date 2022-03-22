@@ -44,6 +44,11 @@ namespace StockSimulateCore.Config
         public int GatherStockPriceInterval { get; set; } = 30;
 
         /// <summary>
+        /// 采集历史股价起始日期
+        /// </summary>
+        public string GatherHistoryStockPriceStartDate { get; set; } = "20200101";
+
+        /// <summary>
         /// 股票财务研报采集时间频率(秒)
         /// </summary>
         public int GatherStockFinanceReportInterval { get; set; } = 24;
@@ -95,6 +100,9 @@ namespace StockSimulateCore.Config
         /// 行业研报采集天数
         /// </summary>
         public int GatherIndustryReportPreDays { get; set; } = 0;
+
+
+        public int BatchExecuteSQLRowCount { get; set; } = 1000;
 
         public string BaseDirectory
         {

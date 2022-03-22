@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +36,15 @@ namespace StockSimulateDomain.Entity
 
         [Description("浮动(%)")]
         public decimal UDPer { get; set; }
+
+        [Description("浮动额")]
+        public decimal UDValue { get; set; }
+
+        [Description("振幅(%)")]
+        public decimal GoPer { get; set; }
+
+        [Description("换手率(%)")]
+        public decimal GoHandPer { get; set; }
 
         [Description("当前股价")]
         public decimal Price { get; set; }

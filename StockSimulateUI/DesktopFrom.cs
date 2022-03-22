@@ -52,7 +52,7 @@ namespace StockPriceTools
                     {
                         this.LoadStockList();
                         this.LoadTopInfo();
-                        this.LoadFundFlowInfo("");
+                        //this.LoadFundFlowInfo("");
                     };
                     this.Invoke(act);
 
@@ -276,7 +276,7 @@ namespace StockPriceTools
 
             //var stocks = GetDataSource<StockEntity>(where);
             //this.gridStockList.DataSource = stocks;
-            var stocks = Repository.Instance.QueryAll<StockEntity>(where);
+            var stocks = Repository.Instance.QueryAll<StockEntity>(where, "Seq asc");
             var dt = ObjectUtil.ConvertTable(stocks);
             this.gridStockList.DataSource = dt.DefaultView;
 
@@ -402,8 +402,15 @@ namespace StockPriceTools
             var industryName = $"{selectRow.Cells["行业名称"].Value}";
             if (selectRow.Index >= 0) this.CurrentStockListSelectedIndex = selectRow.Index;
 
-            this.LoadStockBaseInfo(stockCode);
-            this.LoadFundFlowInfo(stockCode);
+            Task.Factory.StartNew(() =>
+            {
+                Action act = delegate ()
+                {
+                    this.LoadStockBaseInfo(stockCode);
+                };
+                this.Invoke(act);
+            });
+            //this.LoadFundFlowInfo(stockCode);
             this.LoadTabGridList(this.tabControlBottom.SelectedIndex, stockCode, stockName, industryName);
         }
         private void btnFoucsStock_Click(object sender, EventArgs e)
@@ -881,7 +888,7 @@ namespace StockPriceTools
             {
                 where = $"IndustryName='{industryName}' and ReportType=9";
             }
-            var reports = Repository.Instance.QueryAll<ReportEntity>(where, "PublishDate desc", 100);
+            var reports = Repository.Instance.QueryAll<ReportEntity>(where, "PublishDate desc", 20);
             var dt = ObjectUtil.ConvertTable(reports);
             this.gridReportList.DataSource = null;
             this.gridReportList.DataSource = dt.DefaultView;

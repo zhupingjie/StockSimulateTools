@@ -3,7 +3,6 @@ using StockSimulateDomain.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +40,11 @@ namespace StockSimulateDomain.Entity
         [Description("关注")]
         [GridColumnIgnore]
         public int Foucs { get; set; }
+
+        [Description("排序")]
+        [GridColumnIgnore]
+        public int Seq { get; set; }
+
 
         //[Description("关注")]
         //[DBNotMapped]

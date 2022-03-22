@@ -325,7 +325,7 @@ namespace StockSimulateCore.Utils
             }
         }
 
-        public static bool EffectStockDealTime(int offsetMinute = 5)
+        public static bool EffectStockDealTime(int offsetMinute = 10)
         {
             if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return false;
 

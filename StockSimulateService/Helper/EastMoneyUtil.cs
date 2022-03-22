@@ -39,7 +39,7 @@ namespace StockSimulateService.Helper
                 stockPrice.TodayMinPrice = GetNumberValue(model, "f45");
                 stockPrice.TodayEndPrice = GetNumberValue(model, "f43");
                 stockPrice.YesterdayEndPrice = GetNumberValue(model, "f60");
-                stockPrice.DealQty = GetNumberValue(model, "f47");
+                stockPrice.DealQty = GetTenThousandValue(model, "f47");
                 stockPrice.DealAmount = GetMillionValue(model, "f48");
                 stockPrice.Capital = GetMillionValue(model, "f84");
                 stockPrice.Amount = GetMillionValue(model, "f116");
@@ -82,12 +82,12 @@ namespace StockSimulateService.Helper
             }
         }
 
-        public static StockPriceEntity[] GetStockHisPrice(string code)
+        public static StockPriceEntity[] GetStockHisPrice(string code, string startDate = "00000000", string endDate = "20500000")
         {
             try
             {
                 var secid = GetStockSecid(code);
-                var api = $"http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&secid={secid}&fields1=f1,f2,f3,f7&fields2=f51,f62,f63";
+                var api = $"http://push2his.eastmoney.com/api/qt/stock/kline/get?fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&secid={secid}&beg={startDate}&end={endDate}";
                 var retStr = api.PostJsonToUrl(string.Empty, requestFilter =>
                 {
                     requestFilter.Timeout = 5 * 60 * 1000;
@@ -99,15 +99,25 @@ namespace StockSimulateService.Helper
                 foreach (var line in apiModel.data.klines)
                 {
                     var arr = ObjectUtil.GetSplitArray(line, ",");
-                    if (arr.Length != 3) continue;
+                    if (arr.Length != 11) continue;
 
                     var stockPrice = new StockPriceEntity();
                     stockPrice.StockCode = code;
                     stockPrice.DealDate = arr[0];
                     stockPrice.DealTime = "";
                     stockPrice.DateType = 0;
-                    stockPrice.Price = ObjectUtil.ToValue<decimal>(arr[1], 0);
-                    stockPrice.UDPer = ObjectUtil.ToValue<decimal>(arr[2], 1);
+                    stockPrice.TodayStartPrice = ObjectUtil.ToValue<decimal>(arr[1], 0);
+                    stockPrice.TodayEndPrice = ObjectUtil.ToValue<decimal>(arr[2], 0);
+                    stockPrice.TodayMaxPrice = ObjectUtil.ToValue<decimal>(arr[3], 0);
+                    stockPrice.TodayMinPrice = ObjectUtil.ToValue<decimal>(arr[4], 0);
+                    stockPrice.DealQty = Math.Round(ObjectUtil.ToValue<decimal>(arr[5], 0) / 10000, 2);
+                    stockPrice.DealAmount = Math.Round(ObjectUtil.ToValue<decimal>(arr[6], 0)/100000000,3);
+                    stockPrice.GoPer = ObjectUtil.ToValue<decimal>(arr[7], 0);
+                    stockPrice.UDPer = ObjectUtil.ToValue<decimal>(arr[8], 0);
+                    stockPrice.UDValue = ObjectUtil.ToValue<decimal>(arr[9], 0);
+                    stockPrice.GoHandPer = ObjectUtil.ToValue<decimal>(arr[10], 0);
+                    stockPrice.Price = stockPrice.TodayEndPrice;
+
                     if (stockPrice.Price == 0) continue;
                     stockPrices.Add(stockPrice);
                 }
@@ -751,6 +761,14 @@ namespace StockSimulateService.Helper
 
             var val = ObjectUtil.ToValue<decimal>(model[field], 0);
             return Math.Round(val, 3);
+        }
+
+        static decimal GetTenThousandValue(Dictionary<string, object> model, string field)
+        {
+            if (!model.ContainsKey(field)) throw new Exception($"API接口未返回键名:{field}");
+
+            var val = ObjectUtil.ToValue<decimal>(model[field], 0);
+            return Math.Round(val / 10000, 3);
         }
 
         static decimal GetMillionValue(Dictionary<string, object> model, string field)

@@ -21,7 +21,7 @@ namespace StockSimulateNetService.Serivce
         /// <param name="actionLog"></param>
         public static void GatherPriceData(Action<string> actionLog)
         {
-            var stocks = Repository.Instance.QueryAll<StockEntity>($"", "ID asc");
+            var stocks = Repository.Instance.QueryAll<StockEntity>($"", "Seq asc");
             foreach (var stock in stocks)
             {
                 bool newStock = stock.Price == 0;
@@ -44,15 +44,21 @@ namespace StockSimulateNetService.Serivce
                         StockStrategyService.CheckRun(stock.Code, stockInfo.Stock.Price, DateTime.Now);
                     }
                 }
+            }
+        }
 
-                //采集历史价格数据
-                if (newStock)
+        /// <summary>
+        /// 采集历史股价数据
+        /// </summary>
+        public static void GatherAllHistoryPriceData(Action<string> actionLog)
+        {
+            var stocks = Repository.Instance.QueryAll<StockEntity>();
+            foreach (var stock in stocks)
+            {
+                var gatherCount = GatherHisPriceData(stock.Code);
+                if (gatherCount > 0)
                 {
-                    var gatherCount = GatherHisPriceData(stock.Code);
-                    if (gatherCount > 0)
-                    {
-                        actionLog($"已采集[{stock.Name}]历史股价数据...[{gatherCount}天]");
-                    }
+                    actionLog($"已采集[{stock.Name}]历史股价数据...[{gatherCount}天]");
                 }
             }
         }
@@ -64,23 +70,22 @@ namespace StockSimulateNetService.Serivce
         /// <returns></returns>
         public static int GatherHisPriceData(string stockCode)
         {
-            var stockPrices = EastMoneyUtil.GetStockHisPrice(stockCode);
+            var startDate = RunningConfig.Instance.GatherHistoryStockPriceStartDate;
+            var startDealDate = $"{startDate.Substring(0, 4)}-{startDate.Substring(4, 2)}-{startDate.Substring(6, 2)}";
+
+            var firstPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DealDate<='{startDealDate}'", "", 1).FirstOrDefault();
+            if (firstPrice != null) return 0;
+
+            var endDate = "20500000";
+            var startPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DealDate>'{startDealDate}'", "DealDate asc", 1).FirstOrDefault();
+            if (startPrice != null) endDate = ObjectUtil.ToValue<DateTime>(startPrice.DealDate, DateTime.Now.Date).AddDays(-1).ToString("yyyyMMdd");
+
+            var stockPrices = EastMoneyUtil.GetStockHisPrice(stockCode, startDate, endDate);
             if (stockPrices == null) return 0;
 
-            var lastPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}'", "DealDate asc", 1).FirstOrDefault();
-            if (lastPrice == null)
-            {
-                var newPrices = stockPrices.OrderByDescending(c => c.DealDate).ToArray();
-                Repository.Instance.Insert<StockPriceEntity>(newPrices);
-                return newPrices.Length;
-            }
-            else
-            {
-                var lastDate = lastPrice.DealDate;
-                var newPrices = stockPrices.Where(c => c.DealDate.CompareTo(lastDate) < 0).OrderByDescending(c => c.DealDate).ToArray();
-                Repository.Instance.Insert<StockPriceEntity>(newPrices);
-                return newPrices.Length;
-            }
+
+            Repository.Instance.Insert<StockPriceEntity>(stockPrices);
+            return stockPrices.Length;
         }
 
         /// <summary>
@@ -346,7 +351,7 @@ namespace StockSimulateNetService.Serivce
             foreach (var stock in stocks)
             {
                 var forecastInfo = EastMoneyUtil.GetStockForecast(stock.Code);
-                if (forecastInfo.mgsy == null || forecastInfo.jzcsyl == null || forecastInfo.gsjlr == null || forecastInfo.jgyc == null || forecastInfo.jgyc.data == null) continue;
+                if (forecastInfo == null || forecastInfo.mgsy == null || forecastInfo.jzcsyl == null || forecastInfo.gsjlr == null || forecastInfo.jgyc == null || forecastInfo.jgyc.data == null) continue;
 
                 var updateStocks = new List<StockEntity>();
                 var newForecasts = new List<StockForecastEntity>();
