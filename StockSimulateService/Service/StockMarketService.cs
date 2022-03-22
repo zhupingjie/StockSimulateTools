@@ -139,7 +139,7 @@ namespace StockSimulateService.Service
                 Thread.Sleep(2000);
                 while (true)
                 {
-                    if (RC.DebugMode || ObjectUtil.EffectStockDealTime())
+                    if (RC.GatherHistoryStockPrice && ObjectUtil.EffectStockDealTime())
                     {
                         this.ActionLog("采集历史股价数据...");
                         try
@@ -153,8 +153,10 @@ namespace StockSimulateService.Service
                         {
                             LogUtil.Error($"GatherPriceData Error:{ex.Message}");
                         }
+                        RC.GatherHistoryStockPrice = false;
+                        StockConfigService.SaveGlobalConfig("GatherHistoryStockPrice", false);
                     }
-                    Thread.Sleep(RC.GatherStockPriceInterval * 1000);
+                    Thread.Sleep(RC.UpdateStockAssistTargetInterval * 1000);
                 }
             }, CancellationTokenSource.Token);
 

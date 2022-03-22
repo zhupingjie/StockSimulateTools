@@ -73,16 +73,14 @@ namespace StockSimulateNetService.Serivce
             var startDate = RunningConfig.Instance.GatherHistoryStockPriceStartDate;
             var startDealDate = $"{startDate.Substring(0, 4)}-{startDate.Substring(4, 2)}-{startDate.Substring(6, 2)}";
 
-            var firstPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DealDate<='{startDealDate}'", "", 1).FirstOrDefault();
-            if (firstPrice != null) return 0;
-
-            var endDate = "20500000";
-            var startPrice = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DealDate>'{startDealDate}'", "DealDate asc", 1).FirstOrDefault();
-            if (startPrice != null) endDate = ObjectUtil.ToValue<DateTime>(startPrice.DealDate, DateTime.Now.Date).AddDays(-1).ToString("yyyyMMdd");
+            var endDate = RunningConfig.Instance.GatherHistoryStockPriceEndDate;
+            var endDealDate = $"{endDate.Substring(0, 4)}-{endDate.Substring(4, 2)}-{endDate.Substring(6, 2)}";
 
             var stockPrices = EastMoneyUtil.GetStockHisPrice(stockCode, startDate, endDate);
             if (stockPrices == null) return 0;
 
+            var existsPrices = Repository.Instance.QueryAll<StockPriceEntity>($"StockCode='{stockCode}' and DealDate>='{startDealDate}' and DealDate<='{endDealDate}'");
+            Repository.Instance.Delete<StockPriceEntity>(existsPrices);
 
             Repository.Instance.Insert<StockPriceEntity>(stockPrices);
             return stockPrices.Length;

@@ -25,6 +25,7 @@ namespace StockSimulateUI.UI
         private void btnOK_Click(object sender, EventArgs e)
         {
             RunningConfig.Instance.DebugMode = this.txtDebugMode.Checked;
+            RunningConfig.Instance.GatherHistoryStockPrice = this.txtGatherHistoryPrice.Checked;
             RunningConfig.Instance.RemindNoticeByEmail = this.txtRemindNoticeByEmail.Checked;
             RunningConfig.Instance.RemindNoticeByMessage = this.txtRemindNoticeByMessage.Checked;
             RunningConfig.Instance.GatherStockPriceInterval = ObjectUtil.ToValue<int>(this.txtGatherStockPriceInterval.Text, 0);
@@ -37,6 +38,8 @@ namespace StockSimulateUI.UI
             RunningConfig.Instance.LoadGlobalConfigInterval = ObjectUtil.ToValue<int>(this.txtLoadGlobalConfigInterval.Text, 0);
             RunningConfig.Instance.KeepStockAssistTargetDays = ObjectUtil.ToValue<int>(this.txtKeepStockAssistTargetDays.Text, 0);
             RunningConfig.Instance.CurrentAccountName = this.txtAccount.Text;
+            RunningConfig.Instance.GatherHistoryStockPriceStartDate = this.txtGatherHistoryPriceStartDate.Text.Trim();
+            RunningConfig.Instance.GatherHistoryStockPriceEndDate = this.txtGatherHistoryPriceEndDate.Text.Trim();
 
             var configs = Repository.Instance.QueryAll<GlobalConfigEntity>();
             var dic = ObjectUtil.GetPropertyValues(RunningConfig.Instance, true);
@@ -79,10 +82,13 @@ namespace StockSimulateUI.UI
             this.txtLoadMessageInterval.Text = $"{RunningConfig.Instance.LoadMessageInterval}";
             this.txtLoadGlobalConfigInterval.Text = $"{RunningConfig.Instance.LoadGlobalConfigInterval}";
             this.txtDebugMode.Checked = RunningConfig.Instance.DebugMode;
+            this.txtGatherHistoryPrice.Checked = RunningConfig.Instance.GatherHistoryStockPrice;
             this.txtRemindNoticeByMessage.Checked = RunningConfig.Instance.RemindNoticeByMessage;
             this.txtRemindNoticeByEmail.Checked = RunningConfig.Instance.RemindNoticeByEmail;
             this.txtKeepStockAssistTargetDays.Text = $"{RunningConfig.Instance.KeepStockAssistTargetDays}";
             this.txtAccount.Text = RunningConfig.Instance.CurrentAccountName;
+            this.txtGatherHistoryPriceStartDate.Text = RunningConfig.Instance.GatherHistoryStockPriceStartDate;
+            this.txtGatherHistoryPriceEndDate.Text = RunningConfig.Instance.GatherHistoryStockPriceEndDate;
         }
     }
 }

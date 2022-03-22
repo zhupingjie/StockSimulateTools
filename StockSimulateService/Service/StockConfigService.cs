@@ -27,5 +27,15 @@ namespace StockSimulateService.Service
                 }
             }
         }
+
+        public static void SaveGlobalConfig(string key, object value)
+        {
+            var config = Repository.Instance.QueryFirst<GlobalConfigEntity>($"Name='{key}'");
+            if(config != null)
+            {
+                config.Value = $"{value}";
+                Repository.Instance.Update<GlobalConfigEntity>(config);
+            }
+        }
     }
 }
