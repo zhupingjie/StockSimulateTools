@@ -90,6 +90,8 @@ namespace StockSimulateService.Service
         {
             Task.Factory.StartNew(() =>
             {
+                Repository.Instance.InitDataBase();
+
                 while (true)
                 {
                     this.ActionLog("加载全局配置数据...");

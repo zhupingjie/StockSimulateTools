@@ -125,10 +125,10 @@ namespace StockSimulateCore.Config
         /// </summary>
         public string SHZSOfStockCode { get; set; } = "SH000001";
 
-        public string DBServiceIP { get; set; } = "49.232.192.220";
+        public string DBServiceIP { get; set; } = "localhost";
         public string DBName { get; set; } = "stock";
-        public string DBUserID { get; set; } = "sa";
-        public string DBPwd { get; set; } = "sa!123456";
+        public string DBUserID { get; set; } = "root";
+        public string DBPwd { get; set; } = "root";
         public int DBPort { get; set; } = 3306;
 
         //Server=121.4.29.105;Database=stock;User Id=root;Password=sa!123456;Pooling=true;Max Pool Size={100};Connect Timeout=20;
